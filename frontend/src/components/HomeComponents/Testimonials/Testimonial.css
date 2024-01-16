@@ -1,0 +1,22 @@
+.testimonial-slider {
+    width: 100%;
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.testimonial-slide {
+    background-position: center;
+    background-size: cover;
+    width: 360px;
+    height: auto;
+    /* background: radial-gradient(#ffc142, transparent); */
+}
+
+@media(max-width:600px) {
+    .testimonial-slide {
+        background-position: center;
+        background-size: cover;
+        width: 270px;
+        height: auto;
+    }
+}

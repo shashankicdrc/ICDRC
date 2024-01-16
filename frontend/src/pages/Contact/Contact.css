@@ -1,0 +1,15 @@
+.input {
+    transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.input:focus {
+    box-shadow: 0 0 0 0.2rem rgba(226, 116, 20, 0.15);
+    outline: none;
+}
+
+.PhoneInputInput {
+    outline: none;
+    padding: 0 4px;
+    border-radius: 0.5rem;
+    width: 100%;
+}
