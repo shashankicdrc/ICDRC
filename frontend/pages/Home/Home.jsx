@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import './Home.css'
 import Home1 from '../../components/HomeComponents/Home1/Home1';
 import HomeNav from '../../components/Navbar/HomeNav';
 import Home2 from '../../components/HomeComponents/Home2/Home2';

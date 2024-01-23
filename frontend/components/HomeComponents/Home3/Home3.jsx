@@ -1,5 +1,5 @@
 import React from 'react'
-import './Home3.css'
+
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';

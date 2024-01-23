@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './Home6.css'
+
 import CountUp from 'react-countup';
 import ScrollTrigger from 'react-scroll-trigger';
 

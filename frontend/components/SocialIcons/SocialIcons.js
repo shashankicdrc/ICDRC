@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import './SocialIcons.css'
+
 import { IoShareSocialSharp } from 'react-icons/io5'
 import { TbMessageChatbot } from 'react-icons/tb'
 import { AiOutlineWhatsApp } from 'react-icons/ai'

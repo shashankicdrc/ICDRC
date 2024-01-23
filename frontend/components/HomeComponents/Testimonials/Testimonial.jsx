@@ -1,8 +1,4 @@
-
-import Vd from '../Testimonials/Vd.mp4';
-
 // components/TestimonialSlider.js
-
 import React from 'react';
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore, { EffectCoverflow, Pagination, Autoplay } from "swiper";
