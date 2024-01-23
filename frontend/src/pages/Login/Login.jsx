@@ -5,7 +5,8 @@ import HomeNav from './../../components/Navbar/HomeNav';
 import { Link } from 'react-router-dom';
 import Home7Contact from '../../components/HomeComponents/Home7Contact/Home7Contact';
 import SocialIcons from './../../components/SocialIcons/SocialIcons';
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { Helmet } from 'react-helmet';
 
 const Login = () => {
   // const [email,setEmail] = useState('');
@@ -20,6 +21,20 @@ const Login = () => {
     <div className='overflow-hidden'>
       <SocialIcons />
       <HomeNav />
+
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>ICDRC: login</title>
+        <link rel="canonical" href="" />
+        <meta
+          name="description"
+          content="Connect with us, View your case status, client satisfaction. Witness our commitment to transparent processes and empowering individuals in their insurance claim experiences. "
+        />
+        <meta
+          name="keywords"
+          content="login page, register your complain, reliable insurance solutions, Our Success stories, ICDRC, successful claims, Insurance recovery, ICDRC official Claim advocates, Fast insurance settlements, InsuranceSamadhan Alternative"
+        />
+      </Helmet>
 
 
       <div className='' style={{ backgroundImage: `url(https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784022/Home_page/Home1/homeslider2_zzybpj.webp)` }}>

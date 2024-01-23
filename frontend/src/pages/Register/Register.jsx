@@ -6,6 +6,7 @@ import Home7Contact from './../../components/HomeComponents/Home7Contact/Home7Co
 import Footer from './../../components/Footer/Footer';
 import SocialIcons from './../../components/SocialIcons/SocialIcons';
 import TabSection from './TabSection';
+import { Helmet } from 'react-helmet';
 
 const Register = () => {
     useEffect(() => {
@@ -15,6 +16,21 @@ const Register = () => {
         <div className='overflow-x-hidden'>
             <SocialIcons />
             <HomeNav />
+
+
+            <Helmet>
+        <meta charSet="utf-8" />
+        <title>ICDRC: Register Complaint</title>
+        <link rel="canonical" href="" />
+        <meta
+          name="description"
+          content="Connect with us, submit your complaint, client satisfaction. Witness our commitment to transparent processes and empowering individuals in their insurance claim experiences. "
+        />
+        <meta
+          name="keywords"
+          content="Complaint Section, register your complain, reliable insurance solutions, Our Success stories, ICDRC, successful claims, Insurance recovery, ICDRC official Claim advocates, Fast insurance settlements, InsuranceSamadhan Alternative"
+        />
+      </Helmet>
 
             <div
                 className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"

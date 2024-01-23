@@ -10,6 +10,7 @@ import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import axios from 'axios';
 import { url } from '../../api';
+import { Helmet } from 'react-helmet';
 
 const Contact = () => {
     const [name, setName] = useState('');
@@ -75,6 +76,20 @@ const Contact = () => {
         <div className=''>
             <SocialIcons />
             <HomeNav />
+
+            <Helmet>
+        <meta charSet="utf-8" />
+        <title>ICDRC: Contact Us </title>
+        <link rel="canonical" href="" />
+        <meta
+          name="description"
+          content="Conatct us for reliable insurance solution and Fast insurance settlements. Contact ICDRC, ICDRC is Your Trusted Insurance Claims and Dispute Resolution Partner!."
+        />
+        <meta
+          name="keywords"
+          content="reliable insurance solutions, Our Success stories, ICDRC, successful claims, Insurance recovery, ICDRC official Claim advocates, Fast insurance settlements, InsuranceSamadhan Alternative"
+        />
+      </Helmet>
 
             <div
                 className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"

@@ -7,7 +7,7 @@ const Home7Contact = () => {
         <div className='my-2 md:pt-4 mb-8'>
             <h1 className='text-gray-900 text-3xl md:text-6xl font-[Roboto] font-bold text-center bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent px-8' data-aos="fade-up" data-aos-duration="1000">REACH OUT TO US</h1>
             <p className='text-gray-700 text-center font-medium text-md py-2  tracking-widest mx-auto px-8' data-aos="fade-up" data-aos-duration="1000">
-                At ICDRC, we're committed to safeguarding what matters most to you, providing reliable insurance solutions for a worry-free future.
+            ICDRC, we're here to help you with insurance claims and disputes. We're committed to protecting what matters most to you and providing reliable insurance solutions for a worry-free future.
             </p>
 
             <div className='flex justify-center items-center md:items-start flex-col md:flex-row gap-4 px-4 md:pl-8 md:pr-20 py-4'>
@@ -15,13 +15,19 @@ const Home7Contact = () => {
 
                 <div>
                     <p className='mt-4 text-gray-800 font-normal text-md tracking-wide font-[Rubik]' data-aos="fade-up" data-aos-duration="1000">
-                        Your Trusted Insurance Claims and Dispute Resolution Partner!
+                        One Stop Solution For Insurance Claim Disputes!
                         <br className='mt-2' />
-                        Looking for expert guidance with insurance claims or dispute resolution? Partner with us for a seamless experience. Our team of seasoned professionals is here to support you at every step.
+                        We're your trusted partner for insurance claims and dispute resolution! If you need expert guidance on insurance claims or resolving disputes, partner with us for a smooth experience. Our team of experienced professionals is ready to support you at every step.
                         <br className='mt-2' />
-                        Facing an insurance dispute? Register your complaint with us now, and let our skilled negotiators work to find an amicable solution for you.
+                        If you're facing an insurance dispute, register your complaint with us now. Our skilled negotiators will work to find a fair solution for you.
                         <br className='mt-2' />
-                        Choose ICDRC for transparent, empathetic, and effective insurance services. Click below to get started!
+                        Choose ICDRC for transparent, understanding, and effective insurance services. Click below to get started!
+
+
+
+
+
+
                     </p>
 
                     <div className='mt-4 md:mt-8 flex justify-between gap-4 flex-col md:flex-row' data-aos="fade-up" data-aos-duration="1000" >

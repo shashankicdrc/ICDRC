@@ -11,6 +11,7 @@ import Home5 from '../../components/HomeComponents/Home5/Home5';
 import Home7Contact from '../../components/HomeComponents/Home7Contact/Home7Contact';
 import Footer from '../../components/Footer/Footer';
 import SocialIcons from '../../components/SocialIcons/SocialIcons';
+import Testimonials from '../../components/HomeComponents/Testimonials/Testimonial';
 
 const Home = () => {
   useEffect(() => {
@@ -26,8 +27,10 @@ const Home = () => {
       <Home4 />
       <Home5 />
       {/* <Home6 /> */}
-      {/* <Testimonial /> */}
+      
       <Home7Contact />
+      <Testimonials />
+      
       <Footer />
     </div>
   )

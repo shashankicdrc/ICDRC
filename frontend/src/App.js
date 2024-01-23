@@ -28,6 +28,7 @@ const CaseStudy = lazy(() => import('./pages/CaseStudys/CaseStudy'));
 const Gallery = lazy(() => import('./pages/Gallery/Gallery'));
 const AdminMedia = lazy(() => import('./admin/AdminMedia/AdminMedia'));
 const NotFound = lazy(() => import('./pages/NotFound/NotFound'))
+const CaseStatus = lazy(() => import('./pages/CaseStatus/CaseStatus'))
 
 function App() {
   useEffect(() => {
@@ -49,6 +50,7 @@ function App() {
           <Route exact path='/blogs/:id' element={<Blog />} />
           <Route exact path='/casestudies' element={<CaseStudies />} />
           <Route exact path='/casestudies/:id' element={<CaseStudy />} />
+          <Route exact path='/casestatus/' element={<CaseStatus />} />
           <Route exact path='/gallery' element={< Gallery />} />
           {/* Admin Routes */}
           <Route exact path='/en/ICDRC/loginAdmin' element={<LoginAdmin />} />
