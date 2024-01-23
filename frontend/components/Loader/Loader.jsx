@@ -19,4 +19,4 @@ const Loader = ({ h, color }) => {
     )
 }
 
-export default Loader
+export default Loader;
