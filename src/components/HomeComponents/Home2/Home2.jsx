@@ -1,6 +1,6 @@
-import React from 'react'
-import './Home2.css'
-import { Link } from 'react-router-dom'
+import Image from 'next/image';
+
+import Link from 'next/link';
 
 const Home2 = () => {
     return (
@@ -14,16 +14,18 @@ const Home2 = () => {
                 <div className="grid gap-10 my-10 md:my-16  mx-auto px-4  grid-cols-3 sm:grid-cols-4 lg:grid-cols-6">
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500">
-                        <img
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src= "https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/1_qmm9t2.svg"
-                            alt="Person"
-                        />
+                        <Image
+        className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
+        src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/1_qmm9t2.svg"
+        alt="Person"
+        
+        
+      />
                         <p className="text-gray-900 mt-2 text-center font-semibold text-sm md:text-md tracking-widest">Life Insurance</p>
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='100'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/2_u67069.svg"
                             alt="Person"
@@ -32,7 +34,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='300'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/3_ylryzr.svg"
                             alt="Person"
@@ -41,7 +43,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='500'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/4_tq9yeo.svg"
                             alt="Person"
@@ -50,7 +52,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='700'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/5_n9fvp9.svg"
                             alt="Person"
@@ -59,7 +61,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='900'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/6_szgrrz.svg"
                             alt="Person"
@@ -68,7 +70,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='1100'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/7_qdf20m.svg"
                             alt="Person"
@@ -77,7 +79,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='1300'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784296/Home_page/Home2/8_t092so.svg"
                             alt="Person"
@@ -86,7 +88,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='1500'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/9_thtox1.svg"
                             alt="Person"
@@ -95,7 +97,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='1700'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/10_d7qssd.svg"
                             alt="Person"
@@ -104,7 +106,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='1900'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/11_kj6i7t.svg"
                             alt="Person"
@@ -113,7 +115,7 @@ const Home2 = () => {
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='2100'>
-                        <img
+                        <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
                             src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/12_tg3bm9.svg"
                             alt="Person"

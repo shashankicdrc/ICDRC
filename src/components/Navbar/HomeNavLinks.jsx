@@ -1,8 +1,28 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { links } from "./Mylinks";
+
 
 const HomeNavLinks = ({ navbar }) => {
+
+
+    const links = [
+        {
+          name: "Media",
+          submenu: true,
+          sublinks: [
+            {
+              Head: "Media",
+              sublink: [
+                { name: "Case Studies", link: "/casestudies" },
+                { name: "Our Blogs", link: "/blogs" },
+                { name: "Gallery", link: "/gallery" },
+              ],
+            },
+          ],
+        },
+      ];
+      
+
     const [heading, setHeading] = useState("");
     return (
         <>

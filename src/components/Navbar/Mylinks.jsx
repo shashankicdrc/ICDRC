@@ -1,4 +1,4 @@
-export const links = [
+const links = [
   {
     name: "Media",
     submenu: true,
