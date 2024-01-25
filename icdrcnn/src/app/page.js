@@ -1,10 +1,11 @@
-import Image from "next/image";
 
-export default function Home() {
-  return (
-    <>
-    hello world ....
 
-    </>
-  );
+import Homese from './homese/page';
+
+export default function home(){
+    return(
+        <div>
+            <Homese />
+        </div>
+    )
 }

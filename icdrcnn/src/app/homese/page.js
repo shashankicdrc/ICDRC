@@ -1,14 +1,14 @@
-'use client'
+'use client';
  
-import { useState } from 'react';
 
 
 
 
 
 
-import Home1 from '../../components/HomeComponents/Home1';
-import Navbar from '../../components/Navbar/HomeNav';
+
+import Home1 from '../../components/HomeComponents/Home1/page';
+// import Navbar from '../../components/Navbar/HomeNav';
 import Home2 from '../../components/HomeComponents/Home2';
 import Home3 from '../../components/HomeComponents/Home3';
 // import Home4 from '../../components/HomeComponents/Home4/Home4';
@@ -27,7 +27,7 @@ const Home = () => {
   return (
     <div>
       {/* <SocialIcons />*/}
-      <Navbar /> 
+      {/* <Navbar />  */}
       <Home1 />
       <Home2 />
        <Home3 />
