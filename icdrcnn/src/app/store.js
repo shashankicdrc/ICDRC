@@ -9,9 +9,7 @@ import BlogsReducer, { getBlogs } from '../features/page';
 
 const store = configureStore({
     reducer: {
-     
         blogs: BlogsReducer,
-        
     }
 });
 

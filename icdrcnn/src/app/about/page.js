@@ -17,8 +17,8 @@ const About = () => {
       <HomeNav /> */}
 
 
-<>
-      {/* <Helmet>
+      <>
+        {/* <Helmet>
         <meta charSet="utf-8" />
         <title>ICDRC: About</title>
         <link rel="canonical" href="" />

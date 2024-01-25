@@ -9,7 +9,7 @@ import { BallTriangle } from 'react-loader-spinner'
 import { useState } from 'react';
 import { url } from '../../api';
 import axios from 'axios';
-import {Helmet} from 'react-helmet';
+import { Helmet } from 'react-helmet';
 
 const Blog = () => {
     const { id } = useParams();
@@ -41,27 +41,19 @@ const Blog = () => {
             <SocialIcons />
             <HomeNav />
 
-
-
             <Helmet>
-        <meta charSet="utf-8" />
-        <title>ICDRC:- Blogs Our Latest Posts </title>
-        <link rel="canonical" href="" />
-        <meta
-          name="description"
-          content="One stop solution for insurance claim disputes, The most trusted company for resolution of Insurance Complaints in India and help you get your claim settled faster."
-        />
-        <meta
-          name="keywords"
-          content="Insurance claim, Our blogs, ICDRC, successful claims, Insurance recovery, one stop solution for insurance claim disputes, Fast insurance settlements, InsuranceSamadhan Alternative"
-        />
-      </Helmet>
-
-
-
-
-
-
+                <meta charSet="utf-8" />
+                <title>ICDRC:- Blogs Our Latest Posts </title>
+                <link rel="canonical" href="" />
+                <meta
+                    name="description"
+                    content="One stop solution for insurance claim disputes, The most trusted company for resolution of Insurance Complaints in India and help you get your claim settled faster."
+                />
+                <meta
+                    name="keywords"
+                    content="Insurance claim, Our blogs, ICDRC, successful claims, Insurance recovery, one stop solution for insurance claim disputes, Fast insurance settlements, InsuranceSamadhan Alternative"
+                />
+            </Helmet>
 
             {/* Header Section */}
             <div
