@@ -4,7 +4,7 @@ import HomeNav from "../../components/Navbar/page";
 import Link from "next/link";
 import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
-import SocialIcons from "../../components/SocialIcons/SocialIcons";
+import SocialIcons from "../../components/SocialIcons/page";
 
 
 const About = () => {
