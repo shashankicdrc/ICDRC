@@ -8,6 +8,7 @@ import PageLoader from '../components/pageloader/page';
 
 
 
+
 export const metadata = {
   title: 'ICDRC: ',
   description: 'One Stop Solution For Insurance Claim Dispute',

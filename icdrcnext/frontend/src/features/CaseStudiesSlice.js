@@ -1,19 +1,17 @@
-
-'use client';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { url } from '../app/api';
+import { url } from '../api';
 
 const initialState = {
     data: [],
 };
 
-export const getBlogs = createAsyncThunk(
-    "blogs/getBlogs",
+export const getCaseStudies = createAsyncThunk(
+    "caseStudy/getCaseStudies",
     async () => {
         try {
-            const res = await axios.get(`${url}/api/handleblogs`)
+            const res = await axios.get(`${url}/api/handlecasestudy`)
             if (res.data.success) {
                 return res.data.data;
             }
@@ -26,12 +24,12 @@ export const getBlogs = createAsyncThunk(
     }
 )
 
-const blogsSlice = createSlice({
-    name: 'blogs',
+const CaseStudiesSlice = createSlice({
+    name: 'caseStudy',
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(getBlogs.fulfilled, (state, action) => {
+        builder.addCase(getCaseStudies.fulfilled, (state, action) => {
             if (action.payload) {
                 return {
                     ...state,
@@ -45,4 +43,4 @@ const blogsSlice = createSlice({
     }
 })
 
-export default blogsSlice.reducer;
+export default CaseStudiesSlice.reducer;

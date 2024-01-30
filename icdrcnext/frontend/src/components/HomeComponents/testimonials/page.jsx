@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
-import Vd from '../Testimonials/Vd.mp4';
+import Vd from '../../../../public/vd.mp4';
 
 const Testimonial = () => {
     return (
@@ -47,7 +47,10 @@ const Testimonial = () => {
                     <div className="mb-4  p-4 md:mb-0">
                         <div className="mb-6 flex justify-center">
                             <video playsInline autoplay muted controls src={Vd}
-                                className="w-full h-fit rounded-md shadow-black shadow-lg dark:shadow-black/20" ></video>
+                                className="w-full h-fit rounded-md shadow-black shadow-lg dark:shadow-black/20" >
+
+
+                                </video>
                         </div>
                         <h5 className="mb-2 text-lg font-bold text-orange-600 text-center">Joginder Kumar</h5>
                         <h6 className="mb-4 font-medium text-primary text-orange-500 text-center">

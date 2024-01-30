@@ -1,11 +1,5 @@
 'use client';
- 
-
-
-
-
-
-
+import { useEffect } from 'react';
 
 import Home1 from '../../components/HomeComponents/Home1/page';
 import Navbar from '../../components/Navbar/page';
@@ -14,16 +8,17 @@ import Home3 from '../../components/HomeComponents/Home3';
 import Home4 from '../../components/HomeComponents/Home4';
 import Home5 from '../../components/HomeComponents/Home5';
 // import Home6 from '../../components/HomeComponents/Home6/Home6';
-// import Testimonial from '../../components/HomeComponents/Testimonials/Testimonial';
+// import Testimonial from '../../components/HomeComponents/Testimonials/page';
 import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
-// import Testimonials from '../../components/HomeComponents/Testimonials/Testimonial';
+
+
 
 const Home = () => {
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // }, [])
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
   return (
     <div>
       <SocialIcons />
@@ -36,7 +31,7 @@ const Home = () => {
       {/* <Home6 /> */}
       
       <Home7Contact />
-      {/* <Testimonials /> */}
+      {/* <Testimonial /> */}
       
       <Footer />
     </div>

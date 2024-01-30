@@ -8,7 +8,7 @@ import HomeNav from '../../components/Navbar/page';
 import SocialIcons from '../../components/SocialIcons/page';
 
 import { toast } from 'react-hot-toast';
-// import Loader from '../../components/Loader/Loader'
+import Loader from '../../components/Loader/page';
 import axios from 'axios';
 import { url } from '../api';
 
@@ -37,7 +37,7 @@ const Partner = () => {
             return;
         }
 
-        // console.log({ name, email, mobile, company });
+        console.log({ name, email, mobile, company });
 
         try {
             const res = await axios.post(`${url}/api/handlepartner`, {
