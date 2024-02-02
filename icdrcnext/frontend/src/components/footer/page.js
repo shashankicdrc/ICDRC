@@ -188,7 +188,7 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href="/login"
+                    href="/admin/login"
                     className=" font-semibold text-white hover:text-orange-500 hover:font-semibold transition-colors duration-300"
                   >
                     Login Admin
