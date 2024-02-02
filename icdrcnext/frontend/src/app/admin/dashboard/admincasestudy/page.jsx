@@ -15,7 +15,7 @@ import { RiDeleteBin3Line } from 'react-icons/ri'
 
 
 const AdminCaseStudy = () => {
-    const routes = useRoutes();
+    const router = useRouter();
     const admin = useSelector((state) => state.admin);
     const [name, setName] = useState('');
     const [image, setImage] = useState('');

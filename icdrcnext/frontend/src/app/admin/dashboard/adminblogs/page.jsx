@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'next/link';
-import { useRouter } from 'next/navigation';
+import useRouter from 'next/navigation';
 import AdminNav from '../../components/navbar/page';
 import { useEffect } from 'react';
 import JoditEditor from 'jodit-react';
@@ -52,25 +52,25 @@ const AdminBlog = () => {
         setLoading(false);
     }
 
-    // useEffect(() => {
-    //     const getData = async () => {
-    //         setLoading(true);
-    //         try {
-    //             const res = await axios.get(`${url}/api/handleblogs`)
-    //             if (res.data.success) {
-    //                 setData(res.data.data);
-    //             }
-    //         }
-    //         catch (err) {
-    //             // console.log(err);
-    //             if (err?.response?.data?.message) {
-    //                 toast.error(err?.response?.data?.message);
-    //             }
-    //         }
-    //         setLoading(false);
-    //     }
-    //     getData();
-    // }, [admin.token])
+    useEffect(() => {
+        const getData = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get(`${url}/api/handleblogs`)
+                if (res.data.success) {
+                    setData(res.data.data);
+                }
+            }
+            catch (err) {
+                // console.log(err);
+                if (err?.response?.data?.message) {
+                    toast.error(err?.response?.data?.message);
+                }
+            }
+            setLoading(false);
+        }
+        getData();
+    }, [admin.token])
 
 
     const HandleSubmit = async (e) => {
@@ -138,7 +138,7 @@ const AdminBlog = () => {
 
     return (
         <div className='bg-gradient-to-r from-orange-300 to-red-300 min-h-screen'>
-            {loading && <PageLoader />}
+            { loading && <PageLoader />}
             <AdminNav />
 
             <div

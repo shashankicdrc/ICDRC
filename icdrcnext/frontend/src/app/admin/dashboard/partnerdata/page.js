@@ -111,7 +111,7 @@ const PartnerData = () => {
 
     return (
         <div className='bg-gradient-to-r from-orange-300 to-red-300 min-h-screen'>
-            {/* {loading && <PageLoader />} */}
+            {loading && <PageLoader />}
             <Navbar />
 
             <div

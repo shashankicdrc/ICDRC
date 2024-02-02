@@ -61,30 +61,30 @@ const ChatBotLeads = () => {
     }
 
 
-    // useEffect(() => {
-    //     const getData = async () => {
-    //         setLoading(true);
-    //         try {
-    //             const res = await axios.get(`${url}/api/createchatdata`, {
-    //                 headers: {
-    //                     Authorization: admin.token,
-    //                     'Content-Type': 'application/json',
-    //                 }
-    //             })
-    //             if (res.data.success) {
-    //                 setData(res.data.data);
-    //             }
-    //         }
-    //         catch (err) {
-    //             // console.log(err);
-    //             if (err?.response?.data?.message) {
-    //                 console.log(err?.response?.data?.message);
-    //             }
-    //         }
-    //         setLoading(false);
-    //     }
-    //     getData();
-    // }, [admin.token])
+    useEffect(() => {
+        const getData = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get(`${url}/api/createchatdata`, {
+                    headers: {
+                        Authorization: admin.token,
+                        'Content-Type': 'application/json',
+                    }
+                })
+                if (res.data.success) {
+                    setData(res.data.data);
+                }
+            }
+            catch (err) {
+                // console.log(err);
+                if (err?.response?.data?.message) {
+                    console.log(err?.response?.data?.message);
+                }
+            }
+            setLoading(false);
+        }
+        getData();
+    }, [admin.token])
 
     const deletebtn = async (id) => {
         try {
@@ -112,7 +112,7 @@ const ChatBotLeads = () => {
 
     return (
         <div className='bg-gradient-to-r from-orange-300 to-red-300 min-h-screen'>
-            {/* {loading && <PageLoader />} */}
+            {loading && <PageLoader />}
             <Navbar />
 
             <div
