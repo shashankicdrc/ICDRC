@@ -1,6 +1,5 @@
 const dotenv = require('dotenv');
 
-
 dotenv.config();
 
 // database connection function

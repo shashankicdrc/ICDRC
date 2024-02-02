@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { url } from '../api';
+import { url } from '../app/api';
 
 const initialState = {
     data: [],

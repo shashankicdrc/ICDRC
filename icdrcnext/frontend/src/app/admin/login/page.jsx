@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation'
 
 import React, { useEffect, useState } from 'react'
-// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../../../components/Loader/page';
-// import { loginAdmin } from '../../../features/AdminSlice';
+import { loginAdmin } from '../../../features/AdminSlice';
 
 
 const Login = () => {
@@ -17,15 +17,15 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const router = useRouter();
-    // const admin = useSelector((state) => state.admin);
+    const admin = useSelector((state) => state.admin);
 
-    // useEffect(() => {
-    //     if (admin._id) {
-    //         router.push('/admin/dashboard/home')
-    //     }
-    // }, [router, admin])
+    useEffect(() => {
+        if (admin._id) {
+            router.push('/admin/dashboard')
+        }
+    }, [router, admin])
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -36,9 +36,9 @@ const Login = () => {
         setLoading(true);
         let user = { email, password };
         console.log(user);
-        // dispatch(loginAdmin(user)).then(() => {
-        //     setLoading(false);
-        // });
+        dispatch(loginAdmin(user)).then(() => {
+            setLoading(false);
+        });
     }
 
   return (

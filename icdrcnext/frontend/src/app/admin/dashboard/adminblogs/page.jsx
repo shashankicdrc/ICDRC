@@ -1,26 +1,21 @@
 'use client'
-import Navbar from '../../components/navbar/page';
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'next/link';
-import { useRouter } from "next/navigation";
-// import AdminNav from '../../adminComponents/AdminNav/AdminNav'
+import { useRouter } from 'next/navigation';
+import AdminNav from '../../components/navbar/page';
 import { useEffect } from 'react';
-// import JoditEditor from 'jodit-react';
+import JoditEditor from 'jodit-react';
 import { useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { url } from '../../../api';
 import PageLoader from '../../components/pageloader/page';
-import { RiDeleteBin3Line } from 'react-icons/ri';
-
-import dynamic from 'next/dynamic';
-
-
+import { RiDeleteBin3Line } from 'react-icons/ri'
 
 const AdminBlog = () => {
-    const router = useRouter();
-    // const admin = useSelector((state) => state.admin);
+    const router = useRouter()
+    const admin = useSelector((state) => state.admin);
     const [name, setName] = useState('');
     const [image, setImage] = useState('');
     const [desc, setDesc] = useState('');
@@ -29,18 +24,16 @@ const AdminBlog = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
-    const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
-
     // useEffect(() => {
     //     if (!admin._id) {
-    //         router.push('/admin/login')
+    //         router.push('/admin/dashboard/login')
     //     }
-    // }, [navigate, admin])
+    // }, [router, admin])
 
 
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-    // }, [])
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
 
     const getData = async () => {
         setLoading(true);
@@ -144,12 +137,9 @@ const AdminBlog = () => {
 
 
     return (
-        <>
-        <Navbar />
-        
         <div className='bg-gradient-to-r from-orange-300 to-red-300 min-h-screen'>
             {loading && <PageLoader />}
-            
+            <AdminNav />
 
             <div
                 className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"
@@ -250,7 +240,6 @@ const AdminBlog = () => {
             </div >
 
         </div >
-        </>
     )
 }
 

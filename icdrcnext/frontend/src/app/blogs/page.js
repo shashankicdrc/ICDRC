@@ -1,38 +1,18 @@
-
-'use client';
-import { useEffect } from 'react';
-import HomeNav from './../../components/Navbar/page';
-import Link from 'next/image';
-import Home7Contact from './../../components/HomeComponents/Home7Contact';
+'use client'
+import React, { useEffect } from 'react'
+import HomeNav from '../../components/Navbar/page';
+import { Link } from 'next/link';
+import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
 import { useSelector } from 'react-redux';
 
 
 const Blogs = () => {
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-    // }, [])
-    // const blogs = useSelector((state) => state.blogs);
-
-    const blogs = [
-        {
-            _id: '1',
-            image: 'https://dummyimage.com/400x300',
-            name: 'Dummy Blog 1',
-            desc: 'Description of Dummy Blog 1',
-        },
-        {
-            _id: '2',
-            image: 'https://dummyimage.com/400x300',
-            name: 'Dummy Blog 2',
-            desc: 'Description of Dummy Blog 2',
-        },
-        // Add more dummy blog entries as needed
-    ];
-
-
-
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
+    const blogs = useSelector((state) => state.blogs)
     return (
         <div>
             <SocialIcons />
@@ -90,4 +70,4 @@ const Blogs = () => {
     )
 }
 
-export default Blogs;
+export default Blogs

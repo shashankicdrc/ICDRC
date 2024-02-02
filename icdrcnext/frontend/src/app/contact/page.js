@@ -49,7 +49,7 @@ const Contact = () => {
             return;
         }
 
-        // console.log({ name, email, mobile, whatsapp, message });
+        console.log({ name, email, mobile, whatsapp, message });
 
         try {
             const res = await axios.post(`${url}/api/handlecontact`, {
