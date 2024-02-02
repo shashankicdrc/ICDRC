@@ -24,11 +24,11 @@ const AdminBlog = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
-    // useEffect(() => {
-    //     if (!admin._id) {
-    //         router.push('/admin/dashboard/login')
-    //     }
-    // }, [router, admin])
+    useEffect(() => {
+        if (!admin._id) {
+            router.push('/admin/login')
+        }
+    }, [router, admin])
 
 
     useEffect(() => {

@@ -1,9 +1,9 @@
 'use client'
-import React from 'react'
-// import { useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
+
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
 import Navbar from '../../components/navbar/page';
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { url } from '../../../api';
 import { toast } from 'react-hot-toast';
@@ -22,21 +22,21 @@ import {
 
 const ChatBotLeads = () => {
 
-    // const navigate = useNavigate();
-    // const admin = useSelector((state) => state.admin);
+    const router = useRouter();
+    const admin = useSelector((state) => state.admin);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // useEffect(() => {
-    //     if (!admin._id) {
-    //         navigate('/en/ICDRC/loginAdmin')
-    //     }
-    // }, [navigate, admin])
+    useEffect(() => {
+        if (!admin._id) {
+            router.push('/en/ICDRC/loginAdmin')
+        }
+    }, [router, admin])
 
 
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-    // }, [])
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
 
     const getData = async () => {
         setLoading(true);

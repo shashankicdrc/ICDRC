@@ -10,19 +10,13 @@ import { useSelector } from 'react-redux';
 
 const Gallery = () => {
 
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-    // }, [])
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
 
-    // const media = useSelector((state) => state.media)
+    const media = useSelector((state) => state.media)
 
-    const media = [
-        {
-            _id: '1',
-            image: 'https://dummyimage.com/400x300',
-            video: 'Dummy video1',
-        }
-    ];
+    
 
     return (
         <div>

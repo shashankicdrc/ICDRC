@@ -1,18 +1,18 @@
 'use client'
 import React, { useEffect } from 'react'
-// import { useSelector } from 'react-/redux';
-// import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-/redux';
+import { useRouter } from 'next/navigation';
 import AdminNav from '../components/navbar/page';
 
 const Home = () => {
-    // const navigate = useNavigate();
-    // const admin = useSelector((state) => state.admin);
+    const router = useRouter();
+    const admin = useSelector((state) => state.admin);
 
-    // useEffect(() => {
-    //     if (!admin._id) {
-    //         navigate('/en/ICDRC/loginAdmin')
-    //     }
-    // }, [navigate, admin])
+    useEffect(() => {
+        if (!admin._id) {
+            router.push('/admin/login')
+        }
+    }, [navigate, admin])
 
 
     useEffect(() => {

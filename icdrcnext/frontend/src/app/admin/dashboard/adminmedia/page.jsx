@@ -1,9 +1,9 @@
 'use client'
-import React, { useState } from 'react'
-// import { useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
 import Navbar from '../../components/navbar/page';
-// import PageLoader from './../../adminComponents/PageLoader/PageLoader';
+import PageLoader from '../../components/pageloader/page';
 import { useEffect } from 'react';
 import axios from 'axios';
 import { url } from '../../../api';
@@ -11,8 +11,8 @@ import { toast } from 'react-hot-toast';
 import Item from '../../../gallery/Item';
 
 const AdminMedia = () => {
-  // const navigate = useNavigate();
-  // const admin = useSelector((state) => state.admin);
+  const router = useRouter();
+  const admin = useSelector((state) => state.admin);
   const [loading, setLoading] = useState(false);
 
   const [name, setName] = useState('');
@@ -21,16 +21,16 @@ const AdminMedia = () => {
 
   const [data, setData] = useState([]);
 
-  // useEffect(() => {
-  //   if (!admin._id) {
-  //     navigate('/en/ICDRC/loginAdmin')
-  //   }
-  // }, [navigate, admin])
+  useEffect(() => {
+    if (!admin._id) {
+      router.push('/admin/login')
+    }
+  }, [router, admin])
 
 
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // }, [])
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
 
   const getData = async () => {
     setLoading(true);
@@ -49,25 +49,25 @@ const AdminMedia = () => {
     setLoading(false);
   }
 
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const res = await axios.get(`${url}/api/handlemedia`)
-  //       if (res.data.success) {
-  //         setData(res.data.data);
-  //       }
-  //     }
-  //     catch (err) {
-  //       // console.log(err);
-  //       if (err?.response?.data?.message) {
-  //         toast.error(err?.response?.data?.message);
-  //       }
-  //     }
-  //     setLoading(false);
-  //   }
-  //   getData();
-  // }, [admin.token])
+  useEffect(() => {
+    const getData = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`${url}/api/handlemedia`)
+        if (res.data.success) {
+          setData(res.data.data);
+        }
+      }
+      catch (err) {
+        // console.log(err);
+        if (err?.response?.data?.message) {
+          toast.error(err?.response?.data?.message);
+        }
+      }
+      setLoading(false);
+    }
+    getData();
+  }, [admin.token])
 
   const deletebtn = async (id) => {
     try {
@@ -126,7 +126,7 @@ const AdminMedia = () => {
 
   return (
     <div className='bg-gradient-to-r from-orange-300 to-red-300 min-h-screen'>
-      {/* {loading && <PageLoader />} */}
+      {loading && <PageLoader />}
       <Navbar />
 
       <div

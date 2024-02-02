@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'next/link';
+import { useRouter } from 'next/navigation';
 import Navbar from '../../components/navbar/page'
 import { useEffect } from 'react';
 import JoditEditor from 'jodit-react';
@@ -9,13 +10,13 @@ import { useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { url } from '../../../api';
-// import PageLoader from './../../adminComponents/PageLoader/PageLoader';
+import PageLoader from '../../components/pageloader/page';
 import { RiDeleteBin3Line } from 'react-icons/ri'
 
 
 const AdminCaseStudy = () => {
-    // const routes = useRoutes();
-    // const admin = useSelector((state) => state.admin);
+    const routes = useRoutes();
+    const admin = useSelector((state) => state.admin);
     const [name, setName] = useState('');
     const [image, setImage] = useState('');
     const [desc, setDesc] = useState('');
@@ -24,16 +25,16 @@ const AdminCaseStudy = () => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
-    // useEffect(() => {
-    //     if (!admin._id) {
-    //         navigate('/en/ICDRC/loginAdmin')
-    //     }
-    // }, [navigate, admin])
+    useEffect(() => {
+        if (!admin._id) {
+            router.push('/admin/login')
+        }
+    }, [router, admin])
 
 
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-    // }, [])
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
 
     const getData = async () => {
         setLoading(true);
@@ -52,25 +53,25 @@ const AdminCaseStudy = () => {
         setLoading(false);
     }
 
-    // useEffect(() => {
-    //     const getData = async () => {
-    //         setLoading(true);
-    //         try {
-    //             const res = await axios.get(`${url}/api/handlecasestudy`)
-    //             if (res.data.success) {
-    //                 setData(res.data.data);
-    //             }
-    //         }
-    //         catch (err) {
-    //             // console.log(err);
-    //             if (err?.response?.data?.message) {
-    //                 toast.error(err?.response?.data?.message);
-    //             }
-    //         }
-    //         setLoading(false);
-    //     }
-    //     getData();
-    // }, [admin.token])
+    useEffect(() => {
+        const getData = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get(`${url}/api/handlecasestudy`)
+                if (res.data.success) {
+                    setData(res.data.data);
+                }
+            }
+            catch (err) {
+                // console.log(err);
+                if (err?.response?.data?.message) {
+                    toast.error(err?.response?.data?.message);
+                }
+            }
+            setLoading(false);
+        }
+        getData();
+    }, [admin.token])
 
 
     const HandleSubmit = async (e) => {
@@ -138,7 +139,7 @@ const AdminCaseStudy = () => {
 
     return (
         <div className='bg-gradient-to-r from-orange-300 to-red-300 min-h-screen'>
-            {/* {loading && <PageLoader />} */}
+            {loading && <PageLoader />}
             <Navbar />
 
             <div

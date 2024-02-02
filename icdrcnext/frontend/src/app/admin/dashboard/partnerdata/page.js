@@ -1,8 +1,8 @@
 'use client'
 import { useSelector } from 'react-redux';
-// import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import Navbar from '../../components/navbar/page';
-// import { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useState } from 'react';
 import { url } from '../../../api';
 import { toast } from 'react-hot-toast';
@@ -17,25 +17,25 @@ import {
     Td,
     TableContainer,
 } from '@chakra-ui/react';
-// import PageLoader from '../../adminComponents/PageLoader/PageLoader';
+import PageLoader from '../../components/pageloader/page';
 
 const PartnerData = () => {
 
-    // const navigate = useNavigate();
-    // const admin = useSelector((state) => state.admin);
+    const router = useRouter();
+    const admin = useSelector((state) => state.admin);
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    // useEffect(() => {
-    //     if (!admin._id) {
-    //         navigate('/en/ICDRC/loginAdmin')
-    //     }
-    // }, [navigate, admin])
+    useEffect(() => {
+        if (!admin._id) {
+            router.push('/admin/login')
+        }
+    }, [router, admin])
 
 
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-    // }, [])
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [])
 
     const getData = async () => {
         setLoading(true);
@@ -60,30 +60,30 @@ const PartnerData = () => {
     }
 
 
-    // useEffect(() => {
-    //     const getData = async () => {
-    //         setLoading(true);
-    //         try {
-    //             const res = await axios.get(`${url}/api/handlepartner`, {
-    //                 headers: {
-    //                     Authorization: admin.token,
-    //                     'Content-Type': 'application/json',
-    //                 }
-    //             })
-    //             if (res.data.success) {
-    //                 setData(res.data.data);
-    //             }
-    //         }
-    //         catch (err) {
-    //             // console.log(err);
-    //             if (err?.response?.data?.message) {
-    //                 console.log(err?.response?.data?.message);
-    //             }
-    //         }
-    //         setLoading(false);
-    //     }
-    //     getData();
-    // }, [admin.token])
+    useEffect(() => {
+        const getData = async () => {
+            setLoading(true);
+            try {
+                const res = await axios.get(`${url}/api/handlepartner`, {
+                    headers: {
+                        Authorization: admin.token,
+                        'Content-Type': 'application/json',
+                    }
+                })
+                if (res.data.success) {
+                    setData(res.data.data);
+                }
+            }
+            catch (err) {
+                // console.log(err);
+                if (err?.response?.data?.message) {
+                    console.log(err?.response?.data?.message);
+                }
+            }
+            setLoading(false);
+        }
+        getData();
+    }, [admin.token])
 
     const deletebtn = async (id) => {
         try {
