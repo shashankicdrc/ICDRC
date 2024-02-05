@@ -1,11 +1,11 @@
 
 
-import Homese from './homese/page';
+import Homepage from './homepage/page';
 
 export default function home(){
     return(
         <div>
-            <Homese />
+            <Homepage />
         </div>
     )
 }

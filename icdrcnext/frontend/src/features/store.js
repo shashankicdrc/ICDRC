@@ -9,7 +9,7 @@ import CaseStudiesReducer, { getCaseStudies } from './CaseStudiesSlice';
 import MediaReducer, { getMedia } from './MediaSlice';
 
 
-export const store = configureStore({
+const store = configureStore({
     reducer: {
         admin: adminReducer,
         blogs: BlogsReducer,
@@ -22,7 +22,7 @@ store.dispatch(getBlogs(null));
 store.dispatch(getCaseStudies(null));
 store.dispatch(getMedia());
 
-
+export default store;
 
 
 

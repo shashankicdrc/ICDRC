@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link } from 'next/link';
-import useRouter from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import AdminNav from '../../components/navbar/page';
 import { useEffect } from 'react';
 import JoditEditor from 'jodit-react';

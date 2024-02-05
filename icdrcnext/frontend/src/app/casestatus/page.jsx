@@ -5,6 +5,7 @@ import Link from "next/link";
 import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
+
 // import { Helmet } from "react-helmet";
 
 
@@ -129,7 +130,7 @@ const CaseStatus = () => {
       </div>
 
       
-<ShowStatus />
+{/* <ShowStatus /> */}
       <Home7Contact />
       <Footer />
     </div>

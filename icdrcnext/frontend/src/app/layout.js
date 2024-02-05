@@ -2,7 +2,7 @@ import "../../src/styles/globals.css";
 import { Suspense } from "react";
 import PageLoader from "../components/pageloader/page";
 
-import { Providers } from "./Providers";
+import { Providers } from "./providers";
 import store from '../features/store';
 
 export const metadata = {
