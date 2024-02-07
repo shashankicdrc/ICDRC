@@ -6,7 +6,6 @@ import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
 
-
 const Terms_Conditions = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -14,8 +13,7 @@ const Terms_Conditions = () => {
   return (
     <div>
       <SocialIcons />
-      <HomeNav /> 
-
+      <HomeNav />
 
       <>
         {/* <Helmet>
@@ -32,9 +30,6 @@ const Terms_Conditions = () => {
         />
       </Helmet> */}
       </>
-
-
-
 
       <div
         className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"
@@ -99,7 +94,8 @@ const Terms_Conditions = () => {
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        Welcome to ICDRC Services Pt. Ltd.! <p>One Stop Solution For Insurance Claim Disputes. (ICDRC)</p>
+        Welcome to ICDRC Services Pt. Ltd.!{" "}
+        <p>One Stop Solution For Insurance Claim Disputes. (ICDRC)</p>
       </p>
 
       <p
@@ -107,9 +103,12 @@ const Terms_Conditions = () => {
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        These terms and conditions outline the rules and regulations for the use of ICDRC Services Pt. Ltd.'s Website, located at https://icdrc.in.
-
-By accessing this website we assume you accept these terms and conditions. Do not continue to use ICDRC Services Pt. Ltd. if you do not agree to take all of the terms and conditions stated on this page.
+        The terms and conditions set forth below (“Terms of Use”) and the
+        Privacy Policy constitute a legally-binding agreement between Insurance
+        Claims Dispute Redressal Company Private Limited (hereinafter “ICDRC/the
+        Company”), and you. These Terms of Use contain provisions that define
+        your limits, legal rights and obligations with respect to your use of
+        and participation 
       </p>
 
       <p
@@ -117,144 +116,352 @@ By accessing this website we assume you accept these terms and conditions. Do no
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        The following terminology applies to these Terms and Conditions, Privacy Statement and Disclaimer Notice and all Agreements: "Client", "You" and "Your" refers to you, the person log on this website and compliant to the Company's terms and conditions. "The Company", "Ourselves", "We", "Our" and "Us", refers to our Company. "Party", "Parties", or "Us", refers to both the Client and ourselves. All terms refer to the offer, acceptance and consideration of payment necessary to undertake the process of our assistance to the Client in the most appropriate manner for the express purpose of meeting the Client's needs in respect of provision of the Company's stated services, in accordance with and subject to, prevailing law of in. Any use of the above terminology or other words in the singular, plural, capitalization and/or he/she or they, are taken as interchangeable and therefore as referring to same.
+        TBy accessing this websites/App/wallet (all together referred to as the
+        "ICDRC Website’ and using its content, you acknowledge and expressly
+        agree that you have read and understood the following terms of use
+        [“Terms of use”] and you agree to be bound by Terms of Use. Do not use
+        the ICDRC Website, if you do not agree with these Terms of Use.
       </p>
 
-      <h1 className="text-gray-700 font-2xl text-md py-2  tracking-widest mx-auto px-8">Cookies</h1>
+      <h1 className="text-gray-700 font-2xl text-md py-2 font-bold  tracking-widest mx-auto px-8">
+        Use of Content
+      </h1>
 
       <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        We employ the use of cookies. By accessing ICDRC Services Pt. Ltd., you agreed to use cookies in agreement with the ICDRC Services Pt. Ltd.'s Privacy Policy.
-
-Most interactive websites use cookies to let us retrieve the user's details for each visit. Cookies are used by our website to enable the functionality of certain areas to make it easier for people visiting our website. Some of our affiliate/advertising partners may also use cookies.
+        The content/information/blogs/facilitation services are available only
+        for informational purposes. The posting/display of
+        content/blogs/opinions/expressions/ notes/comments/criticism on/at ICDRC
+        Website are only informative and personal to respective author/s and is
+        not necessarily the opinion and recommendation of ICDRC and access to
+        this ICDRC Website and reading of content/blogs/opinions/expressions
+        on/at ICDRC Website does not in any way render and bind ICDRC for such
+        posting/display of content/blogs/opinions/expressions/
+        notes/comments/criticism and also same shall not be taken as to render,
+        either explicitly or implicitly, any provision of services or products
+        by us.
       </p>
 
-      <h1 className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8">License</h1>
+      <h1 className="text-gray-700  text-md py-2 font-bold tracking-widest mx-auto px-8">
+        Add on facilities/value added services to benefit you:
+      </h1>
 
       <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        Unless otherwise stated, ICDRC Services Pt. Ltd. and/or its licensors own the intellectual property rights for all material on ICDRC Services Pt. Ltd.. All intellectual property rights are reserved. You may access this from ICDRC Services Pt. Ltd. for your own personal use subjected to restrictions set in these terms and conditions.
+        ICDRC do NOT operate in any insurance selling business and is neither
+        associated with nor offering/selling/providing any services/products any
+        insurance products and as the offers/discounts/coupons/services/products
+        are solely and independently offered by respective
+        companies/entities/service providers and ICDRC is only a mere
+        facilitator to help and support you for various
+        offers/discounts/coupons/ services/products offered/provided by
+        respective companies/entities/service providers to you upon your
+        accessing the ICDRC website. ICDRC does not represent, assure or endorse
+        the accuracy, completeness, reliability or the quality of the
+        offers/discounts/coupons/ services/products of respective
+        companies/entities/service providers and shall not be in any way liable
+        or responsible for any deficiency of services or non-providing the
+        services or losses or damages or withdrawal of discounts/coupons/not
+        honouring the coupons, if any, incurred/experienced by you as a result
+        of your availing or subscribing to the
+        offers/discounts/coupons/services/products of respective
+        companies/entities/ service providers. Decision to avail and reliance
+        upon the offers/discounts/ coupons/services/products of respective
+        companies/entities/service providers shall be taken by you after careful
+        and independent sole decision of you at your own risk and ICDRC is not
+        in any way be responsible/liable for the same. Even if
+        offers/services/products by respective companies/entities/ service
+        providers are made available to you through API integration of ICDRC
+        Website with website of respective companies/entities/ service
+        providers, ICDRC shall no way be responsible and liable to you either
+        for deficiency, non-provision, delay in providing the services or any
+        other issues of whatsoever and same shall be sole responsibility and
+        liability of respective companies/entities/ service providers.
       </p>
+      <h3 className="text-gray-700 text-md py-2 font-bold tracking-widest mx-auto px-8">
+        No Offer:
+      </h3>
       <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        You must not:
-
-<li>Republish material from ICDRC Services Pt. Ltd.</li>
-<li>Sell, rent or sub-license material from ICDRC Services Pt. Ltd.</li>
-<li>Reproduce, duplicate or copy material from ICDRC Services Pt. Ltd.</li>
-<li>Redistribute content from ICDRC Services Pt. Ltd.</li>
-<li>This Agreement shall begin on the date hereof. Our Terms and Conditions were created with the help of the Free Terms and Conditions Generator.</li>
-
-Parts of this website offer an opportunity for users to post and exchange opinions and information in certain areas of the website. ICDRC Services Pt. Ltd. does not filter, edit, publish or review Comments prior to their presence on the website. Comments do not reflect the views and opinions of ICDRC Services Pt. Ltd.,its agents and/or affiliates. Comments reflect the views and opinions of the person who post their views and opinions. To the extent permitted by applicable laws, ICDRC Services Pt. Ltd. shall not be liable for the Comments or for any liability, damages or expenses caused and/or suffered as a result of any use of and/or posting of and/or appearance of the Comments on this website.
+        The information on the ICDRC Website is or should neither be interpreted
+        as an offer nor a solicitation for an offer, nor as investment, legal,
+        tax or other advice of ICDRC. You shall take advise/opinion of your
+        expert adviser and accordingly you shall take your voluntarily and
+        independent decision to avail any of the consultancy service/any service
+        of ICDRC. Therefore, the content/blogs/opinions/expressions on/at ICDRC
+        Website shall not be solely relied for your availing service of ICDRC.
       </p>
+
+      <h3 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+        No Duty to update:
+      </h3>
       <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        ICDRC Services Pt. Ltd. reserves the right to monitor all Comments and to remove any Comments which can be considered inappropriate, offensive or causes breach of these Terms and Conditions.
-
-<stong>You warrant and represent that:</stong>
-
-You are entitled to post the Comments on our website and have all necessary licenses and consents to do so;
-The Comments do not invade any intellectual property right, including without limitation copyright, patent or trademark of any third party;
-The Comments do not contain any defamatory, libelous, offensive, indecent or otherwise unlawful material which is an invasion of privacy
-The Comments will not be used to solicit or promote business or custom or present commercial activities or unlawful activity.
-You hereby grant ICDRC Services Pt. Ltd. a non-exclusive license to use, reproduce, edit and authorize others to use, reproduce and edit any of your Comments in any and all forms, formats or media.
+        All content on the ICDRC Website is published as of its date only. We
+        assume no responsibility to update or amend. Any modifications/changes
+        to these Terms and Conditions shall be automatically part and parcel of
+        these Terms and Use and you shall accordingly bound by these Terms and
+        Use read with modifications/changes, from time to time.
       </p>
 
-      
-
-      <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">  Hyperlinking to our Content</h1>
+      <h1 className="text-gray-700 font-bold text-md py-2 text-2xl  tracking-widest mx-auto px-8">
+        {" "}
+        Disclaimer:
+      </h1>
+     
       <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
-        data-aos-duration="1000">
-The following organizations may link to our Website without prior written approval:
+        data-aos-duration="1000"
+      >
+        TO THE FULLEST EXTENT PERMISSIBLE PURSUANT TO APPLICABLE LAW, THE MATERIALS ON THIS WEBSITE ARE PROVIDED "AS IS" AND WITHOUT WARRANTIES OF ANY KIND EITHER EXPRESSED OR IMPLIED, FOR ITS SERVICES AND OR THE ADD ON/VALUE ADDED SERVICES OF RESPECTIVE COMPANIES/ENTITIES/SERVICE PROVIDERS AND ICDRC, DISCLAIM ALL WARRANTIES, EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE OR NON-INFRINGEMENT.  ICDRC does not warrant or make any representations
+        regarding the accuracy, reliability, correctness, or any other aspect of
+        the use or results of the materials on the ICDRC website. Please note
+        that the information and descriptions provided on this website are not
+        intended to be comprehensive explanations of all terms, exclusions, and
+        conditions that apply to the products and services. They are solely
+        provided for general informational purposes.
+        <h1 className="text-gray-700 font-bold text-md py-2 text-2xl  tracking-widest mx-auto px-8">
+          {" "}
+          Copyright:
+        </h1>
+        <p
+          className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+          data-aos="fade-up"
+          data-aos-duration="1000"
+        >
+          All content of the ICDRC Website is protected by copyright and
+          Intellectual Property Rights [IPR] with all rights reserved with
+          ICDRC. All rights in the pages, site content and arrangement are owned
+          by ICDRC. You are expressly prohibited from copying, modifying,
+          displaying, distributing, transmitting, redelivering through the use
+          of "framing" technology or otherwise, publishing, selling, licensing,
+          creating derivative works or using any site content for any purpose
+          without the prior written approval of ICDRC. While on/in/using the
+          ICDRC Website you are bound by the Privacy Policy of ICDRC which is
+          published/displayed in/on ICDRC Website
+        </p>
+        <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+          Trademarks, Service Marks and Logos ("Marks"):
+        </h1>
+        <p
+          className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+          data-aos="fade-up"
+          data-aos-duration="1000"
+        >
+          The trademarks/trade names/logos appearing on the ICDRC Website
+          /App/wallet are the property of ICDRC. You are not allowed to copy,
+          use or adopt any of the same for whatsoever purpose.
+        </p>
+        <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+          No Warranty:
+        </h1>
+        <p
+          className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+          data-aos="fade-up"
+          data-aos-duration="1000"
+        >
+          All content on the ICDRC Website, including but not limited to
+          graphics, text and hyperlinks or references to other sites, is
+          provided "as is" basis without warranty of any kind, express or
+          implied, including, but not limited to, implied warranties of
+          merchantability, fitness for a particular purpose, non-infringement
+          and free from computer viruses or other harmful components. We do not
+          warrant the adequacy, accuracy, reliability or completeness of any
+          information on the ICDRC Website and expressly disclaim any liability
+          for errors or omissions therein. We do not warrant that the functions
+          of the ICDRC Website will be uninterrupted and/or error-free, that
+          defects will be corrected or that the ICDRC Website or the server that
+          makes it available are free from computer viruses or other harmful
+          components.
+        </p>
+        <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+          Limitation of Liability:
+        </h1>
+        <p
+          className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+          data-aos="fade-up"
+          data-aos-duration="1000"
+        >
+          We expressly disclaim any liability, whether in contract, tort, strict
+          liability or otherwise, for any direct, indirect, incidental,
+          consequential, punitive or special damages, loss of goodwill, loss of
+          profit etc., arising out of or in any way connected with your access
+          or use or inability to access or use the ICDRC Website or reliance on
+          its content, or any failure of performance, interruption, defect,
+          delay in transmission, computer viruses or other harmful components,
+          or line or system failure associated with the ICDRC Website,
+          regardless of our knowledge thereof.
+        </p>
+      </p>
 
-Government agencies;
-Search engines;
-News organizations;
-Online directory distributors may link to our Website in the same manner as they hyperlink to the Websites of other listed businesses; and
-System wide Accredited Businesses except soliciting non-profit organizations, charity shopping malls, and charity fundraising groups which may not hyperlink to our Web site.
-These organizations may link to our home page, to publications or to other Website information so long as the link: (a) is not in any way deceptive; (b) does not falsely imply sponsorship, endorsement or approval of the linking party and its products and/or services; and (c) fits within the context of the linking party's site.</p>
-<p
+      <h1 className="text-gray-700 font-bold text-md py-2 text-2xl  tracking-widest mx-auto px-8">
+        Membership Eligibility Criteria:
+      </h1>
+
+      <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
-        data-aos-duration="1000">
-We may consider and approve other link requests from the following types of organizations:
+        data-aos-duration="1000"
+      >
+        Use of the Website is available only to individuals who are at least 18
+        years old and can form legally binding contracts under applicable law.
+        You represent, acknowledge and agree that you are at least 18 years of
+        age, and that: (a) all registration information that you submit is
+        truthful and accurate, (b) you will maintain the accuracy of such
+        information, and (c) your use of the Website and Services offered
+        through this Website do not violate any applicable law or regulation.
+        Your Account (defined below) may be terminated without warning if we at
+        our discretion, believe that you are under the age of 18 or that you are
+        not complying with any applicable laws, rules or regulations.
+      </p>
 
+      <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+        Hyperlinked and Referenced Websites/App/wallet :
+      </h1>
 
-
-
-
-<p
+      <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
-        data-aos-duration="1000">
+        data-aos-duration="1000"
+      >
+        Certain hyperlinks or referenced websites/App/wallet on the ICDRC
+        Website may for your convenience forward you to third partie’s
+        websites/App/wallet, which generally are recognized by their top level
+        domain name. Their content has not been investigated or analyzed by us,
+        and we do not warrant the adequacy, accuracy, reliability or
+        completeness of any information on hyperlinked or referenced
+        websites/App/wallet and expressly disclaim any liability for any and all
+        of their content. By accessing the ICDRC Website, you also agree to
+        abide by the proprietary guidelines set forth at any website accessed or
+        hyperlinked to through the ICDRC Website
+      </p>
 
-Approved organizations may hyperlink to our Website as follows:
+      <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+        Local Legal Restrictions:
+      </h1>
 
-By use of our corporate name; or
-By use of the uniform resource locator being linked to; or
-By use of any other description of our Website being linked to that makes sense within the context and format of content on the linking party's site.
-No use of ICDRC Services Pt. Ltd.'s logo or other artwork will be allowed for linking absent a trademark license agreement.
-
-iFrames
-Without prior approval and written permission, you may not create frames around our Webpages that alter in any way the visual presentation or appearance of our Website.
-
-</p>
-
-<h1 className="text-gray-700 font-blod text-md py-2  tracking-widest mx-auto px-8">Content Liability</h1>
-<p
+      <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
-        data-aos-duration="1000">
-We shall not be hold responsible for any content that appears on your Website. You agree to protect and defend us against all claims that is rising on your Website. No link(s) should appear on any Website that may be interpreted as libelous, obscene or criminal, or which infringes, otherwise violates, or advocates the infringement or other violation of, any third party rights.</p>
+        data-aos-duration="1000"
+      >
+        The ICDRC Website is not directed to any person in any jurisdiction
+        where (by reason of that person's nationality, residence or otherwise)
+        the publication or availability of the ICDRC Website is prohibited.
+        Persons in respect of whom such prohibitions apply or country in which
+        it is prohibited, if any, must not access the ICDRC Website.
+      </p>
 
-<h1 className="text-gray-700 font-blod text-md py-2  tracking-widest mx-auto px-8">Reservation of Rights
-</h1>
-<p
+      <h1 className="text-gray-700 font-bold text-md py-2 text-2xl  tracking-widest mx-auto px-8">
+        Force Majeure:
+      </h1>
+
+      <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
-        data-aos-duration="1000">
-  We reserve the right to request that you remove all links or any particular link to our Website. You approve to immediately remove all links to our Website upon request. We also reserve the right to amen these terms and conditions and it's linking policy at any time. By continuously linking to our Website, you agree to be bound to and follow these linking terms and conditions.</p>
+        data-aos-duration="1000"
+      >
+        We shall not be liable if the service is delayed due to any force
+        majeure event, arising out of any enforceable circumstances and beyond
+        our reach, including but not limited to fire, flood, earthquakes,
+        strikes, unavailability of necessary utilities, black-out, acts of God,
+        acts of declared or undeclared war, acts of regulatory agencies, or
+        natural disaster, time consumption during court procedural/regulatory
+        compliances/rule compliance etc.
+      </p>
 
-  <p
+      <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+        Reservation of Rights:
+      </h1>
+
+      <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
-        data-aos-duration="1000">
-We do not ensure that the information on this website is correct, we do not warrant its completeness or accuracy; nor do we promise to ensure that the website remains available or that the material on the website is kept up to date.</p>
-</p>
+        data-aos-duration="1000"
+      >
+        We reserve the right to change, modify, add to, or remove portions of
+        these Terms of Use at any time and accordingly these Terms of Use is
+        liable to be changed at any time at the sole discretion of BAGIC and the
+        changed/revised Terms of Use shall be automatically be applicable to you
+        and you shall be bound by the same and comply with it.
+      </p>
 
-<h1 className="text-gray-700 font-blod text-md py-2  tracking-widest mx-auto px-8">Disclaimer</h1>
+      <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+        Prohibition of you and Miscellaneous Provisions:
+      </h1>
 
-<p
+      <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
-        data-aos-duration="1000">
-To the maximum extent permitted by applicable law, we exclude all representations, warranties and conditions relating to our website and the use of this website. Nothing in this disclaimer will:
+        data-aos-duration="1000"
+      >
+        On surfing/accessing and while in/at/on ICDRC Website, you are expressly
+        prohibited and you shall not (i) upload any of the
+        photos/videos/music/pictures/ screenshots/graphs/tables/any other
+        material/contents/documents of whatsoever nature through electronic or
+        any other mode, (ii) put any URL links/weblinks/ hyperlinks in ICDRC
+        Website, and (iii) shall not put/write/post/comment of whatsoever which
+        is of defamatory to ICDRC and or any other persons/party/government/s.
+        ICDRC shall not be in any way be responsible for the above prohibited
+        acts and also reserves to take suitable actions against you for the
+        same. You are responsible for the content you post – ICDRC Website can
+        be used only for information purpose by you. Keep in mind that you
+        remain solely responsible for the content that you post, including any
+        photos/videos/music/pictures/ screenshots/graphs/tables/any other
+        material/contents/documents of whatsoever nature through electronic or
+        any other mode You cannot post/type/keep private or confidential
+        information or do anything that violates intellectual property rights of
+        any third party.
+      </p>
+      <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+        Content removal:
+      </h1>
 
+      <p
+        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
+        We shall reserve a right to remove any content or information you post
+        on ICDRC Website if we believe it violates our Terms of Use, our
+        policies or if that content is anyway not allowed to post as per
+        applicable laws in India or infringes copy right/IPR rights of any third
+        party in any manner.
+      </p>
 
-<li>limit or exclude our or your liability for death or personal injury;</li>
-<li>limit or exclude our or your liability for fraud or fraudulent misrepresentation;</li>
-<li>limit any of our or your liabilities in any way that is not permitted under applicable law; or
-exclude any of our or your liabilities that may not be excluded under applicable law.</li>
-<li>The limitations and prohibitions of liability set in this Section and elsewhere in this disclaimer: (a) are subject to the preceding paragraph; and (b) govern all liabilities arising under the disclaimer, including liabilities arising in contract, in tort and for breach of statutory duty.</li>
+      <h1 className="text-gray-700 font-bold text-md py-2  tracking-widest mx-auto px-8">
+        Jurisdiction, Severability:
+      </h1>
 
-<li>As long as the website and the information and services on the website are provided free of charge, we will not be liable for any loss or damage of any nature.</li>
-
-</p>
-
+      <p
+        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
+        Any action arising out of these terms or this ICDRC Website shall be
+        exclusively governed by applicable Indian Laws, and the courts located
+        in Pune, India shall have exclusive jurisdiction, and you agree to
+        submit to and bound by the applicable Indian Laws and exclusive
+        jurisdiction of Pune courts and also further agree that they are a
+        convenient forum for you. In the event that any provision of these terms
+        is held unenforceable, the validity or enforceability of the remaining
+        provisions will not be affected, and the unenforceable provision will be
+        replaced with an enforceable provision that comes close to the intention
+        underlying the unenforceable provision.
+      </p>
 
       <Home7Contact />
       <Footer />

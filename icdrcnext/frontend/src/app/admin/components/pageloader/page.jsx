@@ -1,12 +1,24 @@
-import React from 'react'
-import Loader from '../../../../components/Loader/page';
+'use client';
+import React from 'react';
+import { Oval } from 'react-loader-spinner';
 
-const PageLoader = () => {
+// Define the PageLoader component
+const PageLoader = ({ height = 20, color = "black" }) => {
     return (
-        <div className='fixed h-screen w-screen bg-transparent bg-gray-100  z-50 flex justify-center items-center'>
-            <Loader color="orange" h={40} w={40} />
+        <div>
+            {/* Render the loading spinner */}
+            <Oval
+                height={height}
+                width={height}
+                color={color}
+                visible={true}
+                ariaLabel='oval-loading'
+            />
+            {/* Optionally, you can add a message */}
+            <p>Loading...</p>
         </div>
-    )
-}
+    );
+};
 
-export default PageLoader
+// Export the PageLoader component
+export default PageLoader;

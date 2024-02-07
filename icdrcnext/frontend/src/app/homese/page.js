@@ -15,7 +15,7 @@ import SocialIcons from '../../components/SocialIcons/page';
 
 
 
-const Homepage = () => {
+const Home = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [])
@@ -38,4 +38,4 @@ const Homepage = () => {
   )
 }
 
-export default Homepage
+export default Home

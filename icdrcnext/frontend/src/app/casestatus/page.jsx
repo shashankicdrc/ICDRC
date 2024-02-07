@@ -5,15 +5,35 @@ import Link from "next/link";
 import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 
-// import { Helmet } from "react-helmet";
+
 
 
 
 const CaseStatus = () => {
+
+  const router = useRouter();
+    const admin = useSelector((state) => state.admin);
+
+  useEffect(() => {
+    if (!admin._id) {
+        router.push('/login')
+    }
+}, [router, admin])
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // if(!admin_.id){
+  //   render.push('/login')
+  //   else-if {
+  //     router.push('/myprofile')
+  //   }
+  // }
   return (
     <div>
        <SocialIcons />
@@ -130,7 +150,7 @@ const CaseStatus = () => {
       </div>
 
       
-{/* <ShowStatus /> */}
+
       <Home7Contact />
       <Footer />
     </div>

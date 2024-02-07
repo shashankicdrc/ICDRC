@@ -1,5 +1,5 @@
 
-
+'use client';
 
 import { configureStore } from '@reduxjs/toolkit'
 
@@ -9,7 +9,8 @@ import CaseStudiesReducer, { getCaseStudies } from './CaseStudiesSlice';
 import MediaReducer, { getMedia } from './MediaSlice';
 
 
-const store = configureStore({
+export const store = configureStore({
+    
     reducer: {
         admin: adminReducer,
         blogs: BlogsReducer,
@@ -22,7 +23,7 @@ store.dispatch(getBlogs(null));
 store.dispatch(getCaseStudies(null));
 store.dispatch(getMedia());
 
-export default store;
+
 
 
 

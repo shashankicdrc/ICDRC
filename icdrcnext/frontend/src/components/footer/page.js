@@ -188,10 +188,10 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
-                    href="/login"
+                    href="/admin/login"
                     className=" font-semibold text-white hover:text-orange-500 hover:font-semibold transition-colors duration-300"
                   >
-                    Login
+                    Login Admin
                   </Link>
                 </li>
               </ul>
@@ -311,7 +311,7 @@ const Footer = () => {
                 <input
                   type="email"
                   placeholder="Subscribe for Newsletter"
-                  className="mr-4 p-1 rounded-md focus:outline-none border-2 border-orange-600 font-sm text-base font-[Roboto]"
+                  className="w-auto p-2 rounded-md focus:outline-none border-2 border-orange-600 font-sm text-base font-[Roboto]"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required={true}
@@ -320,7 +320,7 @@ const Footer = () => {
               <div>
                 <button
                   type="submit"
-                  className="w-auto rounded-md px-3.5 py-1 flex justify-center items-center m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-orange-500 text-indigo-600 hover:text-white"
+                  className="max-w-max rounded-md px-3.5 py-1 flex justify-center items-center m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-orange-500 text-indigo-600 hover:text-white"
                 >
                   <span className="absolute w-64 h-0 transition-all duration-500 origin-center rotate-45 -translate-x-20 bg-orange-500 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
                   <span className="relative text-orange-500 transition duration-300 group-hover:text-white ease">
@@ -374,14 +374,14 @@ const Footer = () => {
             href="/terms_conditions"
             className="text-sm text-white font-semibold font-sans transition-colors duration-300 hover:text-orange-500"
           >
-            Terms & Conditions
+            Terms Of Use
           </Link>
-          <Link
+          {/* <Link
             href="/refund_policy"
             className="text-sm text-white font-semibold font-sans transition-colors duration-300 hover:text-orange-500"
           >
             Refund Policy
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>
