@@ -1,9 +1,9 @@
-'use client'
-import React, { useState } from 'react'
+'use client';
+import { useState } from 'react'
 import { useSelector } from 'react-redux';
-import { Link } from 'next/link';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Navbar from '../../components/navbar/page'
+import AdminNav from '../../components/navbar/page'
 import { useEffect } from 'react';
 import JoditEditor from 'jodit-react';
 import { useRef } from 'react';
@@ -12,7 +12,6 @@ import axios from 'axios';
 import { url } from '../../../api';
 import PageLoader from '../../components/pageloader/page';
 import { RiDeleteBin3Line } from 'react-icons/ri'
-
 
 const AdminCaseStudy = () => {
     const router = useRouter();
@@ -27,7 +26,7 @@ const AdminCaseStudy = () => {
 
     useEffect(() => {
         if (!admin._id) {
-            router.push('/admin/login')
+            router.push('/admin/loginAdmin')
         }
     }, [router, admin])
 
@@ -140,7 +139,7 @@ const AdminCaseStudy = () => {
     return (
         <div className='bg-gradient-to-r from-orange-300 to-red-300 min-h-screen'>
             {loading && <PageLoader />}
-            <Navbar />
+            <AdminNav />
 
             <div
                 className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"

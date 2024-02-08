@@ -1,4 +1,4 @@
-import React from 'react'
+
 import './Testimonial.css'
 
 import { Swiper, SwiperSlide } from "swiper/react";

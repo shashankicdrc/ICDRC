@@ -1,7 +1,8 @@
-'use client'
+'use client';
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
-import { Link } from 'next/link';
+// import { Link, useNavigate } from 'react-router-dom';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AdminNav from '../../components/navbar/page';
 import { useEffect } from 'react';
@@ -14,7 +15,7 @@ import PageLoader from '../../components/pageloader/page';
 import { RiDeleteBin3Line } from 'react-icons/ri'
 
 const AdminBlog = () => {
-    const router = useRouter()
+    const router = useRouter();
     const admin = useSelector((state) => state.admin);
     const [name, setName] = useState('');
     const [image, setImage] = useState('');
@@ -26,7 +27,7 @@ const AdminBlog = () => {
 
     useEffect(() => {
         if (!admin._id) {
-            router.push('/admin/login')
+            router.push('/admin/loginAdmin')
         }
     }, [router, admin])
 
@@ -138,7 +139,7 @@ const AdminBlog = () => {
 
     return (
         <div className='bg-gradient-to-r from-orange-300 to-red-300 min-h-screen'>
-            { loading && <PageLoader />}
+            {loading && <PageLoader />}
             <AdminNav />
 
             <div

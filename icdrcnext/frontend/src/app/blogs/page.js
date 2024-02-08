@@ -1,7 +1,7 @@
-'use client'
+'use client';
 import React, { useEffect } from 'react'
 import HomeNav from '../../components/Navbar/page';
-import { Link } from 'next/link';
+import Link from 'next/link';
 import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';

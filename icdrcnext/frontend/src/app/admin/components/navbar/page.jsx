@@ -60,6 +60,11 @@ const AdminNav = () => {
                             Contacts
                         </Link>
                     </li>
+                    <li>
+                        <Link href="/admin/dashboard/registrationform" className={`${navbar ? "text-gray-900" : "text-white"} py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}>
+                            Complains
+                        </Link>
+                    </li>
                 </ul>
                 <div className="md:block hidden">
                     <AdminButton />
