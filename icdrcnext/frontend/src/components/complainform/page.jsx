@@ -5,6 +5,7 @@ import { useState } from 'react';
 import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input'
 import { State, City } from 'country-state-city';
+import axios from 'axios';
 
 const ComplainForm = () => {
     const [name, setName] = useState('');
@@ -19,7 +20,7 @@ const ComplainForm = () => {
     const [otherProblem, setOtherProblem] = useState('');
     const [problemDetails, setProblemDetails] = useState('');
 
-    const [mobile, setMobile] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [state, setState] = useState('');
     const [city, setCity] = useState('');
     const country = "India";
@@ -51,10 +52,38 @@ const ComplainForm = () => {
 
 
     // FORM SUBMIT HANDLER
-    const SubmitHandler = (e) => {
+    // const SubmitHandler = (e) => {
+    //     e.preventDefault();
+    //     console.log({ name, phoneNumber, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
+    // }
+    const SubmitHandler = async (e) => {
         e.preventDefault();
-        console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
-    }
+    
+        try {
+            // Make a request to your backend endpoint
+            const response = await axios.post('http://localhost:5000/api/handleindividualcomplaint', {
+                name,
+                phoneNumber,
+                email,
+                country,
+                state,
+                city,
+                address,
+                language,
+                policyCompany,
+                policyType,
+                problem,
+                problemDetails
+            });
+    
+            console.log(response.data); // Log the response from the backend
+    
+            // Add logic here to handle the response if needed (e.g., show a success message)
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            // Add logic here to handle errors (e.g., show an error message)
+        }
+    };
 
 
     return (
@@ -93,10 +122,10 @@ const ComplainForm = () => {
                         countryCallingCodeEditable={false}
                         placeholder="Enter phone number"
                         defaultCountry='IN'
-                        value={mobile}
+                        value={phoneNumber}
                         maxLength={20}
                         required={true}
-                        onChange={setMobile}
+                        onChange={setPhoneNumber}
                         style={{ "padding": "0.5rem", "borderRadius": "0.375rem", "borderWidth": "1px", "borderColor": "#9ca3af", "boxShadow": "0 1px 2px 0 rgba(0, 0, 0, 0.05),", "color": "black" }}
                         className="w-11/12 shadow-sm text-gray-900 font-[Poppins] text-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600"
                     />

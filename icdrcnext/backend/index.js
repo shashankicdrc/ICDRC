@@ -14,6 +14,7 @@ const newsletter = require('./routes/newsletter/newsletter')
 const blogs = require('./routes/blogs/blogs')
 const caseStudy = require('./routes/caseStudy/caseStudy')
 const Media = require('./routes/Media/Media')
+const individualComplaint = require('./routes/complaints/IndividualComplaint');
 
 //  Initializing app
 const app = express();
@@ -48,6 +49,8 @@ app.use('/api/handleblogs', blogs)
 app.use('/api/handlecasestudy', caseStudy)
 // handle media
 app.use('/api/handlemedia',Media)
+// to register complaint 
+app.use('/api/handleindividualcomplaint', individualComplaint);
 
 
 // APP LISTENING AND DB
@@ -58,3 +61,27 @@ connectDB().then(() => {
     })
 })
 
+// var nodemailer = require('nodemailer');
+
+// var transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: 'kartikey.chaudhary.webdesys@gmail.com',
+//     pass: 'pulz gygf jlct ragt'
+//   }
+// });
+
+// var mailOptions = {
+//   from: 'kartikey.chaudhary.webdesys@gmail.com',
+//   to: ['bhattmohit2004@gmail.com','kartikey9949@gmail.com'],
+//   subject: 'Sending Email using Node.js',
+//   text: 'That is for testing purpose!',
+// };
+
+// transporter.sendMail(mailOptions, function(error, info){
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     console.log('Email sent: ' + info.response);
+//   }
+// });

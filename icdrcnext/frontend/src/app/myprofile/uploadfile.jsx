@@ -19,16 +19,91 @@ import {
   MDBListGroupItem
 } from 'mdb-react-ui-kit';
 
+
+
+import { useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useState } from 'react';
+import { url } from '../api';
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
+
 export default function ProfilePage() {
+
+
+  const router = useRouter();
+  const admin = useSelector((state) => state.admin);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+
+  const getData = async () => {
+    setLoading(true);
+    try {
+      const res = await axios.get(`${url}/api/handlecontact`, {
+        headers: {
+          Authorization: admin.token,
+          'Content-Type': 'application/json',
+        }
+      })
+      if (res.data.success) {
+        setData(res.data.data);
+      }
+    }
+
+
+    catch (err) {
+      // console.log(err);
+      if (err?.response?.data?.message) {
+        toast.error(err?.response?.data?.message);
+      }
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    const getData = async () => {
+      setLoading(true);
+      try {
+        const res = await axios.get(`${url}/api/handlecontact`, {
+          headers: {
+            Authorization: admin.token,
+            'Content-Type': 'application/json',
+          }
+        })
+        if (res.data.success) {
+          setData(res.data.data);
+        }
+      }
+      catch (err) {
+        // console.log(err);
+        if (err?.response?.data?.message) {
+          console.log(err?.response?.data?.message);
+        }
+      }
+      setLoading(false);
+    }
+    getData();
+  }, [admin.token])
+
+
+
+
+
   return (
-    <section className="w-full m-4 items-center justify-center flex border-black shadow-lg rounded-md ">
+    <section className="w-full m-5 mx-auto
+     align-middle items-center justify-center flex md:items-center border shadow-orange-400 rounded-lg ">
       <MDBContainer className="py-5">
         <MDBRow>
           <MDBCol>
             <MDBBreadcrumb className=" border-gray shandow-black rounded-3 p-3 mb-4">
               
               
-              <MDBBreadcrumbItem active>User Profile</MDBBreadcrumbItem>
+              <MDBBreadcrumbItem className="bg-orange-200 pl-3 font-bold text-2xl rounded-md ml-3" active>User Profile</MDBBreadcrumbItem>
             </MDBBreadcrumb>
           </MDBCol>
         </MDBRow>

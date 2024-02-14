@@ -1,10 +1,10 @@
 'use client';
 import React, { useEffect } from 'react'
-// import HomeNav from '../../components/Navbar/HomeNav';
+import HomeNav from '../../components/Navbar/HomeNav';
 import { useParams } from 'react-router-dom';
-// import Home7Contact from '../../components/HomeComponents/Home7Contact/Home7Contact';
+import Home7Contact from '../../components/HomeComponents/Home7Contact/Home7Contact';
 import Footer from './../../components/Footer/Footer';
-// import SocialIcons from '../../components/SocialIcons/SocialIcons';
+import SocialIcons from '../../components/SocialIcons/SocialIcons';
 import '../../styles/module.blogs.css';
 import { BallTriangle } from 'react-loader-spinner'
 import { useState } from 'react';
@@ -39,8 +39,8 @@ const Blog = () => {
     return (
         <div style={{ overflowX: 'hidden' }}>
 
-            {/* <SocialIcons />
-            <HomeNav /> */}
+             <SocialIcons />
+            <HomeNav /> 
 
             {/* <Helmet>
                 <meta charSet="utf-8" />
