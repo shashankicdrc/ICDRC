@@ -64,7 +64,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-            cd /var/www/icdrc/
+            cd /var/www/ICDRC/
             docker-compose down
             docker-compose pull
             docker-compose up -d
