@@ -50,7 +50,7 @@ app.use('/api/handlecasestudy', caseStudy)
 // handle media
 app.use('/api/handlemedia',Media)
 // to register complaint 
-app.use('/api/handleindividualcomplaint', individualComplaint);
+app.use('/api/individualcomplaint', individualComplaint);
 
 
 // APP LISTENING AND DB

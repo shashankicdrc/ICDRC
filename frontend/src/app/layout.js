@@ -7,7 +7,7 @@ import {store} from '../features/store';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export const metadata = {
-  title: "ICDRC: ",
+  title: "ICDRC",
   description: "One Stop Solution For Insurance Claim Dispute",
 };
 
@@ -23,3 +23,4 @@ export default function RootLayout({ children }) {
     </Providers>
   );
 }
+
