@@ -109,7 +109,24 @@ const Refund_policy = () => {
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        At ICDRC (Insurance Claim Dispute Resolution Center), we strive to provide unparalleled services in securing rightful financial compensation from insurance providers. Our commitment to transparency and customer satisfaction is at the forefront of our operations. This refund policy elucidates the terms and conditions associated with seeking a refund for our services.
+1. At ICDRC we are committed to providing quality to our valued customers. As part of our commitment to transparency and customer satisfaction, we have established a Zero Refund Policy to outline the terms and conditions regarding refunds for appointment fees made through our platform.      </p>
+
+      <p
+        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
+2. Thank you for choosing ICDRC for your consultation needs. Please read this refund policy carefully before making an appointment payment. This policy outlines the terms and conditions under which ICDRC, referred to as "we" or "us," will not provide refunds for appointment fees.
+
+</p>
+
+      <p
+        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
+        3. Zero Percent Refund Policy:
+ICDRC operates under a unique business model that prioritizes client satisfaction and successful claim resolution. As such, our refund policy is designed as a zero percent refund. This means that once you have booked an appointment and made the requisite fees, no refunds will be provided for the appointment fees.
       </p>
 
       <p
@@ -117,7 +134,21 @@ const Refund_policy = () => {
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        This policy applies exclusively to the services offered by ICDRC in the domain of insurance claim dispute resolution. It is important to note that ICDRC specializes in providing expert assistance to individuals navigating the complexities of insurance claims, and this policy is tailored to address any concerns related to the payment for these specific services.
+      4.  Our commitment to delivering results and dedicating resources to each case from the moment of initiation is the driving force behind our zero percent refund policy. This policy is in place to underscore our confidence in the expertise of our team and the efficacy of our claims resolution process. We invest time, effort, and resources into comprehensively addressing your insurance claim dispute, and our commitment remains unwavering until a resolution is achieved.
+      </p>
+      <p
+        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
+        5. ICDRC places great emphasis on transparent communication. Before engaging our app, we encourage potential clients to thoroughly review our terms and conditions. Our team is available to address any queries or concerns regarding the policy to ensure complete understanding before proceeding with our appointment fees.
+      </p>
+      <p
+        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
+        6. Clients engaging ICDRC services are responsible for providing accurate and truthful information related to their insurance claim dispute. Any misrepresentation or failure to disclose relevant details may impact the progress of the case and is not grounds for a refund under our policy.
       </p>
 
       <p
@@ -125,8 +156,16 @@ const Refund_policy = () => {
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        Zero Percent Services Refund Policy:
-ICDRC operates under a unique business model that prioritizes client satisfaction and successful claim resolution. As such, our refund policy is designed as a zero percent services refund policy. This means that once you have engaged our services and made the requisite payment, no refunds will be provided for the services rendered.
+        7. Clients have the option to cancel our appointment at any point. However, it's crucial to note that the zero percent refund policy remains applicable, and no refunds will be processed, irrespective of the stage of the case at the time of cancellation.
+      </p>
+      <p
+        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
+        data-aos="fade-up"
+        data-aos-duration="1000"
+      >
+       8. Non-Refundable Appointment Fees:
+All appointment fees collected by ICDRC are non-refundable. Once a payment is made for an appointment, it is considered final, and no refunds will be provided, irrespective of the circumstances leading to the cancellation or rescheduling of the appointment.
+
       </p>
 
       <p
@@ -134,48 +173,30 @@ ICDRC operates under a unique business model that prioritizes client satisfactio
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        Our commitment to delivering results and dedicating resources to each case from the moment of initiation is the driving force behind our zero percent refund policy. This policy is in place to underscore our confidence in the expertise of our team and the efficacy of our claims resolution process. We invest time, effort, and resources into comprehensively addressing your insurance claim dispute, and our commitment remains unwavering until a resolution is achieved.
+       9. Cancellation or Rescheduling:
+In the event that you need to cancel or reschedule your appointment, please note that the appointment fees are non-refundable. However, we understand that unforeseen circumstances may arise. In such cases, we encourage you to contact our customer support team as soon as possible to discuss possible alternatives.
+
       </p>
       <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        o ICDRC places great emphasis on transparent communication. Before engaging our services, we encourage potential clients to thoroughly review our terms and conditions, including this refund policy. Our team is available to address any queries or concerns regarding the policy to ensure complete understanding before proceeding with our services.
+        10.  Customer Responsibility:
+We encourage our customers to exercise due diligence before submitting  fees . This includes carefully reviewing product descriptions, specifications, and terms of service to ensure that the product or service meets their requirements and expectations.
+
       </p>
       <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        o Clients engaging ICDRC services are responsible for providing accurate and truthful information related to their insurance claim dispute. Any misrepresentation or failure to disclose relevant details may impact the progress of the case and is not grounds for a refund under our policy.
+11. Contact Us:
+If you have any questions or concerns regarding our Zero Refund Policy, please do not hesitate to contact our customer support team. We are here to assist you and address any issues you may encounter during your shopping experience with us.
+
       </p>
 
-      <p
-        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
-        data-aos="fade-up"
-        data-aos-duration="1000"
-      >
-        o Clients have the option to cancel our services at any point. However, it's crucial to note that the zero percent refund policy remains applicable, and no refunds will be processed, irrespective of the stage of the case at the time of cancellation.
-      </p>
-
-      <p
-        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
-        data-aos="fade-up"
-        data-aos-duration="1000"
-      >
-        o Continuous Support:
-Even though refunds are not applicable under our policy, ICDRC remains committed to providing continuous support and transparent communication throughout the duration of the case. Our goal is to ensure that clients are well-informed and confident in the progression of their insurance claim dispute.
-      </p>
-
-      <p
-        className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
-        data-aos="fade-up"
-        data-aos-duration="1000"
-      >
-        o Contacting ICDRC:
-For any inquiries or clarification regarding our refund policy, clients can reach out to our customer support team. We are dedicated to addressing concerns promptly and maintaining open lines of communication.
-      </p>
+      
 
       </div>
 

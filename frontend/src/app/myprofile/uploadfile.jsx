@@ -1,7 +1,5 @@
-'use client'
-
-
-import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import React from 'react';
+// import 'mdb-react-ui-kit/dist/css/mdb.min.css';
 
 import {
   MDBCol,
@@ -27,8 +25,9 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useState } from 'react';
-
-
+import { url } from '../api';
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
 
 export default function ProfilePage() {
 
@@ -38,82 +37,60 @@ export default function ProfilePage() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
     window.scrollTo(0, 0);
-}, [])
+  }, [])
 
-const getData = async () => {
+  const getData = async () => {
     setLoading(true);
     try {
-        const res = await axios.get(`${url}/api/handlecontact`, {
-            // headers: {
-            //     Authorization: admin.token,
-            //     'Content-Type': 'application/json',
-            // }
-        })
-        if (res.data.success) {
-            setData(res.data.data);
+      const res = await axios.get(`${url}/api/handlecontact`, {
+        headers: {
+          Authorization: admin.token,
+          'Content-Type': 'application/json',
         }
+      })
+      if (res.data.success) {
+        setData(res.data.data);
+      }
     }
+
+
     catch (err) {
-        // console.log(err);
-        if (err?.response?.data?.message) {
-            toast.error(err?.response?.data?.message);
-        }
+      // console.log(err);
+      if (err?.response?.data?.message) {
+        toast.error(err?.response?.data?.message);
+      }
     }
     setLoading(false);
-}
+  }
 
-
-useEffect(() => {
+  useEffect(() => {
     const getData = async () => {
-        setLoading(true);
-        try {
-            const res = await axios.get(`${url}/api/handlecontact`, {
-                // headers: {
-                //     Authorization: admin.token,
-                //     'Content-Type': 'application/json',
-                // }
-            })
-            if (res.data.success) {
-                setData(res.data.data);
-            }
+      setLoading(true);
+      try {
+        const res = await axios.get(`${url}/api/handlecontact`, {
+          headers: {
+            Authorization: admin.token,
+            'Content-Type': 'application/json',
+          }
+        })
+        if (res.data.success) {
+          setData(res.data.data);
         }
-        catch (err) {
-            // console.log(err);
-            if (err?.response?.data?.message) {
-                console.log(err?.response?.data?.message);
-            }
+      }
+      catch (err) {
+        // console.log(err);
+        if (err?.response?.data?.message) {
+          console.log(err?.response?.data?.message);
         }
-        setLoading(false);
+      }
+      setLoading(false);
     }
     getData();
-}, [admin.token])
+  }, [admin.token])
 
-// const deletebtn = async (id) => {
-//     try {
-//         const res = await axios.delete(`${url}/api/handlepartner/${id}`, {
-//             headers: {
-//                 Authorization: admin.token,
-//                 'Content-Type': 'application/json',
-//             }
-//         })
-//         if (res.data.success) {
-//             toast.success(res.data.message);
-//             getData();
-//         }
-//     }
-//     catch (err) {
-//         toast.error(err.response.data.message)
-//         // console.log(err);
-//     }
-// }
 
-// const formatCreatedAtDate = (createdAt) => {
-//     const createdAtDate = new Date(createdAt);
-//     return createdAtDate.toLocaleDateString();
-// };
 
 
 
@@ -141,32 +118,11 @@ useEffect(() => {
                   className="rounded-circle"
                   style={{ width: '150px' }}
                   fluid />
-                <p className="text-muted mb-1">Name:  {admin?.name}</p>
-                <p className="text-muted mb-4">Email: {admin?.emailId}</p>
+                <p className="text-muted mb-1">Full Stack Developer</p>
+                <p className="text-muted mb-4">Bay Area, San Francisco, CA</p>
                 <div className="d-flex justify-content-center mb-2">
-
-                {
-                                    data?.length > 0 ?
-                                        data?.map((item, index) => {
-                                            return (
-                                                <p key={item._id}>
-                                                    <p>{index + 1}</p>
-                                                    <p>{formatCreatedAtDate(item.createdAt)}</p>
-                                                    <p>name: {item.name}</p>
-                                                    <p>Email: {item.email}</p>
-                                                    <p>Mobile: {item.mobile}</p>
-                                                    <p>Company: {item.company}</p>
-                                                   
-                                                </p>
-                                            )
-                                        }) :
-                                        
-                                            <p>No Data found</p>
-                                        
-                                }
-
                   <MDBBtn>Follow</MDBBtn>
-                  <MDBBtn outline className="ms-1">email</MDBBtn>
+                  <MDBBtn outline className="ms-1">Message</MDBBtn>
                 </div>
               </MDBCardBody>
             </MDBCard>
@@ -178,10 +134,10 @@ useEffect(() => {
               <MDBCardBody className="w-full">
                 <MDBRow>
                   <MDBCol sm="3">
-                    <MDBCardText>{admin?.Name}</MDBCardText>
+                    <MDBCardText>Full Name</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">{admin?.emailId}</MDBCardText>
+                    <MDBCardText className="text-muted">Johnatan Smith</MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
@@ -190,7 +146,7 @@ useEffect(() => {
                     <MDBCardText>Email</MDBCardText>
                   </MDBCol>
                   <MDBCol sm="9">
-                    <MDBCardText className="text-muted">{admin?.emailId}</MDBCardText>
+                    <MDBCardText className="text-muted">example@example.com</MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />

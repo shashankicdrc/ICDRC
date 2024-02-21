@@ -1,13 +1,11 @@
-"use client";
-import { useEffect, useState } from 'react';
 
-import 'react-phone-number-input/style.css'
+import React, { useEffect } from 'react'
+import './globals.css';
+import { useState } from 'react';
+import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input'
 import { State, City } from 'country-state-city';
-import Loader from '../Loader/page';
 import axios from 'axios';
-import { url } from '../../app/api';
-import { toast } from 'react-hot-toast';
 
 const ComplainForm = () => {
     const [name, setName] = useState('');
@@ -22,10 +20,9 @@ const ComplainForm = () => {
     const [otherProblem, setOtherProblem] = useState('');
     const [problemDetails, setProblemDetails] = useState('');
 
-    const [mobile, setMobile] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [state, setState] = useState('');
     const [city, setCity] = useState('');
-    const [loading, setLoading] = useState(false);
     const country = "India";
 
     const [cityData, setCityData] = useState();
@@ -57,69 +54,36 @@ const ComplainForm = () => {
     // FORM SUBMIT HANDLER
     // const SubmitHandler = (e) => {
     //     e.preventDefault();
-    //     console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
+    //     console.log({ name, phoneNumber, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
     // }
-
-
-
-    function validateMobileNumber(number) {
-        const pattern = /^\+\d{1,3}\d{5,15}$/;
-        return pattern.test(number);
-    }
-
-    function validateEmailAddress(email) {
-        const pattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,6}$/;
-        return pattern.test(email);
-    }
-
-
     const SubmitHandler = async (e) => {
         e.preventDefault();
-    // console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
-
-        setLoading(true);
-        if (!validateMobileNumber(mobile)) {
-            toast.error("Enter valid mobile number");
-            return;
-        }
-
-        if (!validateEmailAddress(email)) {
-            toast.error("Enter valid email address");
-            return;
-        }
-
-        console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
-
-
+    
         try {
-            const res = await axios.post(`${url}/api/individualcomplaint`, {
-                name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany
-            })
-            if (res?.data?.success) {
-                setName('');
-                setEmail('');
-                setMobile('');
-                setAddress('');
-                setState('');
-                setCity('');
-                setLanguage('');
-                setPolicyType('');
-                setOtherPolicyType('');
-                setProblem('');
-                setOtherProblem('');
-                setProblemDetails('');
-                setPolicyCompany('');
-                setOtherPolicyCompany('');
-                toast.success(res.data.message)
-            }
+            // Make a request to your backend endpoint
+            const response = await axios.post('http://localhost:5000/api/handleindividualcomplaint', {
+                name,
+                phoneNumber,
+                email,
+                country,
+                state,
+                city,
+                address,
+                language,
+                policyCompany,
+                policyType,
+                problem,
+                problemDetails
+            });
+    
+            console.log(response.data); // Log the response from the backend
+    
+            // Add logic here to handle the response if needed (e.g., show a success message)
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            // Add logic here to handle errors (e.g., show an error message)
         }
-        catch (err) {
-            toast.error(err?.response?.data?.message);
-        }
-
-        setLoading(false);
-
-    }
+    };
 
 
     return (
@@ -158,10 +122,10 @@ const ComplainForm = () => {
                         countryCallingCodeEditable={false}
                         placeholder="Enter phone number"
                         defaultCountry='IN'
-                        value={mobile}
+                        value={phoneNumber}
                         maxLength={20}
                         required={true}
-                        onChange={setMobile}
+                        onChange={setPhoneNumber}
                         style={{ "padding": "0.5rem", "borderRadius": "0.375rem", "borderWidth": "1px", "borderColor": "#9ca3af", "boxShadow": "0 1px 2px 0 rgba(0, 0, 0, 0.05),", "color": "black" }}
                         className="w-11/12 shadow-sm text-gray-900 font-[Poppins] text-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600"
                     />
