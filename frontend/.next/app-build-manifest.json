@@ -28,6 +28,12 @@
       "static/chunks/main-app.js",
       "static/css/app/myprofile/page.css",
       "static/chunks/app/myprofile/page.js"
+    ],
+    "/refund_policy/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/refund_policy/page.css",
+      "static/chunks/app/refund_policy/page.js"
     ]
   }
 }

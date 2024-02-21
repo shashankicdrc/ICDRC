@@ -1,6 +1,6 @@
 {
   "/page": "app/page.js",
   "/login/page": "app/login/page.js",
-  "/not-found": "app/not-found.js",
+  "/refund_policy/page": "app/refund_policy/page.js",
   "/myprofile/page": "app/myprofile/page.js"
 }
