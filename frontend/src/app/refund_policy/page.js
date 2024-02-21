@@ -156,7 +156,7 @@ ICDRC operates under a unique business model that prioritizes client satisfactio
         data-aos="fade-up"
         data-aos-duration="1000"
       >
-        7. Clients have the option to cancel our appointment at any point. However, it's crucial to note that the zero percent refund policy remains applicable, and no refunds will be processed, irrespective of the stage of the case at the time of cancellation.
+        7. Clients have the no option to cancel our appointment. However, it's crucial to note that the zero percent refund policy remains applicable, and no refunds will be processed.
       </p>
       <p
         className="text-gray-700 font-medium text-md py-2  tracking-widest mx-auto px-8"
