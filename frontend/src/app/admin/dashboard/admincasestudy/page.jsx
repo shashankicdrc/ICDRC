@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import AdminNav from '../../components/navbar/page'
 import { useEffect } from 'react';
-import JoditEditor from 'jodit-react';
+// import JoditEditor from 'jodit-react';
 import { useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
@@ -185,11 +185,13 @@ const AdminCaseStudy = () => {
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="content">
                                 Content
                             </label>
+                            {/* 
                             <JoditEditor
                                 ref={editor}
                                 value={content}
                                 onChange={newContent => setContent(newContent)}
                             />
+                            */}
                         </div>
 
                         <div className="flex items-center justify-between">
