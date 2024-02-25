@@ -1,14 +1,14 @@
 version: '3'
 services:
   frontend:
-    image: abhishekdev45/icdrc-client:latest
+    image: techwebdesys/icdrc-client:latest
     ports:
       - "3000:3000"
     depends_on:
       - backend
 
   backend:
-    image: abhishekdev45/icdrc-server:latest
+    image: techwebdesys/icdrc-server:latest
     ports:
       - "5000:5000"
     environment:
