@@ -1,7 +1,7 @@
 
 
 import { Tab } from '@headlessui/react';
-// import OrganizationComplainForm from './org';
+import OrganizationComplainForm from './org';
 // import ComplainForm from './page';
 
 
@@ -46,7 +46,7 @@ export default function TabSection() {
                         {/* <ComplainForm /> */}
                     </Tab.Panel>
                     <Tab.Panel>
-                        {/* <OrganizationComplainForm /> */}
+                        <OrganizationComplainForm />
                     </Tab.Panel>
                 </Tab.Panels>
             </Tab.Group>

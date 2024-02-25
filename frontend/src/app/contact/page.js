@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from 'react';
-// import Head from 'next/head';
+import Head from 'next/head';
 import Link from 'next/link';
 import HomeNav from '../../components/Navbar/page';
 import Home7Contact from '../../components/HomeComponents/Home7Contact';
@@ -74,8 +74,8 @@ const Contact = () => {
 
     return (
         <div className=''>
-            {/* <SocialIcons />
-            <HomeNav /> */}
+            <SocialIcons />
+            <HomeNav />
 
             {/* <Helmet>
         <meta charSet="utf-8" />
@@ -185,7 +185,7 @@ const Contact = () => {
                 </div>
             </div>
 
-            {/* <Home7Contact /> */}
+            <Home7Contact />
 
             <Footer />
 

@@ -13,24 +13,23 @@ const Button = () => {
   const router = useRouter();
   const admin = useSelector((state) => state.admin);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    if (admin._id) {
-        router.push('/myprofile')
-        setIsLoggedIn(true);
-    }
-}, [router, admin])
+  
 
 
-  const handleLogout = () => {
-    // Logic for logging out
-    setIsLoggedIn(false);
-  };
+  // const handleLogout = () => {
+  //   // Logic for logging out
+  //   setIsLoggedIn(false);
+  // };
 
   const handleLogin = () => {
-    // Logic for logging in
-    setIsLoggedIn(true);
+    useEffect(() => {
+      if (admin._id) {
+          router.push('/myprofile')
+          setIsLoggedIn(true);
+      }
+  }, [router, admin])
   };
 
 
@@ -45,9 +44,9 @@ const Button = () => {
     </Link>
 
 
-    <Link href="/login" className="max-w-max rounded-md hover:to-blue-600 bg-orange-500 px-3.5 py-1 flex justify-center items-center m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-orange-500 text-indigo-600 hover:text-white" onClick={isLoggedIn ? handleLogout : handleLogin} >
+    <Link href="/login" className="max-w-max rounded-md hover:to-blue-600 bg-orange-500 px-3.5 py-1 flex justify-center items-center m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-orange-500 text-indigo-600 hover:text-white" onClick={handleLogin} >
       <span className="absolute w-64 h-0 transition-all duration-500 origin-center rotate-45 -translate-x-20 bg-orange-500 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
-      <span className="relative text-white  transition duration-300 group-hover:text-white ease"> {isLoggedIn ? 'Logout' : 'Login'}</span>
+      <span className="relative text-white  transition duration-300 group-hover:text-white ease">Login</span>
     </Link>
   
       

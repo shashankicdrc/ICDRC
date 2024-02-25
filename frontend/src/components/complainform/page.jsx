@@ -1,34 +1,40 @@
+"use client";
+import { useEffect, useState } from 'react';
 
-import React, { useEffect } from 'react'
-import './globals.css';
-import { useState } from 'react';
-import 'react-phone-number-input/style.css';
+import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { State, City } from 'country-state-city';
+import Loader from '../Loader/page';
 import axios from 'axios';
+import { url } from '../../app/api';
+import { toast } from 'react-hot-toast';
 
 const ComplainForm = () => {
     const [name, setName] = useState('');
+    const [mobile, setMobile] = useState('');
     const [email, setEmail] = useState('');
+    const country = "India";
+    const [state, setState] = useState('');
+    const [city, setCity] = useState('');
     const [address, setAddress] = useState('');
     const [language, setLanguage] = useState('');
     const [policyCompany, setPolicyCompany] = useState('');
-    const [otherPolicyCompany, setOtherPolicyCompany] = useState('');
     const [policyType, setPolicyType] = useState('');
     const [otherPolicyType, setOtherPolicyType] = useState('');
     const [problem, setProblem] = useState('');
-    const [otherProblem, setOtherProblem] = useState('');
     const [problemDetails, setProblemDetails] = useState('');
 
-    const [phoneNumber, setPhoneNumber] = useState('');
-    const [state, setState] = useState('');
-    const [city, setCity] = useState('');
-    const country = "India";
+    const [otherPolicyCompany, setOtherPolicyCompany] = useState('');
+    const [otherProblem, setOtherProblem] = useState('');
+    
+    const [loading, setLoading] = useState(false);
+    
 
     const [cityData, setCityData] = useState();
 
     const states = State.getStatesOfCountry('IN')
-
+   
+      
     useEffect(() => {
         if (state?.length > 1) {
             let data = states.find(s => s.name === state);
@@ -54,36 +60,69 @@ const ComplainForm = () => {
     // FORM SUBMIT HANDLER
     // const SubmitHandler = (e) => {
     //     e.preventDefault();
-    //     console.log({ name, phoneNumber, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
+    //     console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
     // }
+
+
+
+    function validateMobileNumber(number) {
+        const pattern = /^\+\d{1,3}\d{5,15}$/;
+        return pattern.test(number);
+    }
+
+    function validateEmailAddress(email) {
+        const pattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,6}$/;
+        return pattern.test(email);
+    }
+
+
     const SubmitHandler = async (e) => {
         e.preventDefault();
-    
-        try {
-            // Make a request to your backend endpoint
-            const response = await axios.post('http://localhost:5000/api/handleindividualcomplaint', {
-                name,
-                phoneNumber,
-                email,
-                country,
-                state,
-                city,
-                address,
-                language,
-                policyCompany,
-                policyType,
-                problem,
-                problemDetails
-            });
-    
-            console.log(response.data); // Log the response from the backend
-    
-            // Add logic here to handle the response if needed (e.g., show a success message)
-        } catch (error) {
-            console.error('Error submitting form:', error);
-            // Add logic here to handle errors (e.g., show an error message)
+    // console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
+
+        setLoading(true);
+        if (!validateMobileNumber(mobile)) {
+            toast.error("Enter valid mobile number");
+            return;
         }
-    };
+
+        if (!validateEmailAddress(email)) {
+            toast.error("Enter valid email address");
+            return;
+        }
+
+        console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
+
+
+        try {
+            const res = await axios.post(`${url}/api/individualcomplaint`, {
+                name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany
+            })
+            if (res?.data?.success) {
+                setName('');
+                setEmail('');
+                setMobile('');
+                setAddress('');
+                setState('');
+                setCity('');
+                setLanguage('');
+                setPolicyType('');
+                setOtherPolicyType('');
+                setProblem('');
+                setOtherProblem('');
+                setProblemDetails('');
+                setPolicyCompany('');
+                setOtherPolicyCompany('');
+                toast.success(res.data.message)
+            }
+        }
+        catch (err) {
+            toast.error(err?.response?.data?.message);
+        }
+
+        setLoading(false);
+
+    }
 
 
     return (
@@ -122,10 +161,10 @@ const ComplainForm = () => {
                         countryCallingCodeEditable={false}
                         placeholder="Enter phone number"
                         defaultCountry='IN'
-                        value={phoneNumber}
+                        value={mobile}
                         maxLength={20}
                         required={true}
-                        onChange={setPhoneNumber}
+                        onChange={setMobile}
                         style={{ "padding": "0.5rem", "borderRadius": "0.375rem", "borderWidth": "1px", "borderColor": "#9ca3af", "boxShadow": "0 1px 2px 0 rgba(0, 0, 0, 0.05),", "color": "black" }}
                         className="w-11/12 shadow-sm text-gray-900 font-[Poppins] text-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600"
                     />
@@ -278,32 +317,7 @@ const ComplainForm = () => {
                         </select>
                     </label>
 
-                    {/* other policy company */}
-                    {
-                        policyCompany === "Other" &&
 
-                        <label
-                            htmlFor="otherPolicyCompany"
-                            className="p-2 relative block rounded-md border border-gray-400 shadow-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600 w-11/12"
-                        >
-                            <input
-                                type="text"
-                                id="otherPolicyCompany"
-                                className="peer border-none outline-none bg-white rounded px-1 placeholder-transparent focus:border-white focus:outline-none focus:ring-0 w-full text-gray-900 font-[Poppins] text-sm"
-                                placeholder="Policy Company"
-                                value={otherPolicyCompany}
-                                maxLength={200}
-                                required={true}
-                                onChange={(e) => setOtherPolicyCompany(e.target.value)}
-                            />
-
-                            <span
-                                className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-900 font-[Poppins] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs"
-                            >
-                                Policy Company
-                            </span>
-                        </label>
-                    }
 
                     {/* Policy Type */}
                     <label
@@ -330,32 +344,8 @@ const ComplainForm = () => {
                         </select>
                     </label>
 
-                    {/* Other Policy Type */}
-                    {
-                        policyType === "Other" &&
-
-                        <label
-                            htmlFor="otherpolicyType"
-                            className="p-2 relative block rounded-md border border-gray-400 shadow-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600 w-11/12"
-                        >
-                            <input
-                                type="text"
-                                id="otherpolicyType"
-                                className="peer border-none outline-none bg-white rounded px-1 placeholder-transparent focus:border-white focus:outline-none focus:ring-0 w-full text-gray-900 font-[Poppins] text-sm"
-                                placeholder="Policy Type"
-                                value={otherPolicyType}
-                                maxLength={200}
-                                required={true}
-                                onChange={(e) => setOtherPolicyType(e.target.value)}
-                            />
-
-                            <span
-                                className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-900 font-[Poppins] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs"
-                            >
-                                Policy Type
-                            </span>
-                        </label>
-                    }
+                    
+                    
 
                     {/* Select Your Problem */}
                     <label
@@ -379,33 +369,7 @@ const ComplainForm = () => {
                         </select>
                     </label>
 
-                    {/* Other Problem */}
-                    {
-                        problem === "Other" &&
-
-                        <label
-                            htmlFor="otherProblem"
-                            className="p-2 relative block rounded-md border border-gray-400 shadow-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600 w-11/12"
-                        >
-                            <input
-                                type="text"
-                                id="otherProblem"
-                                className="peer border-none outline-none bg-white rounded px-1 placeholder-transparent focus:border-white focus:outline-none focus:ring-0 w-full text-gray-900 font-[Poppins] text-sm"
-                                placeholder="Enter Your Problem"
-                                value={otherProblem}
-                                maxLength={500}
-                                required={true}
-                                onChange={(e) => setOtherProblem(e.target.value)}
-                            />
-
-                            <span
-                                className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-900 font-[Poppins] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs"
-                            >
-                                Enter Your Problem
-                            </span>
-                        </label>
-                    }
-
+                   
                     {/* Problem in Detail textbox */}
                     <textarea
                         type="text"

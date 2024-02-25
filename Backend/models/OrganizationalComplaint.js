@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const schema = new mongoose.Schema({
     organization_name: {
         type: String,
-        required: [true, "Name is required"],
+        required: [true, " organization_name is required"],
     },
     phoneNumber: {
         type: String,
@@ -15,13 +15,25 @@ const schema = new mongoose.Schema({
         required: [true, "Email Id is required"],
         unique: [true, "Email Id already exists"]
     },
+    country: {
+        type: String,
+        required: [true, "country is required"],
+    },
     state: {
         type: String,
         required: [true, "state is required"],
     },
+    city: {
+        type: String,
+        required: [true, "city is required"],
+    },
     address: {
         type: String,
         required: [true, "address is required"],
+    },
+    language: {
+        type: String,
+        required: [true, "state is required"],
     },
     policy_company: {
         type: String,
@@ -43,6 +55,6 @@ const schema = new mongoose.Schema({
 }, { timestamps: true });
 mongoose.models = {};
 
-const organizationComplaint = mongoose.model('organizationComplaints', schema)
+const OrganizationalComplaint = mongoose.model('OrganizationComplaints', schema)
 
-module.exports = organizationComplaint;
+module.exports = {OrganizationalComplaint};
