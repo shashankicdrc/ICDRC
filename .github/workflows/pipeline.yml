@@ -40,15 +40,15 @@ jobs:
       - name: Build Client Docker Image
         working-directory: ./frontend
         run: |
-          docker build -t abhishekdev45/icdrc-client:latest .
-          docker push abhishekdev45/icdrc-client:latest 
+          docker build -t techwebdesys/icdrc-client:latest .
+          docker push techwebdesys/icdrc-client:latest 
 
       # Build a Docker image for the server application
       - name: Build Server Docker Image
         working-directory: ./backend
         run: |
-           docker build -t abhishekdev45/icdrc-server:latest .
-           docker push abhishekdev45/icdrc-server:latest
+           docker build -t techwebdesys/icdrc-server:latest .
+           docker push techwebdesys/icdrc-server:latest
 
       # SSH into server and deploy with Docker Compose
       - name: Deploy on VPS
