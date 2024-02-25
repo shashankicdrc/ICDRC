@@ -1,25 +1,16 @@
 version: '3'
 services:
-  
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: abhishekdev45/icdrc-client:latest
     ports:
-     - "3000:3000"
+      - "3000:3000"
     depends_on:
-     - backend 
+      - backend
 
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: abhishekdev45/icdrc-server:latest
     ports:
       - "5000:5000"
     environment:
       - MONGO_URL=${MONGO_URL}
       - JWT_SECRET=${JWT_SECRET}
-    
-
-  
-
