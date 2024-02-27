@@ -3,14 +3,14 @@ services:
   frontend:
     image: techwebdesys/icdrc-client:master
     ports:
-      - "3001:3000"
+      - "3000:3000"
     depends_on:
       - backend
 
   backend:
     image: techwebdesys/icdrc-server:master
     ports:
-      - "5001:5000"
+      - "5000:5000"
     environment:
       - MONGO_URL=${MONGO_URL}
       - JWT_SECRET=${JWT_SECRET}
