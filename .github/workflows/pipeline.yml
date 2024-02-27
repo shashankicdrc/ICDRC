@@ -40,15 +40,15 @@ jobs:
       - name: Build Client Docker Image
         working-directory: ./frontend
         run: |
-          docker build -t techwebdesys/icdrc-client:latest .
-          docker push techwebdesys/icdrc-client:latest 
+          docker build -t techwebdesys/icdrc-client:master .
+          docker push techwebdesys/icdrc-client:master 
 
       # Build a Docker image for the server application
       - name: Build Server Docker Image
         working-directory: ./backend
         run: |
-           docker build -t techwebdesys/icdrc-server:latest .
-           docker push techwebdesys/icdrc-server:latest
+           docker build -t techwebdesys/icdrc-server:master .
+           docker push techwebdesys/icdrc-server:master
 
       # SSH into server and deploy with Docker Compose
       - name: Deploy on VPS
@@ -59,7 +59,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             ssh-keyscan -H ${{ secrets.HOST }} >> ~/.ssh/known_hosts
-            cd /var/www/ICDRC/
+            cd /var/www/ICDRC/icdrc_master
             docker-compose down
             docker-compose pull
             docker-compose up -d
