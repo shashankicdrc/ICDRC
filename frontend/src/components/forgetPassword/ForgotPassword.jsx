@@ -120,7 +120,7 @@ const ForgotPassword = () => {
                                                 Enter Your Email Id
                                             </p>
                                             <div className='mb-4 flex flex-col'>
-                                                <input onChange={(e) => setEmail(e.target.value)} autoComplete="email" value={email} name="email" type="email" className='text-sm border-2 border-orange-500 outline-none focus:outline-none rounded-md py-2 px-3 font-[Roboto] tracking-wide mt-1' />
+                                                <input onChange={(e) => setEmail(e.target.value)} autoComplete="email" value={email} name="email" type="email" className='text-sm border-2 border-green-500 outline-none focus:outline-none rounded-md py-2 px-3 font-[Roboto] tracking-wide mt-1' />
                                             </div>
                                             <div className='flex justify-center items-center'>
                                                 <Button isLoading={loading} isDisabled={loading} colorScheme="blue" size="sm" onClick={sendCode}>
@@ -183,7 +183,11 @@ const ForgotPassword = () => {
                         </div>
                     </ModalBody>
                     <ModalFooter>
-                        
+                        <Button colorScheme="red" size="sm" onClick={onClose}>
+                            <p className='font-[Poppins] font-[400] tracking-wider'
+                            >
+                                Close</p>
+                        </Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal>

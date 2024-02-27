@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const schema = new mongoose.Schema({
-    organization_name: {
+    name: {
         type: String,
         required: [true, "Name is required"],
     },
@@ -40,9 +40,10 @@ const schema = new mongoose.Schema({
         required: [true, "problem_detail is required"],
     }
     
+    
 }, { timestamps: true });
 mongoose.models = {};
 
-const organizationComplaint = mongoose.model('organizationComplaints', schema)
+const model = mongoose.model('users', schema)
 
-module.exports = organizationComplaint;
+module.exports = model;

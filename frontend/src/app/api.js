@@ -1,5 +1,6 @@
-export const url = 'http://localhost:5000'
-
+// export const url = 'http://localhost:5000'
+export const url = 'http://193.203.162.161:4007'
+// export const url = 'https://www.backend.webdesys.com'
 
 
 

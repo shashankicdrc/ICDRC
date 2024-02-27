@@ -4,20 +4,20 @@ const schema = new mongoose.Schema({
         type: String,
         required: [true, "Name is required"],
     },
-    mobile: {
+    phoneNumber: {
         type: String,
-        required: [true, "mobile is required"],
-        unique: [true, "mobile already exists"]
+        required: [true, "Phone number is required"],
+        unique: [true, "Phone number already exists"]
        
     },
-    email: {
+    emailId: {
         type: String,
         required: [true, "Email Id is required"],
         unique: [true, "Email Id already exists"]
     },
     country: {
         type: String,
-        required: [true, "country is required"],
+        required: [true, "state is required"],
     },
     state: {
         type: String,
@@ -25,7 +25,7 @@ const schema = new mongoose.Schema({
     },
     city: {
         type: String,
-        required: [true, "city is required"],
+        required: [true, "state is required"],
     },
     address: {
         type: String,
@@ -35,11 +35,11 @@ const schema = new mongoose.Schema({
         type: String,
         required: [true, "state is required"],
     },
-    policyCompany: {
+    policy_company: {
         type: String,
         required: [true, "policy_company is required"],
     },
-    policyType: {
+    policy_type: {
         type: String,
         required: [true, "policy_type is required"],
     },
@@ -47,7 +47,7 @@ const schema = new mongoose.Schema({
         type: String,
         required: [true, "problem is required"],
     },
-    problemDetails: {
+    problem_detail: {
         type: String,
         required: [true, "problem_detail is required"],
     }
@@ -58,4 +58,4 @@ mongoose.models = {};
 
 const IndividualComplaint = mongoose.model('IndividualComplaints', schema)
 
-module.exports = {IndividualComplaint};
+module.exports = IndividualComplaint;

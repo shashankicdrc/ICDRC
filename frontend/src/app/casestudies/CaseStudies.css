@@ -1,8 +1,6 @@
 .content_div {
     -ms-overflow-style: none;
     overflow: -moz-scrollbars-none;
-    font-size: 17px;
-    align-content: flex-start;
 }
 
 .content_div {
@@ -15,4 +13,4 @@
 .content_div::-webkit-scrollbar {
     display: none;
     /* Safari and Chrome */
-} 
+}

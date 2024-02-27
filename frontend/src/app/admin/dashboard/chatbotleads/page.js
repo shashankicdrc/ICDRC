@@ -18,7 +18,7 @@ import {
     Td,
     TableContainer,
 } from '@chakra-ui/react';
-import PageLoader from '../../components/pageloader/page';
+// import PageLoader from '../../adminComponents/PageLoader/PageLoader';
 
 const ChatBotLeads = () => {
 

@@ -3,28 +3,21 @@ import { Suspense } from "react";
 import PageLoader from "../components/pageloader/page";
 
 import { Providers } from "./Providers";
-import { store } from "../features/store";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { ChakraProvider } from "@chakra-ui/react";
-
+import {store} from '../features/store';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 export const metadata = {
-  title: "ICDRC-One Stop Solution For Insurance Claim Dispute",
+  title: "ICDRC: ",
   description: "One Stop Solution For Insurance Claim Dispute",
 };
 
 export default function RootLayout({ children }) {
   return (
+    
     <Providers store={store}>
       <html lang="en">
         <body>
-          <main>
-            <Suspense fallback={<PageLoader />}>
-              
-             <ChakraProvider>{children}</ChakraProvider> 
-              
-              </Suspense>
-          </main>
+          <Suspense fallback={<PageLoader />}>{children}</Suspense>
         </body>
       </html>
     </Providers>

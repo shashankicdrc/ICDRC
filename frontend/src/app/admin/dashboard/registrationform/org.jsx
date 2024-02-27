@@ -42,7 +42,7 @@ const ContactMessages = () => {
   const getData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${url}/api/individualcomplaint`, {
+      const res = await axios.get(`${url}/api/handlecontact`, {
         headers: {
           Authorization: admin.token,
           'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const ContactMessages = () => {
     const getData = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${url}/api/individualcomplaint`, {
+        const res = await axios.get(`${url}/api/handlecontact`, {
           headers: {
             Authorization: admin.token,
             'Content-Type': 'application/json',
@@ -89,7 +89,7 @@ const ContactMessages = () => {
 
   const deletebtn = async (id) => {
     try {
-      const res = await axios.delete(`${url}/api/individualcomplaint${id}`, {
+      const res = await axios.delete(`${url}/api/handlecontact/${id}`, {
         headers: {
           Authorization: admin.token,
           'Content-Type': 'application/json',
