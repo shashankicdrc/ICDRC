@@ -1,4 +1,3 @@
-
 "use client";
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,7 +13,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 // import { Helmet } from 'react-helmet';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import jwtDecode from "jwt-decode";
-import { loginAdmin } from '../../features/AdminSlice';
+import { loginUser } from '../../features/UserSlice';
 import ForgotPassword from '@/components/forgetPassword/ForgotPassword';
 
 const Login = () => {
@@ -24,14 +23,15 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const router = useRouter();
-    const admin = useSelector((state) => state.admin);
+    const user = useSelector((state) => state.user);
 
 
     useEffect(() => {
-      if (admin._id) {
+      if (user?._id) {
+        console.log(user)
           router.push('/myprofile')
       }
-  }, [router, admin])
+  }, [router, user])
 
   useEffect(() => {
       window.scrollTo(0, 0);
@@ -42,7 +42,7 @@ const Login = () => {
       setLoading(true);
       let user = { email, password };
       console.log(user);
-      dispatch(loginAdmin(user)).then(() => {
+      dispatch(loginUser(user)).then(() => {
           setLoading(false);
       });
   }
