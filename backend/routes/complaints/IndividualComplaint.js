@@ -1,84 +1,78 @@
-const express = require('express');
-const { asyncError } = require('../../middlewares/error');
-const IndividualComplaint = require('..//..//models/IndividualComplaint');
-const verifyToken = require('../../utils/verifyToken');
+const express = require("express");
+const {IndividualComplaint} = require("..//..//models/IndividualComplaint")
+const Individualrouter = express.Router();
 var nodemailer = require('nodemailer');
 
-const router = express.Router();
-
 const policyTypeToEmail = {
-    'Life Insurance': 'lifeinsurance@icdrc.in',
-    'Health Insurance': 'kartikey9949@gmail.com',
-   
+  'Life Insurance': 'lifeinsurance@icdrc.in',
+  'Health Insurance': 'kartikey090803@gmail.com',
+  "Motor Insurance": "motorinsurance@icdrc.in",
+  "Travel Insurance": "travelinsurance@icdrc.in",
+  "Agriculture Insurance": "agricultureinsurance@icdrc.in",
+  "File Insurance": "fileinsurance@icdrc.in",
+  "Marine Insurance": "marineinsurance@icdrc.in",
+  "Liability Insurance": "liabilityinsurance@icdrc.in",
+  "Cyber Insurance": "cyberinsurance@icdrc.in",
+  "Personal Accident Insurance": "personalaccidentinsurance@icdrc.in",
+  "Property Insurance": "propertyinsurance@icdrc.in",
 };
 
+var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'kartikey.chaudhary.webdesys@gmail.com',
+    pass: 'pulz gygf jlct ragt'
+  }
+});
 
-
-// var transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: 'kartikey.chaudhary.webdesys@gmail.com',
-//     pass: 'pulz gygf jlct ragt'
-//   }
-// });
-
-// create Complaint 
-router.post('/', asyncError(async (req, res) => {
-
-    // Token Verification
-    const token = req.headers.authorization;
-    if (!token) {
-        return res.status(400).json({ success: false, message: "No token provided" });
-    }
-    let user = verifyToken(token);
-    if (!user.success) {
-        return res.status(400).json({ success: false, message: user.message });
-    }
-
-    let { name, phoneNumber, emailId, state, address, policy_company, policy_type, problem, problem_detail } = req.body;
-    if (!name || !phoneNumber || !emailId || !state || !address || !policy_company || !policy_type || !problem || !problem_detail  ) {
-        return res.status(400).json({ success: false, message: "Please Enter all fields." })
-    }
-
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'kartikey.chaudhary.webdesys@gmail.com',
-          pass: 'pulz gygf jlct ragt'
-        }
+Individualrouter.post("/", async (req, res) => {
+  console.log("123");
+  const { name, mobile, email, country, state,city, address,language, policyCompany, policyType, problem, problemDetails } = req.body;
+  
+  {
+     
+    try {
+      let user = await IndividualComplaint.create({ name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails });
+      res.send({
+          message: "User conplaint created",
+          status: 1,
       });
-    await IndividualComplaint.create({ name, phoneNumber, emailId, state, address, policy_company, policy_type, problem, problem_detail });
 
-    // Send email based on policy type
-    const emailRecipient = policyTypeToEmail[policy_type];
-    if (emailRecipient) {
+      let emailRecipient = email;
+        if (!policyTypeToEmail[email]) {
+          emailRecipient = policyTypeToEmail[policyType];
+        }
+
+      if (emailRecipient) {
         const mailOptions = {
             from: 'kartikey.chaudhary.webdesys@gmail.com',
             to: emailRecipient,
-            subject: 'New Individual Complaint',
-            text: `A new individual complaint has been submitted. Details: ${JSON.stringify(req.body)}`,
+            subject: ' New Individual Complaint Register ',
+            text: `A new individual complaint has been submitted.` ,
+            text : `Details: ${JSON.stringify(req.body)}`,
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
+              console.log("1234");
                 console.error('Error sending email:', error);
             } else {
                 console.log('Email sent:', info.response);
             }
         });
     }
+} 
+    catch (error) {
+      console.log("12345");
+      res.send({
+       
+        message: error.message,
+        status: 0,
+      });
+    }
+  };
+});
 
-    res.status(201).json({
-        success: true,
-        message: 'Individual complain Added',
-    });
-}))
+module.exports = { Individualrouter };
 
-// get all  complaint 
-router.get('/', asyncError(async (req, res) => {
-    const individualComplaint = await IndividualComplaint.find({}).select('-content');
-    individualComplaint.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    return res.status(200).json({ success: true, data: individualComplaint });
-}))
 
-module.exports = router;

@@ -8,6 +8,7 @@ import SocialIcons from '../../components/SocialIcons/page';
 import { useSelector } from 'react-redux';
 
 
+
 const Blogs = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -39,7 +40,8 @@ const Blogs = () => {
                         blogs.data?.length > 0 ?
                             blogs.data.map((item) => (
                                 <div key={item._id} className="overflow-hidden border-2 border-orange-500 transition-shadow duration-300 bg-white rounded-2xl shadow-lg px-4 py-3" data-aos="zoom-in" data-aos-duration="1000">
-                                    <Link href={`/blogs/${item._id}`} aria-label="Article">
+                                    <Link href={`/blogs/${item._id}`} aria-label="Article" >
+                                       
                                         <img
                                             src={item.image}
                                             className="object-cover w-full h-40 md:h-60 rounded-2xl"
@@ -50,7 +52,7 @@ const Blogs = () => {
                                         <Link href={`/blogs/${item._id}`} aria-label="Article">
                                             <p className="text-2xl font-semibold font-[Poppins] text-orange-600">{item.name}</p>
 
-                                            <p className="mb-4 text-gray-900 text-xl font-[Caveat]">
+                                            <p className="mb-4 text-gray-900 text-m font-[Poppins]">
                                                 {item.desc}
                                             </p>
                                         </Link>

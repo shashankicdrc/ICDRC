@@ -1,6 +1,6 @@
-"use client";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+'use client'
+import React, { useEffect } from 'react'
+import { useSelector } from 'react-redux';
 import HomeNav from "../../components/Navbar/page";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,18 +8,18 @@ import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
 import ShowStatus from "../casestatus/ShowStatus";
-import Profile from "./uploadfile";
+import Profile from "./profile";
 import UploadDoc from '../../components/uploaddoc/page';
 
 const myprofile = () => {
   const router = useRouter();
-  const admin = useSelector((state) => state.admin);
+  const user = useSelector((state) => state.user);
 
-  // useEffect(() => {
-  //     if (!admin._id) {
-  //         router.push('/login')
-  //     }
-  // }, [router, admin])
+  useEffect(() => {
+      if (!user._id) {
+          router.push('/login')
+      }
+  }, [router, user])
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -98,7 +98,7 @@ const myprofile = () => {
 
       <div className="flex flex-col justify-center md:flex-row">
   {/* Left Column */}
-  <div className="order-2 md:order-1 md:w-full md:p-8">
+  <div className="order-1 md:order-1 md:w-full md:p-8">
     {/* User Details */}
      
      <Profile />
@@ -107,7 +107,8 @@ const myprofile = () => {
     <UploadDoc />
   </div>
   {/* Right Column */}
-  <div className="order-1 md:order-2 md:w-full md:p-8">
+  <div className="order-2 md:order-2 md:w-full md:p-8">
+  
   <ShowStatus />
     
   </div>

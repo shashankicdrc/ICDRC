@@ -39,7 +39,7 @@ const UploadDocuments = () => {
 
       {/* Section for displaying uploaded documents */}
       <div>
-        <h3 className="text-2xl text-orange-400 font-bold m-4 mt-10 p-3  mb-2">Uploaded Documents</h3>
+        <h3 className="text-2xl text-orange-400 font-bold mt-4  mb-2">Sellected Documents</h3>
         <ul>
           {uploadedFiles.map(file => (
             <li key={file.id} className="flex justify-between items-center py-2 border-b border-gray-300">
@@ -75,7 +75,7 @@ const UploadDocuments = () => {
 
 <div className="max-w-3xl mx-auto p-8 text-orange-400 m-4 mt-10  bg-white rounded-lg shadow-lg">
 <div>
-        <h3 className="text-2xl text-orange-400 font-bold m-4 p-3  mb-2">Uploaded Documents</h3>
+        <h3 className="text-2xl text-orange-400 font-bold  mb-2">Submitted Documents</h3>
         <ul>
           {uploadedFiles.map(file => (
             <li key={file.id} className="flex justify-between items-center py-2 border-b border-gray-300">

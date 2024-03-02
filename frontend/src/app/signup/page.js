@@ -1,15 +1,67 @@
-'use client';
-import React, { useEffect } from 'react'
+"use client";
+import { useEffect, useState } from 'react';
 import Footer from '../../components/footer/page';
 import HomeNav from '../../components/Navbar/page';
 import Link from 'next/link';
 import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import SocialIcons from '../../components/SocialIcons/page';
+import { axios } from 'axios';
+import { url } from '../api';
 
 const Signup = () => {
+
+
+
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
+
+
+    function validateEmailAddress(email) {
+        const pattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,6}$/;
+        return pattern.test(email);
+    }
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        
+        if (!validateEmailAddress(email)) {
+            toast.error("Enter valid email address");
+            return;
+        }
+
+        console.log({ name, email, password });
+
+        try {
+            const res = await axios.post(`${url}/api/handlecontact`, {
+                name, email, password
+            })
+            if (res?.data?.success) {
+                setName('');
+                setEmail('');
+                setPassword('');
+                
+                toast.success(res.data.message)
+            }
+        }
+        catch (err) {
+            toast.error(err?.response?.data?.message);
+        }
+
+        setLoading(false);
+
+    }
+
+
+
     return (
         <div className='overflow-hidden'>
             <SocialIcons />
@@ -28,19 +80,19 @@ const Signup = () => {
                             <div className="mt-5" data-aos="fade-up" data-aos-duration="1000">
                                 <form>
                                     <div className="relative mt-6">
-                                        <input type="name" name="name" id="name" placeholder="Name" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autoComplete="NA" />
+                                        <input type="name" name="name" id="name" placeholder="Name" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autoComplete="NA" value={name} onChange={(e) => setName(e.target.value)} required={true} />
                                         <label htmlFor="name" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Name</label>
                                     </div>
                                     <div className="relative mt-6">
-                                        <input type="email" name="email" id="email" placeholder="Email Address" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autoComplete="NA" />
+                                        <input type="email" name="email" id="email" placeholder="Email Address" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autoComplete="NA" value={email} onChange={(e) => setEmail(e.target.value)} required={true}/>
                                         <label htmlFor="email" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Email Address</label>
                                     </div>
                                     <div className="relative mt-6">
-                                        <input type="password" name="password" id="password" placeholder="Password" className="peer peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" />
+                                        <input type="password" name="password" id="password" placeholder="Password" className="peer peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" value={password} onChange={(e) => setPassword(e.target.value)} required={true} />
                                         <label htmlFor="password" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Password</label>
                                     </div>
                                     <div className="my-6">
-                                        <button type="submit" className="w-full rounded-md bg-orange-500 px-3 py-4 text-white focus:bg-orange-700 focus:outline-none">Sign up</button>
+                                        <button type="submit" onSubmit={handleSubmit} className="w-full rounded-md bg-orange-500 px-3 py-4 text-white focus:bg-orange-700 focus:outline-none">Sign up</button>
                                     </div>
 
                                     <p className="text-center text-sm text-gray-700" data-aos="fade-up" data-aos-duration="1000">Already have an account? 
