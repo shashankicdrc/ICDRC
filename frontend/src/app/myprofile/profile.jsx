@@ -1,7 +1,7 @@
 "use client";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-import Navbar from "../../components/navbar/page";
+// import Navbar from "../../components/Navbar/page";
 import { useEffect } from "react";
 import { useState } from "react";
 import { url } from "../api";

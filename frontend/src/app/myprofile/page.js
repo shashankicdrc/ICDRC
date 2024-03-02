@@ -13,13 +13,13 @@ import UploadDoc from '../../components/uploaddoc/page';
 
 const myprofile = () => {
   const router = useRouter();
-  const admin = useSelector((state) => state.admin);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
-      if (!admin._id) {
+      if (!user._id) {
           router.push('/login')
       }
-  }, [router, admin])
+  }, [router, user])
 
   useEffect(() => {
     window.scrollTo(0, 0);

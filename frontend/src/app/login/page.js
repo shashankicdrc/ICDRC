@@ -14,7 +14,7 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 import jwtDecode from "jwt-decode";
 import { loginUser } from '../../features/UserSlice';
-import ForgotPassword from '@/components/forgetPassword/ForgotPassword';
+import ForgotPassword from '../../components/forgetPassword/ForgotPassword';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -27,7 +27,7 @@ const Login = () => {
 
 
     useEffect(() => {
-      if (user?._id) {
+      if (user._id) {
         console.log(user)
           router.push('/myprofile')
       }
