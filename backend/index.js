@@ -14,7 +14,10 @@ const newsletter = require('./routes/newsletter/newsletter')
 const blogs = require('./routes/blogs/blogs')
 const caseStudy = require('./routes/caseStudy/caseStudy')
 const Media = require('./routes/Media/Media')
-const individualComplaint = require('./routes/complaints/IndividualComplaint');
+const registerUser =require("./routes/auth/registerUser")
+const loginUser =require("./routes/auth/loginUser")
+const {Individualrouter} = require("./routes/complaints/IndividualComplaint");
+const {Organizationalrouter} = require("./routes/complaints/OrganizationalComplaint");
 
 //  Initializing app
 const app = express();
@@ -49,8 +52,15 @@ app.use('/api/handleblogs', blogs)
 app.use('/api/handlecasestudy', caseStudy)
 // handle media
 app.use('/api/handlemedia',Media)
-// to register complaint 
-app.use('/api/handleindividualcomplaint', individualComplaint);
+// to register individual complaint 
+app.use("/api/individualcomplaint", Individualrouter)
+// to register  Organizational complaint 
+app.use("/api/organizationalcomplaint", Organizationalrouter)
+// register user
+app.use('/api/registeruser',registerUser)
+// login user
+app.use('/api/loginuser',loginUser)
+
 
 
 // APP LISTENING AND DB

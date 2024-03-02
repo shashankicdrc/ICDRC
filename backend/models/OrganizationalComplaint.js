@@ -2,47 +2,59 @@ const mongoose = require('mongoose')
 const schema = new mongoose.Schema({
     organization_name: {
         type: String,
-        required: [true, "Name is required"],
+        required: [true, " organization_name is required"],
     },
-    phoneNumber: {
+    mobile: {
         type: String,
-        required: [true, "Phone number is required"],
+        required: [true, "mobile is required"],
         unique: [true, "Phone number already exists"]
        
     },
-    emailId: {
+    email: {
         type: String,
-        required: [true, "Email Id is required"],
+        required: [true, "email  is required"],
         unique: [true, "Email Id already exists"]
+    },
+    country: {
+        type: String,
+        required: [true, "country is required"],
     },
     state: {
         type: String,
         required: [true, "state is required"],
     },
+    city: {
+        type: String,
+        required: [true, "city is required"],
+    },
     address: {
         type: String,
         required: [true, "address is required"],
     },
-    policy_company: {
+    language: {
+        type: String,
+        required: [true, "language is required"],
+    },
+    policyCompany: {
         type: String,
         required: [true, "policy_company is required"],
     },
-    policy_type: {
+    policyType: {
         type: String,
-        required: [true, "policy_type is required"],
+        required: [true, "policyType is required"],
     },
     problem: {
         type: String,
         required: [true, "problem is required"],
     },
-    problem_detail: {
+    problemDetails: {
         type: String,
-        required: [true, "problem_detail is required"],
+        required: [true, "problemDetails is required"],
     }
     
 }, { timestamps: true });
 mongoose.models = {};
 
-const organizationComplaint = mongoose.model('organizationComplaints', schema)
+const OrganizationalComplaint = mongoose.model('OrganizationComplaints', schema)
 
-module.exports = organizationComplaint;
+module.exports = {OrganizationalComplaint};
