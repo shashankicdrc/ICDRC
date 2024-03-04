@@ -1,0 +1,12 @@
+.main_icon {
+    z-index: 1000;
+}
+
+input::placeholder {
+    color: white;
+  }
+
+  input {
+    border: none;
+    outline: none; /* Optionally remove the outline when input is focused */
+  }

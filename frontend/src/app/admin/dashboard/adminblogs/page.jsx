@@ -15,8 +15,6 @@ import { url } from "../../../api";
 import PageLoader from "../../components/pageloader/page";
 import { RiDeleteBin3Line } from "react-icons/ri";
 
-
-
 const AdminBlog = () => {
   const router = useRouter();
   const admin = useSelector((state) => state.admin);
@@ -77,7 +75,7 @@ const AdminBlog = () => {
     setLoading(true);
     e.preventDefault();
     if (content.length > 5) {
-      // console.log({ name, image, desc, content })
+      console.log({ name, image, desc, content })
       try {
         const res = await axios.post(
           `${url}/api/handleblogs`,
@@ -248,16 +246,14 @@ const AdminBlog = () => {
                             /> */}
 
               <Tiptap
-
-ref={editor}
-value={content}
-onChange={newContent => setContent(newContent)}
-              
+                ref={editor}
+                value={content}
+                onChange={(newContent) => setContent(newContent)}
               />
             </div>
 
             <div className="flex items-center justify-between">
-              <button
+              <button onSubmit={HandleSubmit}
                 className="bg-blue-500 text-center hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
