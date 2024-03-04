@@ -9,6 +9,8 @@ import { useEffect } from 'react';
 import { url } from '../../app/api';
 import axios from 'axios'
 
+import { PiFinnTheHuman } from "react-icons/pi";
+
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(0);
@@ -242,7 +244,7 @@ const ChatBot = () => {
         onClick={handleToggleChat}
         className=" hover:bg-orange-500 "
       >
-        <FaRobot
+        <PiFinnTheHuman
           className="text-orange-500 border-orange-600 hover:bg-orange-500 hover:text-white text-2xl"
           onClick={handleToggleChat}
         />

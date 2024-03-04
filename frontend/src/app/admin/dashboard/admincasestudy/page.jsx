@@ -13,7 +13,7 @@ import axios from 'axios';
 import { url } from '../../../api';
 import PageLoader from '../../components/pageloader/page';
 import { RiDeleteBin3Line } from 'react-icons/ri'
-import Tiptap from '../../components/texteditor';
+
 
 const AdminCaseStudy = () => {
     const router = useRouter();
@@ -187,15 +187,15 @@ const AdminCaseStudy = () => {
                             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="content">
                                 Content
                             </label>
-                            {/* <JoditEditor
+                            <JoditEditor
 
                                 ref={editor}
                                 value={content}
                                 onChange={newContent => setContent(newContent)}
-                            /> */}
+                            />
 
 
-                            <Tiptap />
+                            
                         </div>
 
                         <div className="flex items-center justify-between">

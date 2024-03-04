@@ -159,7 +159,7 @@ const SocialIcons = () => {
 
 
           
- <div onClick={() => setShowBot((prev) => !prev)} className="main_icon rounded-full h-8 md:h-12 w-8 md:w-12 group border-2  cursor-pointer fixed bottom-28 md:bottom-36 right-4 text-orange-500 hover:text-orange-700 border-orange-400 flex justify-center items-center transition-all  300 ease-in-out">
+ <div onClick={() => setShowBot((prev) => !prev)} className="main_icon rounded-full h-8 md:h-12 w-8 md:w-12 group border-2  cursor-pointer fixed bottom-28 md:bottom-36 right-4 text-orange-500 hover:text-orange-700 border-orange-400 flex justify-center items-center transition-all bg-white hover:bg-orange-400 300 ease-in-out">
                 {/* <TbMessageChatbot className=' text-xl font-semibold md:text-2xl' /> */}
 
                <Chatbot />

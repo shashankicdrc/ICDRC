@@ -14,7 +14,7 @@ const newsletter = require('./routes/newsletter/newsletter')
 const blogs = require('./routes/blogs/blogs')
 const caseStudy = require('./routes/caseStudy/caseStudy')
 const Media = require('./routes/Media/Media')
-const registerUser =require("./routes/auth/registerUser")
+const registerUser = require('./routes/auth/registerUser')
 const loginUser =require("./routes/auth/loginUser")
 const {Individualrouter} = require("./routes/complaints/IndividualComplaint");
 const {Organizationalrouter} = require("./routes/complaints/OrganizationalComplaint");
@@ -57,7 +57,7 @@ app.use("/api/individualcomplaint", Individualrouter)
 // to register  Organizational complaint 
 app.use("/api/organizationalcomplaint", Organizationalrouter)
 // register user
-app.use('/api/registeruser',registerUser)
+app.use('/api/registeruser', registerUser)
 // login user
 app.use('/api/loginuser',loginUser)
 

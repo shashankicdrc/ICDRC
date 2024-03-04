@@ -20,6 +20,7 @@ import { FaRedo } from "react-icons/fa";
 
 
 
+
 const Tiptap = () => {
   const editor = useEditor({
     extensions: [
@@ -37,7 +38,7 @@ const Tiptap = () => {
 
   return (
 
-    <>
+    <div>
 
 <div className='border-2 p-2 font-semibold shadow-md flex justify-start flex-wrap'>
 <FaBold
@@ -170,10 +171,10 @@ const Tiptap = () => {
      
           </div>
    
-    <EditorContent editor={editor} className='border shadow-sm' />
+    <EditorContent editor={editor} className='border shadow-sm min-h-32 mt-4' />
 
 
-    </>
+    </div>
   )
 }
 
