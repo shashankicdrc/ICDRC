@@ -3,8 +3,7 @@
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Navbar from "../../components/navbar/page";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { url } from "../../../api";
 import { toast } from "react-hot-toast";
 import axios from "axios";
@@ -21,62 +20,68 @@ const ContactMessages = () => {
 
   useEffect(() => {
     if (!admin._id) {
-      router.push("/admin/login");
+        router.push('/admin/login')
     }
-  }, [router, admin]);
+}, [router, admin])
 
-  useEffect(() => {
+
+useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+}, [])
 
   const getData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${url}/api/individualcomplaint`, {
-        headers: {
-          Authorization: admin.token,
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.data.success) {
-        setData(res.data.data);
-      }
-    } catch (err) {
-      // console.log(err);
-      if (err?.response?.data?.message) {
-        toast.error(err?.response?.data?.message);
-      }
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    const getData = async () => {
-      setLoading(true);
-      try {
         const res = await axios.get(`${url}/api/individualcomplaint`, {
-          headers: {
-            Authorization: admin.token,
-            "Content-Type": "application/json",
-          },
-        });
+            headers: {
+                Authorization: admin.token,
+                'Content-Type': 'application/json',
+            }
+        })
         if (res.data.success) {
-          setData(res.data.data);
+            setData(res.data.data);
         }
-      } catch (err) {
+    }
+    catch (err) {
         // console.log(err);
         if (err?.response?.data?.message) {
-          console.log(err?.response?.data?.message);
+            toast.error(err?.response?.data?.message);
         }
+    }
+    setLoading(false);
+}
+
+
+
+useEffect(() => {
+  const getData = async () => {
+      setLoading(true);
+      try {
+          const res = await axios.get(`${url}/api/individualcomplaint`, {
+              headers: {
+                  Authorization: admin.token,
+                  'Content-Type': 'application/json',
+              }
+          })
+          if (res.data.success) {
+              setData(res.data.data);
+          }
+      }
+      catch (err) {
+          // console.log(err);
+          if (err?.response?.data?.message) {
+              console.log(err?.response?.data?.message);
+          }
       }
       setLoading(false);
-    };
-    getData();
-  }, [admin.token]);
+  }
+  getData();
+}, [admin.token])
+  
 
   const deletebtn = async (id) => {
     try {
-      const res = await axios.delete(`${url}/api/individualcomplaint${id}`, {
+      const res = await axios.delete(`${url}/api/individualcomplaint/${id}`, {
         headers: {
           Authorization: admin.token,
           "Content-Type": "application/json",
@@ -84,11 +89,10 @@ const ContactMessages = () => {
       });
       if (res.data.success) {
         toast.success(res.data.message);
-        getData();
+        getData(); // Assuming getData function is accessible here
       }
     } catch (err) {
-      toast.error(err.response.data.message);
-      // console.log(err);
+      toast.error(err?.response?.data?.message);
     }
   };
 
