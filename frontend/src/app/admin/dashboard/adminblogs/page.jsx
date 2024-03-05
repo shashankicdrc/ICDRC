@@ -6,8 +6,9 @@ import { useRouter } from "next/navigation";
 import AdminNav from "../../components/navbar/page";
 import { useEffect } from "react";
 // import { JoditEditor }  from 'jodit-react';
+import dynamic from 'next/dynamic';
 
-import Tiptap from "../../components/texteditor";
+// import Tiptap from "../../components/texteditor";
 import { useRef } from "react";
 import { toast } from "react-hot-toast";
 import axios from "axios";
@@ -15,9 +16,9 @@ import { url } from "../../../api";
 import PageLoader from "../../components/pageloader/page";
 import { RiDeleteBin3Line } from "react-icons/ri";
 
-
-
 const AdminBlog = () => {
+
+  const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
   const router = useRouter();
   const admin = useSelector((state) => state.admin);
   const [name, setName] = useState("");
@@ -77,7 +78,7 @@ const AdminBlog = () => {
     setLoading(true);
     e.preventDefault();
     if (content.length > 5) {
-      // console.log({ name, image, desc, content })
+      console.log({ name, image, desc, content })
       try {
         const res = await axios.post(
           `${url}/api/handleblogs`,
@@ -247,17 +248,25 @@ const AdminBlog = () => {
                                 onChange={newContent => setContent(newContent)}
                             /> */}
 
-              <Tiptap
 
-ref={editor}
-value={content}
-onChange={newContent => setContent(newContent)}
-              
-              />
+
+<JoditEditor
+    ref={editor}
+    value={content}
+    tabIndex={1} // tabIndex of textarea
+    onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+    onChange={(newContent) => setContent(newContent)}
+  />
+
+              {/* <Tiptap
+                ref={editor}
+                value={content}
+                onChange={(newContent) => setContent(newContent)}
+              /> */}
             </div>
 
             <div className="flex items-center justify-between">
-              <button
+              <button onSubmit={HandleSubmit}
                 className="bg-blue-500 text-center hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
@@ -298,12 +307,12 @@ onChange={newContent => setContent(newContent)}
                       {item.name}
                     </p>
 
-                    <p className="mb-4 text-gray-900 text-xl font-[Caveat]">
+                    <p className="mb-4 text-gray-900 text-xl font-[Poppins]">
                       {item.desc}
                     </p>
                   </Link>
                   <p className="mb-2 text-xl text-red-600 flex justify-between">
-                    <span className="font-[Caveat]">
+                    <span className="font-[Poppins]">
                       Created on: {formatCreatedAtDate(item.createdAt)}
                     </span>
                     <button
@@ -317,7 +326,7 @@ onChange={newContent => setContent(newContent)}
               </div>
             ))
           ) : (
-            <span className="font-semibold font-[Caveat] text-xl md:text-2xl">
+            <span className="font-semibold font-[Poppins] text-xl md:text-2xl">
               No blogs available.
             </span>
           )}

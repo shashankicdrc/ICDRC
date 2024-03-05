@@ -29,15 +29,15 @@ export default function ProfilePage() {
   const params = useParams();
   const { id } = useParams();
   const router = useRouter();
-  const admin = useSelector((state) => state.admin);
+  const user = useSelector((state) => state.user);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!admin._id) {
-      router.push("/admin/login");
+    if (!user._id) {
+      router.push("/login");
     }
-  }, [router, admin]);
+  }, [router, user]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -86,7 +86,7 @@ export default function ProfilePage() {
       setLoading(false);
     };
     getData();
-  }, [admin.token]);
+  }, [user.token]);
 
   const deletebtn = async (id) => {
     try {
@@ -146,7 +146,7 @@ export default function ProfilePage() {
                       >
                         Name :{" "}
                         <span className="text-orange-500 font-[Signika+Negative] ml-3 md:ml-8">
-                          {admin?.name}
+                          {user?.name}
                         </span>
                       </h2>
                       <h2
@@ -156,7 +156,7 @@ export default function ProfilePage() {
                       >
                         Email Id :{" "}
                         <span className="text-orange-500 font-[Signika+Negative] ml-3 md:ml-8">
-                          {admin?.emailId}
+                          {user?.emailId}
                         </span>
                       </h2>
                       <h2
@@ -190,7 +190,7 @@ export default function ProfilePage() {
                     
                     <MDBCol sm="9">
                       <MDBCardText className="text-muted pt-2 pb-2">
-                       Name:  {admin?.emailId}
+                       Name:  {user?.emailId}
                       </MDBCardText>
                     </MDBCol>
                   </MDBRow>
@@ -199,7 +199,7 @@ export default function ProfilePage() {
                     
                     <MDBCol sm="9">
                       <MDBCardText className="text-muted pt-2 pb-2">
-                       Email:  {admin?.emailId}
+                       Email:  {user?.emailId}
                       </MDBCardText>
                     </MDBCol>
                   </MDBRow>

@@ -6,16 +6,18 @@ import { useRouter } from 'next/navigation';
 import AdminNav from '../../components/navbar/page'
 import { useEffect } from 'react';
 // import JoditEditor from "jodit-pro-react";
-
+import dynamic from 'next/dynamic';
 import { useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { url } from '../../../api';
 import PageLoader from '../../components/pageloader/page';
 import { RiDeleteBin3Line } from 'react-icons/ri'
-import Tiptap from '../../components/texteditor';
+
 
 const AdminCaseStudy = () => {
+
+    const JoditEditor = dynamic(() => import('jodit-react'), { ssr: false });
     const router = useRouter();
     const admin = useSelector((state) => state.admin);
     const [name, setName] = useState('');
@@ -193,9 +195,15 @@ const AdminCaseStudy = () => {
                                 value={content}
                                 onChange={newContent => setContent(newContent)}
                             /> */}
+<JoditEditor
+    ref={editor}
+    value={content}
+    tabIndex={1} // tabIndex of textarea
+    onBlur={(newContent) => setContent(newContent)} // preferred to use only this option to update the content for performance reasons
+    onChange={(newContent) => setContent(newContent)}
+  />
 
-
-                            <Tiptap />
+                            
                         </div>
 
                         <div className="flex items-center justify-between">
@@ -227,12 +235,12 @@ const AdminCaseStudy = () => {
                                         <Link href={`/casestudies/${item._id}`} aria-label="Article">
                                             <p className="text-2xl font-semibold font-[Poppins] text-orange-600">{item.name}</p>
 
-                                            <p className="mb-4 text-gray-900 text-xl font-[Caveat]">
+                                            <p className="mb-4 text-gray-900 text-xl font-[Poppins]">
                                                 {item.desc}
                                             </p>
                                         </Link>
                                         <p className="mb-2 text-xl text-red-600 flex justify-between">
-                                            <span className='font-[Caveat]'>Created on: {formatCreatedAtDate(item.createdAt)}</span>
+                                            <span className='font-[Poppins]'>Created on: {formatCreatedAtDate(item.createdAt)}</span>
                                             <button onClick={() => deletebtn(item._id)} className='text-red-500 text-xl'><RiDeleteBin3Line /></button>
                                         </p>
                                     </div>
@@ -240,7 +248,7 @@ const AdminCaseStudy = () => {
                                 </div>
                             ))
                             :
-                            <span className='font-semibold font-[Caveat] text-xl md:text-2xl'>No Case Study available.</span>
+                            <span className='font-semibold font-[Poppins] text-xl md:text-2xl'>No Case Study available.</span>
                     }
                 </div>
             </div >
