@@ -78,7 +78,8 @@ const ComplainForm = () => {
 
     const SubmitHandler = async (e) => {
         e.preventDefault();
-    // console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
+        window.location.reload();
+    console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
 
         setLoading(true);
         if (!validateMobileNumber(mobile)) {
@@ -386,7 +387,7 @@ const ComplainForm = () => {
 
                     {/* Submit Btn */}
                     <div className="text-center mt-4 md:mt-12" data-aos="fade-up" data-aos-duration="1000">
-                        <button className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300">
+                        <button onSubmit={SubmitHandler} className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300">
                             Next
                             <i className="fas fa-chevron-right ml-2 text-sm"></i>
                         </button>

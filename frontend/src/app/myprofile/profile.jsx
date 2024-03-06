@@ -46,7 +46,7 @@ export default function ProfilePage() {
   const getData = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`${url}/api/handlepartner`, {
+      const res = await axios.get(`${url}/api/registeruser`, {
         headers: {
           Authorization: admin.token,
           "Content-Type": "application/json",

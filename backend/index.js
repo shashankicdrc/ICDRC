@@ -3,6 +3,7 @@ const dotenv = require('dotenv')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const connectDB = require('./utils/connectDB');
+// const passport = require('./utils/passport');
 
 // importing routes
 const registerAdmin = require('./routes/auth/registerAdmin')
@@ -27,6 +28,7 @@ dotenv.config();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
+// passport(app);
 
 // Default Get Request
 app.get('/', async (req, res) => {

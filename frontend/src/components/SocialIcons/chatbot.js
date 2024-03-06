@@ -5,7 +5,7 @@ import { IoMdSend } from "react-icons/io";
 import { FaUserCheck } from "react-icons/fa";
 import './SocialIcons.css';
 
-import { useEffect } from 'react';
+import { useEffect, useRef, } from 'react';
 import { url } from '../../app/api';
 import axios from 'axios'
 
@@ -26,10 +26,22 @@ const ChatBot = () => {
     },
   ]);
 
+  const chatContainerRef = useRef(null);
+
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  };
+
   const handleToggleChat = () => {
     setIsOpen(!isOpen);
     setStep(0);
   };
+
+  useEffect(() => {
+    scrollToBottom(); // Scroll to bottom when messages change
+  }, [messages]);
 
   const handleSendMessage = () => {
     const userMessage = {
@@ -44,9 +56,15 @@ const ChatBot = () => {
     setMessages((prevMessages) => [...prevMessages, userMessage, botMessage]);
 
     if (step < 3) {
+      
       setStep(step + 1);
+    setName(''); // Clear input field after every step
+    setEmail('');
+    setMobile('');
     } else {
-      setIsOpen(false);
+      setTimeout(() => {
+        setIsOpen(false); // Close the chatbot after 2 seconds
+      }, 2000);
     }
   };
 
@@ -82,7 +100,6 @@ const ChatBot = () => {
         return "Final step! Enter your Mobile number:";
       case 3:
         return "Thank you for providing your information! Our Team Will contact with you soon.";
-
       default:
         return "";
     }
@@ -114,45 +131,18 @@ const ChatBot = () => {
     flexDirection: "column",
   };
 
-  // const messageStyle = {
-  //   padding: "10px",
-  //   borderRadius: "8px",
-  //   marginBottom: "10px",
-  //   color: "#f97316",
-  //   backgroundColor: "#fff",
-  // };
-
-  // const inputContainerStyle = {
-  //   display: "flex",
-
-  //   // justifyContent: "space-between",
-  //   padding: "5px 20px 5px 20px",
-
-  //   borderRadius: "1px",
-
-  //   cursor: "pointer",
-  //   color: "orange",
-  // };
-
-  // const buttonStyle = {
-  //   padding: "20px",
-  //   backgroundColor: "#fff",
-  //   color: "#ffa500",
-  //   border: "none",
-  //   borderRadius: "4px",
-  //   cursor: "pointer",
-  // };
+  
 
   return (
-    <div style={chatBotStyle}>
+    <div ref={chatContainerRef} style={chatBotStyle}>
       {isOpen && (
-        <div style={chatBoxStyle} className=" mr-12 max-w-80">
+        <div  style={chatBoxStyle} className=" mr-12 max-w-80">
           <div className="">
-            <div className="bg-orange-500 w-full h-16 rounded-md text-white  flex items-center">
-              <FaRobot className="text-4xl m-2 border text-orange-500 bg-white rounded-full p-2 " />
+            <div  className="bg-orange-500 w-full h-16 rounded-md text-white  flex items-center">
+              <PiFinnTheHuman className="text-4xl m-2 border text-orange-500 bg-white rounded-full p-2 " />
               <div className="flex flex-col text-start ml-2 font-[Poppins]">
                 <span className="text-sm font-semibold text-white">
-                  RaksaBot (रक्षा बोट)
+                  RakshaBot (रक्षा बोट)
                 </span>
                 <span className="text-xs font-base text-white">
                   Customer Communication
@@ -186,8 +176,8 @@ const ChatBot = () => {
             <div className="">
               {" "}
               <div className="flex items-center ">
-                <FaRobot className="text-xl mr-3 mt-1" />{" "}
-                <p className=" mt-1 font-medium text-xs">RaksaBot</p>
+                <PiFinnTheHuman className="text-xl mr-3 mt-1" />{" "}
+                <p className=" mt-1 font-medium text-xs">RakshaBot</p>
               </div>
               <div className=" text-white border bg-orange-500 py-2 px-2 rounded-md mr-20">
                 {getPromptMessage()}
@@ -217,18 +207,25 @@ const ChatBot = () => {
           </div> */}
 
 <div className="bg-orange-500 ml-2 rounded-md mr-2 flex justify-between m-4 p-2 text-white">
-  <input
-    className="bg-orange-500 ml-2 rounded-md mr-2 text-white w-full border-orange-500 placeholder-white::placeholder"
-    type="text"
-    placeholder="Enter your input..."
-    value={step === 0 ? name : step === 1 ? email : mobile}
-    onChange={(e) => {
-      if (step === 0) setName(e.target.value);
-      else if (step === 1) setEmail(e.target.value);
-      else if (step === 2) setMobile(e.target.value);
-      else if (step === 3);
-    }}
-  />
+<input
+  className="bg-orange-500 ml-2 rounded-md mr-2 text-white w-full border-orange-500 placeholder-white::placeholder"
+  type="text"
+  placeholder="Enter your input..."
+  value={step === 0 ? name : step === 1 ? email : mobile}
+  onChange={(e) => {
+    if (step === 0) setName(e.target.value);
+    else if (step === 1) setEmail(e.target.value);
+    else if (step === 2) setMobile(e.target.value);
+    // No need for the condition for step 3
+  }}
+  onKeyDown={(e) => {
+    if (e.key === 'Enter') {
+      // Handle form submission here, for example:
+      e.preventDefault(); // Prevents default form submission behavior
+      handleSendMessage(); // Replace handleFormSubmit with your form submission logic
+    }
+  }}
+/>
   <button className="bg-white p-2 rounded" onClick={handleSendMessage}>
     <IoMdSend className="text-orange-600 text-xl font-bold" />
   </button>

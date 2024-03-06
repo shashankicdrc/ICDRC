@@ -33,6 +33,10 @@ const Signup = () => {
             return;
         }
 
+
+
+        
+
         // console.log({ name, emailId, password });
 
         try {
@@ -91,7 +95,7 @@ const Signup = () => {
                                     </p>
 
                                     <div className='mt-4 flex flex-col justify-center items-center gap-4' data-aos="fade-up" data-aos-duration="1000">
-                                        <button
+                                        <button 
                                             className="flex items-center bg-white border border-gray-800 rounded-lg shadow-md max-w-xs px-8 py-4 text-sm font-medium text-gray-800 hover:bg-orange-400 hover:text-white hover:border-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
                                             <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="-0.5 0 48 48" version="1.1">
