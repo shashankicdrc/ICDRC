@@ -22,7 +22,7 @@ const Button = () => {
     // Redirect to login page after 2 seconds
     setTimeout(() => {
       router.push('/login');
-    }, 2000);
+    }, );
   };
 
   const handleLogin = () => {

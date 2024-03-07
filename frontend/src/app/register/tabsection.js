@@ -3,6 +3,8 @@
 import { Tab } from '@headlessui/react'
 import ComplainForm from '../../components/complainform/page';
 import OrganizationComplainForm from '../../components/organizationcomplainform/page';
+// import Cart from '../../components/cart/cart';
+// import OrgCart from '../../components/cart/orgcart';
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -39,12 +41,15 @@ export default function TabSection() {
                     >
                         Register as an Organization
                     </Tab>
+                    
                 </Tab.List>
                 <Tab.Panels>
                     <Tab.Panel>
+                    {/* <Cart /> */}
                         <ComplainForm />
                     </Tab.Panel>
                     <Tab.Panel>
+                        {/* <OrgCart /> */}
                         <OrganizationComplainForm />
                     </Tab.Panel>
                 </Tab.Panels>

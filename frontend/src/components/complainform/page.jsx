@@ -8,6 +8,7 @@ import Loader from '../Loader/page';
 import axios from 'axios';
 import { url } from '../../app/api';
 import { toast } from 'react-hot-toast';
+import Link from 'next/link';
 
 const ComplainForm = () => {
     const [name, setName] = useState('');
@@ -130,8 +131,9 @@ const ComplainForm = () => {
         <div className="container flex justify-center items-center mx-auto w-screen py-8
          bg-gradient-to-r from-orange-300 to-orange-500 ">
             <div className='border-2 bg-white border-gray-500 p-4 rounded-2xl w-11/12 md:w-1/2 flex flex-col justify-center items-center'>
-                <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold text-center underline p-2 text-orange-600 font-[Poppins]'>Register as an Individual</h2>
-
+                <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold text-center underline p-2 text-orange-500 font-[Poppins]'>Register as an Individual</h2>
+                <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold text-center  text-orange-600 font-[Poppins]'>
+Consultation Fee-500₹</h2>
                 <form className='my-6 w-full md:w-4/5 flex justify-center items-center flex-col gap-4' onSubmit={SubmitHandler} data-aos="fade-up" data-aos-duration="1000">
                     {/* Name */}
                     <label
@@ -387,10 +389,11 @@ const ComplainForm = () => {
 
                     {/* Submit Btn */}
                     <div className="text-center mt-4 md:mt-12" data-aos="fade-up" data-aos-duration="1000">
-                        <button onSubmit={SubmitHandler} className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300">
+                      <Link href="/checkout"> <button onSubmit={SubmitHandler} className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300">
                             Next
                             <i className="fas fa-chevron-right ml-2 text-sm"></i>
                         </button>
+                        </Link> 
                     </div>
 
 

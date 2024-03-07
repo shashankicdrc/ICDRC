@@ -6,6 +6,7 @@ import { useState } from 'react';
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { State, City } from 'country-state-city';
+import Link from 'next/link';
 
 const OrganizationComplainForm = () => {
     const [name, setName] = useState('');
@@ -63,7 +64,8 @@ const OrganizationComplainForm = () => {
          bg-gradient-to-r from-orange-300 to-orange-500 ">
             <div className='border-2 bg-white border-gray-500 p-4 rounded-2xl w-11/12 md:w-1/2 flex flex-col justify-center items-center'>
                 <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold underline text-center p-2 text-orange-600 font-[Poppins]'>Register as an Organization</h2>
-
+                <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold text-center  text-orange-600 font-[Poppins]'>
+Consultation Fee-5000₹</h2>
                 <form className='my-6 w-full md:w-4/5 flex justify-center items-center flex-col gap-4' onSubmit={SubmitHandler} data-aos="fade-up" data-aos-duration="1000">
                     {/* Name */}
                     <label
@@ -394,10 +396,10 @@ const OrganizationComplainForm = () => {
 
                     {/* Submit Btn */}
                     <div className="text-center mt-4 md:mt-12" data-aos="fade-up" data-aos-duration="1000">
-                        <button className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300">
+                    <Link href="/checkout">   <button className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300">
                             Next
                             <i className="fas fa-chevron-right ml-2 text-sm"></i>
-                        </button>
+                        </button> </Link>
                     </div>
 
 
