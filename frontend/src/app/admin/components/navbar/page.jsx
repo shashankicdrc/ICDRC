@@ -4,6 +4,7 @@ import Link from "next/link";
 import AdminButton from "./adminbutton";
 import AdminNavLinks from "./adminnavlinks";
 import './navbar.modules.css';
+import Image from 'next/image';
 
 const AdminNav = () => {
     const [open, setOpen] = useState(false);
@@ -28,7 +29,8 @@ const AdminNav = () => {
         <nav className={`${navbar ? "bg-white" : ""} fixed w-full z-10 transition-all ease-in-out duration-75`}>
             <div className="flex items-center font-medium justify-around">
                 <div className="z-50 p-5 md:w-auto w-full flex justify-between h-full">
-                    <Link href='/en/ICDRC/Home'><img src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1692866749/Logo/Copy_of_ICDRC_912_273_px_rwkrry.png" alt="logo" className="md:cursor-pointer w-28 md:w-44" /></Link>
+                    <Link href='/en/ICDRC/Home'><Image src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1692866749/Logo/Copy_of_ICDRC_912_273_px_rwkrry.png" alt="logo" className="md:cursor-pointer w-28 md:w-44"  width={1425}
+                height={421} /></Link>
                     <div className="text-3xl md:hidden" onClick={() => setOpen(!open)}>
                         <ion-icon name={`${open ? "close" : "menu"}`}></ion-icon>
                     </div>

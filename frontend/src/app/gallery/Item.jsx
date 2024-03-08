@@ -1,5 +1,7 @@
 import React from 'react'
 import { BsPlay } from 'react-icons/bs'
+import Image from 'next/image';
+
 import {
     Modal,
     ModalOverlay,
@@ -16,7 +18,7 @@ const Item = ({ image, video, name, deleteId, deletebtn }) => {
         <>
             <div className="overflow-hidden border-2 border-orange-500 transition-shadow duration-300 bg-white rounded-2xl shadow-lg px-4 py-3" data-aos="zoom-in" data-aos-duration="1000">
                 <div className='relative'>
-                    {image && image?.length > 0 && <img
+                    {image && image?.length > 0 && <Image
                         src={image}
                         className="object-cover w-full h-40 md:h-60 rounded-2xl"
                         alt=""

@@ -1,23 +1,25 @@
 // PricingCards.js file
 import React from "react";
+import Image from 'next/image';
+
 
 const OrgCards = () => {
   const cardData = [
     {
-      image: "https://i.imgur.com/Ql4jRdB.png",
+      image: "https://i.Imageur.com/Ql4jRdB.png",
       title: "Organization Complain",
       price: "5000 ₹",
       features: ["Contact support", "Suggestion support", "Case study consultant"],
     }
 ,
 //     {
-//       image: "https://i.imgur.com/pJNFEHR.png",
+//       image: "https://i.Imageur.com/pJNFEHR.png",
 //       title: "Double User",
 //       price: "$149",
 //       features: ["500 GB Storage", "1 Granted User", "Send up to 2 GB"],
 //     },
 //     {
-//       image: "https://i.imgur.com/Hg0sUJP.png",
+//       image: "https://i.Imageur.com/Hg0sUJP.png",
 //       title: "Triple User",
 //       price: "$149",
 //       features: ["500 GB Storage", "1 Granted User", "Send up to 2 GB"],
@@ -31,7 +33,7 @@ const OrgCards = () => {
             key={index}
             className={`w-full shadow-xl flex flex-col p-4 my-4 rounded-lg hover:scale-105 duration-300`}
           >
-            <img
+            <Image
               className="w-20 mx-auto mt-[-3rem] bg-white"
               src={card.image}
               alt="/"

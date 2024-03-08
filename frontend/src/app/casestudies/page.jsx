@@ -7,7 +7,8 @@
   import Footer from '../../components/footer/page';
   import SocialIcons from '../../components/SocialIcons/page';
   import { useSelector } from 'react-redux'; 
-  
+  import Image from 'next/image';
+
   
   
   const CaseStudies = () => {
@@ -43,7 +44,7 @@
                                   <div key={item._id} className="overflow-hidden border-2 border-orange-500 transition-shadow duration-300 bg-white rounded-2xl shadow-lg px-4 py-3" data-aos="zoom-in" data-aos-duration="1000">
                                       <Link href={`/casestudies/${item._id}`} aria-label="Article" >
                                          
-                                          <img
+                                          <Image
                                               src={item.image}
                                               className="object-cover w-full h-40 md:h-60 rounded-2xl"
                                               alt=""

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 
 import CountUp from 'react-countup';
 import ScrollTrigger from 'react-scroll-trigger';
+import Image from 'next/image';
+
 
 const Home6 = () => {
     const [counterOn1, setCounterOn1] = useState(false);
@@ -18,7 +20,7 @@ const Home6 = () => {
 
                 <div className="bg-orange-500 shadow-2xl p-4 md:p-6 rounded-2xl w-56 md:w-64">
                     <div className="flex items-center justify-center" data-aos="fade-up" data-aos-duration="1000">
-                        <img src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690786092/Home_page/Home6/1_iofzc9.svg" alt="" className='w-12 md:w-16' />
+                        <Image src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690786092/Home_page/Home6/1_iofzc9.svg" alt="" className='w-12 md:w-16' />
                     </div>
                     <div className="flex justify-center text-2xl md:text-4xl items-center font-bold mt-4 mb-2 text-white" data-aos="fade-up" data-aos-duration="1000">
                         <ScrollTrigger onEnter={() => setCounterOn1(true)} onExit={() => setCounterOn1(false)}>
@@ -30,7 +32,7 @@ const Home6 = () => {
 
                 <div className="bg-orange-500 shadow-2xl p-4 md:p-6 rounded-2xl w-56 md:w-64">
                     <div className="flex items-center justify-center" data-aos="fade-up" data-aos-duration="1000">
-                        <img src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690786092/Home_page/Home6/2_xon0qo.svg" alt="" className='w-12 md:w-16' />
+                        <Image src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690786092/Home_page/Home6/2_xon0qo.svg" alt="" className='w-12 md:w-16' />
                     </div>
                     <div className="flex justify-center text-2xl md:text-4xl items-center font-bold mt-4 mb-2 text-white" data-aos="fade-up" data-aos-duration="1000">
                         <ScrollTrigger onEnter={() => setCounterOn2(true)} onExit={() => setCounterOn2(false)}>
@@ -42,7 +44,7 @@ const Home6 = () => {
 
                 <div className="bg-orange-500 shadow-2xl p-4 md:p-6 rounded-2xl w-56 md:w-64">
                     <div className="flex items-center justify-center" data-aos="fade-up" data-aos-duration="1000">
-                        <img src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690786093/Home_page/Home6/3_cf52sx.svg" alt="" className='w-12 md:w-16' />
+                        <Image src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690786093/Home_page/Home6/3_cf52sx.svg" alt="" className='w-12 md:w-16' />
                     </div>
                     <div className="flex justify-center text-2xl md:text-4xl items-center font-bold mt-4 mb-2 text-white" data-aos="fade-up" data-aos-duration="1000">
                         <ScrollTrigger onEnter={() => setCounterOn3(true)} onExit={() => setCounterOn3(false)}>
@@ -54,7 +56,7 @@ const Home6 = () => {
 
                 <div className="bg-orange-500 shadow-2xl p-4 md:p-6 rounded-2xl w-56 md:w-64">
                     <div className="flex items-center justify-center" data-aos="fade-up" data-aos-duration="1000">
-                        <img src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690786093/Home_page/Home6/4_x2v19q.svg" alt="" className='w-12 md:w-16' />
+                        <Image src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690786093/Home_page/Home6/4_x2v19q.svg" alt="" className='w-12 md:w-16' />
                     </div>
                     <div className="flex justify-center text-2xl md:text-4xl items-center font-bold mt-4 mb-2 text-white" data-aos="fade-up" data-aos-duration="1000">
                         <ScrollTrigger onEnter={() => setCounterOn4(true)} onExit={() => setCounterOn4(false)}>

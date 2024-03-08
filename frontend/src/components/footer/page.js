@@ -17,7 +17,9 @@ import axios from "axios";
 import { url } from "../../app/api";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { AiFillFacebook } from "react-icons/ai";
-// import Image from 'next/image';
+import Image from 'next/image';
+
+
 const Footer = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -67,10 +69,12 @@ const Footer = () => {
               title="Company"
               className="inline-flex items-center"
             >
-              <img
+              <Image
                 src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1692866749/Logo/Copy_of_ICDRC_912_273_px_rwkrry.png"
                 alt="logo"
                 className="md:cursor-pointer h-24"
+                width={300}
+                height={200}
                 
               />
             </a>

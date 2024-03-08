@@ -245,7 +245,7 @@ const ChatBot = () => {
           className="text-orange-500 border-orange-600 hover:bg-orange-500 hover:text-white text-2xl"
           onClick={handleToggleChat}
         />
-        {/* <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPEulAZkIAPYseBZzyO-VechpLx2BUnwJ6VfhqDyusrw&s" alt='ICDRC ' style={iconStyle}  onClick={handleToggleChat} /> */}
+        {/* <Image src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPEulAZkIAPYseBZzyO-VechpLx2BUnwJ6VfhqDyusrw&s" alt='ICDRC ' style={iconStyle}  onClick={handleToggleChat} /> */}
       </div>
     </div>
   );
