@@ -48,6 +48,8 @@
                                               src={item.image}
                                               className="object-cover w-full h-40 md:h-60 rounded-2xl"
                                               alt=""
+                                              width={640}
+                                              height={360}
                                           />
                                       </Link>
                                       <div className="py-5">

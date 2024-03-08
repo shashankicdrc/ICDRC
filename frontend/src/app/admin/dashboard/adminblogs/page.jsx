@@ -15,7 +15,7 @@ import axios from "axios";
 import { url } from "../../../api";
 import PageLoader from "../../components/pageloader/page";
 import { RiDeleteBin3Line } from "react-icons/ri";
-import Images from 'next/image';
+import Image from 'next/image';
 
 const AdminBlog = () => {
 
@@ -300,6 +300,8 @@ const AdminBlog = () => {
                     src={item.image}
                     className="object-cover w-full h-40 md:h-60 rounded-2xl"
                     alt=""
+                    width={640}
+                    height={360}
                     
                   />
                 </Link>

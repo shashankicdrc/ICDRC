@@ -25,19 +25,7 @@ const Gallery = () => {
 
 
 {/* 
-            <Helmet>
-        <meta charSet="utf-8" />
-        <title>ICDRC: Gallery</title>
-        <link rel="canonical" href="" />
-        <meta
-          name="description"
-          content="Explore captivating images capturing moments of success, teamwork, and client satisfaction. Witness our commitment to transparent processes and empowering individuals in their insurance claim experiences. "
-        />
-        <meta
-          name="keywords"
-          content="reliable insurance solutions, Our Success stories, ICDRC, successful claims, Insurance recovery, ICDRC official Claim advocates, Fast insurance settlements, InsuranceSamadhan Alternative"
-        />
-      </Helmet> */}
+            
 
             {/* Header Section */}
             <div

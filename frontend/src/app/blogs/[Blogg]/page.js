@@ -92,7 +92,7 @@ const Blog = () => {
             </h2>
 
             <div className="justify-center flex items-center">
-              <Image className="h-96 will-change-auto flex justify-center " src= {data?.image} />
+              <Image className="h-96 will-change-auto flex justify-center " src= {data?.image} width={640} height={360} />
             </div>
 
             <div

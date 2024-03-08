@@ -22,6 +22,8 @@ const Item = ({ image, video, name, deleteId, deletebtn }) => {
                         src={image}
                         className="object-cover w-full h-40 md:h-60 rounded-2xl"
                         alt=""
+                        width={640}
+                        height={360}
                     />}
                     {video && video?.length > 0 && <div onClick={onOpen} className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 cursor-pointer border-2 rounded-full p-2 grid place-items-center text-4xl md:text-7xl bg-transparent text-orange-600 border-orange-600 ring
                             ring-orange-600 ring-inset-2 font-bold hover:bg-orange-600 hover:text-white hover:border-white 
