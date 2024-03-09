@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { FaRobot } from "react-icons/fa";
 import { IoMdSend } from "react-icons/io";
 import { FaUserCheck } from "react-icons/fa";
-import './SocialIcons.css';
+import './Socialicon.module.css';
 
 import { useEffect, useRef, } from 'react';
 import { url } from '../../app/api';
@@ -208,7 +208,7 @@ const ChatBot = () => {
 
 <div className="bg-orange-500 ml-2 rounded-md mr-2 flex justify-between m-4 p-2 text-white">
 <input
-  className="bg-orange-500 ml-2 rounded-md mr-2 text-white w-full border-orange-500 placeholder-white::placeholder"
+  className="bg-orange-500 ml-2 placeholder:text-white outline-none  rounded-md mr-2 text-white w-full border-orange-500 placeholder-white::placeholder"
   type="text"
   placeholder="Enter your input..."
   value={step === 0 ? name : step === 1 ? email : mobile}
