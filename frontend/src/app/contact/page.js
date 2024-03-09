@@ -11,6 +11,7 @@ import 'react-phone-number-input/style.css';
 import PhoneInput from 'react-phone-number-input';
 import axios from 'axios';
 import { url } from '../api';
+import Styles from './Contact.module.css'
 
 const Contact = () => {
     const [name, setName] = useState('');
@@ -130,7 +131,7 @@ const Contact = () => {
                                     <form className="contact-form" onSubmit={handleSubmit} data-aos="fade-up" data-aos-duration="1000">
                                         <div className="sm:flex sm:flex-wrap -mx-3">
                                             <div className="sm:w-1/2 px-3 mb-6">
-                                                <input type="text" placeholder="Full Name" className="border-2 rounded px-3 py-1 w-full focus:border-orange-500 input" value={name} onChange={(e) => setName(e.target.value)} required={true} />
+                                                <input type="text" placeholder="Full Name" className=" just border-2 rounded px-3  w-full focus:border-orange-500 input" value={name} onChange={(e) => setName(e.target.value)} required={true} ></input>
                                             </div>
                                             <div className="sm:w-1/2 px-3 mb-6">
                                                 <PhoneInput

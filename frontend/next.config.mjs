@@ -2,11 +2,22 @@
 
 /**
  * @type {import('next').NextConfig}
+ * 
+ * 
  */
+
+// const withImage=require('next-images')
+// module.exports = withImage()
 const nextConfig = {
   images: {
-    domains: ['res.cloudinary.com', 'cdn.pixabay.com', '*', 'www.google.com'],
-   
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '**',
+      },
+    ],
   },
 }
  
