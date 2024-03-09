@@ -19,6 +19,7 @@ const registerUser = require('./routes/auth/registerUser')
 const loginUser =require("./routes/auth/loginUser")
 const {Individualrouter} = require("./routes/complaints/IndividualComplaint");
 const {Organizationalrouter} = require("./routes/complaints/OrganizationalComplaint");
+const Payment = require("./routes/payment/payment");
 
 //  Initializing app
 const app = express();
@@ -62,6 +63,8 @@ app.use("/api/organizationalcomplaint", Organizationalrouter)
 app.use('/api/registeruser', registerUser)
 // login user
 app.use('/api/loginuser',loginUser)
+app.use("/api/v1",Payment);
+
 
 
 

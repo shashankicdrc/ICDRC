@@ -1,5 +1,5 @@
-export const url = 'https://api.icdrc.in'
-// export const url = 'http://localhost:5000'
+// export const url = 'https://api.icdrc.in'
+export const url = 'http://localhost:5000'
 
 
 
@@ -18,4 +18,8 @@ export const UserAuthAPI = {
     // userGetMyProfile_API: BASE_URL + "/api/v1/userGetMyProfile",
     userSendOTP_API: url + "/api/v1/userSendOTP",
     userVerifyOTP_API: url + "/api/v1/userVerifyOTP",
+  };
+  export const Phonepayment_API = {
+    NewPayment_API: url + "/api/v1/paytm",
+    Status_API: url + "/api/v1/status",
   };
