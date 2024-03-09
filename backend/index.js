@@ -63,7 +63,7 @@ app.use("/api/organizationalcomplaint", Organizationalrouter)
 app.use('/api/registeruser', registerUser)
 // login user
 app.use('/api/loginuser',loginUser)
-app.use("/api/v1",Payment);
+// app.use("/api/v1",Payment);
 
 
 
