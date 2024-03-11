@@ -73,6 +73,20 @@ Individualrouter.post("/", async (req, res) => {
   };
 });
 
+// Route to get all complaints with details and timestamp
+Individualrouter.get("/all", async (req, res) => {
+  try {
+    const complaints = await IndividualComplaint.find().select('-_id name mobile email country state city address language policyCompany policyType problem problemDetails createdAt');
+    res.json({
+      message: "Complaints fetched successfully",
+      complaints: complaints
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 module.exports = { Individualrouter };
 
 
