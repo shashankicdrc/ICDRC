@@ -1,9 +1,11 @@
-'use client';
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation'; // Change to 'next/router'
 import { loginUser, logoutUser } from '../../features/UserSlice';
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
+
 
 const Button = () => {
   const dispatch = useDispatch();
@@ -11,27 +13,25 @@ const Button = () => {
   const user = useSelector((state) => state.user);
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { status, data: session } = useSession();
 
   useEffect(() => {
     setIsLoggedIn(!!user._id);
   }, [user]);
 
   const handleLogout = () => {
-    // Dispatch action to log out the admin
+    // Dispatch action to log out the user
     dispatch(logoutUser());
-    // Redirect to login page after 2 seconds
-    setTimeout(() => {
-      router.push('/login');
-    }, );
+    // Redirect to login page after the action is completed
+    router.push('/login');
+    signOut("google");
   };
 
   const handleLogin = () => {
-    // Dispatch action to log in the admin
+    // Dispatch action to log in the user
     dispatch(loginUser());
-    // Redirect to profile page upon successful login after 2 seconds
-    setTimeout(() => {
-      router.push('/myprofile');
-    }, );
+    // Redirect to profile page upon successful login after the action is completed
+    router.push('/myprofile');
   };
 
   const handleClick = () => {

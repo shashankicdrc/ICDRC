@@ -1,5 +1,4 @@
 "use client";
-
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
 import Navbar from "../../components/navbar/page";
@@ -7,15 +6,20 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { url } from "../../../api";
 import { toast } from "react-hot-toast";
+import { RiDeleteBin3Line } from "react-icons/ri";
 import axios from "axios";
-import TabSection from "./tabsection";
-import { Table, Thead, Tbody, Tr, Th, Td, TableContainer } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from "@chakra-ui/react";
 import PageLoader from "../../components/pageloader/page";
 
-import { RiDeleteBin3Line } from "react-icons/ri";
-
-
-const ContactMessages = () => {
+const PartnerData = () => {
   const router = useRouter();
   const admin = useSelector((state) => state.admin);
   const [data, setData] = useState([]);
@@ -61,73 +65,75 @@ const ContactMessages = () => {
     fetchData();
   }, [admin.token]);
 
+//   const getData = async () => {
+//       setLoading(true);
+//       try {
+//           const res = await axios.get(`${url}/api/individualcomplaint/all`, {
+//               headers: {
+//                   Authorization: admin.token,
+//                   'Content-Type': 'application/json',
+//               }
+//           })
+//           if (res.data.success) {
+//               setData(res.data.data);
+//           }
+//       }
+//       catch (err) {
+//           // console.log(err);
+//           if (err?.response?.data?.message) {
+//               toast.error(err?.response?.data?.message);
+//           }
+//       }
+//       setLoading(false);
+//   }
+
+//   useEffect(() => {
+//       const getData = async () => {
+//           setLoading(true);
+//           try {
+//               const res = await axios.get(`${url}/api/individualcomplaint/all`, {
+//                   headers: {
+//                       Authorization: admin.token,
+//                       'Content-Type': 'application/json',
+//                   }
+//               })
+//               if (res.data.success) {
+//                   setData(res.data.data);
+//               }
+//           }
+//           catch (err) {
+//               // console.log(err);
+//               if (err?.response?.data?.message) {
+//                   console.log(err?.response?.data?.message);
+//               }
+//           }
+//           setLoading(false);
+//       }
+//       getData();
+//   }, [admin.token])
+
+//   const deletebtn = async (id) => {
+//       try {
+//           const res = await axios.delete(`${url}/api/individualcomplaint/all/${id}`, {
+//               headers: {
+//                   Authorization: admin.token,
+//                   'Content-Type': 'application/json',
+//               }
+//           })
+//           if (res.data.success) {
+//               toast.success(res.data.message);
+//               getData();
+//           }
+//       }
+//       catch (err) {
+//           toast.error(err.response.data.message)
+//           // console.log(err);
+//       }
+//   }
 
   const formatCreatedAtDate = (createdAt) => {
     const createdAtDate = new Date(createdAt);
     return createdAtDate.toLocaleDateString();
-  };
-
-  // const getData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios.get(`${url}/api/individualcomplaint/all`, {
-  //       headers: {
-  //         Authorization: admin.token,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     if (res.data.success) {
-  //       setData(res.data.data);
-  //     }
-  //   } catch (err) {
-  //     // console.log(err);
-  //     if (err?.response?.data?.message) {
-  //       toast.error(err?.response?.data?.message);
-  //     }
-  //   }
-  //   setLoading(false);
-  // };
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const res = await axios.get(`${url}/api/individualcomplaint/all`, {
-  //         headers: {
-  //           Authorization: admin.token,
-  //           "Content-Type": "application/json",
-  //         },
-  //       });
-  //       if (res.data.success) {
-  //         setData(res.data.data);
-  //       }
-  //     } catch (err) {
-  //       // console.log(err);
-  //       if (err?.response?.data?.message) {
-  //         console.log(err?.response?.data?.message);
-  //       }
-  //     }
-  //     setLoading(false);
-  //   };
-  //   getData();
-  // }, [admin.token]);
-
-  const deletebtn = async (id) => {
-    try {
-      const res = await axios.delete(`${url}/api/individualcomplaint/all${id}`, {
-        headers: {
-          Authorization: admin.token,
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.data.success) {
-        toast.success(res.data.message);
-        getData();
-      }
-    } catch (err) {
-      toast.error(err.response.data.message);
-      // console.log(err);
-    }
   };
 
   return (
@@ -152,29 +158,11 @@ const ContactMessages = () => {
               data-aos="fade-up"
               data-aos-duration="2000"
             >
-              All Registrated Forms
+              Partner Form Data
             </h2>
           </div>
         </div>
       </div>
-
-      <h1
-        className="text-gray-900 text-3xl mt-6 md:mt-8 md:text-6xl font-[Roboto] font-bold text-center bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent px-8"
-        data-aos="fade-up"
-        data-aos-duration="1000"
-      >
-        REGISTERED COMPLAINT
-      </h1>
-      <p
-        className="text-gray-700 text-center font-medium text-md py-2  tracking-widest mx-auto px-8"
-        data-aos="fade-up"
-        data-aos-duration="1000"
-      >
-        All registered complain data individual and organizational details.
-      </p>
-
-      {/* <ComplainForm /> */}
-      <TabSection />
 
       <div
         className="border-2 bg-white border-gray-400 my-4 mx-4  md:px-3 py-2 md:py-4 rounded-md"
@@ -187,7 +175,7 @@ const ContactMessages = () => {
           </p>
         </div>
         <div className="mt-4 md:mt-6 lg:mt-8">
-        <TableContainer>
+          <TableContainer>
             <Table variant="striped" colorScheme="orange">
               <Thead>
                 <Tr>
@@ -247,5 +235,4 @@ const ContactMessages = () => {
     </div>
   );
 };
-
-export default ContactMessages;
+export default PartnerData;

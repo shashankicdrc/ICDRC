@@ -3,14 +3,15 @@ import React from 'react';
 import { Oval } from 'react-loader-spinner';
 
 // Define the PageLoader component
-const PageLoader = ({ height = 20, color = "black" }) => {
+const PageLoader = () => {
     return (
         <div>
             {/* Render the loading spinner */}
             <Oval
-                height={height}
-                width={height}
-                color={color}
+                height="80"
+                width="80"
+                color="Black"
+                
                 visible={true}
                 ariaLabel='oval-loading'
             />

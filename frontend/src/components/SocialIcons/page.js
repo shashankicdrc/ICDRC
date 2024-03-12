@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react'
-import './Socialicon.module.css';
+// import './Socialicon.module.css';
 import { IoShareSocialSharp } from 'react-icons/io5';
 // import ChatBot from 'react-simple-chatbot';
 // import { TbMessageChatbot } from 'react-icons/tb'

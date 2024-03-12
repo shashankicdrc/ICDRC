@@ -1,31 +1,36 @@
+
+
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios';
 
 import jwtDecode from 'jwt-decode';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { url } from '../app/api';
 
 export const initialState = {
   token: typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('token') : null,
   name: "",
   emailId: '',
-
+  
   _id: '',
 };
 
 export const loginUser = createAsyncThunk(
-    "User/login",
+    "user/login",
     async (user) => {
         try {
+            console.log(user);
             const res = await axios.post(`${url}/api/loginuser`, {
                 emailId: user.email,
                 password: user.password
             });
             if (res.data.success) {
+                console.log("login successful");
                 toast.success(res.data.message)
                 sessionStorage.setItem('token', res.data.token);
             }
             else {
+                
                 toast.error("Login Failed, Invalid Credentials")
                 return;
             }
@@ -37,8 +42,8 @@ export const loginUser = createAsyncThunk(
     }
 )
 
-const UserSlice = createSlice({
-    name: 'User',
+const userSlice = createSlice({
+    name: 'user',
     initialState,
     reducers: {
         loadUser(state, action) {
@@ -53,7 +58,7 @@ const UserSlice = createSlice({
                     name: user.name,
                     emailId: user.emailId,
                     _id: user._id,
-
+                 
                 };
             }
         },
@@ -65,6 +70,7 @@ const UserSlice = createSlice({
                 token: "",
                 name: "",
                 emailId: '',
+               
                 _id: '',
             }
         }
@@ -89,5 +95,5 @@ const UserSlice = createSlice({
     }
 });
 
-export const { loadUser, logoutUser } = UserSlice.actions
-export default UserSlice.reducer
+export const { loadUser, logoutUser } = userSlice.actions
+export default userSlice.reducer

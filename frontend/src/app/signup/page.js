@@ -7,6 +7,10 @@ import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import SocialIcons from '../../components/SocialIcons/page';
 import axios from 'axios';
 import { url } from '../api';
+import { signIn } from "next-auth/react";
+import { FcGoogle } from "react-icons/fc";
+import toast, { Toaster } from 'react-hot-toast';
+
 
 const Signup = () => {
     const [name, setName] = useState('');
@@ -50,6 +54,9 @@ const Signup = () => {
                 setemailId('');
                 setPassword('');
                 console.log(res.data.message);
+               
+                window.location.reload();
+                toast.success("Signup Successful")
             }
         } catch (err) {
             console.error(err?.response?.data?.message);
@@ -78,7 +85,7 @@ const Signup = () => {
                                     </div>
                                     <div className="relative mt-6">
                                         <input type="email" name="email" id="email" placeholder="email Address" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autoComplete="NA" value={emailId} onChange={(e) => setemailId(e.target.value)} required />
-                                        <label htmlFor="email" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">emailId Address</label>
+                                        <label htmlFor="email" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Email</label>
                                     </div>
                                     <div className="relative mt-6">
                                         <input type="password" name="password" id="password" placeholder="Password" className="peer peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" value={password} onChange={(e) => setPassword(e.target.value)} required />
@@ -95,7 +102,7 @@ const Signup = () => {
                                     </p>
 
                                     <div className='mt-4 flex flex-col justify-center items-center gap-4' data-aos="fade-up" data-aos-duration="1000">
-                                        <button 
+                                        {/* <button 
                                             className="flex items-center bg-white border border-gray-800 rounded-lg shadow-md max-w-xs px-8 py-4 text-sm font-medium text-gray-800 hover:bg-orange-400 hover:text-white hover:border-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
                                             <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="-0.5 0 48 48" version="1.1">
@@ -120,7 +127,12 @@ const Signup = () => {
                                                 </g>
                                             </svg>
                                             <span>Continue with Google</span>
-                                        </button>
+                                        </button> */}
+
+                                        
+<div className='flex justify-center items-center bg-gray-200 text-gray-800 font-medium py-2 px-2 rounded-md'>  <FcGoogle /><button className='bg-gray-200 text-gray-800 font-medium px-2 rounded-md' onClick={() => signIn("google")}>Signup with google</button>
+
+</div>
 
                                         
                                     </div>

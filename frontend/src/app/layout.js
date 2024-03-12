@@ -4,9 +4,11 @@ import PageLoader from "../components/pageloader/page";
 
 import { Providers } from "./Providers";
 import { store } from "../features/store";
-import { GoogleOAuthProvider } from "@react-oauth/google";
-import { ChakraProvider } from "@chakra-ui/react";
 
+import { ChakraProvider } from "@chakra-ui/react";
+import { Toaster } from "react-hot-toast"
+
+import { NextAuthProvider } from "./Providers";
 
 export const metadata = {
   title: "ICDRC-One Stop Solution For Insurance Claim Dispute",
@@ -21,7 +23,12 @@ export default function RootLayout({ children }) {
           <main>
             <Suspense fallback={<PageLoader />}>
               
-             <ChakraProvider>{children}</ChakraProvider> 
+             <ChakraProvider>
+             <NextAuthProvider>
+             {children} 
+             </NextAuthProvider>
+              
+              <Toaster /></ChakraProvider> 
               
               </Suspense>
           </main>

@@ -1,6 +1,6 @@
 const express = require('express');
 const { asyncError } = require('../../middlewares/error');
-const User =require("..//..//models/User")
+const User =require("../../models/User")
 const router = express.Router()
 const bcrypt = require('bcrypt')
 const generateToken = require('../../utils/generateToken')

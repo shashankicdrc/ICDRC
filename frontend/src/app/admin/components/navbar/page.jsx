@@ -37,7 +37,7 @@ const AdminNav = () => {
                 </div>
                 <ul className="md:flex hidden items-center gap-8 font-[Signika+Negative] z-20">
                     <li>
-                        <Link href="/admin/home" className={`${navbar ? "text-gray-900" : "text-white"} py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}>
+                        <Link href="/admin/dashboard" className={`${navbar ? "text-gray-900" : "text-white"} py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}>
                             Home
                         </Link>
                     </li>
@@ -79,7 +79,7 @@ const AdminNav = () => {
         `}
                 >
                     <li>
-                        <Link href="/admin/dashboard/Home" className="py-7 px-3 inline-block">
+                        <Link href="/admin/dashboard" className="py-7 px-3 inline-block">
                             Home
                         </Link>
                     </li>

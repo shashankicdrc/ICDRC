@@ -37,6 +37,7 @@ const PartnerData = () => {
         window.scrollTo(0, 0);
     }, [])
 
+
     const getData = async () => {
         setLoading(true);
         try {

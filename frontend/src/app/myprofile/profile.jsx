@@ -11,7 +11,7 @@ import axios from "axios";
 import { useParams } from "next/navigation";
 
 // import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-
+import { useSession } from "next-auth/react";
 import {
   MDBCol,
   MDBContainer,
@@ -26,67 +26,67 @@ import {
 } from "mdb-react-ui-kit";
 
 export default function ProfilePage() {
+
+
+  const { status, data: session } = useSession();
   const params = useParams();
   const { id } = useParams();
   const router = useRouter();
   const user = useSelector((state) => state.user);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+ 
 
   useEffect(() => {
-    if (!user._id) {
+    if (!user._id ) {
       router.push("/login");
     }
   }, [router, user]);
+
+
+
+//google auth routing
+
+  //  useEffect(()=>{
+  //     if (!status === "authenticated"){
+  //       router.push('/login')
+  //     }
+  //   })
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  const getData = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(`${url}/api/registeruser`, {
-        headers: {
-          Authorization: admin.token,
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.data.success) {
-        setData(res.data.data);
-      }
-    } catch (err) {
-      // console.log(err);
-      if (err?.response?.data?.message) {
-        toast.error(err?.response?.data?.message);
-      }
-    }
-    setLoading(false);
-  };
+ 
 
   useEffect(() => {
-    const getData = async () => {
+    const fetchData = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${url}/api/individualcomplaint`, {
-          headers: {
-            Authorization: admin.token,
-            "Content-Type": "application/json",
-          },
-        });
-        if (res.data.success) {
-          setData(res.data.data);
+        // Fetch all individual complaints
+        const response = await fetch(`${url}/api/individualcomplaint/all`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
         }
-      } catch (err) {
-        // console.log(err);
-        if (err?.response?.data?.message) {
-          console.log(err?.response?.data?.message);
-        }
+        const allData = await response.json();
+        
+        // Filter the data based on the logged-in user's email ID
+        const filteredData = allData.filter(item => item.email === session.user.email);
+  
+        // Update the state with the filtered data
+        setData(filteredData);
+        console.log("Filtered Data:", filteredData);
+      } catch (error) {
+        console.error(error);
+        setError("Failed to fetch data. Please try again later.");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    getData();
-  }, [user.token]);
+  
+    fetchData();
+  }, [session]);
+  
 
   const deletebtn = async (id) => {
     try {
@@ -110,6 +110,11 @@ export default function ProfilePage() {
     const createdAtDate = new Date(createdAt);
     return createdAtDate.toLocaleDateString();
   };
+
+ 
+    // if (status === "authenticated"){
+      
+  
 
   return (
     <>
@@ -190,7 +195,11 @@ export default function ProfilePage() {
                     
                     <MDBCol sm="9">
                       <MDBCardText className="text-muted pt-2 pb-2">
-                       Name:  {user?.emailId}
+                       {data.map((item)=>{
+                        <div key={item._id}>
+<p>{item.name}</p>
+                        </div>
+                       })}
                       </MDBCardText>
                     </MDBCol>
                   </MDBRow>
@@ -212,4 +221,6 @@ export default function ProfilePage() {
       </section>
     </>
   );
+
+
 }

@@ -2,7 +2,8 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation';
+import { FcGoogle } from "react-icons/fc";
 
 import Footer from '../../components/footer/page';
 import HomeNav from '../../components/Navbar/page';
@@ -10,27 +11,41 @@ import Link from 'next/link';
 import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import SocialIcons from '../../components/SocialIcons/page';
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
-// import { Helmet } from 'react-helmet';
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
-import jwtDecode from "jwt-decode";
+
 import { loginUser } from '../../features/UserSlice';
 import ForgotPassword from '../../components/forgetPassword/ForgotPassword';
+import { signIn } from "next-auth/react";
+// import { useSession } from "next-auth/react";
+
+
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    // const { status, data: session } = useSession();
 
     const dispatch = useDispatch();
     const router = useRouter();
     const user = useSelector((state) => state.user);
 
+// google auth routing 
+
+    // useEffect(()=>{
+    //   if (status === "authenticated"){
+    //     router.push('/myprofile')
+    //   }
+    // })
+
+    // email password routing
 
     useEffect(() => {
       if (user._id) {
         console.log(user)
           router.push('/myprofile')
       }
+     
   }, [router, user])
 
   useEffect(() => {
@@ -41,7 +56,7 @@ const Login = () => {
       e.preventDefault();
       setLoading(true);
       let user = { email, password };
-      console.log(user);
+      // console.log(user);
       dispatch(loginUser(user)).then(() => {
           setLoading(false);
       });
@@ -59,20 +74,6 @@ const Login = () => {
       <SocialIcons />
       <HomeNav />
 
-      {/* <Helmet>
-        <meta charSet="utf-8" />
-        <title>ICDRC: login</title>
-        <link rel="canonical" href="" />
-        <meta
-          name="description"
-          content="Connect with us, View your case status, client satisfaction. Witness our commitment to transparent processes and empowering individuals in their insurance claim experiences. "
-        />
-        <meta
-          name="keywords"
-          content="login page, register your complain, reliable insurance solutions, Our Success stories, ICDRC, successful claims, Insurance recovery, ICDRC official Claim advocates, Fast insurance settlements, InsuranceSamadhan Alternative"
-        />
-      </Helmet> */}
-
 
       <div className='' style={{ backgroundImage: `url(https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784022/Home_page/Home1/homeslider2_zzybpj.webp)` }}>
         <div className='flex bg-cover bg-no-repeat justify-center items-center h-screen w-screen px-4 md:px-0' style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
@@ -86,7 +87,7 @@ const Login = () => {
               <div className="mt-5" data-aos="fade-up" data-aos-duration="1000">
                 <form type="submit" onSubmit={handleSubmit}>
                   <div className="relative mt-6">
-                    <input type="email" name="email" id="email" placeholder="Email Address" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autoComplete="NA" value={email} required={true} onChange={(e)=> setEmail(e.target.value)} />
+                    <input type="email" name="email" id="email" placeholder="Email" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autoComplete="NA" value={email} required={true} onChange={(e)=> setEmail(e.target.value)} />
                     <label htmlFor="email" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Email Address</label>
                   </div>
                   <div className="relative mt-6">
@@ -119,23 +120,9 @@ const Login = () => {
                     {/* google Outh login system */}
 
 
-                  <GoogleOAuthProvider clientId="305051668026-5s7be4nbuq4ofkpaf0lpvpe463u0v6s6.apps.googleusercontent.com">
+                  <div className='flex justify-center items-center bg-gray-200 text-gray-800 font-medium py-2 px-2 rounded-md'>  <FcGoogle /><button className='bg-gray-200 text-gray-800 font-medium px-2 rounded-md' onClick={() => signIn("google")}>Signin with google</button>
 
-
-                   <GoogleLogin
-                             onSuccess={credentialResponse => {
-                              const decoded = jwtDecode(credentialResponse.credential);
-                            console.log(decoded);
-                                 }}
-                             onError={() => {
-                            console.log('Login Failed');
-                                          }}
-                   />
-
-                  
-                  </GoogleOAuthProvider>
-
-                 
+                  </div>
 
                  
                     
