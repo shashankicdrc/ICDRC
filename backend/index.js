@@ -67,7 +67,7 @@ app.use('/api/loginuser',loginUser)
 
 
 
-
+// const MONGO_URL = process.env.MONGO_URL;
 // APP LISTENING AND DB
 const PORT = process.env.PORT || 5000;
 connectDB().then(() => {

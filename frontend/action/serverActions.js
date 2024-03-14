@@ -2,23 +2,31 @@
 import { v4 as uuidv4 } from "uuid";
 import sha256 from "crypto-js/sha256";
 import axios from "axios";
-const paymentModel = require('../../backend/models/Payment')
+import paymentModel from '../models/Payment';
 
 
 export async function payment(formData) {
+  console.log("hii", formData);
   const transactionid = "Tr-" + uuidv4().toString(36).slice(-6);
+  const {
+    name,
+    email,
+    mobile,
+    amount
+  } = formData;
+
 
   const payload = {
-    name: formData.name,
-    amount: formData.amount * 100,
-    email:formData.email,
-    mobile:formData.mobile,
+    name,
+    amount:amount*100,
+    email,
+    mobile,
     merchantId: process.env.NEXT_PUBLIC_MERCHANT_ID,
     merchantTransactionId: transactionid,
     merchantUserId: "MUID-" + uuidv4().toString(36).slice(-6),
-    redirectUrl: `http://localhost:3000/api/status/${transactionid}`,
+    redirectUrl: `https://icdrc.in/api/status/${transactionid}`,
     redirectMode: "POST",
-    callbackUrl: `http://localhost:3000/api/status/${transactionid}`,
+    callbackUrl: `https://icdrc.in/api/status/${transactionid}`,
     mobileNumber: "9999999999",
     paymentInstrument: {
       type: "PAY_PAGE",
@@ -37,7 +45,17 @@ export async function payment(formData) {
   const checksum = dataSha256 + "###" + process.env.NEXT_PUBLIC_SALT_INDEX;
   console.log("c====", checksum);
 
+  const details={
+    name,
+    email,
+    mobile,
+    amount,
+    merchantTransactionId:transactionid,
+    merchantUserId:"MUID-" + uuidv4().toString(36).slice(-6),
+}
+//  paymentModel.create(details);
   const UAT_PAY_API_URL = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+
 
   const response = await axios.post(
     UAT_PAY_API_URL,
@@ -53,15 +71,7 @@ export async function payment(formData) {
     }
   );
 
-  const details={
-    name,
-    email,
-    mobile,
-    amount,
-    transactionid,
-    merchantTransactionId,
-}
-await paymentModel.create(details);
+  
 
   const redirect = response.data.data.instrumentResponse.redirectInfo.url;
   console.log("1",redirect)

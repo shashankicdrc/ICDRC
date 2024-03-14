@@ -18,4 +18,22 @@ const connectDB = async () => {
     }
 };
 
+// const connectDB = async (MONGO_URL, options = {}) => {
+//     try {
+//         const defaultOptions = {
+//             useNewUrlParser: true,
+//             useUnifiedTopology: true,
+//             bufferCommands: false, // Disable command buffering
+//             // Add other options here as needed
+//         };
+
+//         const connectionOptions = { ...defaultOptions, ...options };
+
+//         await mongoose.connect(MONGO_URL, connectionOptions);
+//         console.log(`Database running at ${mongoose.connection.host}`);
+//     } catch (error) {
+//         console.error('Error connecting to the database:', error);
+//     }
+// };
+
 module.exports = connectDB;

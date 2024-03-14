@@ -10,7 +10,7 @@ const Pay = () => {
     name: "",
     email:"",
     mobile: "",
-    amount:"",
+    amount:"100",
   });
 
   const handleInputChange = (e) => {
@@ -22,6 +22,8 @@ const Pay = () => {
     e.preventDefault();
 
     try {
+      console.log("hii2",formData);
+      
         const { url: redirect } = await payment(formData);
         console.log("Redirect URL:", redirect); 
         router.push(redirect); 
@@ -101,9 +103,9 @@ const Pay = () => {
               <input
                 id="Amount"
                 name="amount"
-                value="100"
+                value={formData.amount}
                 autoComplete="Amount"
-                onChange={(e) => handleFormData(e)}
+                disabled // Disable the inpu
                 required=""
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
