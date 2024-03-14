@@ -65,7 +65,7 @@ const OrganizationComplainForm = () => {
             <div className='border-2 bg-white border-gray-500 p-4 rounded-2xl w-11/12 md:w-1/2 flex flex-col justify-center items-center'>
                 <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold underline text-center p-2 text-orange-600 font-[Poppins]'>Register as an Organization</h2>
                 <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold text-center  text-orange-600 font-[Poppins]'>
-Consultation Fee-5000₹</h2>
+Registration Fee-5000₹</h2>
                 <form className='my-6 w-full md:w-4/5 flex justify-center items-center flex-col gap-4' onSubmit={SubmitHandler} data-aos="fade-up" data-aos-duration="1000">
                     {/* Name */}
                     <label
@@ -75,7 +75,7 @@ Consultation Fee-5000₹</h2>
                         <input
                             type="text"
                             id="organization"
-                            className="peer border-none outline-none bg-white rounded px-1 placeholder-transparent focus:border-white focus:outline-none focus:ring-0 w-full text-gray-900 font-[Poppins] text-sm "
+                            className="peer border-none outline-none bg-white rounded px-1 placeholder-transparent focus:border-white focus:outline-none focus:ring-0 w-full text-gray-900 font-[Poppins] text-sm"
                             placeholder="Organization Name"
                             value={name}
                             maxLength={50}

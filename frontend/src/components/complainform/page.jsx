@@ -133,7 +133,7 @@ const ComplainForm = () => {
             <div className='border-2 bg-white border-gray-500 p-4 rounded-2xl w-11/12 md:w-1/2 flex flex-col justify-center items-center'>
                 <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold text-center underline p-2 text-orange-500 font-[Poppins]'>Register as an Individual</h2>
                 <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold text-center  text-orange-600 font-[Poppins]'>
-Consultation Fee-500₹</h2>
+Registration Fee-500₹</h2>
                 <form className='my-6 w-full md:w-4/5 flex justify-center items-center flex-col gap-4' onSubmit={SubmitHandler} data-aos="fade-up" data-aos-duration="1000">
                     {/* Name */}
                     <label

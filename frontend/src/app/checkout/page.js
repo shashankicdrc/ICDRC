@@ -85,7 +85,7 @@ const Checkout = () => {
             </h5>
             <div class="flex justify-between py-3 items-baseline text-gray-900 dark:text-white">
               <span class="text-s text-start ">Individual Complain:  
-Consultancy fees</span>
+              Consultancy fees</span>
               <span class="text-l text-end text-green-700"> ₹ 500</span>
               
             </div>
