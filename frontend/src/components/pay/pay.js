@@ -22,7 +22,7 @@ const Pay = () => {
     e.preventDefault();
 
     try {
-        const { url: redirect } = await payment();
+        const { url: redirect } = await payment(formData);
         console.log("Redirect URL:", redirect); 
         router.push(redirect); 
     } catch (error) {
@@ -101,7 +101,7 @@ const Pay = () => {
               <input
                 id="Amount"
                 name="amount"
-                value="500"
+                value="100"
                 autoComplete="Amount"
                 onChange={(e) => handleFormData(e)}
                 required=""

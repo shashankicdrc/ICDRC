@@ -5,15 +5,11 @@ const Schema = mongoose.Schema(
       type: String,
       required: true,
     },
-  number: {
+  email: {
       type: String,
       required: true,
     },
-  transactionId: {
-      type: String,
-      required: true,
-    },
-  muId: {
+  mobile: {
       type: String,
       required: true,
     },
@@ -22,11 +18,14 @@ const Schema = mongoose.Schema(
       default: 1,
       required: true,
     },
-    paymentFor:{
-         type: String,
-        enum: ["clinic-session"],
-        default: "clinic-session"
-   },
+  transactionid: {
+      type: String,
+      required: true,
+    },
+    merchantUserId: {
+      type: String,
+      required: true,
+    },
     status: {
       type: String,
       enum: ["successful","failed","pending"],

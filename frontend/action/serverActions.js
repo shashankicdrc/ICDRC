@@ -2,16 +2,20 @@
 import { v4 as uuidv4 } from "uuid";
 import sha256 from "crypto-js/sha256";
 import axios from "axios";
+const paymentModel = require('../../backend/models/Payment')
 
 
-export async function payment() {
+export async function payment(formData) {
   const transactionid = "Tr-" + uuidv4().toString(36).slice(-6);
 
   const payload = {
+    name: formData.name,
+    amount: formData.amount * 100,
+    email:formData.email,
+    mobile:formData.mobile,
     merchantId: process.env.NEXT_PUBLIC_MERCHANT_ID,
     merchantTransactionId: transactionid,
     merchantUserId: "MUID-" + uuidv4().toString(36).slice(-6),
-    amount: 50000,
     redirectUrl: `http://localhost:3000/api/status/${transactionid}`,
     redirectMode: "POST",
     callbackUrl: `http://localhost:3000/api/status/${transactionid}`,
@@ -48,6 +52,16 @@ export async function payment() {
       },
     }
   );
+
+  const details={
+    name,
+    email,
+    mobile,
+    amount,
+    transactionid,
+    merchantTransactionId,
+}
+await paymentModel.create(details);
 
   const redirect = response.data.data.instrumentResponse.redirectInfo.url;
   console.log("1",redirect)
