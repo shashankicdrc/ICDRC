@@ -38,10 +38,10 @@ export async function POST(req, res) {
 
 
   if (response.data.code == "PAYMENT_SUCCESS")
-  return NextResponse.redirect("http://localhost:3000/success",{
+  return NextResponse.redirect("https://icdrc.in/success",{
     status: 301,
   });
-else return NextResponse.redirect("http://localhost:3000/failure",{
+else return NextResponse.redirect("https://icdrc.in/failure",{
   // a 301 status is required to redirect from a POST to a GET route
   status: 301,
 });
