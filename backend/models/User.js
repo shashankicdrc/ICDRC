@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const schema = new mongoose.Schema({
+   
     emailId: {
         type: String,
         required: [true, "Email Id is required"],
@@ -18,6 +19,6 @@ const schema = new mongoose.Schema({
 
 mongoose.models = {};
 
-const Admin = mongoose.model('newuser', schema)
+const User = mongoose.model('User', schema)
 
-module.exports = Admin;
+module.exports = {User};

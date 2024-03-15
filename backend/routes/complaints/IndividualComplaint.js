@@ -2,6 +2,7 @@ const express = require("express");
 const {IndividualComplaint} = require("..//..//models/IndividualComplaint")
 const Individualrouter = express.Router();
 var nodemailer = require('nodemailer');
+const {User} = require("..//..//models/User")
 
 const policyTypeToEmail = {
   'Life Insurance': 'lifeinsurance@icdrc.in',
@@ -32,7 +33,9 @@ Individualrouter.post("/", async (req, res) => {
   {
      
     try {
-      let user = await IndividualComplaint.create({ name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails });
+      const loggedInUser = req.user;
+
+      let user = await IndividualComplaint.create({  name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails });
       res.send({
           message: "User conplaint created",
           status: 1,
