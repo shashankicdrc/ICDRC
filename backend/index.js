@@ -19,7 +19,15 @@ const registerUser = require('./routes/auth/registerUser')
 const loginUser =require("./routes/auth/loginUser")
 const {Individualrouter} = require("./routes/complaints/IndividualComplaint");
 const {Organizationalrouter} = require("./routes/complaints/OrganizationalComplaint");
+
 const Payment = require("./routes/payment/payment");
+
+const { Documentrouter } = require("./routes/document/document");
+const ResetPaswword = require("./routes/resetpassword/reset")
+
+
+
+
 
 //  Initializing app
 const app = express();
@@ -65,6 +73,13 @@ app.use('/api/registeruser', registerUser)
 app.use('/api/loginuser',loginUser)
 // app.use("/api/v1",Payment);
 
+app.use("/api",Documentrouter)
+// reset password
+app.use("/api",ResetPaswword)
+
+
+
+
 
 
 // const MONGO_URL = process.env.MONGO_URL;
@@ -76,27 +91,3 @@ connectDB().then(() => {
     })
 })
 
-// var nodemailer = require('nodemailer');
-
-// var transporter = nodemailer.createTransport({
-//   service: 'gmail',
-//   auth: {
-//     user: 'kartikey.chaudhary.webdesys@gmail.com',
-//     pass: 'pulz gygf jlct ragt'
-//   }
-// });
-
-// var mailOptions = {
-//   from: 'kartikey.chaudhary.webdesys@gmail.com',
-//   to: ['bhattmohit2004@gmail.com','kartikey9949@gmail.com'],
-//   subject: 'Sending Email using Node.js',
-//   text: 'That is for testing purpose!',
-// };
-
-// transporter.sendMail(mailOptions, function(error, info){
-//   if (error) {
-//     console.log(error);
-//   } else {
-//     console.log('Email sent: ' + info.response);
-//   }
-// });
