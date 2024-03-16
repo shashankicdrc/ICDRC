@@ -5,7 +5,7 @@ import {url} from '../../../api'
 import {furl} from '../../../api'
 
 export async function POST(req, res) {
-  
+  try {
   const data = await req.formData();
   const status = data.get("code");
   const merchantId = data.get("merchantId");
@@ -100,7 +100,7 @@ if (response.data.code === "PAYMENT_SUCCESS") {
   else {
     console.error("No complaint form data found in local storage.");
     // Redirect to the failure page if form data is not found
-    return NextResponse.redirect(`${furl}/success`, { status: 301 });
+    return NextResponse.redirect(`${furl}/failure`, { status: 301 });
   }
 } else {
   // Redirect to the failure page if payment was not successful
@@ -110,9 +110,9 @@ if (response.data.code === "PAYMENT_SUCCESS") {
   console.log("formdataor",storedFormDataOrg)
   return NextResponse.redirect(`${furl}/failure`, { status: 301 });
 }
-// } catch (error) {
-// console.error("Error: catch ", error.message);
-// // Redirect to the failure page if an error occurs
-// return NextResponse.redirect(`${furl}/failure`, { status: 301 });
-// }
+} catch (error) {
+console.error("Error: catch ", error.message);
+// Redirect to the failure page if an error occurs
+return NextResponse.redirect(`${furl}/failure`, { status: 301 });
+}
 }
