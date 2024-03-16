@@ -27,12 +27,12 @@ var transporter = nodemailer.createTransport({
 
 Organizationalrouter.post("/", async (req, res) => {
   console.log("123");
-  const { organization_name, mobile, email, country, state,city, address,language, policyCompany, policyType, problem, problemDetails } = req.body;
+  const { organization_name, mobile, email, country, state,city, address,language, policyCompany, policyType, problem, problemDetails ,transactionId} = req.body;
   
   {
      
     try {
-      let user = await OrganizationalComplaint.create({ organization_name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails });
+      let user = await OrganizationalComplaint.create({ organization_name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails,transactionId });
       res.send({
           message: "Organizational conplaint created",
           status: 1,

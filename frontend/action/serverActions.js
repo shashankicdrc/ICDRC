@@ -2,8 +2,7 @@
 import { v4 as uuidv4 } from "uuid";
 import sha256 from "crypto-js/sha256";
 import axios from "axios";
-import paymentModel from '../models/Payment';
-
+import { furl } from "../src/app/api";
 
 export async function payment(formData) {
   console.log("hii", formData);
@@ -18,16 +17,15 @@ export async function payment(formData) {
 
   const payload = {
     name,
-    amount:amount*100,
+    amount,
     email,
     mobile,
     merchantId: process.env.NEXT_PUBLIC_MERCHANT_ID,
     merchantTransactionId: transactionid,
     merchantUserId: "MUID-" + uuidv4().toString(36).slice(-6),
-    redirectUrl: `https://icdrc.in/api/status/${transactionid}`,
+    redirectUrl: `${furl}/api/status/${transactionid}`,
     redirectMode: "POST",
-    callbackUrl: `https://icdrc.in/api/status/${transactionid}`,
-    mobileNumber: "9999999999",
+    callbackUrl: `${furl}/api/status/${transactionid}`,
     paymentInstrument: {
       type: "PAY_PAGE",
     },

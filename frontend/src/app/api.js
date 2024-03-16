@@ -1,6 +1,9 @@
 export const url = 'https://api.icdrc.in'
 // export const url = 'http://localhost:5000'
 
+// export const furl = 'http://localhost:3000'
+export const furl = 'https://icdrc.in'
+
 
 
 

@@ -7,6 +7,7 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { State, City } from "country-state-city";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const OrganizationComplainForm = () => {
   const [name, setName] = useState("");
@@ -27,7 +28,7 @@ const OrganizationComplainForm = () => {
   const country = "India";
 
   const [cityData, setCityData] = useState();
-
+  const router=useRouter();
   const states = State.getStatesOfCountry("IN");
 
   useEffect(() => {
@@ -54,23 +55,10 @@ const OrganizationComplainForm = () => {
   // FORM SUBMIT HANDLER
   const SubmitHandler = (e) => {
     e.preventDefault();
-    console.log({
-      name,
-      mobile,
-      email,
-      country,
-      state,
-      city,
-      address,
-      language,
-      policyType,
-      otherPolicyType,
-      problem,
-      otherProblem,
-      problemDetails,
-      policyCompany,
-      otherPolicyCompany,
-    });
+    localStorage.setItem("complaintFormDataOrg", JSON.stringify({ name,mobile,email,country,state,city,address,language,policyType,otherPolicyType, problem,otherProblem,problemDetails,policyCompany,otherPolicyCompany }));
+        // Redirect to payment page
+        router.push("/payments");
+        setLoading(false);
   };
 
   return (
@@ -506,13 +494,13 @@ const OrganizationComplainForm = () => {
             data-aos="fade-up"
             data-aos-duration="1000"
           >
-            <Link href="/checkout">
+           
               {" "}
-              <button className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300">
+              <button className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300" type="submit">
                 Next
                 <i className="fas fa-chevron-right ml-2 text-sm"></i>
               </button>{" "}
-            </Link>
+            
           </div>
         </form>
       </div>
