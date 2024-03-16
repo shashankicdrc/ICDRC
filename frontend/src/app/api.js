@@ -9,12 +9,7 @@ export const furl = 'https://icdrc.in'
 
 export const UserAuthAPI = {
    
-    // userAccountOTPVerification_API:
-    //   BASE_URL + "/api/v1/userAccountOTPVerification",
-   
-   
-    // changeUserAccountStatus_API: BASE_URL + "/api/v1/changeUserAccountStatus",
-  
+
     // userLogin_API: BASE_URL + "/api/v1/userLogin",
     userUpdatePassword_API: url + "/api/v1/userUpdatePassword",
     // userUpdateProfile_API: BASE_URL + "/api/v1/userUpdateProfile",
