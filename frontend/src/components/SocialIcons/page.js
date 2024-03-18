@@ -171,19 +171,10 @@ const SocialIcons = () => {
 
             {/* Chat Message */}
             {show2 && <div className='social_icons main_icon fixed flex  gap-2 md:gap-4 justify-center items-center bottom-16 md:bottom-20 right-14 md:right-20'>
-                <span className='main_icon bg-green-500 h-8 md:h-12 w-8 md:w-12 cursor-pointer rounded-full flex justify-center items-center  text-white border-2 border-green-500 hover:bg-white hover:text-green-500
-                '>
-                    <AiOutlineWhatsApp className='text-xl md:text-2xl' />
-                </span>
-                <a href="tel:+917042490338" className='main_icon bg-blue-600 h-8 md:h-12 w-8 md:w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-blue-600 hover:bg-white hover:text-blue-600'>
-                    <IoCall className=' text-xl font-semibold md:text-2xl' />
-                </a>
-                <span className='main_icon bg-red-600 h-8 md:h-12 w-8 md:w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-red-600 hover:bg-white hover:text-red-600'>
-                    <CgMail className='text-xl md:text-2xl' />
-                </span>
+                
             </div>}
 
-
+            
             {!show2 && <div onClick={() => { setShow2(true); setShow(false) }} className="main_icon rounded-full h-8 md:h-12 w-8 md:w-12 bg-white cursor-pointer fixed bottom-16 md:bottom-20 right-4  flex justify-center items-center border-2 border-orange-600 hover:bg-orange-600 transition-all 300 ease-in-out text-orange-600 hover:text-white">
                 <MdContactPhone className=' text-xl font-semibold md:text-2xl' />
             </div>}

@@ -2,8 +2,9 @@ const express = require('express');
 const { asyncError } = require('../../middlewares/error');
 const User =require("..//..//models/User")
 const router = express.Router()
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt') 
 const generateToken = require('../../utils/generateToken')
+
 
 router.post('/', asyncError(async (req, res) => {
     const { emailId, password } = req.body;
@@ -24,11 +25,12 @@ router.post('/', asyncError(async (req, res) => {
 
     // generating the token
     const token = generateToken(user._id, user.name, user.emailId);
+    
 
     res.status(200).json({
         success: true,
         message: `Welcome back, ${user.name}`,
-        token
+        token 
     })
 }))
 

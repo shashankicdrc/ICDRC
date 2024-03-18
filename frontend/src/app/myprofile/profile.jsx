@@ -159,7 +159,7 @@ export default function ProfilePage() {
                           {user?.emailId}
                         </span>
                       </h2>
-                      <h2
+                      {/* <h2
                         className="mt-3 text-md font-semibold font-[Poppins]"
                         data-aos="fade-up"
                         data-aos-duration="2000"
@@ -168,7 +168,7 @@ export default function ProfilePage() {
                         <span className="text-orange-500 font-[Signika+Negative] ml-3 md:ml-8">
                           +9187XXXXXX56
                         </span>
-                      </h2>
+                      </h2> */}
                       <div
                         className="grid place-items-center"
                         data-aos="fade-up"
@@ -186,11 +186,11 @@ export default function ProfilePage() {
               <MDBCard className="mb-4 w-full">
                 <MDBCardBody className="w-full">
                 
-                  <MDBRow>
+                  {/* <MDBRow>
                     
                     <MDBCol sm="9">
                       <MDBCardText className="text-muted pt-2 pb-2">
-                       Name:  {user?.emailId}
+                       Name:  {user?.}
                       </MDBCardText>
                     </MDBCol>
                   </MDBRow>
@@ -202,7 +202,7 @@ export default function ProfilePage() {
                        Email:  {user?.emailId}
                       </MDBCardText>
                     </MDBCol>
-                  </MDBRow>
+                  </MDBRow> */}
                  
                 </MDBCardBody>
               </MDBCard>

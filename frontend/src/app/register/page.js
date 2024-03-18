@@ -3,7 +3,7 @@
 
 
 import React, { useEffect } from 'react'
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Link from 'next/link';
 import HomeNav from '../../components/Navbar/page';
 import Home7Contact from '../../components/HomeComponents/Home7Contact';
@@ -11,23 +11,23 @@ import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
 import TabSection from './tabsection';
 // import Cart from '../../components/cart/cart'
-// import { useRouter } from "next/navigation";
+ import { useRouter } from "next/navigation";
 
 const Register = () => {
 
 
-    // const router = useRouter();
-    // const user = useSelector((state) => state.user);
+    const router = useRouter();
+    const user = useSelector((state) => state.user);
   
-    // useEffect(() => {
-    //     if (!user._id) {
-    //         router.push('/login')
-    //     }
-    // }, [router, user])
+    useEffect(() => {
+        if (!user._id) {
+            router.push('/login')
+        }
+    }, [router, user])
   
-    // useEffect(() => {
-    //   window.scrollTo(0, 0);
-    // }, []);
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
   
 
 

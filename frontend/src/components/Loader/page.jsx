@@ -16,6 +16,7 @@ const Loader = ({ h, color }) => {
             strokeWidth={6}
             strokeWidthSecondary={8}
         />
+        
     )
 }
 

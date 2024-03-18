@@ -19,7 +19,7 @@ const registerUser = require('./routes/auth/registerUser')
 const loginUser =require("./routes/auth/loginUser")
 const {Individualrouter} = require("./routes/complaints/IndividualComplaint");
 const {Organizationalrouter} = require("./routes/complaints/OrganizationalComplaint");
-
+const {Documentrouter} = require('./routes/document/document')
 //  Initializing app
 const app = express();
 
@@ -62,6 +62,8 @@ app.use("/api/organizationalcomplaint", Organizationalrouter)
 app.use('/api/registeruser', registerUser)
 // login user
 app.use('/api/loginuser',loginUser)
+// document
+app.use('/api',Documentrouter)
 
 
 

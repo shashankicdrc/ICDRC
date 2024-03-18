@@ -14,11 +14,22 @@ const schema = new mongoose.Schema({
         type: String,
         required: [true, "Password is required"],
         select: false,
-    }
+    },
+    resetPasswordCode: String,
+    Individualcomplaints: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'IndividualComplaints'
+    }],
+    organizationcomplaints: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'OrganizationalComplaint'
+    }]
+    
+
 }, { timestamps: true });
 
 mongoose.models = {};
 
 const User = mongoose.model('User', schema)
 
-module.exports = {User};
+module.exports = User;

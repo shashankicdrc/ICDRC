@@ -389,11 +389,12 @@ Consultation Fee-500₹</h2>
 
                     {/* Submit Btn */}
                     <div className="text-center mt-4 md:mt-12" data-aos="fade-up" data-aos-duration="1000">
-                      <Link href="/checkout"> <button onSubmit={SubmitHandler} className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300">
+                    {/* <Link href="/payment"> */}
+                     <button className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300" type='submit'>
                             Next
                             <i className="fas fa-chevron-right ml-2 text-sm"></i>
                         </button>
-                        </Link> 
+                        {/* </Link>  */}
                     </div>
 
 

@@ -10,7 +10,7 @@ import SocialIcons from "../../components/SocialIcons/page";
 import ShowStatus from "../casestatus/ShowStatus";
 import Profile from "./profile";
 import UploadDoc from '../../components/uploaddoc/page';
-
+import ShowComplaint from './showComplaint'
 const myprofile = () => {
   const router = useRouter();
   const user = useSelector((state) => state.user);
@@ -102,7 +102,9 @@ const myprofile = () => {
     {/* User Details */}
      
      <Profile />
+     <ShowComplaint></ShowComplaint>
     {/* Upload Documents */}
+
 
     <UploadDoc />
   </div>
