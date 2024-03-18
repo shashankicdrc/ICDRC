@@ -10,7 +10,10 @@ import SocialIcons from "../../components/SocialIcons/page";
 import ShowStatus from "../casestatus/ShowStatus";
 import Profile from "./profile";
 import UploadDoc from '../../components/uploaddoc/page';
+
 import { useSession } from "next-auth/react";
+
+import ShowComplaint from './showComplaint'
 
 const myprofile = () => {
   const router = useRouter();
@@ -112,7 +115,9 @@ const myprofile = () => {
     {/* User Details */}
      
      <Profile />
+     <ShowComplaint></ShowComplaint>
     {/* Upload Documents */}
+
 
     <UploadDoc />
   </div>

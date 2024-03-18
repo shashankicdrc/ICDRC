@@ -20,10 +20,12 @@ const loginUser =require("./routes/auth/loginUser")
 const {Individualrouter} = require("./routes/complaints/IndividualComplaint");
 const {Organizationalrouter} = require("./routes/complaints/OrganizationalComplaint");
 
+
 const Payment = require("./routes/payment/payment");
 
 const { Documentrouter } = require("./routes/document/document");
 const ResetPaswword = require("./routes/resetpassword/reset")
+
 
 
 
@@ -71,11 +73,13 @@ app.use("/api/organizationalcomplaint", Organizationalrouter)
 app.use('/api/registeruser', registerUser)
 // login user
 app.use('/api/loginuser',loginUser)
+
 // app.use("/api/v1",Payment);
 
 app.use("/api",Documentrouter)
 // reset password
 app.use("/api",ResetPaswword)
+
 
 
 

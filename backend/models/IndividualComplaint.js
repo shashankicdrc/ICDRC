@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const schema = new mongoose.Schema({
+    
+   
     name: {
         type: String,
         required: [true, "Name is required"],
@@ -7,13 +9,12 @@ const schema = new mongoose.Schema({
     mobile: {
         type: String,
         required: [true, "mobile is required"],
-        unique: [true, "mobile already exists"]
        
     },
     email: {
         type: String,
         required: [true, "Email Id is required"],
-        unique: [true, "Email Id already exists"]
+       
     },
     country: {
         type: String,

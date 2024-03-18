@@ -2,6 +2,9 @@ const express = require("express");
 const {IndividualComplaint} = require("..//..//models/IndividualComplaint")
 const Individualrouter = express.Router();
 var nodemailer = require('nodemailer');
+const {User} = require("..//..//models/User")
+const verifyToken = require('..//..//utils/verifyToken')
+
 
 const policyTypeToEmail = {
   'Life Insurance': 'lifeinsurance@icdrc.in',
@@ -25,16 +28,18 @@ var transporter = nodemailer.createTransport({
   }
 });
 
+
 Individualrouter.post("/", async (req, res) => {
   console.log("123");
   const { name, mobile, email, country, state,city, address,language, policyCompany, policyType, problem, problemDetails ,transactionId} = req.body;
-  
+
   {
      
     try {
       let user = await IndividualComplaint.create({ name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails ,transactionId});
       res.send({
           message: "User complaint created",
+
           status: 1,
       });
 
@@ -46,10 +51,26 @@ Individualrouter.post("/", async (req, res) => {
       if (emailRecipient) {
         const mailOptions = {
             from: 'kartikey.chaudhary.webdesys@gmail.com',
-            to: emailRecipient,
+            to: [emailRecipient, user.email,'aditiyachaudhary496@gmail.com',],
             subject: ' New Individual Complaint Register ',
             text: `A new individual complaint has been submitted.` ,
-            text : `Details: ${JSON.stringify(req.body)}`,
+            html: `
+        <h2>New Individual Complaint Registered</h2>
+        <p>A new individual complaint has been submitted.</p>
+        <h3>Details:</h3>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Mobile:</strong> ${mobile}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Country:</strong> ${country}</p>
+        <p><strong>State:</strong> ${state}</p>
+        <p><strong>City:</strong> ${city}</p>
+        <p><strong>Address:</strong> ${address}</p>
+        <p><strong>Language:</strong> ${language}</p>
+        <p><strong>Policy Company:</strong> ${policyCompany}</p>
+        <p><strong>Policy Type:</strong> ${policyType}</p>
+        <p><strong>Problem:</strong> ${problem}</p>
+        <p><strong>Problem Details:</strong> ${problemDetails}</p>
+    `
         };
 
         transporter.sendMail(mailOptions, (error, info) => {

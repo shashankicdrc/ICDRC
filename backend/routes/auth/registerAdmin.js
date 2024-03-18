@@ -10,16 +10,16 @@ router.post('/', asyncError(async (req, res) => {
     if (!name || !role || !emailId || !password) return res.status(200).json({ success: false, message: "Please enter all fields." });
 
     // finding the user if he/she exist or not
-    let user = await Admin.findOne({ emailId });
-    if (user) {
+    let admin = await Admin.findOne({ emailId });
+    if (admin) {
         return res.status(400).json({ success: false, message: "User already registered with this Email Id." });
     }
 
     // hashing the password
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    // creating the user
-    user = await Admin.create({
+    // creating the admin
+    admin = await Admin.create({
         name, role, emailId, password: hashedPassword,
     });
 

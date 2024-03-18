@@ -48,7 +48,7 @@ const Login = () => {
 <div className='overflow-hidden'>
             <div className='' style={{ backgroundImage: `url(https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784022/Home_page/Home1/homeslider2_zzybpj.webp)` }}>
                 <div className="fixed bg-gray-900 px-3 py-2 rounded-2xl top-4 left-4">
-                    <Link href='/'><Image src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1692866749/Logo/Copy_of_ICDRC_912_273_px_rwkrry.png" alt="logo" className="md:cursor-pointer w-28 md:w-44" width={200} height={80} /></Link>
+                    <Link href='/admin/dashboard'><Image src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1692866749/Logo/Copy_of_ICDRC_912_273_px_rwkrry.png" alt="logo" className="md:cursor-pointer w-28 md:w-44" width={200} height={80} /></Link>
                 </div>
                 <div className='flex bg-cover bg-no-repeat justify-center items-center h-screen w-screen px-4 md:px-0' style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
                     <div

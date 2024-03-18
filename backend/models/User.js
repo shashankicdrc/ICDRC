@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const schema = new mongoose.Schema({
+   
     emailId: {
         type: String,
         required: [true, "Email Id is required"],
@@ -13,11 +14,22 @@ const schema = new mongoose.Schema({
         type: String,
         required: [true, "Password is required"],
         select: false,
-    }
+    },
+    resetPasswordCode: String,
+    Individualcomplaints: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'IndividualComplaints'
+    }],
+    organizationcomplaints: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'OrganizationalComplaint'
+    }]
+    
+
 }, { timestamps: true });
 
 mongoose.models = {};
 
-const Admin = mongoose.model('newuser', schema)
+const User = mongoose.model('User', schema)
 
-module.exports = Admin;
+module.exports = User;

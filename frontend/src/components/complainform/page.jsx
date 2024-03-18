@@ -402,8 +402,10 @@ Registration Fee-500₹</h2>
                             Next
                             <i className="fas fa-chevron-right ml-2 text-sm"></i>
                         </button>
+
                        {/* </Link> */}
                         
+
                     </div>
 
 
