@@ -51,6 +51,9 @@ const schema = new mongoose.Schema({
     problemDetails: {
         type: String,
         required: [true, "problemDetails is required"],
+    },
+    transactionId: {
+        type: String,
     }
     
     

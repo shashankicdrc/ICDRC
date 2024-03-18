@@ -10,6 +10,8 @@ import { BallTriangle } from "react-loader-spinner";
 import { useState } from "react";
 import { url } from "../../api";
 import axios from "axios";
+import Image from 'next/image';
+
 
 const Case = () => {
   const params = useParams();
@@ -91,7 +93,8 @@ const Case = () => {
             </h2>
 
             <div className="justify-center flex items-center">
-              <img className="h-96 will-change-auto flex justify-center " src= {data?.image} />
+              <Image className="h-96 will-change-auto flex justify-center " src= {data?.image}  width={640}
+                                              height={360} />
             </div>
 
             <div

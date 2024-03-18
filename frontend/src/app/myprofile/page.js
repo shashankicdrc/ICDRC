@@ -10,16 +10,29 @@ import SocialIcons from "../../components/SocialIcons/page";
 import ShowStatus from "../casestatus/ShowStatus";
 import Profile from "./profile";
 import UploadDoc from '../../components/uploaddoc/page';
+
+import { useSession } from "next-auth/react";
+
 import ShowComplaint from './showComplaint'
+
 const myprofile = () => {
   const router = useRouter();
   const user = useSelector((state) => state.user);
+  const { status, data: session } = useSession();
 
   useEffect(() => {
       if (!user._id) {
           router.push('/login')
       }
   }, [router, user])
+
+  //google auth routing
+
+  // useEffect(()=>{
+  //   if (!status === "authenticated"){
+  //     router.push('/login')
+  //   }
+  // })
 
   useEffect(() => {
     window.scrollTo(0, 0);

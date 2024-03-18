@@ -29,9 +29,9 @@ const Home = () => {
      <Home4 />
       <Home5 />
       {/* <Home6 /> */}
-      
-      <Home7Contact />
       <Testimonial />
+      <Home7Contact />
+     
       
       <Footer />
     </div>

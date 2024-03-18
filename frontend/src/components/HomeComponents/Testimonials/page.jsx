@@ -70,7 +70,7 @@ const Testimonial = () => {
             </h6>
           </div>
         </SwiperSlide>
-        <SwiperSlide className="testimonial-slide bg-white rounded-xl border-2 border-gray-800">
+        {/* <SwiperSlide className="testimonial-slide bg-white rounded-xl border-2 border-gray-800">
           <div className="mb-4  p-4 md:mb-0">
             <div className="mb-6 flex justify-center">
               <video
@@ -176,7 +176,7 @@ const Testimonial = () => {
               Small Business Owner
             </h6>
           </div>
-        </SwiperSlide>
+        </SwiperSlide> */}
       </Swiper>
 
     

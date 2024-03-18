@@ -9,6 +9,7 @@ import axios from 'axios';
 import { url } from '../../app/api';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const ComplainForm = () => {
     const [name, setName] = useState('');
@@ -35,7 +36,7 @@ const ComplainForm = () => {
 
     const states = State.getStatesOfCountry('IN')
    
-      
+      const router=useRouter();
     useEffect(() => {
         if (state?.length > 1) {
             let data = states.find(s => s.name === state);
@@ -78,9 +79,11 @@ const ComplainForm = () => {
 
 
     const SubmitHandler = async (e) => {
+
+        
         e.preventDefault();
-        window.location.reload();
-    console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
+        // window.location.reload();
+    // console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
 
         setLoading(true);
         if (!validateMobileNumber(mobile)) {
@@ -93,36 +96,41 @@ const ComplainForm = () => {
             return;
         }
 
-        console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
-
-
-        try {
-            const res = await axios.post(`${url}/api/individualcomplaint`, {
-                name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany
-            })
-            if (res?.data?.success) {
-                setName('');
-                setEmail('');
-                setMobile('');
-                setAddress('');
-                setState('');
-                setCity('');
-                setLanguage('');
-                setPolicyType('');
-                setOtherPolicyType('');
-                setProblem('');
-                setOtherProblem('');
-                setProblemDetails('');
-                setPolicyCompany('');
-                setOtherPolicyCompany('');
-                toast.success(res.data.message)
-            }
-        }
-        catch (err) {
-            toast.error(err?.response?.data?.message);
-        }
-
+        // console.log({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany });
+        // e.preventDefault();
+        // Save form data in local storage
+        localStorage.setItem("complaintFormData", JSON.stringify({ name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany }));
+        // Redirect to payment page
+        router.push("/payment");
         setLoading(false);
+
+        // try {
+        //     const res = await axios.post(`${url}/api/individualcomplaint`, {
+        //         name, mobile, email, country, state, city, address, language, policyType, otherPolicyType, problem, otherProblem, problemDetails, policyCompany, otherPolicyCompany
+        //     })
+        //     if (res?.data?.success) {
+        //         setName('');
+        //         setEmail('');
+        //         setMobile('');
+        //         setAddress('');
+        //         setState('');
+        //         setCity('');
+        //         setLanguage('');
+        //         setPolicyType('');
+        //         setOtherPolicyType('');
+        //         setProblem('');
+        //         setOtherProblem('');
+        //         setProblemDetails('');
+        //         setPolicyCompany('');
+        //         setOtherPolicyCompany('');
+        //         toast.success(res.data.message)
+        //     }
+        // }
+        // catch (err) {
+        //     toast.error(err?.response?.data?.message);
+        // }
+
+        // setLoading(false);
 
     }
 
@@ -133,7 +141,7 @@ const ComplainForm = () => {
             <div className='border-2 bg-white border-gray-500 p-4 rounded-2xl w-11/12 md:w-1/2 flex flex-col justify-center items-center'>
                 <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold text-center underline p-2 text-orange-500 font-[Poppins]'>Register as an Individual</h2>
                 <h2 data-aos="fade-up" data-aos-duration="1000" className='font-semibold text-center  text-orange-600 font-[Poppins]'>
-Consultation Fee-500₹</h2>
+Registration Fee-500₹</h2>
                 <form className='my-6 w-full md:w-4/5 flex justify-center items-center flex-col gap-4' onSubmit={SubmitHandler} data-aos="fade-up" data-aos-duration="1000">
                     {/* Name */}
                     <label
@@ -394,7 +402,10 @@ Consultation Fee-500₹</h2>
                             Next
                             <i className="fas fa-chevron-right ml-2 text-sm"></i>
                         </button>
-                        {/* </Link>  */}
+
+                       {/* </Link> */}
+                        
+
                     </div>
 
 

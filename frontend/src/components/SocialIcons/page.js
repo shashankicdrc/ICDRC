@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react'
-import './SocialIcons.css';
+// import './Socialicon.module.css';
 import { IoShareSocialSharp } from 'react-icons/io5';
 // import ChatBot from 'react-simple-chatbot';
 // import { TbMessageChatbot } from 'react-icons/tb'
@@ -33,106 +33,7 @@ const SocialIcons = () => {
     const [email, setEmail] = useState('');
     const [mobile, setMobile] = useState('');
 
-    // const steps = [
-    //     {
-    //         id: '0',
-    //         message: "Hi there 👋🏻! Welcome to ICDRC. We are India's most trusted platform for resolving Insurance Complaints.",
-    //         trigger: '1',
-    //     },
-    //     {
-    //         id: '1',
-    //         message: "I am RaksaBot, Your virtual claim assistant, here to help you find solutions to any insurance- related issue and much more.",
-    //         trigger: '2',
-    //     },
-    //     {
-    //         id: '2',
-    //         message: 'What is your name?',
-    //         trigger: 'name',
-    //     },
-    //     {
-    //         id: 'name',
-    //         user: true,
-    //         validator: (value) => {
-    //             if (value.length > 1) {
-    //                 setName(value)
-    //                 return true;
-    //             }
-    //             return true;
-    //         },
-    //         trigger: '3',
-    //     },
-    //     {
-    //         id: '3',
-    //         message: 'Hi {previousValue}! Enter your email address?',
-    //         trigger: 'email',
-    //     },
-    //     {
-    //         id: 'email',
-    //         user: true,
-    //         validator: (value) => {
-    //             if (value.length === 1) {
-    //                 return 'Enter a valid email.';
-    //             }
-    //             else if (value.toLowerCase().match(/^[a-z0-9]+@[a-z]+\.[a-z]{2,6}$/)) {
-    //                 setEmail(value)
-    //                 return true;
-    //             }
-    //             else {
-    //                 return 'Enter a valid email.';
-    //             }
-    //         },
-    //         trigger: '4',
-    //     },
-    //     {
-    //         id: '4',
-    //         message: 'What is your mobile number?',
-    //         trigger: 'mobile',
-    //     },
-    //     {
-    //         id: 'mobile',
-    //         user: true,
-    //         validator: (value) => {
-    //             if (isNaN(value)) {
-    //                 return 'Enter valid mobile number.';
-    //             }
-    //             else if (value.length === 10) {
-    //                 setMobile(value)
-    //                 return true;
-    //             }
-    //             else {
-    //                 return 'Enter valid mobile number.'
-    //             }
-    //         },
-    //         trigger: '5',
-    //     },
-    //     {
-    //         id: '5',
-    //         message: 'Thankyou! Your data has been submitted successfully!',
-    //         trigger: 6,
-    //     },
-    //     {
-    //         id: '6',
-    //         message: 'Our team will contact you shortly.',
-    //         trigger: 7,
-    //     },
-    //     {
-    //         id: '7',
-    //         delay: 100,
-    //         component: (
-    //             <div className='flex flex-col justify-center items-center font-[Roboto] text-sm'>
-    //                 <Link href="/register" className="max-w-max rounded-md px-3.5 py-1 flex justify-center items-center m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-orange-500 text-indigo-600 hover:text-white">
-    //                     <span className="absolute w-64 h-0 transition-all duration-500 origin-center rotate-45 -translate-x-20 bg-orange-500 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
-    //                     <span className="relative text-orange-500 transition duration-300 group-hover:text-white ease">Register Complaint</span>
-    //                 </Link>
-    //                 <Link href="/partner" className="max-w-max rounded-md px-3.5 py-1 flex justify-center items-center m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-orange-500 text-indigo-600 hover:text-white">
-    //                     <span className="absolute w-64 h-0 transition-all duration-500 origin-center rotate-45 -translate-x-20 bg-orange-500 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
-    //                     <span className="relative text-orange-500 transition duration-300 group-hover:text-white ease">Partner with us</span>
-    //                 </Link>
-    //             </div>
-    //         ),
-    //         end: true,
-    //     },
-    // ];
+
 
     useEffect(()=> {
         const submit = async() => {

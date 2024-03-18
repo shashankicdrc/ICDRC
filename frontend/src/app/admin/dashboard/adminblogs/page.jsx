@@ -15,6 +15,7 @@ import axios from "axios";
 import { url } from "../../../api";
 import PageLoader from "../../components/pageloader/page";
 import { RiDeleteBin3Line } from "react-icons/ri";
+import Image from 'next/image';
 
 const AdminBlog = () => {
 
@@ -295,10 +296,13 @@ const AdminBlog = () => {
                 data-aos-duration="1000"
               >
                 <Link href={`/blogs/${item._id}`} aria-label="Article">
-                  <img
+                  <Image
                     src={item.image}
                     className="object-cover w-full h-40 md:h-60 rounded-2xl"
                     alt=""
+                    width={640}
+                    height={360}
+                    
                   />
                 </Link>
                 <div className="py-5">

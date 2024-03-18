@@ -27,20 +27,19 @@ var transporter = nodemailer.createTransport({
     pass: 'pulz gygf jlct ragt'
   }
 });
-console.log("1");
-Individualrouter.post("/",verifyToken, async (req, res) => {
-  console.log("12");
-  const { name, mobile, email, country, state,city, address,language, policyCompany, policyType, problem, problemDetails } = req.body;
-  
+
+
+Individualrouter.post("/", async (req, res) => {
+  console.log("123");
+  const { name, mobile, email, country, state,city, address,language, policyCompany, policyType, problem, problemDetails ,transactionId} = req.body;
+
   {
      
     try {
-      const loggedInUser = req.user;
-
-      let user = await IndividualComplaint.create({  name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails });
+      let user = await IndividualComplaint.create({ name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails ,transactionId});
       res.send({
           message: "User complaint created",
-          
+
           status: 1,
       });
 
@@ -93,6 +92,19 @@ Individualrouter.post("/",verifyToken, async (req, res) => {
       });
     }
   };
+});
+
+
+
+
+Individualrouter.get("/all", async (req, res) => {
+  try {
+    const complaints = await IndividualComplaint.find().select('-_id name mobile email country state city address language policyCompany policyType problem problemDetails createdAt transactionId');
+    res.json(complaints);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 module.exports = { Individualrouter };

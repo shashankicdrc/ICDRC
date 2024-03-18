@@ -85,14 +85,14 @@ const Checkout = () => {
             </h5>
             <div class="flex justify-between py-3 items-baseline text-gray-900 dark:text-white">
               <span class="text-s text-start ">Individual Complain:  
-Consultancy fees</span>
+              Registratiobn fees</span>
               <span class="text-l text-end text-green-700"> ₹ 500</span>
               
             </div>
             <div className="border  mt-3 text-gray-50 "></div>
 
             <div class=" py-3 items-baseline text-gray-900 dark:text-white">
-              <p class="text-base text-start font-semibold ">Suntotal</p>
+              <p class="text-base text-start font-semibold ">Subtotal</p>
               <p class="text-l mt-2 text-start text-gray-700 font-medium">Flat rate:  ₹ 500</p>
               {/* <p class="text-l py-4  text-start text-gray-700">Shiping to: <span>M/S Balak Ram Laxmi Narayan & Sons- Gandhi Nagar, Basti, Uttar Pradesh 272001  </span> </p> */}
               
@@ -104,10 +104,11 @@ Consultancy fees</span>
               
             </div>
 
-            
+            <Link href='/payment'>
             <button className="bg-orange-400 mt-5 w-30 rounded-lg text-white px-4 py-2  hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600 mb-4">
             Procced to checkout
           </button>
+          </Link>
           </div>
         </div>
 

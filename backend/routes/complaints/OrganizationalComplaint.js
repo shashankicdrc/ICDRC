@@ -27,12 +27,12 @@ var transporter = nodemailer.createTransport({
 
 Organizationalrouter.post("/", async (req, res) => {
   console.log("123");
-  const { organization_name, mobile, email, country, state,city, address,language, policyCompany, policyType, problem, problemDetails } = req.body;
+  const { organization_name, mobile, email, country, state,city, address,language, policyCompany, policyType, problem, problemDetails ,transactionId} = req.body;
   
   {
      
     try {
-      let user = await OrganizationalComplaint.create({ organization_name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails });
+      let user = await OrganizationalComplaint.create({ organization_name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails,transactionId });
       res.send({
           message: "Organizational conplaint created",
           status: 1,
@@ -71,6 +71,21 @@ Organizationalrouter.post("/", async (req, res) => {
       });
     }
   };
+});
+
+
+
+
+
+// Route to get all organizational complaints with details and timestamp
+Organizationalrouter.get("/all", async (req, res) => {
+  try {
+    const complaints = await OrganizationalComplaint.find().select('-_id organization_name mobile email country state city address language policyCompany policyType problem problemDetails createdAt');
+    res.json(complaints);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 });
 
 module.exports = { Organizationalrouter };
