@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { payment } from "../../../action/serverActions";
+import HomeNav from "../Navbar/page";
 
 const Pay = () => {
   const router = useRouter();
@@ -32,9 +33,13 @@ const Pay = () => {
   };
 
   return (
-    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" action="#" method="POST">
+    <>
+    <HomeNav/>
+    
+    <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8 ">
+      <div className="mt-16 sm:mx-auto sm:w-full sm:max-w-sm ">
+      <h1 className="text-xl my-5">Please Enter your Payment Details</h1>
+        <form className="space-y-6 " action="#" method="POST">
           <div>
             <label
               htmlFor="name"
@@ -121,6 +126,7 @@ const Pay = () => {
         </form>
       </div>
     </div>
+    </>
   );
 };
 

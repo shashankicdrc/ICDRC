@@ -8,18 +8,20 @@ import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
 import ShowStatus from "../casestatus/ShowStatus";
-import Profile from "./profile";
 import UploadDoc from '../../components/uploaddoc/page';
-
+import dynamic from 'next/dynamic'
 import { useSession } from "next-auth/react";
 
 import ShowComplaint from './showComplaint'
+
+const Profile = dynamic(() => import('./profile'), { ssr: false })
 
 const myprofile = () => {
   const router = useRouter();
   const user = useSelector((state) => state.user);
   const { status, data: session } = useSession();
 
+  console.log(user);
   useEffect(() => {
       if (!user._id) {
           router.push('/login')
@@ -115,7 +117,7 @@ const myprofile = () => {
     {/* User Details */}
      
      <Profile />
-     <ShowComplaint></ShowComplaint>
+     {/* <ShowComplaint></ShowComplaint> */}
     {/* Upload Documents */}
 
 

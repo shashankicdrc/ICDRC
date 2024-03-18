@@ -24,7 +24,7 @@ const PartnerData = () => {
   const admin = useSelector((state) => state.admin);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const [error, setError] = useState("");
   useEffect(() => {
     if (!admin._id) {
       router.push("/admin/login");

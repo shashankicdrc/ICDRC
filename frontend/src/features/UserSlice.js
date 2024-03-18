@@ -19,11 +19,13 @@ export const loginUser = createAsyncThunk(
     "user/login",
     async (user) => {
         try {
+            dispatch(setLoading(true));
             console.log(user);
             const res = await axios.post(`${url}/api/loginuser`, {
                 emailId: user.email,
                 password: user.password
             });
+            console.log(res);
             if (res.data.success) {
                 console.log("login successful");
                 toast.success(res.data.message)

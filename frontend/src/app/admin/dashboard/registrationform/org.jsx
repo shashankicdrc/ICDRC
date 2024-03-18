@@ -24,7 +24,7 @@ import { RiDeleteBin3Line } from "react-icons/ri";
 
 
 const ContactMessages = () => {
-
+  const [error, setError] = useState("");
   const router = useRouter();
   const admin = useSelector((state) => state.admin);
   const [data, setData] = useState([]);
