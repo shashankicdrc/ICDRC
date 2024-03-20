@@ -2,7 +2,7 @@ import { connectMongoDB } from "../../../../../lib/mongodb";
 import User from "../../../../../models/user";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
-import { url } from '../../../api';
+import { url } from "../../../api";
 
 const authOptions = {
   providers: [
@@ -13,6 +13,8 @@ const authOptions = {
   ],
   callbacks: {
     async signIn({ user, account }) {
+      console.log("google", user);
+      console.log("google", account);
       if (account.provider === "google") {
         const { name, email } = user;
         try {

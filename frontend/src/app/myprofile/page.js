@@ -1,6 +1,6 @@
-'use client'
-import React, { useEffect } from 'react'
-import { useSelector } from 'react-redux';
+"use client";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import HomeNav from "../../components/Navbar/page";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -8,25 +8,21 @@ import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
 import ShowStatus from "../casestatus/ShowStatus";
-import UploadDoc from '../../components/uploaddoc/page';
-import dynamic from 'next/dynamic'
+import UploadDoc from "../../components/uploaddoc/page";
+import dynamic from "next/dynamic";
 import { useSession } from "next-auth/react";
+import ShowComplaint from "./showComplaint";
 
-import ShowComplaint from './showComplaint'
-
-const Profile = dynamic(() => import('./profile'), { ssr: false })
+const Profile = dynamic(() => import("./profile"), { ssr: false });
 
 const myprofile = () => {
   const router = useRouter();
   const user = useSelector((state) => state.user);
   const { status, data: session } = useSession();
 
-  console.log(user);
   useEffect(() => {
-      if (!user._id) {
-          router.push('/login')
-      }
-  }, [router, user])
+    if (!user._id) router.push("/login");
+  }, [user._id]);
 
   //google auth routing
 
@@ -112,26 +108,23 @@ const myprofile = () => {
       </p>
 
       <div className="flex flex-col justify-center md:flex-row">
-  {/* Left Column */}
-  <div className="order-1 md:order-1 md:w-full md:p-8">
-    {/* User Details */}
-     
-     <Profile />
-     {/* <ShowComplaint></ShowComplaint> */}
-    {/* Upload Documents */}
+        {/* Left Column */}
+        <div className="order-1 md:order-1 md:w-full md:p-8">
+          {/* User Details */}
 
+          <Profile />
+          {/* <ShowComplaint></ShowComplaint> */}
+          {/* Upload Documents */}
 
-    <UploadDoc />
-  </div>
-  {/* Right Column */}
-  <div className="order-2 md:order-2 md:w-full md:p-8">
-  
-  <ShowStatus />
-    
-  </div>
-</div>
-<Home7Contact />
-<Footer />
+          <UploadDoc />
+        </div>
+        {/* Right Column */}
+        <div className="order-2 md:order-2 md:w-full md:p-8">
+          <ShowStatus />
+        </div>
+      </div>
+      <Home7Contact />
+      <Footer />
     </div>
   );
 };
