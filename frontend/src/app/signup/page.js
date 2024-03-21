@@ -1,108 +1,187 @@
 "use client";
-import React, { useEffect, useState } from 'react';
-import Footer from '../../components/footer/page';
-import HomeNav from '../../components/Navbar/page';
-import Link from 'next/link';
-import Home7Contact from '../../components/HomeComponents/Home7Contact';
-import SocialIcons from '../../components/SocialIcons/page';
-import axios from 'axios';
-import { url } from '../api';
+import React, { useEffect, useState } from "react";
+import Footer from "../../components/footer/page";
+import HomeNav from "../../components/Navbar/page";
+import Link from "next/link";
+import Home7Contact from "../../components/HomeComponents/Home7Contact";
+import SocialIcons from "../../components/SocialIcons/page";
+import axios from "axios";
+import { url } from "../api";
 import { signIn } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
-import toast, { Toaster } from 'react-hot-toast';
-
+import toast, { Toaster } from "react-hot-toast";
 
 const Signup = () => {
-    const [name, setName] = useState('');
-    const [emailId, setemailId] = useState('');
-    const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [emailId, setemailId] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
-    function validateemailIdAddress(emailId) {
-        const pattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,6}$/;
-        return pattern.test(emailId);
+  function validateemailIdAddress(emailId) {
+    const pattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,6}$/;
+    return pattern.test(emailId);
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    if (!validateemailIdAddress(emailId)) {
+      console.error("Enter valid emailId address");
+      setLoading(false);
+      return;
     }
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
+    // console.log({ name, emailId, password });
 
-        if (!validateemailIdAddress(emailId)) {
-            console.error("Enter valid emailId address");
-            setLoading(false);
-            return;
-        }
+    try {
+      const res = await axios.post(`${url}/api/registeruser`, {
+        name,
+        emailId,
+        password,
+      });
+      if (res?.data?.success) {
+        setName("");
+        setemailId("");
+        setPassword("");
+        console.log(res.data.message);
 
+        window.location.reload();
+        toast.success("Signup Successful");
+      }
+    } catch (err) {
+      console.error(err?.response?.data?.message);
+    }
 
+    setLoading(false);
+  };
 
-        
+  return (
+    <div className="overflow-hidden">
+      <SocialIcons />
+      <HomeNav />
+      <div
+        className=""
+        style={{
+          backgroundImage: `url(https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784022/Home_page/Home1/homeslider2_zzybpj.webp)`,
+        }}
+      >
+        <div
+          className="flex bg-cover bg-no-repeat justify-center items-center h-screen w-screen px-4 md:px-0"
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}
+        >
+          <div className="rounded-xl relative mx-auto w-full max-w-md bg-white px-6 pt-10 mt-12 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
+            <div className="w-full">
+              <div className="text-center">
+                <h1
+                  className="text-3xl font-semibold text-gray-900"
+                  data-aos="fade-up"
+                  data-aos-duration="1000"
+                >
+                  Sign up
+                </h1>
+                <p
+                  className="mt-2 text-gray-500"
+                  data-aos="fade-up"
+                  data-aos-duration="1000"
+                >
+                  Sign up below to create your account
+                </p>
+              </div>
+              <div className="mt-5" data-aos="fade-up" data-aos-duration="1000">
+                <form onSubmit={handleSubmit}>
+                  <div className="relative mt-6">
+                    <input
+                      type="name"
+                      name="name"
+                      id="name"
+                      placeholder="Name"
+                      className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none"
+                      autoComplete="NA"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                    <label
+                      htmlFor="name"
+                      className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
+                    >
+                      Name
+                    </label>
+                  </div>
+                  <div className="relative mt-6">
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      placeholder="email Address"
+                      className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none"
+                      autoComplete="NA"
+                      value={emailId}
+                      onChange={(e) => setemailId(e.target.value)}
+                      required
+                    />
+                    <label
+                      htmlFor="email"
+                      className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
+                    >
+                      Email
+                    </label>
+                  </div>
+                  <div className="relative mt-6">
+                    <input
+                      type="password"
+                      name="password"
+                      id="password"
+                      placeholder="Password"
+                      className="peer peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                    <label
+                      htmlFor="password"
+                      className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800"
+                    >
+                      Password
+                    </label>
+                  </div>
+                  <div className="my-6">
+                    <button
+                      onSubmit={handleSubmit}
+                      type="submit"
+                      className="w-full rounded-md bg-orange-500 px-3 py-4 text-white focus:bg-orange-700 focus:outline-none"
+                    >
+                      {loading ? "Loading..." : "Sign up"}
+                    </button>
+                  </div>
 
-        // console.log({ name, emailId, password });
+                  <p
+                    className="text-center text-sm text-gray-700"
+                    data-aos="fade-up"
+                    data-aos-duration="1000"
+                  >
+                    Already have an account?
+                    <Link
+                      href="/login"
+                      className="font-semibold text-gray-900 hover:underline focus:text-gray-900 focus:outline-none"
+                    >
+                      {" "}
+                      Sign in
+                    </Link>
+                    .
+                  </p>
 
-        try {
-            const res = await axios.post(`${url}/api/registeruser`, {
-                name,
-                emailId,
-                password
-            });
-            if (res?.data?.success) {
-                setName('');
-                setemailId('');
-                setPassword('');
-                console.log(res.data.message);
-               
-                window.location.reload();
-                toast.success("Signup Successful")
-            }
-        } catch (err) {
-            console.error(err?.response?.data?.message);
-        }
-
-        setLoading(false);
-    };
-
-    return (
-        <div className='overflow-hidden'>
-            <SocialIcons />
-            <HomeNav />
-            <div className='' style={{ backgroundImage: `url(https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784022/Home_page/Home1/homeslider2_zzybpj.webp)` }}>
-                <div className='flex bg-cover bg-no-repeat justify-center items-center h-screen w-screen px-4 md:px-0' style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-                    <div className="rounded-xl relative mx-auto w-full max-w-md bg-white px-6 pt-10 mt-12 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
-                        <div className="w-full">
-                            <div className="text-center">
-                                <h1 className="text-3xl font-semibold text-gray-900" data-aos="fade-up" data-aos-duration="1000">Sign up</h1>
-                                <p className="mt-2 text-gray-500" data-aos="fade-up" data-aos-duration="1000">Sign up below to create your account</p>
-                            </div>
-                            <div className="mt-5" data-aos="fade-up" data-aos-duration="1000">
-                                <form onSubmit={handleSubmit}>
-                                    <div className="relative mt-6">
-                                        <input type="name" name="name" id="name" placeholder="Name" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autoComplete="NA" value={name} onChange={(e) => setName(e.target.value)} required />
-                                        <label htmlFor="name" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Name</label>
-                                    </div>
-                                    <div className="relative mt-6">
-                                        <input type="email" name="email" id="email" placeholder="email Address" className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" autoComplete="NA" value={emailId} onChange={(e) => setemailId(e.target.value)} required />
-                                        <label htmlFor="email" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Email</label>
-                                    </div>
-                                    <div className="relative mt-6">
-                                        <input type="password" name="password" id="password" placeholder="Password" className="peer peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                                        <label htmlFor="password" className="pointer-events-none absolute top-0 left-0 origin-left -translate-y-1/2 transform text-sm text-gray-800 opacity-75 transition-all duration-100 ease-in-out peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:top-0 peer-focus:pl-0 peer-focus:text-sm peer-focus:text-gray-800">Password</label>
-                                    </div>
-                                    <div className="my-6">
-                                        <button onSubmit={handleSubmit} type="submit" className="w-full rounded-md bg-orange-500 px-3 py-4 text-white focus:bg-orange-700 focus:outline-none">{loading ? 'Loading...' : 'Sign up'}</button>
-                                    </div>
-
-                                    <p className="text-center text-sm text-gray-700" data-aos="fade-up" data-aos-duration="1000">Already have an account? 
-                                        <Link href="/login"
-                                            className="font-semibold text-gray-900 hover:underline focus:text-gray-900 focus:outline-none"> Sign in
-                                        </Link>.
-                                    </p>
-
-                                    <div className='mt-4 flex flex-col justify-center items-center gap-4' data-aos="fade-up" data-aos-duration="1000">
-                                        {/* <button 
+                  <div
+                    className="mt-4 flex flex-col justify-center items-center gap-4"
+                    data-aos="fade-up"
+                    data-aos-duration="1000"
+                  >
+                    {/* <button 
                                             className="flex items-center bg-white border border-gray-800 rounded-lg shadow-md max-w-xs px-8 py-4 text-sm font-medium text-gray-800 hover:bg-orange-400 hover:text-white hover:border-none focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
                                             <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg"
                                                 viewBox="-0.5 0 48 48" version="1.1">
@@ -129,30 +208,27 @@ const Signup = () => {
                                             <span>Continue with Google</span>
                                         </button> */}
 
-                                        
-<div className='flex justify-center items-center bg-gray-200 text-gray-800 font-medium py-2 px-2 rounded-md'>  <FcGoogle /><button className='bg-gray-200 text-gray-800 font-medium px-2 rounded-md' onClick={() => signIn("google")}>Signup with google</button>
-
-</div>
-
-                                        
-                                    </div>
-
-
-
-                                </form>
-                            </div>
-                        </div>
+                    <div className="flex justify-center items-center bg-gray-200 text-gray-800 font-medium py-2 px-2 rounded-md">
+                      {" "}
+                      <FcGoogle />
+                      <button
+                        className="bg-gray-200 text-gray-800 font-medium px-2 rounded-md"
+                        onClick={() => signIn("google")}
+                      >
+                        Signup with google
+                      </button>
                     </div>
-                </div>
+                  </div>
+                </form>
+              </div>
             </div>
-            <Home7Contact />
-            <Footer />
+          </div>
         </div>
-    )
-}
+      </div>
+      <Home7Contact />
+      <Footer />
+    </div>
+  );
+};
 
 export default Signup;
-
-
-
-

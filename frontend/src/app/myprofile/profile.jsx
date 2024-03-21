@@ -26,26 +26,21 @@ import {
 } from "mdb-react-ui-kit";
 
 export default function ProfilePage() {
-
-
-  const { status, data: session } = useSession();
-  const params = useParams();
-  const { id } = useParams();
+  // const { status, data: session } = useSession();
+  // const params = useParams();
+  // const { id } = useParams();
   const router = useRouter();
   const user = useSelector((state) => state.user);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
- 
 
   useEffect(() => {
-    if (!user._id ) {
+    if (!user._id) {
       router.push("/login");
     }
   }, [router, user]);
 
-
-
-//google auth routing
+  //google auth routing
 
   //  useEffect(()=>{
   //     if (!status === "authenticated"){
@@ -57,36 +52,38 @@ export default function ProfilePage() {
     window.scrollTo(0, 0);
   }, []);
 
- 
-
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         // Fetch all individual complaints
-        const response = await fetch(`${url}/api/individualcomplaint/all`);
+        const response = await fetch(`${url}/api/individualcomplaint`, {
+          headers: { token: user.token },
+        });
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
-        const allData = await response.json();
-        
+        const data = await response.json();
+
         // Filter the data based on the logged-in user's email ID
-        const filteredData = allData.filter(item => item.email === session.user.email);
-  
+        // const filteredData = allData.filter(
+        //   (item) => item.email === user.email
+        // );
+
         // Update the state with the filtered data
-        setData(filteredData);
-        console.log("Filtered Data:", filteredData);
+        setData(data);
+        // console.log("Filtered Data:", filteredData);
       } catch (error) {
         console.error(error);
-        setError("Failed to fetch data. Please try again later.");
+        // setError("Failed to fetch data. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
-  }, [session]);
-  
+  }, []);
+  // console.log(session, user);
 
   const deletebtn = async (id) => {
     try {
@@ -111,10 +108,7 @@ export default function ProfilePage() {
     return createdAtDate.toLocaleDateString();
   };
 
- 
-    // if (status === "authenticated"){
-      
-  
+  // if (status === "authenticated"){
 
   return (
     <>
@@ -143,7 +137,6 @@ export default function ProfilePage() {
 
                   <div className="mb-2">
                     <div className="bg-white w-full  border-gray-400 mx-auto px-3 rounded-xl">
-                      
                       <h2
                         className="mt-8 text-md font-semibold font-[Poppins]"
                         data-aos="fade-up"
@@ -180,9 +173,6 @@ export default function ProfilePage() {
                         data-aos-duration="2000"
                       ></div>
                     </div>
-
-                   
-                   
                   </div>
                 </MDBCardBody>
               </MDBCard>
@@ -190,7 +180,6 @@ export default function ProfilePage() {
             <MDBCol lg="8" className="w-full ml-5">
               <MDBCard className="mb-4 w-full">
                 <MDBCardBody className="w-full">
-                
                   {/* <MDBRow>
                     
                     <MDBCol sm="9">
@@ -214,7 +203,6 @@ export default function ProfilePage() {
                       </MDBCardText>
                     </MDBCol>
                   </MDBRow> */}
-                 
                 </MDBCardBody>
               </MDBCard>
             </MDBCol>
@@ -223,6 +211,4 @@ export default function ProfilePage() {
       </section>
     </>
   );
-
-
 }

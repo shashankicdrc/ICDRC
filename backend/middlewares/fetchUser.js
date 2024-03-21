@@ -18,6 +18,7 @@ exports.fetchUser = async (req, res, next) => {
 
     const userId = decoded._id;
     req.id = userId;
+    // req.email = decoded.email;
 
     next();
   } catch (error) {

@@ -1,14 +1,14 @@
 const express = require("express");
-const {IndividualComplaint} = require("..//..//models/IndividualComplaint")
+const { IndividualComplaint } = require("..//..//models/IndividualComplaint");
 const Individualrouter = express.Router();
-var nodemailer = require('nodemailer');
-const {User} = require("..//..//models/User")
-const verifyToken = require('..//..//utils/verifyToken')
-
+var nodemailer = require("nodemailer");
+const { User } = require("..//..//models/User");
+const verifyToken = require("..//..//utils/verifyToken");
+const { fetchUser } = require("../../middlewares/fetchUser");
 
 const policyTypeToEmail = {
-  'Life Insurance': 'lifeinsurance@icdrc.in',
-  'Health Insurance': 'kartikey090803@gmail.com',
+  "Life Insurance": "lifeinsurance@icdrc.in",
+  "Health Insurance": "kartikey090803@gmail.com",
   "Motor Insurance": "motorinsurance@icdrc.in",
   "Travel Insurance": "travelinsurance@icdrc.in",
   "Agriculture Insurance": "agricultureinsurance@icdrc.in",
@@ -21,40 +21,66 @@ const policyTypeToEmail = {
 };
 
 var transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: 'kartikey.chaudhary.webdesys@gmail.com',
-    pass: 'pulz gygf jlct ragt'
-  }
+    user: "kartikey.chaudhary.webdesys@gmail.com",
+    pass: "pulz gygf jlct ragt",
+  },
 });
-
 
 Individualrouter.post("/", async (req, res) => {
   console.log("123");
-  const { name, mobile, email, country, state,city, address,language, policyCompany, policyType, problem, problemDetails ,transactionId} = req.body;
+  const {
+    name,
+    mobile,
+    email,
+    country,
+    state,
+    city,
+    address,
+    language,
+    policyCompany,
+    policyType,
+    problem,
+    problemDetails,
+    transactionId,
+  } = req.body;
 
   {
-     
     try {
-      let user = await IndividualComplaint.create({ name, mobile, email, country, state, city, address, language, policyCompany, policyType, problem, problemDetails ,transactionId});
+      let user = await IndividualComplaint.create({
+        name,
+        mobile,
+        email,
+        country,
+        state,
+        city,
+        address,
+        language,
+        policyCompany,
+        policyType,
+        problem,
+        problemDetails,
+        transactionId,
+      });
       res.send({
-          message: "User complaint created",
+        message: "User complaint created",
 
-          status: 1,
+        status: 1,
       });
 
       let emailRecipient = email;
-        if (!policyTypeToEmail[email]) {
-          emailRecipient = policyTypeToEmail[policyType];
-        }
+      if (!policyTypeToEmail[email]) {
+        emailRecipient = policyTypeToEmail[policyType];
+      }
 
       if (emailRecipient) {
         const mailOptions = {
-            from: 'kartikey.chaudhary.webdesys@gmail.com',
-            to: [emailRecipient, user.email,'aditiyachaudhary496@gmail.com',],
-            subject: ' New Individual Complaint Register ',
-            text: `A new individual complaint has been submitted.` ,
-            html: `
+          from: "kartikey.chaudhary.webdesys@gmail.com",
+          to: [emailRecipient, user.email, "aditiyachaudhary496@gmail.com"],
+          subject: " New Individual Complaint Register ",
+          text: `A new individual complaint has been submitted.`,
+          html: `
         <h2>New Individual Complaint Registered</h2>
         <p>A new individual complaint has been submitted.</p>
         <h3>Details:</h3>
@@ -70,36 +96,33 @@ Individualrouter.post("/", async (req, res) => {
         <p><strong>Policy Type:</strong> ${policyType}</p>
         <p><strong>Problem:</strong> ${problem}</p>
         <p><strong>Problem Details:</strong> ${problemDetails}</p>
-    `
+    `,
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.log("1234");
-                console.error('Error sending email:', error);
-            } else {
-                console.log('Email sent:', info.response);
-            }
+          if (error) {
+            console.log("1234");
+            console.error("Error sending email:", error);
+          } else {
+            console.log("Email sent:", info.response);
+          }
         });
-    }
-} 
-    catch (error) {
+      }
+    } catch (error) {
       console.log("12345");
       res.send({
-       
         message: error.message,
         status: 0,
       });
     }
-  };
+  }
 });
 
-
-
-
-Individualrouter.get("/all", async (req, res) => {
+Individualrouter.get("/", fetchUser, async (req, res) => {
   try {
-    const complaints = await IndividualComplaint.find().select('-_id name mobile email country state city address language policyCompany policyType problem problemDetails createdAt transactionId');
+    const complaints = await IndividualComplaint.find({ _id: req.id }).select(
+      "-_id name mobile email country state city address language policyCompany policyType problem problemDetails createdAt transactionId"
+    );
     res.json(complaints);
   } catch (error) {
     console.error(error);
@@ -108,5 +131,3 @@ Individualrouter.get("/all", async (req, res) => {
 });
 
 module.exports = { Individualrouter };
-
-
