@@ -44,7 +44,7 @@ const Button = () => {
 
   return (
     <div className="flex flex-col gap-8 md:flex-row justify-center items-center">
-      <Link href="/casestatus">
+      <Link href="/myprofile">
         <div
           className="b mx-auto h-12 w-48 flex justify-center items-center text-white hover:font-semibold"
           data-aos="zoom-in"

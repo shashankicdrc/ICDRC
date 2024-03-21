@@ -169,7 +169,7 @@ const Login = () => {
                     </div>
                     {/* google Outh login system */}
 
-                    <div className="flex justify-center items-center bg-gray-200 text-gray-800 font-medium py-2 px-2 rounded-md">
+                    {/* <div className="flex justify-center items-center bg-gray-200 text-gray-800 font-medium py-2 px-2 rounded-md">
                       {" "}
                       <FcGoogle />
                       <button
@@ -178,7 +178,7 @@ const Login = () => {
                       >
                         Signin with google
                       </button>
-                    </div>
+                    </div> */}
                   </div>
                 </form>
               </div>
