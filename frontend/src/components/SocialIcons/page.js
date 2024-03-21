@@ -17,7 +17,7 @@ import { MdContactPhone } from 'react-icons/md'
 import { CgMail } from 'react-icons/cg'
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { IoCall } from 'react-icons/io5'
-
+import { FaWhatsapp } from "react-icons/fa";
 import { AiFillWechat } from 'react-icons/ai';
 import Link from 'next/link';
 import { useEffect } from 'react';
@@ -60,7 +60,7 @@ const SocialIcons = () => {
 
 
           
- <div onClick={() => setShowBot((prev) => !prev)} className="main_icon rounded-full h-8 md:h-12 w-8 md:w-12 group border-2  cursor-pointer fixed bottom-28 md:bottom-36 right-4 text-orange-500 hover:text-orange-700 border-orange-400 flex justify-center items-center transition-all bg-white hover:bg-orange-400 300 ease-in-out">
+ <div onClick={() => setShowBot((prev) => !prev)} className="main_icon rounded-full h-12 w-12 group border-2  cursor-pointer fixed bottom-36 md:bottom-36 right-4 text-orange-500 hover:text-orange-700 border-orange-400 flex justify-center items-center transition-all bg-white hover:bg-orange-400 300 ease-in-out">
                 {/* <TbMessageChatbot className=' text-xl font-semibold md:text-2xl' /> */}
 
                <Chatbot />
@@ -76,40 +76,48 @@ const SocialIcons = () => {
             </div>}
 
             
-            {!show2 && <div onClick={() => { setShow2(true); setShow(false) }} className="main_icon rounded-full h-8 md:h-12 w-8 md:w-12 bg-white cursor-pointer fixed bottom-16 md:bottom-20 right-4  flex justify-center items-center border-2 border-orange-600 hover:bg-orange-600 transition-all 300 ease-in-out text-orange-600 hover:text-white">
+            {!show2 && 
+            <Link href={"/contact"}>
+            <div onClick={() => { setShow2(true); setShow(false) }} className="main_icon rounded-full h-12 w-12 bg-white cursor-pointer fixed bottom-20 md:bottom-20 right-4  flex justify-center items-center border-2 border-orange-600 hover:bg-orange-600 transition-all 300 ease-in-out text-orange-600 hover:text-white">
                 <MdContactPhone className=' text-xl font-semibold md:text-2xl' />
-            </div>}
-            {show2 && <div onClick={() => setShow2(false)} className="main_icon rounded-full h-8 md:h-12 w-8 md:w-12 bg-orange-600 cursor-pointer fixed bottom-16 md:bottom-20 right-4 flex justify-center items-center text-white border-2 border-orange-600 hover:border-orange-600 hover:bg-white hover:text-orange-600">
+            </div>
+            </Link>
+            }
+            {show2 && <div onClick={() => setShow2(false)} className="main_icon rounded-full h-12 w-12 bg-orange-600 cursor-pointer fixed bottom-20 md:bottom-20 right-4 flex justify-center items-center text-white border-2 border-orange-600 hover:border-orange-600 hover:bg-white hover:text-orange-600">
                 <ImCross className='text-lg md:text-xl' />
             </div>}
 
 
 
             {/* Social Media */}
-            {show && <div className='social_icons main_icon fixed flex  gap-2 md:gap-4 justify-center items-center bottom-4 right-14 md:right-20'>
+            {show && <div className='social_icons main_icon fixed flex  gap-2 md:gap-4 justify-center items-center bottom-4 right-20 md:right-20'>
+                <a href="https://wa.me/9170424 90338"
+                 target="_blank" rel="noreferrer" className='main_icon bg-green-500 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-green-500 hover:bg-white hover:text-green-500'>
+                    <FaWhatsapp  className='text-2xl md:text-2xl' />
+                </a>
                 <a href="https://www.facebook.com/ICDRCOfficial/"
-                 target="_blank" rel="noreferrer" className='main_icon bg-blue-500 h-8 md:h-12 w-8 md:w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-blue-500 hover:bg-white hover:text-blue-500'>
+                 target="_blank" rel="noreferrer" className='main_icon bg-blue-500 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-blue-500 hover:bg-white hover:text-blue-500'>
                     <AiFillFacebook className='text-xl md:text-2xl' />
                 </a>
                 <a href="https://twitter.com/ICDRC_Official"
-                 target="_blank" rel="noreferrer" className='main_icon bg-gray-900 h-8 md:h-12 w-8 md:w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-gray-900 hover:bg-white hover:text-gray-900'>
+                 target="_blank" rel="noreferrer" className='main_icon bg-gray-900 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-gray-900 hover:bg-white hover:text-gray-900'>
                     <FaSquareXTwitter className='text-xl md:text-2xl' />
                 </a>
                 <a href="https://www.instagram.com/icdrc_official/"
-                 target="_blank" rel="noreferrer" className='main_icon bg-pink-600 h-8 md:h-12 w-8 md:w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-pink-600 hover:bg-white hover:text-pink-600'>
+                 target="_blank" rel="noreferrer" className='main_icon bg-pink-600 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-pink-600 hover:bg-white hover:text-pink-600'>
                     <BsInstagram className='text-xl md:text-2xl' />
                 </a>
                 <a href="https://www.linkedin.com/in/icdrcofficial/"
-                 target="_blank" rel="noreferrer" className='main_icon bg-blue-600 h-8 md:h-12 w-8 md:w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-blue-600 hover:bg-white hover:text-blue-600'>
+                 target="_blank" rel="noreferrer" className='main_icon bg-blue-600 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-blue-600 hover:bg-white hover:text-blue-600'>
                     <BsLinkedin className='text-xl md:text-2xl' />
                 </a>
             </div>}
 
-            {!show && <div onClick={() => { setShow(true); setShow2(false) }} className="main_icon rounded-full h-8 md:h-12 w-8 md:w-12 bg-orange-600 cursor-pointer fixed bottom-4 right-4 flex justify-center items-center text-white border-2 border-orange-600  hover:border-orange-600 hover:bg-white hover:text-orange-600">
+            {!show && <div onClick={() => { setShow(true); setShow2(false) }} className="main_icon rounded-full h-12 w-12 bg-orange-600 cursor-pointer fixed bottom-4 right-4 flex justify-center items-center text-white border-2 border-orange-600  hover:border-orange-600 hover:bg-white hover:text-orange-600">
                 <IoShareSocialSharp className='text-xl md:text-2xl' />
             </div>}
 
-            {show && <div onClick={() => setShow(false)} className="main_icon rounded-full h-8 md:h-12 w-8 md:w-12 bg-orange-600 cursor-pointer fixed bottom-4 right-4 flex justify-center items-center text-white border-2 border-orange-600 hover:border-orange-600 hover:bg-white hover:text-orange-600">
+            {show && <div onClick={() => setShow(false)} className="main_icon rounded-full h-12 w-12 bg-orange-600 cursor-pointer fixed bottom-4 right-4 flex justify-center items-center text-white border-2 border-orange-600 hover:border-orange-600 hover:bg-white hover:text-orange-600">
                 <ImCross className='text-lg md:text-xl' />
             </div>}
         </div>

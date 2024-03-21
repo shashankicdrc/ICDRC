@@ -345,7 +345,7 @@ Registration Fee-500₹</h2>
                             <option value="Motor Insurance">Motor Insurance</option>
                             <option value="Travel Insurance">Travel Insurance</option>
                             <option value="Agriculture Insurance">Agriculture Insurance</option>
-                            <option value="File Insurance">File Insurance</option>
+                            <option value="Fire Insurance">Fire Insurance</option>
                             <option value="Marine Insurance">Marine Insurance</option>
                             <option value="Liability Insurance">Liability Insurance</option>
                             <option value="Cyber Insurance">Cyber Insurance</option>

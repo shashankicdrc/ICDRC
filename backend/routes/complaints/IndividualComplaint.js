@@ -12,7 +12,7 @@ const policyTypeToEmail = {
   "Motor Insurance": "motorinsurance@icdrc.in",
   "Travel Insurance": "travelinsurance@icdrc.in",
   "Agriculture Insurance": "agricultureinsurance@icdrc.in",
-  "File Insurance": "fileinsurance@icdrc.in",
+  "Fire Insurance": "fileinsurance@icdrc.in",
   "Marine Insurance": "marineinsurance@icdrc.in",
   "Liability Insurance": "liabilityinsurance@icdrc.in",
   "Cyber Insurance": "cyberinsurance@icdrc.in",

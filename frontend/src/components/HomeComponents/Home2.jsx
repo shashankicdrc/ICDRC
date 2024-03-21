@@ -69,7 +69,7 @@ const Home2 = () => {
                             alt="Person"
                             width={80} height={80}
                         />
-                        <p className="text-gray-900 mt-2 text-center font-semibold text-sm md:text-md tracking-widest">File Insurance</p>
+                        <p className="text-gray-900 mt-2 text-center font-semibold text-sm md:text-md tracking-widest">Fire Insurance</p>
                     </div>
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='1100'>
