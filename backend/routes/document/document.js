@@ -11,6 +11,7 @@ const ensureUploadDirectoryExists = (uploadDir) => {
   }
 };
 
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const userId = req.id;
@@ -25,6 +26,7 @@ const storage = multer.diskStorage({
       file.fieldname + "-" + Date.now() + path.extname(file.originalname)
     ); // File naming scheme
   },
+
 });
 
 const upload = multer({ storage: storage });
@@ -90,5 +92,4 @@ Documentrouter.delete("/file/:fileName", fetchUser, (req, res) => {
     });
   } catch (error) {}
 });
-
 module.exports = { Documentrouter };

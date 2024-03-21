@@ -15,7 +15,9 @@ const schema = new mongoose.Schema({
         required: [true, "Password is required"],
         select: false,
     },
+
     resetPasswordCode: String,
+
     Individualcomplaints: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'IndividualComplaints'
@@ -23,6 +25,10 @@ const schema = new mongoose.Schema({
     organizationcomplaints: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'OrganizationalComplaint'
+    }],
+    Document:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Document'
     }]
     
 
