@@ -64,10 +64,10 @@ const Home2 = () => {
 
                     <div className="flex flex-col items-center" data-aos="zoom-in" data-aos-duration="1500" data-aos-delay='900'>
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/6_szgrrz.svg"
+                            className="object-cover w-16 h-16 md:w-16 md:h-16 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
+                            src="https://i.ibb.co/LYSxBfW/image-removebg-preview.png"
                             alt="Person"
-                            width={80} height={80}
+                            width={50} height={50}
                         />
                         <p className="text-gray-900 mt-2 text-center font-semibold text-sm md:text-md tracking-widest">Fire Insurance</p>
                     </div>
