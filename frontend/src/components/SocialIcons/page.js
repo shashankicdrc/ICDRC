@@ -112,7 +112,7 @@ const SocialIcons = () => {
                  target="_blank" rel="noreferrer" className='main_icon bg-pink-600 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-pink-600 hover:bg-white hover:text-pink-600'>
                     <BsInstagram className='text-xl md:text-2xl' />
                 </a>
-                <a href="https://www.linkedin.com/in/icdrcofficial/"
+                <a href="https://www.linkedin.com/company/icdrcofficial"
                  target="_blank" rel="noreferrer" className='main_icon bg-blue-600 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-blue-600 hover:bg-white hover:text-blue-600'>
                     <BsLinkedin className='text-xl md:text-2xl' />
                 </a>
