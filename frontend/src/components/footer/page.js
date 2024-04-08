@@ -91,7 +91,7 @@ const Footer = () => {
               </p>
               <p className="mt-8 text-2xl text-gray-700 flex gap-8">
                 <a
-                  href="https://www.linkedin.com/in/icdrcofficial/"
+                  href="https://www.linkedin.com/company/icdrcofficial"
                   rel="noreferrer"
                   target="_blank"
                   data-aos="zoom-in"
