@@ -11,7 +11,6 @@ const ensureUploadDirectoryExists = (uploadDir) => {
   }
 };
 
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const userId = req.id;
@@ -23,10 +22,9 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(
       null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname),
     ); // File naming scheme
   },
-
 });
 
 const upload = multer({ storage: storage });
@@ -50,7 +48,7 @@ Documentrouter.post(
       console.log(error);
       res.status(500).send("Server Error");
     }
-  }
+  },
 );
 
 Documentrouter.get("/files", fetchUser, (req, res) => {
@@ -77,18 +75,17 @@ Documentrouter.delete("/file/:fileName", fetchUser, (req, res) => {
     const fileName = req.params.fileName;
     const filePath = path.join(
       __dirname,
-      `../../uploads/${userId}/${fileName}`
+      `../../uploads/${userId}/${fileName}`,
     );
 
     // Delete the file
     fs.unlink(filePath, (err) => {
       if (err) {
-        console.error("Error deleting file:", err);
-        res.status(500).send("Error deleting file");
-        return;
+        return res.status(500).json({ error: err.message });
       }
-
-      res.sendStatus(200);
+      return res
+        .status(200)
+        .json({ data: "File has been deleted succesfully." });
     });
   } catch (error) {}
 });
