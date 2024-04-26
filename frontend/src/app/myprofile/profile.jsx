@@ -1,28 +1,18 @@
 "use client";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
-// import Navbar from "../../components/Navbar/page";
 import { useEffect } from "react";
 import { useState } from "react";
 import { url } from "../api";
 import { toast } from "react-hot-toast";
-//import { RiDeleteBin3Line } from 'react-icons/ri'
 import axios from "axios";
-import { useParams } from "next/navigation";
-
-// import 'mdb-react-ui-kit/dist/css/mdb.min.css';
-import { useSession } from "next-auth/react";
 import {
   MDBCol,
   MDBContainer,
   MDBRow,
   MDBCard,
-  MDBCardText,
   MDBCardBody,
   MDBCardImage,
-  MDBBtn,
-  MDBBreadcrumb,
-  MDBBreadcrumbItem,
 } from "mdb-react-ui-kit";
 
 export default function ProfilePage() {
@@ -39,7 +29,6 @@ export default function ProfilePage() {
       router.push("/login");
     }
   }, [router, user]);
-
   //google auth routing
 
   //  useEffect(()=>{

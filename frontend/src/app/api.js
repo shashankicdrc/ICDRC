@@ -1,8 +1,12 @@
-export const url = "https://api.icdrc.in";
-// export const url = "http://localhost:5000";
+export const url =
+  process.env.NODE_ENV === "production"
+    ? "https://api.icdrc.in"
+    : "http://localhost:5000";
 
-// export const furl = 'http://localhost:3000'
-export const furl = "https://icdrc.in";
+export const furl =
+  process.env.NODE_ENV === "production"
+    ? "https://icdrc.in"
+    : "http://localhost:3000";
 
 export const UserAuthAPI = {
   // userLogin_API: BASE_URL + "/api/v1/userLogin",

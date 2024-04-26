@@ -1,29 +1,30 @@
-"use client";
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import HomeNav from "../../components/Navbar/page";
+import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
-import ShowStatus from "../casestatus/ShowStatus";
-import UploadDoc from "../../components/uploaddoc/page";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "../../components/ErrorFallback";
 import dynamic from "next/dynamic";
-import { useSession } from "next-auth/react";
-import ShowComplaint from "./showComplaint";
 
 const Profile = dynamic(() => import("./profile"), { ssr: false });
+const UploadDoc = dynamic(() => import("../../components/uploaddoc/page"), {
+  ssr: false,
+});
+const HomeNav = dynamic(() => import("../../components/Navbar/page"), {
+  ssr: false,
+});
 
 const myprofile = () => {
-  const router = useRouter();
-  const user = useSelector((state) => state.user);
-  const { status, data: session } = useSession();
+  // const router = useRouter();
+  // const user = useSelector((state) => state.user);
+  // const { status, data: session } = useSession();
+  //
+  // useEffect(() => {
+  //   if (!user._id) router.push("/login");
+  // }, [user._id]);
 
-  useEffect(() => {
-    if (!user._id) router.push("/login");
-  }, [user._id]);
-
+  // start of old code
   //google auth routing
 
   // useEffect(()=>{
@@ -31,16 +32,16 @@ const myprofile = () => {
   //     router.push('/login')
   //   }
   // })
+  //// end of old code
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  // useEffect(() => {
+  //   window.scrollTo(0, 0);
+  // }, []);
 
   return (
     <div>
       <SocialIcons />
       <HomeNav />
-
       <div
         className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"
         style={{
@@ -106,24 +107,15 @@ const myprofile = () => {
       >
         One Stop Solution For Insurance Claim Disputes. (ICDRC)
       </p>
-
-      <div className="flex flex-col justify-center md:flex-row">
-        {/* Left Column */}
-        <div className="order-1 md:order-1 md:w-full md:p-8">
-          {/* User Details */}
-
+      <section className="md:mx-5 lg:mx-10">
+        <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Profile />
-          {/* <ShowComplaint></ShowComplaint> */}
-          {/* Upload Documents */}
+        </ErrorBoundary>
+      </section>
 
-          <UploadDoc />
-        </div>
-        {/* Right Column */}
-        <div className="order-2 md:order-2 md:w-full md:p-8">
-          <ShowStatus />
-        </div>
-      </div>
-      <Home7Contact />
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <UploadDoc />
+      </ErrorBoundary>
       <Footer />
     </div>
   );

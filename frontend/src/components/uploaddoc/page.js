@@ -1,8 +1,10 @@
+"use client";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid"; // for generating unique IDs
 import { url } from "../../app/api";
 import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
 
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -33,11 +35,16 @@ const UploadDocuments = () => {
     const res = await axios.post(`${url}/api/upload`, formData, {
       headers: { token: user.token },
     });
-    console.log(res);
-    setSelectedFiles((prevFiles) =>
-      prevFiles.filter((fl) => fl.id !== file.id)
-    );
-    setUploadedFiles((prevFiles) => [...prevFiles, res.data.file]);
+
+    if (res.status === 200) {
+      setSelectedFiles((prevFiles) =>
+        prevFiles.filter((fl) => fl.id !== file.id),
+      );
+      setUploadedFiles((prevFiles) => [...prevFiles, res.data.file]);
+      toast("File has been submited successfully.");
+      return;
+    }
+    toast.error("something went wrong.");
   };
 
   const fetchAllFiles = async () => {
@@ -48,10 +55,26 @@ const UploadDocuments = () => {
   };
 
   const deleteFile = async (file) => {
-    const res = await axios.delete(`${url}/api/file/${file}`, {
-      headers: { token: user.token },
-    });
-    setUploadedFiles((prevFiles) => prevFiles.filter((fl) => fl !== file));
+    try {
+      const res = await axios.delete(`${url}/api/file/${file}`, {
+        headers: { token: user.token },
+      });
+      const { data, error } = res.data;
+      if (res.status === 200) {
+        setUploadedFiles((prevFiles) => prevFiles.filter((fl) => fl !== file));
+        return toast(data);
+      }
+      toast(error);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const removedFile = async (id) => {
+    if (!id) return;
+    const updatedFiles = selectedFiles.filter((item) => item.id !== id);
+    setSelectedFiles(updatedFiles);
+    toast("file has been removed successfully.");
   };
 
   useEffect(() => {
@@ -59,10 +82,9 @@ const UploadDocuments = () => {
   }, []);
 
   return (
-    <>
-      <div className="max-w-3xl mx-auto p-8 text-orange-400 m-4 mt-10  bg-white rounded-lg shadow-lg">
+    <div className="flex justify-between">
+      <div className="mx-auto p-8 w-full text-orange-400 m-4 mt-10  bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold mb-4">Upload Documents</h2>
-        {/* File input for document upload */}
         <input
           type="file"
           className="mb-4"
@@ -88,21 +110,15 @@ const UploadDocuments = () => {
                   </span>
                 </div>
                 <div className="flex">
-                  {/* Edit button */}
                   <button
                     className="text-blue-500 hover:text-blue-700 mr-2"
                     onClick={() => alert("Edit action")}
                   >
                     Edit
                   </button>
-                  {/* Delete button */}
                   <button
                     className="text-red-500 hover:text-red-700"
-                    onClick={() =>
-                      setSelectedFiles((prevFiles) =>
-                        prevFiles.filter((file) => file.id !== id)
-                      )
-                    }
+                    onClick={() => removedFile(file.id)}
                   >
                     Delete
                   </button>
@@ -119,7 +135,7 @@ const UploadDocuments = () => {
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto p-8 text-orange-400 m-4 mt-10  bg-white rounded-lg shadow-lg">
+      <div className="mx-auto p-8 text-orange-400 m-4 mt-10  w-full bg-white rounded-lg shadow-lg">
         <div>
           <h3 className="text-2xl text-orange-400 font-bold  mb-2">
             Submitted Documents
@@ -157,7 +173,7 @@ const UploadDocuments = () => {
           </ul>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
