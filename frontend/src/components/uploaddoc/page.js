@@ -1,15 +1,17 @@
 "use client";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import { v4 as uuidv4 } from "uuid"; // for generating unique IDs
 import { url } from "../../app/api";
 import { useSelector } from "react-redux";
 import toast from "react-hot-toast";
+import DeleteDoc from "./DeleteDoc";
 
 const UploadDocuments = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const user = useSelector((state) => state.user);
+  const fileInputRef = useRef(null);
 
   // Function to handle file upload
   const handleFileUpload = (event) => {
@@ -41,6 +43,9 @@ const UploadDocuments = () => {
         prevFiles.filter((fl) => fl.id !== file.id),
       );
       setUploadedFiles((prevFiles) => [...prevFiles, res.data.file]);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = null;
+      }
       toast("File has been submited successfully.");
       return;
     }
@@ -54,7 +59,7 @@ const UploadDocuments = () => {
     setUploadedFiles(res.data.files);
   };
 
-  const deleteFile = async (file) => {
+  const deleteFile = useCallback(async (file) => {
     try {
       const res = await axios.delete(`${url}/api/file/${file}`, {
         headers: { token: user.token },
@@ -68,25 +73,29 @@ const UploadDocuments = () => {
     } catch (error) {
       toast.error(error.message);
     }
-  };
+  }, []);
 
-  const removedFile = async (id) => {
-    if (!id) return;
-    const updatedFiles = selectedFiles.filter((item) => item.id !== id);
-    setSelectedFiles(updatedFiles);
-    toast("file has been removed successfully.");
-  };
+  const removedFile = useCallback(
+    (id) => {
+      if (!id) return;
+      const updatedFiles = selectedFiles.filter((item) => item.id !== id);
+      setSelectedFiles(updatedFiles);
+      toast("file has been removed successfully.");
+    },
+    [selectedFiles],
+  );
 
   useEffect(() => {
     fetchAllFiles();
   }, []);
 
   return (
-    <div className="flex justify-between">
-      <div className="mx-auto p-8 w-full text-orange-400 m-4 mt-10  bg-white rounded-lg shadow-lg">
+    <div className="grid grid-col-1 md:grid-cols-2 gap-5 my-5">
+      <secion className="mx-auto p-8 w-full text-orange-400 m-4 mt-10  bg-white rounded-lg border">
         <h2 className="text-2xl font-bold mb-4">Upload Documents</h2>
         <input
           type="file"
+          ref={fileInputRef}
           className="mb-4"
           onChange={handleFileUpload}
           multiple
@@ -105,37 +114,30 @@ const UploadDocuments = () => {
               >
                 <div className="flex items-center">
                   <span className="text-gray-700">{file.name}</span>
-                  <span className="text-sm text-gray-500 ml-2">
-                    ({file.type}, {(file.size / 1000).toFixed(2)} KB)
-                  </span>
+                  {/* <span className="text-sm text-gray-500 ml-2"> */}
+                  {/*   ({file.type}, {(file.size / 1000).toFixed(2)} KB) */}
+                  {/* </span> */}
                 </div>
-                <div className="flex">
+                <div className="flex space-x-2 item-center">
+                  <DeleteDoc
+                    id={file.id}
+                    removedFile={removedFile}
+                    isSubmited={false}
+                  />
                   <button
-                    className="text-blue-500 hover:text-blue-700 mr-2"
-                    onClick={() => alert("Edit action")}
+                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2  rounded"
+                    onClick={() => handleSubmission(file)}
                   >
-                    Edit
-                  </button>
-                  <button
-                    className="text-red-500 hover:text-red-700"
-                    onClick={() => removedFile(file.id)}
-                  >
-                    Delete
+                    Submit
                   </button>
                 </div>
-                <button
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-                  onClick={() => handleSubmission(file)}
-                >
-                  Submit
-                </button>
               </li>
             ))}
           </ul>
         </div>
-      </div>
+      </secion>
 
-      <div className="mx-auto p-8 text-orange-400 m-4 mt-10  w-full bg-white rounded-lg shadow-lg">
+      <section className="mx-auto p-8 text-orange-400 m-4 mt-10  w-full bg-white rounded-lg border">
         <div>
           <h3 className="text-2xl text-orange-400 font-bold  mb-2">
             Submitted Documents
@@ -148,31 +150,13 @@ const UploadDocuments = () => {
               >
                 <div className="flex items-center">
                   <span className="text-gray-700">{file}</span>
-                  {/* <span className="text-sm text-gray-500 ml-2">
-                    ({file.type}, {(file.size / 1000).toFixed(2)} KB)
-                  </span> */}
                 </div>
-                <div className="flex">
-                  {/* Edit button */}
-                  <button
-                    className="text-blue-500 hover:text-blue-700 mr-2"
-                    onClick={() => alert("Edit action")}
-                  >
-                    Edit
-                  </button>
-                  {/* Delete button */}
-                  <button
-                    className="text-red-500 hover:text-red-700"
-                    onClick={() => deleteFile(file)}
-                  >
-                    Delete
-                  </button>
-                </div>
+                <DeleteDoc id={file} removedFile={deleteFile} />
               </li>
             ))}
           </ul>
         </div>
-      </div>
+      </section>
     </div>
   );
 };

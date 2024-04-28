@@ -101,52 +101,49 @@ export default function ProfilePage() {
 
   return (
     <>
-      <div className=" items-center justify-center flex border-orange-400 shadow-lg rounded-md">
+      <section
+        className="w-full m-5 mx-auto
+      border shadow-orange-400 rounded-lg "
+      >
         <h1 className="font-bold text-orange-400 text-3xl font-[popins] m-4 p-2">
           Your Profile Details
         </h1>
-        <div></div>
-      </div>
-
-      <section
-        className="w-full m-5 mx-auto
-     align-middle items-center justify-center flex md:items-center border shadow-orange-400 rounded-lg "
-      >
-        <MDBContainer className="py-5">
-          <MDBRow>
+        <div className="align-middle items-center justify-center flex md:items-center">
+          <MDBContainer className="py-5">
             <MDBRow>
-              <MDBCard className="mb-4">
-                <MDBCardBody className="flex justify-evenly">
-                  <MDBCardImage
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                    alt="avatar"
-                    className="rounded-circle max-w-36 max-h-36 my-2 px-3 py-2"
-                    fluid
-                  />
+              <MDBRow>
+                <MDBCard className="mb-4">
+                  <MDBCardBody className="flex justify-evenly">
+                    <MDBCardImage
+                      src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                      alt="avatar"
+                      className="rounded-circle max-w-36 max-h-36 my-2 px-3 py-2"
+                      fluid
+                    />
 
-                  <div className="mb-2">
-                    <div className="bg-white w-full  border-gray-400 mx-auto px-3 rounded-xl">
-                      <h2
-                        className="mt-8 text-md font-semibold font-[Poppins]"
-                        data-aos="fade-up"
-                        data-aos-duration="2000"
-                      >
-                        Name :{" "}
-                        <span className="text-orange-500 font-[Signika+Negative] ml-3 md:ml-8">
-                          {user?.name}
-                        </span>
-                      </h2>
-                      <h2
-                        className="mt-3 text-md font-semibold font-[Poppins]"
-                        data-aos="fade-up"
-                        data-aos-duration="2000"
-                      >
-                        Email Id :{" "}
-                        <span className="text-orange-500 font-[Signika+Negative] ml-3 md:ml-8">
-                          {user?.emailId}
-                        </span>
-                      </h2>
-                      {/* <h2
+                    <div className="mb-2">
+                      <div className="bg-white w-full  border-gray-400 mx-auto px-3 rounded-xl">
+                        <h2
+                          className="mt-8 text-md font-semibold font-[Poppins]"
+                          data-aos="fade-up"
+                          data-aos-duration="2000"
+                        >
+                          Name :{" "}
+                          <span className="text-orange-500 font-[Signika+Negative] ml-3 md:ml-8">
+                            {user?.name}
+                          </span>
+                        </h2>
+                        <h2
+                          className="mt-3 text-md font-semibold font-[Poppins]"
+                          data-aos="fade-up"
+                          data-aos-duration="2000"
+                        >
+                          Email Id :{" "}
+                          <span className="text-orange-500 font-[Signika+Negative] ml-3 md:ml-8">
+                            {user?.emailId}
+                          </span>
+                        </h2>
+                        {/* <h2
                         className="mt-3 text-md font-semibold font-[Poppins]"
                         data-aos="fade-up"
                         data-aos-duration="2000"
@@ -156,47 +153,24 @@ export default function ProfilePage() {
                           +9187XXXXXX56
                         </span>
                       </h2> */}
-                      <div
-                        className="grid place-items-center"
-                        data-aos="fade-up"
-                        data-aos-duration="2000"
-                      ></div>
+                        <div
+                          className="grid place-items-center"
+                          data-aos="fade-up"
+                          data-aos-duration="2000"
+                        ></div>
+                      </div>
                     </div>
-                  </div>
-                </MDBCardBody>
-              </MDBCard>
+                  </MDBCardBody>
+                </MDBCard>
+              </MDBRow>
+              <MDBCol lg="8" className="w-full ml-5">
+                <MDBCard className="mb-4 w-full">
+                  <MDBCardBody className="w-full"></MDBCardBody>
+                </MDBCard>
+              </MDBCol>
             </MDBRow>
-            <MDBCol lg="8" className="w-full ml-5">
-              <MDBCard className="mb-4 w-full">
-                <MDBCardBody className="w-full">
-                  {/* <MDBRow>
-                    
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted pt-2 pb-2">
-
-                       {data.map((item)=>{
-                        <div key={item._id}>
-<p>{item.name}</p>
-                        </div>
-                       })}
-                       
-                      </MDBCardText>
-                    </MDBCol>
-                  </MDBRow>
-                  
-                  <MDBRow>
-                    
-                    <MDBCol sm="9">
-                      <MDBCardText className="text-muted pt-2 pb-2">
-                       Email:  {user?.emailId}
-                      </MDBCardText>
-                    </MDBCol>
-                  </MDBRow> */}
-                </MDBCardBody>
-              </MDBCard>
-            </MDBCol>
-          </MDBRow>
-        </MDBContainer>
+          </MDBContainer>
+        </div>
       </section>
     </>
   );

@@ -1,37 +1,23 @@
-import React, { useEffect, useState } from "react";
+"use client";
+import React from "react";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation"; // Change to 'next/router'
+import { useRouter } from "next/navigation"; 
 import { loginUser, logoutUser } from "../../features/UserSlice";
-import { signOut } from "next-auth/react";
-import { useSession } from "next-auth/react";
 
 const Button = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const user = useSelector((state) => state.user);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { status, data: session } = useSession();
-
-  // useEffect(() => {
-  //   setIsLoggedIn(!!user._id);
-  // }, [user]);
-
   const handleLogout = () => {
-    // Dispatch action to log out the user
     dispatch(logoutUser());
-    // Redirect to login page after the action is completed
     router.push("/login");
-    signOut("google");
   };
 
   const handleLogin = () => {
-    // Dispatch action to log in the user
     router.push("/login");
     dispatch(loginUser());
-    // Redirect to profile page upon successful login after the action is completed
-    // router.push("/myprofile");
   };
 
   const handleClick = () => {
@@ -44,33 +30,17 @@ const Button = () => {
 
   return (
     <div className="flex flex-col gap-8 md:flex-row justify-center items-center">
-      <Link href="/myprofile">
-        <div
-          className="b mx-auto h-12 w-48 flex justify-center items-center text-white hover:font-semibold"
-          data-aos="zoom-in"
-        >
-          <div className="i h-12 w-48 bg-orange-500 items-center rounded-xl shadow-2xl cursor-pointer absolute overflow-hidden transform hover:scale-x-110 hover:scale-y-105 transition duration-300 ease-out"></div>
-          <div
-            className="text-center font-semibold z-10 pointer-events-none flex justify-content items-center"
-            style={{ fontSize: "18px" }}
-          >
-            <span className=""></span>Case Status
-          </div>
-        </div>
+      <Link
+        className="bg-orange-500 hover:bg-orange-600 text-white rounded-md py-2 px-4"
+        href="/casestatus"
+      >
+        Case status
       </Link>
-
       <div
         onClick={handleClick}
-        className="b mx-auto h-12 w-48 flex justify-center items-center text-white hover:font-semibold"
-        data-aos="zoom-in"
+        className="bg-orange-500 hover:bg-orange-600 text-white rounded-md py-2 px-4 cursor-pointer"
       >
-        <div className="i h-12 w-48 bg-orange-500 items-center rounded-xl shadow-2xl cursor-pointer absolute overflow-hidden transform hover:scale-x-110 hover:scale-y-105 transition duration-300 ease-out"></div>
-        <div
-          className="text-center font-semibold z-10 pointer-events-none flex justify-content items-center"
-          style={{ fontSize: "18px" }}
-        >
-          {user._id ? "Logout" : "Login"}
-        </div>
+        {user._id ? "Logout" : "Login"}
       </div>
     </div>
   );
