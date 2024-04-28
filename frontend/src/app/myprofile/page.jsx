@@ -5,8 +5,6 @@ import SocialIcons from "../../components/SocialIcons/page";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "../../components/ErrorFallback";
 import dynamic from "next/dynamic";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import ProfileSkeleton from "../../components/Skeleton/ProfileSkeleton";
 
 const Profile = dynamic(() => import("./profile"), {
@@ -18,8 +16,6 @@ const UploadDoc = dynamic(() => import("../../components/uploaddoc/page"), {
 });
 
 const myprofile = async () => {
-  const session = await getServerSession(authOptions);
-
   return (
     <Fragment>
       <main className="mx-5 md:mx-10 lg:mx-15 mt-32 mb-5 z-10">

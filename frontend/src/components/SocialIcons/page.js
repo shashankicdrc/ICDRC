@@ -108,7 +108,7 @@ const SocialIcons = () => {
                  target="_blank" rel="noreferrer" className='main_icon bg-gray-900 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-gray-900 hover:bg-white hover:text-gray-900'>
                     <FaSquareXTwitter className='text-xl md:text-2xl' />
                 </a>
-                <a href="https://www.instagram.com/icdrc_official/"
+                <a href="https://www.instagram.com/icdrc2024"
                  target="_blank" rel="noreferrer" className='main_icon bg-pink-600 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-pink-600 hover:bg-white hover:text-pink-600'>
                     <BsInstagram className='text-xl md:text-2xl' />
                 </a>

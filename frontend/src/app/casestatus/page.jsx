@@ -1,28 +1,21 @@
-'use client';
+"use client";
 import React, { useEffect } from "react";
 import HomeNav from "../../components/Navbar/page";
 import Link from "next/link";
-import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
-import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
-
-
-
-
+import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const CaseStatus = () => {
-
   const router = useRouter();
-    const admin = useSelector((state) => state.admin);
+  const admin = useSelector((state) => state.admin);
 
   useEffect(() => {
     if (!admin._id) {
-        router.push('/login')
+      router.push("/login");
     }
-}, [router, admin])
-
+  }, [router, admin]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -36,10 +29,10 @@ const CaseStatus = () => {
   // }
   return (
     <div>
-       <SocialIcons />
+      <SocialIcons />
       <HomeNav />
 
-     {/* <Helmet>
+      {/* <Helmet>
         <meta charSet="utf-8" />
         <title>ICDRC: Case Status</title>
         <link rel="canonical" href="" />
@@ -52,10 +45,6 @@ const CaseStatus = () => {
           content="Complaint Section, case study and case status register your complain, reliable insurance solutions, Our Success stories, ICDRC, successful claims, Insurance recovery,  Fast insurance settlements, InsuranceSamadhan Alternative"
         />
       </Helmet> */}
-
-
-
-      
 
       <div
         className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"
@@ -123,35 +112,75 @@ const CaseStatus = () => {
         One Stop Solution For Insurance Claim Disputes. (ICDRC)
       </p>
       <div className="">
-        
-
-<form className="max-w-sm mx-auto mt-10 mb-10 p-10 border-orange-700 rounded-lg bg-slate-50">
-<div className="mb-5">
-    <label for="Name" className="block mb-2 text-sm font-medium text-Black ">Your Name</label>
-    <input type="Name" id="email" className="bg-white border cursor-text border-gray-300 text-gray-900 text-sm rounded-lg  w-full p-2.5 " required />
-  </div>
-  <div class="mb-5">
-    <label for="email" class="block mb-2 text-sm font-medium text-gray-900 ">Your Email</label>
-    <input type="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required />
-  </div>
-  <div className="mb-5">
-    <label for="CaseId" className="block mb-2 text-sm font-medium text-gray-900 ">Case Id</label>
-    <input type="number" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 " required />
-  </div>
-  <div className="flex items-start mb-5">
-    <div className="flex items-center h-5">
-      <input id="remember" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" required />
-    </div>
-    <label for="remember" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remember me</label>
-  </div>
-  <button type="submit" className="text-white bg-orange-400 hover:bg-orange-50 hover:text-black hover:border  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mb-10 ">Check Status</button>
-</form>
-
+        <form className="max-w-sm mx-auto mt-10 mb-10 p-10 border-orange-700 rounded-lg bg-slate-50">
+          <div className="mb-5">
+            <label
+              for="Name"
+              className="block mb-2 text-sm font-medium text-Black "
+            >
+              Your Name
+            </label>
+            <input
+              type="Name"
+              id="email"
+              className="bg-white border cursor-text border-gray-300 text-gray-900 text-sm rounded-lg  w-full p-2.5 "
+              required
+            />
+          </div>
+          <div class="mb-5">
+            <label
+              for="email"
+              class="block mb-2 text-sm font-medium text-gray-900 "
+            >
+              Your Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              required
+            />
+          </div>
+          <div className="mb-5">
+            <label
+              for="CaseId"
+              className="block mb-2 text-sm font-medium text-gray-900 "
+            >
+              Case Id
+            </label>
+            <input
+              type="number"
+              id="password"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+              required
+            />
+          </div>
+          <div className="flex items-start mb-5">
+            <div className="flex items-center h-5">
+              <input
+                id="remember"
+                type="checkbox"
+                value=""
+                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                required
+              />
+            </div>
+            <label
+              for="remember"
+              className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+            >
+              Remember me
+            </label>
+          </div>
+          <button
+            type="submit"
+            className="text-white bg-orange-400 hover:bg-orange-50 hover:text-black hover:border  focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center mb-10 "
+          >
+            Check Status
+          </button>
+        </form>
       </div>
 
-      
-
-      <Home7Contact />
       <Footer />
     </div>
   );

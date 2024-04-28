@@ -1,28 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useRouter } from "next/navigation";
-import { FcGoogle } from "react-icons/fc";
-
-import Footer from "../../components/footer/page";
 import HomeNav from "../../components/Navbar/page";
-import Link from "next/link";
-import Home7Contact from "../../components/HomeComponents/Home7Contact";
 import SocialIcons from "../../components/SocialIcons/page";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-
+import Link from "next/link";
 import { loginUser } from "../../features/UserSlice";
 import ForgotPassword from "../../components/forgetPassword/ForgotPassword";
-import { signIn, useSession } from "next-auth/react";
-// import { useSession } from "next-auth/react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [show, setShow] = useState(false);
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { status, data: session } = useSession();
 
   const dispatch = useDispatch();
   const router = useRouter();
@@ -186,9 +177,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-
-      <Home7Contact />
-      <Footer />
     </div>
   );
 };

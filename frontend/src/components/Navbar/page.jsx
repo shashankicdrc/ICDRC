@@ -1,11 +1,15 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Button from "./Button";
 import "../../styles/module.navbar.css";
 import HomeNavLinks from "./HomeNavLinks";
 import { IoMdMenu } from "react-icons/io";
 import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const Button = dynamic(() => import("./Button"), {
+  ssr: false,
+});
 
 const HomeNav = () => {
   const [open, setOpen] = useState(false);
