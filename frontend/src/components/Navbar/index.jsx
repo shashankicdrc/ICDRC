@@ -4,11 +4,7 @@ import Link from "next/link";
 import "../../styles/module.navbar.css";
 import PrivateHomeNavLinks from "./PrivateHomeLink";
 import { IoMdMenu } from "react-icons/io";
-import dynamic from "next/dynamic";
-
-const Button = dynamic(() => import("./Button"), {
-  ssr: false,
-});
+import RightMenu from "./RightMenu";
 
 const HomeNav = () => {
   const [open, setOpen] = useState(false);
@@ -118,7 +114,7 @@ const HomeNav = () => {
             </Link>
           </li>
           <div className="py-5">
-            <Button />
+            <RightMenu />
           </div>
         </ul>
       </div>
