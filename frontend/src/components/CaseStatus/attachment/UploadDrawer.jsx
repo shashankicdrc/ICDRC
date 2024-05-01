@@ -1,5 +1,11 @@
 "use client";
-import React, { Fragment, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import {
   Drawer,
   DrawerBody,
@@ -9,23 +15,45 @@ import {
   DrawerCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useForm } from "react-hook-form";
+import UploadedDataTable from "./UploadedDatatable";
 
 export default function UploadDrawer() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
   const [isloading, setIsloading] = useState(false);
+  const [files, setFiles] = useState([]);
 
-  const [file, setFile] = useState(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const removeFile = useCallback(
+    (name) => {
+      const updatedFile = Array.from(files).filter(
+        (item) => item.name !== name,
+      );
+      setFiles(updatedFile);
+    },
+    [files],
+  );
 
   const fileHandler = (e) => {
     if (!e.target.files) return;
-    setFile(Array.from(e.target.files));
+    setFiles(Array.from(e.target.files));
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedFiles = e.dataTransfer.files;
-    setFile(droppedFiles);
+    setFiles(droppedFiles);
+  };
+
+  const uploadHandler = (data) => {
+    console.log(data);
   };
 
   return (
@@ -49,22 +77,26 @@ export default function UploadDrawer() {
           <DrawerCloseButton />
           <DrawerHeader>Upload a new attachments</DrawerHeader>;
           <DrawerBody className="overflow-y-auto">
-            <form action="">
+            <form onSubmit={handleSubmit(uploadHandler)}>
               <div className="flex flex-col space-y-2">
                 <label htmlFor="attachment_name">Attachment Name</label>
                 <input
                   type="text"
                   name="attachment_name"
+                  {...register("attachment_name", {
+                    required: true,
+                    minLength: 4,
+                  })}
                   id="attachment_name"
                   placeholder="Enter your attachment name"
                   className="text-sm border border-gray-300 focus:border-orange-500 outline-none
                     focus:outline-none rounded-md py-2 px-3 tracking-wide mt-1"
                 />
-                {/* {errors.email && ( */}
-                {/*   <span className="text-red-600"> */}
-                {/*     Please provide valid email */}
-                {/*   </span> */}
-                {/* )} */}
+                {errors.attachment_name && (
+                  <span className="text-red-600">
+                    Attachment name should be at leas 4 character
+                  </span>
+                )}
               </div>
 
               <div
@@ -109,6 +141,14 @@ export default function UploadDrawer() {
                   />
                 </label>
               </div>
+              {files.length ? (
+                <div className="my-5">
+                  <UploadedDataTable
+                    removeFile={removeFile}
+                    fileData={Array.from(files)}
+                  />
+                </div>
+              ) : null}
               <button
                 className="bg-orange-500 hover:bg-orange-600 px-4 py-2
                     rounded-md text-white w-fit inline-flex"
