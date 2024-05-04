@@ -9,6 +9,31 @@ const {
 const { IndividualComplaint } = require("../models/IndividualComplaint");
 const { asyncError } = require("../middlewares/error");
 
+const Attachments = asyncError(async (req, res) => {
+  const { caseId, caseType } = req.query;
+
+  switch (caseType) {
+    case "individual":
+      const ind_attachments = await IndividualComplaint.findById(caseId, {
+        _id: true,
+      })
+        .populate("attachments")
+        .exec();
+      return res.status(200).json({ data: ind_attachments });
+    case "organisational":
+      const org_attachments = await OrganizationalComplaint.findById(caseId, {
+        _id: true,
+      })
+        .populate("attachments")
+        .exec();
+      return res.status(200).json({ data: org_attachments });
+    default:
+      return res
+        .status(400)
+        .json({ error: "Invalid case type has been provided." });
+  }
+});
+
 const CheckCaseStatus = asyncError(async (req, res) => {
   const { email, id, type } = req.query;
   switch (type) {
@@ -169,4 +194,4 @@ const UploadAttachments = asyncError(async (req, res) => {
   req.pipe(bb);
 });
 
-module.exports = { UploadAttachments, CheckCaseStatus };
+module.exports = { UploadAttachments, CheckCaseStatus, Attachments };
