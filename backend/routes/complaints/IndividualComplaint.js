@@ -5,6 +5,7 @@ var nodemailer = require("nodemailer");
 const { User } = require("..//..//models/User");
 const verifyToken = require("..//..//utils/verifyToken");
 const { fetchUser } = require("../../middlewares/fetchUser");
+const adminValidation = require("../../middlewares/adminValidation");
 
 const policyTypeToEmail = {
   "Life Insurance": "lifeinsurance@icdrc.in",
@@ -121,13 +122,18 @@ Individualrouter.post("/", async (req, res) => {
 Individualrouter.get("/", fetchUser, async (req, res) => {
   try {
     const complaints = await IndividualComplaint.find({ _id: req.id }).select(
-      "-_id name mobile email country state city address language policyCompany policyType problem problemDetails createdAt transactionId"
+      "-_id name mobile email country state city address language policyCompany policyType problem problemDetails createdAt transactionId",
     );
     res.json(complaints);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
+});
+
+Individualrouter.get("/all", adminValidation, async (req, res) => {
+  const complaints = await IndividualComplaint.find();
+  return res.status(200).json({ data: complaints });
 });
 
 module.exports = { Individualrouter };

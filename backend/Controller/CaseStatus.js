@@ -9,6 +9,72 @@ const {
 const { IndividualComplaint } = require("../models/IndividualComplaint");
 const { asyncError } = require("../middlewares/error");
 
+const deleteCase = asyncError(async (req, res) => {
+  const { caseId, caseType } = req.body;
+
+  switch (caseType) {
+    case "individual":
+      const ind_delete = await IndividualComplaint.findByIdAndDelete(caseId, {
+        new: true,
+      });
+      if (ind_delete._id) {
+        return res
+          .status(200)
+          .json({ data: "Complain has been deleted successfully." });
+      } else {
+        return res
+          .status(400)
+          .json({ data: "Invalid complain has been provided." });
+      }
+    case "organisational":
+      const org_delete = await OrganizationalComplaint.findByIdAndDelete(
+        caseId,
+        { new: true },
+      );
+      if (org_delete._id) {
+        return res
+          .status(200)
+          .json({ data: "Complain has been deleted successfully." });
+      } else {
+        return res
+          .status(400)
+          .json({ error: "Invalid complain has been provided." });
+      }
+    default:
+      return res
+        .status(400)
+        .json({ error: "Invalid case type has been provided." });
+  }
+});
+
+const updateStatus = asyncError(async (req, res) => {
+  const { caseId, caseType, status } = req.body;
+
+  switch (caseType) {
+    case "individual":
+      const ind_updates = await IndividualComplaint.findByIdAndUpdate(
+        caseId,
+        {
+          status,
+        },
+        { new: true },
+      );
+      return res.status(200).json({ data: ind_updates });
+    case "organisational":
+      const org_updates = await OrganizationalComplaint.findByIdAndUpdate(
+        caseId,
+        {
+          status,
+        },
+      );
+      return res.status(200).json({ data: org_updates });
+    default:
+      return res
+        .status(400)
+        .json({ error: "Invalid case type has been provided." });
+  }
+});
+
 const Attachments = asyncError(async (req, res) => {
   const { caseId, caseType } = req.query;
 
@@ -194,4 +260,10 @@ const UploadAttachments = asyncError(async (req, res) => {
   req.pipe(bb);
 });
 
-module.exports = { UploadAttachments, CheckCaseStatus, Attachments };
+module.exports = {
+  UploadAttachments,
+  CheckCaseStatus,
+  Attachments,
+  updateStatus,
+  deleteCase,
+};

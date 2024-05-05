@@ -57,7 +57,7 @@ const schema = new mongoose.Schema(
       default: "prending",
       enum: ["pending", "processing", "completed"],
     },
-    attachements: [
+    attachments: [
       { type: mongoose.Schema.Types.ObjectId, ref: "complainMedia" },
     ],
   },
