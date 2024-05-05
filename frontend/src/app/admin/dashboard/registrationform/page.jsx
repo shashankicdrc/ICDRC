@@ -7,13 +7,18 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { url } from "../../../api";
 import { toast } from "react-hot-toast";
-import axios from "axios";
 import TabSection from "./tabsection";
-import { Table, Thead, Tbody, Tr, Th, Td, TableContainer } from "@chakra-ui/react";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+} from "@chakra-ui/react";
 import PageLoader from "../../components/pageloader/page";
-
-import { RiDeleteBin3Line } from "react-icons/ri";
-
+import Menu from "../../components/CaseStatus/Menu";
 
 const ContactMessages = () => {
   const router = useRouter();
@@ -21,11 +26,12 @@ const ContactMessages = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   useEffect(() => {
     if (!admin._id) {
       router.push("/admin/login");
     }
-  }, [router, admin]);
+  }, [admin]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -35,21 +41,16 @@ const ContactMessages = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-            `${url}/api/individualcomplaint/all`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
+        const response = await fetch(`${url}/api/individualcomplaint/all`, {
+          headers: {
+            Authorization: `Bearer ${admin._id}`,
+          },
+        });
+        const { error, data } = await response.json();
+        if (error) {
+          return toast.error(error);
         }
-        const jsonData = await response.json();
-        console.log("API Response:", jsonData); // Log API response
-        // Check if the data is not an array
-        if (!Array.isArray(jsonData)) {
-          // If it's not an array, convert it to an array with a single item
-          setData([jsonData]);
-        } else {
-          setData(jsonData);
-        }
+        setData(data);
       } catch (error) {
         console.error(error);
         setError("Failed to fetch data. Please try again later.");
@@ -61,73 +62,9 @@ const ContactMessages = () => {
     fetchData();
   }, [admin.token]);
 
-
   const formatCreatedAtDate = (createdAt) => {
     const createdAtDate = new Date(createdAt);
     return createdAtDate.toLocaleDateString();
-  };
-
-  // const getData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios.get(`${url}/api/individualcomplaint/all`, {
-  //       headers: {
-  //         Authorization: admin.token,
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-  //     if (res.data.success) {
-  //       setData(res.data.data);
-  //     }
-  //   } catch (err) {
-  //     // console.log(err);
-  //     if (err?.response?.data?.message) {
-  //       toast.error(err?.response?.data?.message);
-  //     }
-  //   }
-  //   setLoading(false);
-  // };
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const res = await axios.get(`${url}/api/individualcomplaint/all`, {
-  //         headers: {
-  //           Authorization: admin.token,
-  //           "Content-Type": "application/json",
-  //         },
-  //       });
-  //       if (res.data.success) {
-  //         setData(res.data.data);
-  //       }
-  //     } catch (err) {
-  //       // console.log(err);
-  //       if (err?.response?.data?.message) {
-  //         console.log(err?.response?.data?.message);
-  //       }
-  //     }
-  //     setLoading(false);
-  //   };
-  //   getData();
-  // }, [admin.token]);
-
-  const deletebtn = async (id) => {
-    try {
-      const res = await axios.delete(`${url}/api/individualcomplaint/all${id}`, {
-        headers: {
-          Authorization: admin.token,
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.data.success) {
-        toast.success(res.data.message);
-        getData();
-      }
-    } catch (err) {
-      toast.error(err.response.data.message);
-      // console.log(err);
-    }
   };
 
   return (
@@ -187,13 +124,14 @@ const ContactMessages = () => {
           </p>
         </div>
         <div className="mt-4 md:mt-6 lg:mt-8">
-        <TableContainer>
+          <TableContainer>
             <Table variant="striped" colorScheme="orange">
               <Thead>
                 <Tr>
                   <Th>S.No</Th>
                   <Th>Date</Th>
                   <Th>Name</Th>
+                  <Th>Status</Th>
                   <Th>Email</Th>
                   <Th>Mobile</Th>
                   <Th>Country</Th>
@@ -215,6 +153,7 @@ const ContactMessages = () => {
 
                         <Td>{formatCreatedAtDate(item.createdAt)}</Td>
                         <Td>{item.name}</Td>
+                        <Td>{item.status}</Td>
                         <Td>{item.email}</Td>
                         <Td>{item.mobile}</Td>
                         <Td>{item.country}</Td>
@@ -225,11 +164,8 @@ const ContactMessages = () => {
                         <Td>{item.policyType}</Td>
                         <Td>{item.problem}</Td>
                         <Td>{item.problemDetails}</Td>
-
-                        <Td onClick={() => deletebtn(item._id)}>
-                          {
-                            <RiDeleteBin3Line className="text-xl text-red-600 cursor-pointer" />
-                          }
+                        <Td>
+                          <Menu caseType={"individual"} caseId={item._id} />
                         </Td>
                       </Tr>
                     );

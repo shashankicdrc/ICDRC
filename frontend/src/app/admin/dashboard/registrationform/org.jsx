@@ -1,14 +1,12 @@
-'use client'
+"use client";
 
-import { useSelector } from 'react-redux';
-import { useRouter } from 'next/navigation';
-import Navbar from '../../components/navbar/page'
-import { useEffect } from 'react';
-import { useState } from 'react';
-import { url } from '../../../api';
-import { toast } from 'react-hot-toast';
-import axios from 'axios';
-import TabSection from './tabsection';
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useState } from "react";
+import { url } from "../../../api";
+import { toast } from "react-hot-toast";
+import axios from "axios";
 import {
   Table,
   Thead,
@@ -17,11 +15,9 @@ import {
   Th,
   Td,
   TableContainer,
-} from '@chakra-ui/react';
-import PageLoader from '../../components/pageloader/page';
-import { RiDeleteBin3Line } from "react-icons/ri";
-
-
+} from "@chakra-ui/react";
+import PageLoader from "../../components/pageloader/page";
+import Menu from "../../components/CaseStatus/Menu";
 
 const ContactMessages = () => {
   const [error, setError] = useState("");
@@ -32,23 +28,19 @@ const ContactMessages = () => {
 
   useEffect(() => {
     if (!admin._id) {
-      router.push('/admin/login')
+      router.push("/admin/login");
     }
-  }, [router, admin])
-
+  }, [router, admin]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [])
-
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(
-            `${url}/api/organizationalcomplaint/all`
-        );
+        const response = await fetch(`${url}/api/organizationalcomplaint/all`);
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -69,97 +61,52 @@ const ContactMessages = () => {
       }
     };
 
-   
-
     fetchData();
   }, [admin.token]);
-
 
   const formatCreatedAtDate = (createdAt) => {
     const createdAtDate = new Date(createdAt);
     return createdAtDate.toLocaleDateString();
   };
 
-  // const getData = async () => {
-  //   setLoading(true);
-  //   try {
-  //     const res = await axios.get(`${url}/api/organizationalcomplaint/all`, {
-  //       headers: {
-  //         Authorization: admin.token,
-  //         'Content-Type': 'application/json',
-  //       }
-  //     })
-  //     if (res.data.success) {
-  //       setData(res.data.data);
-  //     }
-  //   }
-  //   catch (err) {
-  //     // console.log(err);
-  //     if (err?.response?.data?.message) {
-  //       toast.error(err?.response?.data?.message);
-  //     }
-  //   }
-  //   setLoading(false);
-  // }
-
-
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       const res = await axios.get(`${url}/api/organizationalcomplaint/all`, {
-  //         headers: {
-  //           Authorization: admin.token,
-  //           'Content-Type': 'application/json',
-  //         }
-  //       })
-  //       if (res.data.success) {
-  //         setData(res.data.data);
-  //       }
-  //     }
-  //     catch (err) {
-  //       // console.log(err);
-  //       if (err?.response?.data?.message) {
-  //         console.log(err?.response?.data?.message);
-  //       }
-  //     }
-  //     setLoading(false);
-  //   }
-  //   getData();
-  // }, [admin.token])
-
   const deletebtn = async (id) => {
     try {
-      const res = await axios.delete(`${url}/api/organizationalcomplaint${id}`, {
-        headers: {
-          Authorization: admin.token,
-          'Content-Type': 'application/json',
-        }
-      })
+      const res = await axios.delete(
+        `${url}/api/organizationalcomplaint${id}`,
+        {
+          headers: {
+            Authorization: admin.token,
+            "Content-Type": "application/json",
+          },
+        },
+      );
       if (res.data.success) {
         toast.success(res.data.message);
         getData();
       }
-    }
-    catch (err) {
-      toast.error(err.response.data.message)
+    } catch (err) {
+      toast.error(err.response.data.message);
       // console.log(err);
     }
-  }
-
+  };
 
   return (
-    <div className='bg-gradient-to-r from-orange-300 to-red-300 min-h-screen'>
+    <div className="bg-gradient-to-r from-orange-300 to-red-300 min-h-screen">
       {loading && <PageLoader />}
-     
 
-      <div className="border-2 bg-white border-gray-400 my-4 mx-4  md:px-3 py-2 md:py-4 rounded-md" data-aos="zoom-in" data-aos-duration="2000">
-        <div className='flex justify-between items-center'>
-          <p className="text-md font-[Poppins] text-gray-700 md:text-xl font-medium pl-4 lg:pl-8">Total: {data?.length}</p>
+      <div
+        className="border-2 bg-white border-gray-400 my-4 mx-4  md:px-3 py-2 md:py-4 rounded-md"
+        data-aos="zoom-in"
+        data-aos-duration="2000"
+      >
+        <div className="flex justify-between items-center">
+          <p className="text-md font-[Poppins] text-gray-700 md:text-xl font-medium pl-4 lg:pl-8">
+            Total: {data?.length}
+          </p>
         </div>
-        <div className='mt-4 md:mt-6 lg:mt-8'>
-        <TableContainer>
-            <Table variant="striped" colorScheme="orange">
+        <div className="mt-4 md:mt-6 lg:mt-8">
+          <TableContainer>
+            <Table>
               <Thead>
                 <Tr>
                   <Th>S.No</Th>
@@ -168,6 +115,7 @@ const ContactMessages = () => {
                   <Th>Email</Th>
                   <Th>Mobile</Th>
                   <Th>Country</Th>
+                  <Th>Status</Th>
                   <Th>State</Th>
                   <Th>Address</Th>
                   <Th>Language</Th>
@@ -175,20 +123,28 @@ const ContactMessages = () => {
                   <Th>Policy Type</Th>
                   <Th>Problem</Th>
                   <Th>Details</Th>
+                  <Th>Menu</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {data?.length > 0 ? (
                   data?.map((item, index) => {
                     return (
-                      <Tr key={item._id}>
+                      <Tr
+                        className="cursor-pointer"
+                        // onClick={() => {
+                        //   router.push(
+                        //     `/admin/dashboard/registrationform/attachments/${item._id}?caseType=organisational`,
+                        //   );
+                        // }}
+                      >
                         <Td>{index + 1}</Td>
-
                         <Td>{formatCreatedAtDate(item.createdAt)}</Td>
                         <Td>{item.name}</Td>
                         <Td>{item.email}</Td>
                         <Td>{item.mobile}</Td>
                         <Td>{item.country}</Td>
+                        <Td>{item.status}</Td>
                         <Td>{item.state}</Td>
                         <Td>{item.address}</Td>
                         <Td>{item.language}</Td>
@@ -196,11 +152,8 @@ const ContactMessages = () => {
                         <Td>{item.policyType}</Td>
                         <Td>{item.problem}</Td>
                         <Td>{item.problemDetails}</Td>
-
-                        <Td onClick={() => deletebtn(item._id)}>
-                          {
-                            <RiDeleteBin3Line className="text-xl text-red-600 cursor-pointer" />
-                          }
+                        <Td>
+                          <Menu caseType={"organisational"} caseId={item._id} />
                         </Td>
                       </Tr>
                     );
@@ -214,9 +167,9 @@ const ContactMessages = () => {
             </Table>
           </TableContainer>
         </div>
-      </div >
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default ContactMessages
+export default ContactMessages;

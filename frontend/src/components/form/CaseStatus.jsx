@@ -46,7 +46,7 @@ const CaseStatus = () => {
       const { data, error } = await response.json();
       setIsloading((prevState) => !prevState);
       if (response.status !== 200) {
-        return toast.error(error);
+        return toast.error(error ? error : "Invalid id has been provided.");
       }
       toast.success("Case details has been fetched successfully.");
       sessionStorage.setItem(

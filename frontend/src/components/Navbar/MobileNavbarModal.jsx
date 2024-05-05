@@ -33,7 +33,7 @@ bg-black w-full overscroll-none ${isOpen ? "flex" : "hidden"}`}
               <Link href={item.link}>{item.name}</Link>
             </li>
           ))}
-          <div className="absolute bottom-5 left-2 flex item-center space-x-2">
+          <div className="absolute bottom-5 left-2 flex flex-col space-y-2">
             <RightMenu />
           </div>
         </ul>
