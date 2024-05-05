@@ -13,7 +13,7 @@ import { IoIosClose } from "react-icons/io";
 
 export default function UploadedDatatable({ fileData, removeFile }) {
   return (
-    <TableContainer>
+    <TableContainer className="shadow-md my-2">
       <Table variant="simple">
         <Thead>
           <Tr>

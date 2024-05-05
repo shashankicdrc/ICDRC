@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, Fragment } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FiLoader } from "react-icons/fi";
 import { url } from "../../app/api";
@@ -12,36 +12,60 @@ import {
   ModalCloseButton,
   useDisclosure,
 } from "@chakra-ui/react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 const CaseStatus = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const caseType = ["individual", "organisational"];
+  const router = useRouter();
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
       email: "",
       caseid: "",
+      type: "",
     },
   });
 
   const [isloading, setIsloading] = useState(false);
 
-  const submit = async (data) => {
+  const submit = async (value) => {
     try {
-      setIsloading(!isloading);
-      const response = await fetch(`${url}/case/status/id`, {
-        method: POST,
-        body: JSON.stringify({ ...data }),
+      setIsloading((prevState) => !prevState);
+      const query = `email=${value.email}&type=${value.type}&id=${value.caseid}`;
+      const response = await fetch(`${url}/api/casestatus?${query}`, {
+        method: "GET",
+        cache: "no-cache",
       });
       const { data, error } = await response.json();
-      console.log(data, error);
+      setIsloading((prevState) => !prevState);
+      if (response.status !== 200) {
+        return toast.error(error);
+      }
+      toast.success("Case details has been fetched successfully.");
+      sessionStorage.setItem(
+        "caseDetails",
+        JSON.stringify({ data, case_type: value.type }),
+      );
+      onClose();
+      router.push(`/casestatus`);
     } catch (error) {
-      setIsloading(!isloading);
+      console.log(error);
+      setIsloading((prevState) => !prevState);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, []);
 
   return (
     <Fragment>
@@ -53,7 +77,7 @@ const CaseStatus = () => {
       </button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent className="h-fit">
           <ModalHeader>Check your case status</ModalHeader>
           <ModalCloseButton />
           <ModalBody className="mb-5">
@@ -90,6 +114,22 @@ const CaseStatus = () => {
                   <span className="text-red-600">
                     Please provide valid case id.
                   </span>
+                )}
+              </div>
+              <div className="flex space-y-2 flex-col">
+                <label htmlFor="type">Case Type</label>
+                <select
+                  {...register("type", { required: true })}
+                  className="text-sm border border-gray-300 focus:border-orange-500 outline-none
+                    focus:outline-none rounded-md py-2 px-3 tracking-wide mt-1"
+                  type="text"
+                  name="type"
+                >
+                  <option defaultValue={caseType[0]}>{caseType[0]}</option>
+                  <option value={caseType[1]}>{caseType[1]}</option>
+                </select>
+                {errors.type && (
+                  <span className="text-red-600">Pleae select case type</span>
                 )}
               </div>
 

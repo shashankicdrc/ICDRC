@@ -17,12 +17,18 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import UploadedDataTable from "./UploadedDatatable";
+import { FiLoader } from "react-icons/fi";
+import { url } from "../../../app/api";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function UploadDrawer() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef();
   const [isloading, setIsloading] = useState(false);
   const [files, setFiles] = useState([]);
+  const [caseData, setCaseData] = useState([]);
+  const router = useRouter();
 
   const {
     register,
@@ -49,11 +55,59 @@ export default function UploadDrawer() {
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedFiles = e.dataTransfer.files;
-    setFiles(droppedFiles);
+    setFiles([droppedFiles[0]]);
   };
 
-  const uploadHandler = (data) => {
-    console.log(data);
+  useEffect(() => {
+    if (window) {
+      const caseData = JSON.parse(sessionStorage.getItem("caseDetails"));
+      if (!caseData) {
+        toast.error("You don't have any data.");
+        router.push("/", { scroll: false });
+        return;
+      }
+
+      setCaseData([caseData.data, caseData.case_type]);
+    }
+  }, []);
+
+  const uploadHandler = async (value) => {
+    try {
+      setIsloading((prevState) => !prevState);
+      const formData = new FormData();
+      formData.set("attachment_name", value.attachment_name);
+      formData.set("type", caseData[1]);
+      formData.set("id", caseData[0]._id);
+      if (!files.length) {
+        setIsloading((prevState) => !prevState);
+        return toast.error("please add a file");
+      }
+      formData.set("attachment_file", files[0]);
+
+      const response = await fetch(`${url}/api/casestatus/uploads`, {
+        method: "POST",
+        body: formData,
+      });
+
+      setIsloading((prevState) => !prevState);
+      const { data, error } = await response.json();
+      if (response.status !== 200) {
+        return toast.error(error);
+      }
+      toast.success("File has been uploaded succcessfully.");
+      sessionStorage.setItem(
+        "caseDetails",
+        JSON.stringify({ data, case_type: caseData[1] }),
+      );
+      reset();
+      setFiles([]);
+      setTimeout(() => {
+        onClose();
+      }, 3000);
+    } catch (error) {
+      setIsloading((prevState) => !prevState);
+      console.log(error);
+    }
   };
 
   return (
@@ -137,7 +191,6 @@ export default function UploadDrawer() {
                     id="dropzone-file"
                     type="file"
                     className="hidden"
-                    multiple
                   />
                 </label>
               </div>
@@ -150,8 +203,9 @@ export default function UploadDrawer() {
                 </div>
               ) : null}
               <button
+                disabled={isloading ? true : false}
                 className="bg-orange-500 hover:bg-orange-600 px-4 py-2
-                    rounded-md text-white w-fit inline-flex"
+                    rounded-md text-white w-fit inline-flex disabled:cursor-not-allowed"
               >
                 {isloading ? (
                   <>
@@ -159,7 +213,7 @@ export default function UploadDrawer() {
                     please wait ...
                   </>
                 ) : (
-                  "Case status"
+                  "Submit"
                 )}
               </button>
             </form>
