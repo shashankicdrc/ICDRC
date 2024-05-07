@@ -81,30 +81,38 @@ const ComplainForm = () => {
         return;
       }
 
-      const res = await axios.post(`${url}/api/individualcomplaint`, {
-        name,
-        mobile,
-        email,
-        country,
-        state,
-        city,
-        address,
-        language,
-        policyType,
-        otherPolicyType,
-        problem,
-        otherProblem,
-        problemDetails,
-        policyCompany,
-        otherPolicyCompany,
+      const res = await fetch(`${url}/api/individualcomplaint`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          mobile,
+          email,
+          country,
+          state,
+          city,
+          address,
+          language,
+          policyType,
+          otherPolicyType,
+          problem,
+          otherProblem,
+          problemDetails,
+          policyCompany,
+          otherPolicyCompany,
+        }),
       });
       setLoading((prevState) => !prevState);
-      const { data, error } = res.data;
-      if (res.data.data) {
+      const { data, error } = await res.json();
+      if (data) {
         return router.push(`/payment?caseId=${data._id}&caseType=individual`);
       }
       toast.error(error);
     } catch (error) {
+            setLoading(false)
+      console.log("error", error);
       toast.error(error.message);
     }
   };
@@ -476,6 +484,7 @@ const ComplainForm = () => {
             <button
               className="border-2 inline-flex cursor-pointer border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300"
               type="submit"
+              disabled={loading ? true : false}
             >
               {loading ? (
                 <>

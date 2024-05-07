@@ -122,7 +122,9 @@ Individualrouter.get("/", fetchUser, async (req, res) => {
 });
 
 Individualrouter.get("/all", adminValidation, async (req, res) => {
-  const complaints = await IndividualComplaint.find();
+  const complaints = await IndividualComplaint.find()
+    .sort({ createdAt: -1 })
+    .exec();
   return res.status(200).json({ data: complaints });
 });
 

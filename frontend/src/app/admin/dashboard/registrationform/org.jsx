@@ -113,6 +113,7 @@ const ContactMessages = () => {
                   <Th>Date</Th>
                   <Th>Name</Th>
                   <Th>Email</Th>
+                  <Th>Payment</Th>
                   <Th>Mobile</Th>
                   <Th>Country</Th>
                   <Th>Status</Th>
@@ -130,18 +131,12 @@ const ContactMessages = () => {
                 {data?.length > 0 ? (
                   data?.map((item, index) => {
                     return (
-                      <Tr
-                        className="cursor-pointer"
-                        // onClick={() => {
-                        //   router.push(
-                        //     `/admin/dashboard/registrationform/attachments/${item._id}?caseType=organisational`,
-                        //   );
-                        // }}
-                      >
+                      <Tr className="cursor-pointer">
                         <Td>{index + 1}</Td>
                         <Td>{formatCreatedAtDate(item.createdAt)}</Td>
                         <Td>{item.name}</Td>
                         <Td>{item.email}</Td>
+                        <Td>{item.isPay ? "Done" : "Pending"}</Td>
                         <Td>{item.mobile}</Td>
                         <Td>{item.country}</Td>
                         <Td>{item.status}</Td>

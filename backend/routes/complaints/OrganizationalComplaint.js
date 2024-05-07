@@ -104,7 +104,9 @@ Organizationalrouter.post("/", async (req, res) => {
 // Route to get all organizational complaints with details and timestamp
 Organizationalrouter.get("/all", async (req, res) => {
   try {
-    const complaints = await OrganizationalComplaint.find();
+    const complaints = await OrganizationalComplaint.find()
+      .sort({ createdAt: -1 })
+      .exec();
     res.json(complaints);
   } catch (error) {
     console.error(error);

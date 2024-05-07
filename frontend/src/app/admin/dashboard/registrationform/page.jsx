@@ -133,6 +133,7 @@ const ContactMessages = () => {
                   <Th>Name</Th>
                   <Th>Status</Th>
                   <Th>Email</Th>
+                  <Th>Payment</Th>
                   <Th>Mobile</Th>
                   <Th>Country</Th>
                   <Th>State</Th>
@@ -155,6 +156,7 @@ const ContactMessages = () => {
                         <Td>{item.name}</Td>
                         <Td>{item.status}</Td>
                         <Td>{item.email}</Td>
+                        <Td>{item.isPay ? "Done" : "Pending"}</Td>
                         <Td>{item.mobile}</Td>
                         <Td>{item.country}</Td>
                         <Td>{item.state}</Td>
