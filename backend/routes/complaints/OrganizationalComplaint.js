@@ -63,9 +63,8 @@ Organizationalrouter.post("/", async (req, res) => {
         problemDetails,
         transactionId,
       });
-      res.send({
-        message: "Organizational conplaint created",
-        status: 1,
+      res.status(200).json({
+        data: user,
       });
 
       let emailRecipient = email;

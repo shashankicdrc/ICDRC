@@ -10,17 +10,14 @@ export async function POST(req, res) {
     const { searchParams } = new URL(req.url);
     const caseId = searchParams.get("caseId");
     const caseType = searchParams.get("caseType");
-    const status = data.get("code");
     const merchantId = data.get("merchantId");
-    const transactionId = data.get("merchantTransactionId");
+    const transactionId = data.get("transactionId");
     const st =
       `/pg/v1/status/${merchantId}/${transactionId}` +
       process.env.NEXT_PUBLIC_SALT_KEY;
-    // console.log(st)
     const dataSha256 = sha256(st);
 
     const checksum = dataSha256 + "###" + process.env.NEXT_PUBLIC_SALT_INDEX;
-    console.log(caseId, caseType);
 
     const options = {
       method: "GET",
@@ -43,13 +40,13 @@ export async function POST(req, res) {
         body: JSON.stringify({ caseId, caseType, isPay: true }),
       });
       const { data, error } = await res.json();
-      const query = `amout=${response.data.data.amount}&transactionId=${response.data.data.transactionId}`;
+      const query = `amount=${response.data.data.amount}&transactionId=${response.data.data.transactionId}`;
       if (data) {
-        return NextResponse.redirect(`${furl}/sucess?${query}`, {
+        return NextResponse.redirect(`${furl}/success?${query}`, {
           status: 301,
         });
       }
-      return NextResponse.redirect(`${furl}/sucess?${query}&message=${error}`);
+      return NextResponse.redirect(`${furl}/success?${query}&message=${error}`);
     }
     return NextResponse.redirect(
       `${furl}/failure?message=${response.data.message}`,

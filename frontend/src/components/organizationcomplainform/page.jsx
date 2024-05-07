@@ -7,6 +7,7 @@ import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { State, City } from "country-state-city";
 import { useRouter } from "next/navigation";
+import { FiLoader } from "react-icons/fi";
 
 const OrganizationComplainForm = () => {
   const [name, setName] = useState("");
@@ -27,8 +28,9 @@ const OrganizationComplainForm = () => {
   const country = "India";
 
   const [cityData, setCityData] = useState();
-  const router=useRouter();
+  const router = useRouter();
   const states = State.getStatesOfCountry("IN");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (state?.length > 1) {
@@ -52,12 +54,57 @@ const OrganizationComplainForm = () => {
   }, [policyType, problem, policyCompany]);
 
   // FORM SUBMIT HANDLER
-  const SubmitHandler = (e) => {
+  const SubmitHandler = async (e) => {
     e.preventDefault();
-    localStorage.setItem("complaintFormDataOrg", JSON.stringify({ name,mobile,email,country,state,city,address,language,policyType,otherPolicyType, problem,otherProblem,problemDetails,policyCompany,otherPolicyCompany }));
-        // Redirect to payment page
-        router.push("/payments");
-        setLoading(false);
+    try {
+      if (!validateMobileNumber(mobile)) {
+        toast.error("Enter valid mobile number");
+        setLoading((prevState) => !prevState);
+        return;
+      }
+
+      if (!validateEmailAddress(email)) {
+        setLoading((prevState) => !prevState);
+        toast.error("Enter valid email address");
+        return;
+      }
+
+      const res = await fetch(`${url}/api/organizationalcomplaint`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          mobile,
+          email,
+          country,
+          state,
+          city,
+          address,
+          language,
+          policyType,
+          otherPolicyType,
+          problem,
+          otherProblem,
+          problemDetails,
+          policyCompany,
+          otherPolicyCompany,
+        }),
+      });
+      setLoading((prevState) => !prevState);
+      const { data, error } = await res.json();
+      if (data) {
+        return router.push(
+          `/payment?caseId=${data._id}&caseType=organisational`,
+        );
+      }
+      toast.error(error);
+    } catch (error) {
+      setLoading(false);
+      console.log("error", error);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -493,13 +540,14 @@ const OrganizationComplainForm = () => {
             data-aos="fade-up"
             data-aos-duration="1000"
           >
-           
-              {" "}
-              <button className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300" type="submit">
-                Next
-                <i className="fas fa-chevron-right ml-2 text-sm"></i>
-              </button>{" "}
-            
+            {" "}
+            <button
+              className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300"
+              type="submit"
+            >
+              Next
+              <i className="fas fa-chevron-right ml-2 text-sm"></i>
+            </button>{" "}
           </div>
         </form>
       </div>

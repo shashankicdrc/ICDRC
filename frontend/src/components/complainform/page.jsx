@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import "react-phone-number-input/style.css";
 import PhoneInput from "react-phone-number-input";
 import { State, City } from "country-state-city";
-import axios from "axios";
 import { url } from "../../app/api";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -111,7 +110,7 @@ const ComplainForm = () => {
       }
       toast.error(error);
     } catch (error) {
-            setLoading(false)
+      setLoading(false);
       console.log("error", error);
       toast.error(error.message);
     }
