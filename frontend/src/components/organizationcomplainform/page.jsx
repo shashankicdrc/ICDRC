@@ -8,6 +8,8 @@ import PhoneInput from "react-phone-number-input";
 import { State, City } from "country-state-city";
 import { useRouter } from "next/navigation";
 import { FiLoader } from "react-icons/fi";
+import { toast } from "react-hot-toast";
+import { url } from "../../app/api";
 
 const OrganizationComplainForm = () => {
   const [name, setName] = useState("");
@@ -53,6 +55,16 @@ const OrganizationComplainForm = () => {
     }
   }, [policyType, problem, policyCompany]);
 
+  function validateMobileNumber(number) {
+    const pattern = /^\+\d{1,3}\d{5,15}$/;
+    return pattern.test(number);
+  }
+
+  function validateEmailAddress(email) {
+    const pattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,6}$/;
+    return pattern.test(email);
+  }
+
   // FORM SUBMIT HANDLER
   const SubmitHandler = async (e) => {
     e.preventDefault();
@@ -75,7 +87,7 @@ const OrganizationComplainForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
+          organization_name: name,
           mobile,
           email,
           country,
@@ -93,13 +105,13 @@ const OrganizationComplainForm = () => {
         }),
       });
       setLoading((prevState) => !prevState);
-      const { data, error } = await res.json();
+      const { data, error, message } = await res.json();
       if (data) {
         return router.push(
           `/payment?caseId=${data._id}&caseType=organisational`,
         );
       }
-      toast.error(error);
+      toast.error(message || error);
     } catch (error) {
       setLoading(false);
       console.log("error", error);

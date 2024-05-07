@@ -59,7 +59,7 @@ const schema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "prending",
+      default: "pending",
       enum: ["pending", "processing", "completed"],
     },
     attachments: [
