@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 const schema = new mongoose.Schema(
   {
+    isPay: {
+      type: Boolean,
+      default: false,
+    },
+
     organization_name: {
       type: String,
       required: [true, " organization_name is required"],
@@ -8,12 +13,10 @@ const schema = new mongoose.Schema(
     mobile: {
       type: String,
       required: [true, "mobile is required"],
-      unique: [true, "Phone number already exists"],
     },
     email: {
       type: String,
       required: [true, "email  is required"],
-      unique: [true, "Email Id already exists"],
     },
     country: {
       type: String,

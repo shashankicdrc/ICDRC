@@ -54,8 +54,12 @@ const schema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "prending",
+      default: "pending",
       enum: ["pending", "processing", "completed"],
+    },
+    isPay: {
+      type: Boolean,
+      default: false,
     },
     attachments: [
       { type: mongoose.Schema.Types.ObjectId, ref: "complainMedia" },

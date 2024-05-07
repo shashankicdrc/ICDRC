@@ -30,7 +30,6 @@ var transporter = nodemailer.createTransport({
 });
 
 Individualrouter.post("/", async (req, res) => {
-  console.log("123");
   const {
     name,
     mobile,
@@ -46,42 +45,36 @@ Individualrouter.post("/", async (req, res) => {
     problemDetails,
     transactionId,
   } = req.body;
+  try {
+    let user = await IndividualComplaint.create({
+      name,
+      mobile,
+      email,
+      country,
+      state,
+      city,
+      address,
+      language,
+      policyCompany,
+      policyType,
+      problem,
+      problemDetails,
+      transactionId,
+    });
+    res.status(200).json({ data: user });
 
-  {
-    try {
-      let user = await IndividualComplaint.create({
-        name,
-        mobile,
-        email,
-        country,
-        state,
-        city,
-        address,
-        language,
-        policyCompany,
-        policyType,
-        problem,
-        problemDetails,
-        transactionId,
-      });
-      res.send({
-        message: "User complaint created",
+    let emailRecipient = email;
+    if (!policyTypeToEmail[email]) {
+      emailRecipient = policyTypeToEmail[policyType];
+    }
 
-        status: 1,
-      });
-
-      let emailRecipient = email;
-      if (!policyTypeToEmail[email]) {
-        emailRecipient = policyTypeToEmail[policyType];
-      }
-
-      if (emailRecipient) {
-        const mailOptions = {
-          from: "kartikey.chaudhary.webdesys@gmail.com",
-          to: [emailRecipient, user.email, "aditiyachaudhary496@gmail.com"],
-          subject: " New Individual Complaint Register ",
-          text: `A new individual complaint has been submitted.`,
-          html: `
+    if (emailRecipient) {
+      const mailOptions = {
+        from: "kartikey.chaudhary.webdesys@gmail.com",
+        to: [emailRecipient, user.email, "aditiyachaudhary496@gmail.com"],
+        subject: " New Individual Complaint Register ",
+        text: `A new individual complaint has been submitted.`,
+        html: `
         <h2>New Individual Complaint Registered</h2>
         <p>A new individual complaint has been submitted.</p>
         <h3>Details:</h3>
@@ -98,24 +91,21 @@ Individualrouter.post("/", async (req, res) => {
         <p><strong>Problem:</strong> ${problem}</p>
         <p><strong>Problem Details:</strong> ${problemDetails}</p>
     `,
-        };
+      };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.log("1234");
-            console.error("Error sending email:", error);
-          } else {
-            console.log("Email sent:", info.response);
-          }
-        });
-      }
-    } catch (error) {
-      console.log("12345");
-      res.send({
-        message: error.message,
-        status: 0,
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+          console.log("1234");
+          console.error("Error sending email:", error);
+        } else {
+          console.log("Email sent:", info.response);
+        }
       });
     }
+  } catch (error) {
+    return res.status(400).json({
+      error: error.message,
+    });
   }
 });
 

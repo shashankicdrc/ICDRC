@@ -9,6 +9,47 @@ const {
 const { IndividualComplaint } = require("../models/IndividualComplaint");
 const { asyncError } = require("../middlewares/error");
 
+const updatePayment = asyncError(async (req, res) => {
+  const { caseId, caseType, isPay } = req.body;
+  if (!caseId || !isPay) {
+    return res.status(400).json({ erro: "Invalid request." });
+  }
+  switch (caseType) {
+    case "individual":
+      const ind_update = await IndividualComplaint.findByIdAndUpdate(
+        caseId,
+        { isPay },
+        {
+          new: true,
+        },
+      );
+      if (ind_update._id) {
+        return res.status(200).json({ data: ind_update });
+      } else {
+        return res
+          .status(400)
+          .json({ error: "Invalid complain id has been provided." });
+      }
+    case "organisational":
+      const org_update = await OrganizationalComplaint.findByIdAndUpdate(
+        caseId,
+        { isPay },
+        { new: true },
+      );
+      if (org_update._id) {
+        return res.status(200).json({ data: org_update });
+      } else {
+        return res
+          .status(400)
+          .json({ error: "Invalid complain has been provided." });
+      }
+    default:
+      return res
+        .status(400)
+        .json({ error: "Invalid case type has been provided." });
+  }
+});
+
 const deleteCase = asyncError(async (req, res) => {
   const { caseId, caseType } = req.body;
 
@@ -266,4 +307,5 @@ module.exports = {
   Attachments,
   updateStatus,
   deleteCase,
+  updatePayment,
 };
