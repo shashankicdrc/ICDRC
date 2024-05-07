@@ -7,13 +7,7 @@ import { furl } from "../src/app/api";
 export async function payment(formData) {
   console.log("hii", formData);
   const transactionid = "Tr-" + uuidv4().toString(36).slice(-6);
-  const {
-    name,
-    email,
-    mobile,
-    amount
-  } = formData;
-
+  const { name, email, mobile, amount, caseId, caseType } = formData;
 
   const payload = {
     name,
@@ -23,9 +17,9 @@ export async function payment(formData) {
     merchantId: process.env.NEXT_PUBLIC_MERCHANT_ID,
     merchantTransactionId: transactionid,
     merchantUserId: "MUID-" + uuidv4().toString(36).slice(-6),
-    redirectUrl: `${furl}/api/status/${transactionid}`,
+    redirectUrl: `${furl}/api/status/${transactionid}?caseId=${caseId}&caseType=${caseType}`,
     redirectMode: "POST",
-    callbackUrl: `${furl}/api/status/${transactionid}`,
+    callbackUrl: `${furl}/api/status/${transactionid}?caseId=${caseId}&caseType=${caseType}`,
     paymentInstrument: {
       type: "PAY_PAGE",
     },
@@ -43,17 +37,16 @@ export async function payment(formData) {
   const checksum = dataSha256 + "###" + process.env.NEXT_PUBLIC_SALT_INDEX;
   console.log("c====", checksum);
 
-  const details={
+  const details = {
     name,
     email,
     mobile,
     amount,
-    merchantTransactionId:transactionid,
-    merchantUserId:"MUID-" + uuidv4().toString(36).slice(-6),
-}
-//  paymentModel.create(details);
+    merchantTransactionId: transactionid,
+    merchantUserId: "MUID-" + uuidv4().toString(36).slice(-6),
+  };
+  //  paymentModel.create(details);
   const UAT_PAY_API_URL = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
-
 
   const response = await axios.post(
     UAT_PAY_API_URL,
@@ -66,12 +59,10 @@ export async function payment(formData) {
         "Content-Type": "application/json",
         "X-VERIFY": checksum,
       },
-    }
+    },
   );
 
-  
-
   const redirect = response.data.data.instrumentResponse.redirectInfo.url;
-  console.log("1",redirect)
+  console.log("1", redirect);
   return { url: redirect };
 }
