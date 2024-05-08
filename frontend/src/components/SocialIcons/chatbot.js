@@ -3,22 +3,17 @@ import axios from "axios";
 import { url } from "../../app/api";
 import { PiFinnTheHuman } from "react-icons/pi";
 import { IoMdSend } from "react-icons/io";
-import './module.Socialicon.css';
+import "./module.Socialicon.css";
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
+  const [issue, setIssue] = useState("");
 
-  const [messages, setMessages] = useState([
-    {
-      text:
-        "Hi there! Welcome to ICDRC. We are India's most trusted platform for resolving Insurance Complaints.",
-      type: "bot",
-    },
-  ]);
+  const [messages, setMessages] = useState([]);
 
   const chatContainerRef = useRef(null);
 
@@ -33,28 +28,24 @@ const ChatBot = () => {
 
   const handleToggleChat = () => {
     setIsOpen(!isOpen);
-    setStep(0);
+    setStep(1);
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  const handleSendMessage = () => {
-    const userMessage = {
-      text: `User: ${name}, ${email}, ${mobile}`,
-      type: "user",
+  const handleSendMessage = (step, message) => {
+    if (!step) return;
+    const newMessage = {
+      text: message,
     };
-
-    setMessages((prevMessages) => [...prevMessages, userMessage]);
-
-    if (step < 3) {
-      setStep(step + 1);
-      setName("");
-      setEmail("");
-      setMobile("");
-    } else {
-      postFormData();
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    if (step <= 4) {
+      if (step === 4) {
+        postFormData();
+      }
+      setStep((prevState) => prevState + 1);
     }
   };
 
@@ -64,7 +55,9 @@ const ChatBot = () => {
         name,
         email,
         mobile,
+        issue,
       });
+      setIssue("");
       console.log("Data posted successfully");
     } catch (error) {
       console.error("Error posting data:", error);
@@ -73,16 +66,16 @@ const ChatBot = () => {
 
   const getPromptMessage = () => {
     switch (step) {
-      case 0:
-        return "Please enter your name:";
       case 1:
-        return "Great! Now, enter your email address:";
+        return "Welcome to ICDRC! We're here to assist you with your concerns. To get started, could you please provide your Name?";
       case 2:
-        return "Final step! Enter your Mobile number:";
+        return `Thanks ${name}. What's your email address? This will help us reach out to you.`;
       case 3:
-        return "Thank you for providing your information! Our Team Will contact with you soon.";
-      default:
-        return "";
+        return "Great! Could you please share your mobile number with us?";
+      case 4:
+        return "Thank you for sharing your contact details. Finally, could you briefly describe the issue or concern you're facing? This will help us understand how we can assist you better.";
+      case 5:
+        return `Thank you for providing your details and sharing your concern with us, . Your information has been forwarded to one of our experts. You can expect to hear from us soon.`;
     }
   };
 
@@ -95,7 +88,6 @@ const ChatBot = () => {
     width: "500px",
     height: "400px",
     borderRadius: "8px",
-    overflow: "hidden",
     backgroundColor: "white",
     boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
     position: "fixed",
@@ -107,10 +99,33 @@ const ChatBot = () => {
     flexDirection: "column",
   };
 
+  const changeHandler = (e) => {
+    if (step === 1) setName(e.target.value);
+    else if (step === 2) setEmail(e.target.value);
+    else if (step === 3) setMobile(e.target.value);
+    else if (step === 4) setIssue(e.target.value);
+  };
+
+  const valueAttrChange = () => {
+    switch (step) {
+      case 1:
+        return name;
+      case 2:
+        return email;
+      case 3:
+        return mobile;
+      case 4:
+        return issue;
+    }
+  };
+
   return (
     <div ref={chatContainerRef} style={chatBotStyle}>
       {isOpen && (
-        <div style={chatBoxStyle} className="mr-12 max-w-80">
+        <div
+          style={chatBoxStyle}
+          className="mr-12 max-w-[340px] overflow-hidden"
+        >
           <div className="bg-orange-500 w-full h-16 rounded-md text-white  flex items-center">
             <PiFinnTheHuman className="text-4xl m-2 border text-orange-500 bg-white rounded-full p-2 " />
             <div className="flex flex-col text-start ml-2 font-[Poppins]">
@@ -122,16 +137,14 @@ const ChatBot = () => {
               </span>
             </div>
           </div>
-          <div
-            style={{ padding: "20px", maxHeight: "350px", overflowY: "auto" }}
-          >
+
+          <section className="px-5 pt-5 pb-20 overflow-y-auto">
             {messages.map((message, index) => (
               <div
                 className="flex items-end justify-end ml-10 "
                 key={index}
                 style={{
-                  backgroundColor:
-                    message.type === "user" ? "#fff" : "#f97316",
+                  backgroundColor: message.type === "user" ? "#fff" : "#f97316",
                   color: message.type === "user" ? "#f97316" : "white",
                   fontWeight: message.type === "user" ? "bold" : "normal",
                   padding: "10px",
@@ -139,37 +152,37 @@ const ChatBot = () => {
                   marginBottom: "10px",
                 }}
               >
-                <div> {message.text} </div>
+                {message.text}
               </div>
             ))}
-            <div className="">
-            <div className="flex ">  <PiFinnTheHuman className="text-xl mr-3 mt-1" />
-              <p className="mt-1 font-medium text-xs">RakshaBot</p></div>
-              <div className="text-white border bg-orange-500 py-2 px-2 rounded-md mr-20">
-                {getPromptMessage()}
-              </div>
+
+            <div className="text-white  bg-orange-500 py-2 px-2 rounded-md mr-20">
+              {getPromptMessage()}
             </div>
-          </div>
-          <div className="bg-orange-500 ml-2 rounded-md mr-2 flex justify-between m-4 p-2 text-white">
+          </section>
+
+          <div
+            className="bg-orange-500 w-full h-12 flex justify-between 
+            p-2 text-white absolute bottom-0 left-0"
+          >
             <input
-              className="bg-orange-500 ml-2 placeholder:text-white outline-none rounded-md mr-2 text-white w-full border-orange-500 placeholder-white::placeholder"
+              className="bg-orange-500 ml-2 placeholder:text-white outline-none rounded-md mr-2 text-white
+                w-full border-orange-500 placeholder-white::placeholder"
               type="text"
               placeholder="Enter your input..."
-              value={step === 0 ? name : step === 1 ? email : mobile}
-              onChange={(e) => {
-                if (step === 0) setName(e.target.value);
-                else if (step === 1) setEmail(e.target.value);
-                else if (step === 2) setMobile(e.target.value);
-              }}
+              value={valueAttrChange()}
+              disabled={step >= 5 ? true : false}
+              onChange={changeHandler}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
-                  handleSendMessage();
+                  handleSendMessage(step, getPromptMessage());
                 }
               }}
             />
             <button
               className="bg-white p-2 rounded"
+              disabled={step >= 5 ? true : false}
               onClick={handleSendMessage}
             >
               <IoMdSend className="text-orange-600 text-xl font-bold" />
