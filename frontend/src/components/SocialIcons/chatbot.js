@@ -13,18 +13,14 @@ const ChatBot = () => {
   const [mobile, setMobile] = useState("");
   const [issue, setIssue] = useState("");
 
-  const [messages, setMessages] = useState([]);
-
+  const [messages, setMessages] = useState([
+    {
+      type: "bot",
+      text: "Welcome to ICDRC! We're here to assist you with your concerns. To get started, could you please provide your Name?",
+    },
+  ]);
+  const lastMessageRef = useRef(null);
   const chatContainerRef = useRef(null);
-
-  const scrollToBottom = () => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-      });
-    }
-  };
 
   const handleToggleChat = () => {
     setIsOpen(!isOpen);
@@ -32,15 +28,28 @@ const ChatBot = () => {
   };
 
   useEffect(() => {
-    scrollToBottom();
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
   }, [messages]);
 
   const handleSendMessage = (step, message) => {
     if (!step) return;
-    const newMessage = {
-      text: message,
+    if (step !== 1) {
+      const newMessage = {
+        text: message,
+        type: "bot",
+      };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    }
+    const value = valueAttrChange();
+    const userMessage = {
+      text: value,
+      type: "user",
     };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
     if (step <= 4) {
       if (step === 4) {
         postFormData();
@@ -66,8 +75,6 @@ const ChatBot = () => {
 
   const getPromptMessage = () => {
     switch (step) {
-      case 1:
-        return "Welcome to ICDRC! We're here to assist you with your concerns. To get started, could you please provide your Name?";
       case 2:
         return `Thanks ${name}. What's your email address? This will help us reach out to you.`;
       case 3:
@@ -141,24 +148,20 @@ const ChatBot = () => {
           <section className="px-5 pt-5 pb-20 overflow-y-auto">
             {messages.map((message, index) => (
               <div
-                className="flex items-end justify-end ml-10 "
+                className={`flex bg-orange-500 max-w-60 text-white items-center rounded-md mb-5 px-5 min-h-10 ${
+                  message.type !== "bot" ? "ml-auto" : ""
+                } `}
                 key={index}
-                style={{
-                  backgroundColor: message.type === "user" ? "#fff" : "#f97316",
-                  color: message.type === "user" ? "#f97316" : "white",
-                  fontWeight: message.type === "user" ? "bold" : "normal",
-                  padding: "10px",
-                  borderRadius: "8px",
-                  marginBottom: "10px",
-                }}
               >
                 {message.text}
               </div>
             ))}
-
-            <div className="text-white  bg-orange-500 py-2 px-2 rounded-md mr-20">
-              {getPromptMessage()}
-            </div>
+            {step !== 1 ? (
+              <div className="text-white  bg-orange-500 py-2 px-2 rounded-md mr-20">
+                {getPromptMessage()}
+              </div>
+            ) : null}
+            <div ref={lastMessageRef}></div>
           </section>
 
           <div
