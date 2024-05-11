@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const schema = new mongoose.Schema(
   {
     name: {
@@ -64,10 +65,38 @@ const schema = new mongoose.Schema(
     attachments: [
       { type: mongoose.Schema.Types.ObjectId, ref: "complainMedia" },
     ],
+    caseId: {
+      type: String,
+      unique: true,
+    },
   },
   { timestamps: true },
 );
-mongoose.models = {};
+
+const generateCaseId = async function () {
+  const latestDoc = await IndividualComplaint.findOne().sort("-caseId").exec();
+  let currentId = 1000;
+
+  if (latestDoc) {
+    const lastId = parseInt(latestDoc.caseId.split("-")[2]);
+    currentId = lastId + 1;
+  }
+
+  const newId = `ICDRC-IND-${currentId}`;
+  return newId;
+};
+
+schema.pre("save", async function (next) {
+  try {
+    if (!this.caseId) {
+      this.caseId = await generateCaseId();
+    }
+    next();
+  } catch (error) {
+    console.error("Error in pre-save middleware:", error);
+    next(error); // Pass the error to the next middleware or function in the chain
+  }
+});
 
 const IndividualComplaint = mongoose.model("IndividualComplaints", schema);
 

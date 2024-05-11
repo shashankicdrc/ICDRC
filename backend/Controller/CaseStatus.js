@@ -147,7 +147,7 @@ const CheckCaseStatus = asyncError(async (req, res) => {
     case "individual":
       const individualComplaints = await IndividualComplaint.findOne({
         email,
-        _id: id,
+        caseId: id,
       });
       if (!individualComplaints) {
         return res.status(400).json({ error: "Case does not exist." });
@@ -156,7 +156,7 @@ const CheckCaseStatus = asyncError(async (req, res) => {
     case "organisational":
       const organisationalComplaints = await OrganizationalComplaint.findOne({
         email,
-        _id: id,
+        caseId: id,
       });
       if (!organisationalComplaints) {
         return res.status(400).json({ error: "Case does not exist." });
