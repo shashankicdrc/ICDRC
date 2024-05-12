@@ -161,30 +161,64 @@ const deleteCase = asyncError(async (req, res) => {
 
 const updateStatus = asyncError(async (req, res) => {
   const { caseId, caseType, status } = req.body;
+  let updateResult;
 
   switch (caseType) {
     case "individual":
-      const ind_updates = await IndividualComplaint.findByIdAndUpdate(
+      updateResult = await IndividualComplaint.findByIdAndUpdate(
         caseId,
         {
           status,
         },
         { new: true },
       );
-      return res.status(200).json({ data: ind_updates });
+      break;
     case "organisational":
-      const org_updates = await OrganizationalComplaint.findByIdAndUpdate(
-        caseId,
-        {
-          status,
-        },
-      );
-      return res.status(200).json({ data: org_updates });
+      updateResult = await OrganizationalComplaint.findByIdAndUpdate(caseId, {
+        status,
+      });
+      break;
     default:
       return res
         .status(400)
         .json({ error: "Invalid case type has been provided." });
   }
+
+  if (!updateResult || !updateResult._id) {
+    return res.status(400).json({ error: "Case does no exist." });
+  }
+
+  const caseData = {
+    caseId: updateResult.caseId,
+    name:
+      caseType === "individual"
+        ? updateResult.name
+        : updateResult.organization_name,
+    date: updateResult.updatedAt.toLocaleString(),
+    status: updateResult.status,
+  };
+
+  const caseTypeTemplate = htmlTemplate(`template/UpdateCase.html`, caseData);
+
+  const caseTypeMessage = {
+    mailOptions: {
+      from: NOREPLYEMAIL,
+      to: [...NewRegrecipients, updateResult.email],
+      subject: ` Update on Your Case Status with ICDRC - Case ID:  ${updateResult.caseId}`,
+      html: caseTypeTemplate,
+    },
+  };
+
+  const caseTypeMail = fork(MailFilePath);
+  caseTypeMail.send(caseTypeMessage);
+  caseTypeMail.on("message", (msg) => {
+    if (msg.error) {
+      console.error(msg.error.response);
+    } else if (msg.data) {
+      console.log(msg.data.response);
+    }
+  });
+  return res.status(200).json({ data: updateResult });
 });
 
 const Attachments = asyncError(async (req, res) => {
