@@ -5,6 +5,13 @@ const {
 const Organizationalrouter = express.Router();
 var nodemailer = require("nodemailer");
 const asyncError = require("../../middlewares/error");
+const {
+  htmlTemplate,
+  MailFilePath,
+  NewRegrecipients,
+  NOREPLYEMAIL,
+} = require("../../utils/Mail");
+const { fork } = require("child_process");
 
 const policyTypeToEmail = {
   "Life Insurance": "lifeinsurance@icdrc.in",
@@ -63,9 +70,6 @@ Organizationalrouter.post("/", async (req, res) => {
         problemDetails,
         transactionId,
       });
-      res.status(200).json({
-        data: user,
-      });
 
       let emailRecipient = email;
       if (!policyTypeToEmail[email]) {
@@ -73,23 +77,37 @@ Organizationalrouter.post("/", async (req, res) => {
       }
 
       if (emailRecipient) {
-        const mailOptions = {
-          from: "kartikey.chaudhary.webdesys@gmail.com",
-          to: emailRecipient,
-          subject: " New  Organizational Complaint Register ",
-          text: `A new  Organizational Complaint has been submitted.`,
-          text: `Details: ${JSON.stringify(req.body)}`,
+        const caseData = {
+          name: user.organization_name,
+          email: user.email,
+          mobile: user.mobile,
+          date: user.createdAt.toLocaleString(),
+        };
+        const html = htmlTemplate(
+          "template/organisational/NewRegTeam.html",
+          caseData,
+        );
+        const NewMessage = {
+          mailOptions: {
+            from: NOREPLYEMAIL,
+            to: [...NewRegrecipients],
+            subject:
+              "New Registration Form Submission on ICDRC Website for an Organisation",
+            html,
+          },
         };
 
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.log("1234");
-            console.error("Error sending email:", error);
-          } else {
-            console.log("Email sent:", info.response);
+        const sendMail = fork(MailFilePath);
+        sendMail.send(NewMessage);
+        sendMail.on("message", (msg) => {
+          if (msg.error) {
+            console.error(msg.error.response);
+          } else if (msg.data) {
+            console.log(msg.data.response);
           }
         });
       }
+      res.status(200).json({ data: user });
     } catch (error) {
       console.log("12345");
       res.send({

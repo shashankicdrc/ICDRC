@@ -8,46 +8,117 @@ const {
 } = require("../models/OrganizationalComplaint");
 const { IndividualComplaint } = require("../models/IndividualComplaint");
 const { asyncError } = require("../middlewares/error");
+const {
+  getPolicyEmail,
+  htmlTemplate,
+  MailFilePath,
+  NOREPLYEMAIL,
+  NewRegrecipients,
+  TeamPaymentEmail,
+} = require("../utils/Mail");
+const { fork } = require("child_process");
 
 const updatePayment = asyncError(async (req, res) => {
   const { caseId, caseType, isPay } = req.body;
   if (!caseId || !isPay) {
     return res.status(400).json({ erro: "Invalid request." });
   }
+
+  let updateResult;
+
   switch (caseType) {
     case "individual":
-      const ind_update = await IndividualComplaint.findByIdAndUpdate(
-        caseId,
-        { isPay },
-        {
-          new: true,
-        },
-      );
-      if (ind_update._id) {
-        return res.status(200).json({ data: ind_update });
-      } else {
-        return res
-          .status(400)
-          .json({ error: "Invalid complain id has been provided." });
-      }
-    case "organisational":
-      const org_update = await OrganizationalComplaint.findByIdAndUpdate(
-        caseId,
+      updateResult = await IndividualComplaint.findOneAndUpdate(
+        { caseId },
         { isPay },
         { new: true },
       );
-      if (org_update._id) {
-        return res.status(200).json({ data: org_update });
-      } else {
-        return res
-          .status(400)
-          .json({ error: "Invalid complain has been provided." });
-      }
+      break;
+
+    case "organisational":
+      updateResult = await OrganizationalComplaint.findOneAndUpdate(
+        { caseId },
+        { isPay },
+        { new: true },
+      );
+      break;
     default:
-      return res
-        .status(400)
-        .json({ error: "Invalid case type has been provided." });
+      return res.status(400).json({ error: "Invalid case type provided." });
   }
+
+  if (!updateResult || !updateResult._id) {
+    return res.status(400).json({ error: "Invalid complaint provided." });
+  }
+
+  const policyEmail = getPolicyEmail(updateResult.policyType);
+  if (!policyEmail) {
+    return res.status(400).json({ error: "Invalid policy provided" });
+  }
+
+  const caseData = {
+    caseId: updateResult.caseId,
+    name:
+      caseType === "individual"
+        ? updateResult.name
+        : updateResult.organization_name,
+    email: updateResult.email,
+    mobile: updateResult.mobile,
+    amount: caseType === "individual" ? 500 : 5000,
+    registration_date: updateResult.createdAt.toLocaleString(),
+    insuranceCategory: updateResult.policyType,
+    isPay: updateResult.isPay ? "Received" : "Not paid",
+  };
+
+  const caseTypeTemplate = htmlTemplate(
+    `template/${caseType}/SuccessPayment.html`,
+    caseData,
+  );
+
+  const caseTypeMessage = {
+    mailOptions: {
+      from: NOREPLYEMAIL,
+      to: [...NewRegrecipients, policyEmail],
+      subject: `Confirmation of Successful Registration and Payment - Case ID: ${updateResult.caseId}`,
+      html: caseTypeTemplate,
+    },
+  };
+
+  const caseTypeMail = fork(MailFilePath);
+  caseTypeMail.send(caseTypeMessage);
+  caseTypeMail.on("message", (msg) => {
+    if (msg.error) {
+      console.error(msg.error.response);
+    } else if (msg.data) {
+      console.log(msg.data.response);
+    }
+  });
+
+  const teamTemplate = htmlTemplate(
+    `template/${caseType}/SuccessPaymentTeam.html`,
+    caseData,
+  );
+
+  const teamMessage = {
+    mailOptions: {
+      from: NOREPLYEMAIL,
+      to: [...TeamPaymentEmail, policyEmail], // Specify the recipient for the additional email
+      subject: `Successful Registration and Payment Recieved - Case Id: ${updateResult.caseId}`,
+      html: teamTemplate,
+    },
+  };
+
+  const teamSendMail = fork(MailFilePath);
+  teamSendMail.send(teamMessage);
+
+  teamSendMail.on("message", (msg) => {
+    if (msg.error) {
+      console.error(msg.error.response);
+    } else if (msg.data) {
+      console.log(msg.data.response);
+    }
+  });
+
+  return res.status(200).json({ data: updateResult });
 });
 
 const deleteCase = asyncError(async (req, res) => {

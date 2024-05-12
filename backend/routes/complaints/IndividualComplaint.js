@@ -2,10 +2,15 @@ const express = require("express");
 const { IndividualComplaint } = require("..//..//models/IndividualComplaint");
 const Individualrouter = express.Router();
 var nodemailer = require("nodemailer");
-const { User } = require("..//..//models/User");
-const verifyToken = require("..//..//utils/verifyToken");
 const { fetchUser } = require("../../middlewares/fetchUser");
 const adminValidation = require("../../middlewares/adminValidation");
+const {
+  htmlTemplate,
+  MailFilePath,
+  NewRegrecipients,
+  NOREPLYEMAIL,
+} = require("../../utils/Mail");
+const { fork } = require("child_process");
 
 const policyTypeToEmail = {
   "Life Insurance": "lifeinsurance@icdrc.in",
@@ -20,14 +25,6 @@ const policyTypeToEmail = {
   "Personal Accident Insurance": "personalaccidentinsurance@icdrc.in",
   "Property Insurance": "propertyinsurance@icdrc.in",
 };
-
-var transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "kartikey.chaudhary.webdesys@gmail.com",
-    pass: "pulz gygf jlct ragt",
-  },
-});
 
 Individualrouter.post("/", async (req, res) => {
   const {
@@ -61,7 +58,6 @@ Individualrouter.post("/", async (req, res) => {
       problemDetails,
       transactionId,
     });
-    res.status(200).json({ data: user });
 
     let emailRecipient = email;
     if (!policyTypeToEmail[email]) {
@@ -69,39 +65,37 @@ Individualrouter.post("/", async (req, res) => {
     }
 
     if (emailRecipient) {
-      const mailOptions = {
-        from: "kartikey.chaudhary.webdesys@gmail.com",
-        to: [emailRecipient, user.email, "aditiyachaudhary496@gmail.com"],
-        subject: " New Individual Complaint Register ",
-        text: `A new individual complaint has been submitted.`,
-        html: `
-        <h2>New Individual Complaint Registered</h2>
-        <p>A new individual complaint has been submitted.</p>
-        <h3>Details:</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Mobile:</strong> ${mobile}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Country:</strong> ${country}</p>
-        <p><strong>State:</strong> ${state}</p>
-        <p><strong>City:</strong> ${city}</p>
-        <p><strong>Address:</strong> ${address}</p>
-        <p><strong>Language:</strong> ${language}</p>
-        <p><strong>Policy Company:</strong> ${policyCompany}</p>
-        <p><strong>Policy Type:</strong> ${policyType}</p>
-        <p><strong>Problem:</strong> ${problem}</p>
-        <p><strong>Problem Details:</strong> ${problemDetails}</p>
-    `,
+      const caseData = {
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile,
+        date: user.createdAt.toLocaleString(),
+      };
+      const html = htmlTemplate(
+        "template/individual/NewRegTeam.html",
+        caseData,
+      );
+      const NewMessage = {
+        mailOptions: {
+          from: NOREPLYEMAIL,
+          to: [...NewRegrecipients],
+          subject:
+            "New Registration Form Submission on ICDRC Website for an Individual",
+          html,
+        },
       };
 
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log("1234");
-          console.error("Error sending email:", error);
-        } else {
-          console.log("Email sent:", info.response);
+      const sendMail = fork(MailFilePath);
+      sendMail.send(NewMessage);
+      sendMail.on("message", (msg) => {
+        if (msg.error) {
+          console.error(msg.error.response);
+        } else if (msg.data) {
+          console.log(msg.data.response);
         }
       });
     }
+    res.status(200).json({ data: user });
   } catch (error) {
     return res.status(400).json({
       error: error.message,
