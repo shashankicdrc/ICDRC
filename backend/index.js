@@ -25,6 +25,7 @@ const Payment = require("./routes/payment/payment");
 const { Documentrouter } = require("./routes/document/document");
 const ResetPaswword = require("./routes/resetpassword/reset");
 const CloudinaryConfiguration = require("./utils/CloudinaryConfiguration");
+const adminRouter = require("./routes/admins/routes");
 
 //  Initializing app
 const app = express();
@@ -75,6 +76,8 @@ app.use("/api", Documentrouter);
 app.use("/api", ResetPaswword);
 
 app.use("/api", caseStatusRouter.router);
+
+app.use("/api/admins", adminRouter);
 
 // const MONGO_URL = process.env.MONGO_URL;
 // APP LISTENING AND DB
