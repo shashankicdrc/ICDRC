@@ -7,7 +7,7 @@ import { MdCurrencyRupee } from "react-icons/md";
 const page = ({ searchParams }) => {
   const message = searchParams.message;
   const transactionId = searchParams.transactionId;
-  const amount = searchParams.amount;
+  const amount = Math.round(searchParams.amount / 100);
   return (
     <Fragment>
       <main className="flex mx-auto md:w-[40%] items-center justify-center mt-40">
@@ -28,7 +28,7 @@ const page = ({ searchParams }) => {
                   during process.Please contact site owner.
                 </p>
               ) : null}
-              <p className="text-gray-500">
+              <p className="text-gray-500 mb-3">
                 Your transactionId: {transactionId}
               </p>
             </div>

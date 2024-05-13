@@ -128,10 +128,9 @@ const ComplainForm = () => {
   }, [policyType, problem, policyCompany]);
 
   function validateEmailAddress(email) {
-    const pattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,6}$/;
+    const pattern = /^[a-z0-9._]+@[a-z]+\.[a-z]{2,6}$/;
     return pattern.test(email);
   }
-
   const updateDb = (data) => {
     // Access IndexedDB and put an object
     const dbRequest = indexedDB.open("ICDRCDatabase", 1);
@@ -194,7 +193,7 @@ const ComplainForm = () => {
         return;
       }
       const plainObject = {
-        caseId: data._id,
+        caseId: data.caseId,
         caseType: "individual",
         amount: 1 * 100,
       };
