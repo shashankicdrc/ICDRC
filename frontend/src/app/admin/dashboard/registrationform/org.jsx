@@ -5,8 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useState } from "react";
 import { url } from "../../../api";
-import { toast } from "react-hot-toast";
-import axios from "axios";
 import {
   Table,
   Thead,
@@ -69,27 +67,6 @@ const ContactMessages = () => {
     return createdAtDate.toLocaleDateString();
   };
 
-  const deletebtn = async (id) => {
-    try {
-      const res = await axios.delete(
-        `${url}/api/organizationalcomplaint${id}`,
-        {
-          headers: {
-            Authorization: admin.token,
-            "Content-Type": "application/json",
-          },
-        },
-      );
-      if (res.data.success) {
-        toast.success(res.data.message);
-        getData();
-      }
-    } catch (err) {
-      toast.error(err.response.data.message);
-      // console.log(err);
-    }
-  };
-
   return (
     <div className="bg-gradient-to-r from-orange-300 to-red-300 min-h-screen">
       {loading && <PageLoader />}
@@ -106,17 +83,17 @@ const ContactMessages = () => {
         </div>
         <div className="mt-4 md:mt-6 lg:mt-8">
           <TableContainer>
-            <Table>
+            <Table variant="striped" colorScheme="orange">
               <Thead>
                 <Tr>
                   <Th>S.No</Th>
                   <Th>Date</Th>
                   <Th>Name</Th>
+                  <Th>Status</Th>
                   <Th>Email</Th>
                   <Th>Payment</Th>
                   <Th>Mobile</Th>
                   <Th>Country</Th>
-                  <Th>Status</Th>
                   <Th>State</Th>
                   <Th>Address</Th>
                   <Th>Language</Th>
@@ -134,13 +111,15 @@ const ContactMessages = () => {
                       <Tr className="cursor-pointer">
                         <Td>{index + 1}</Td>
                         <Td>{formatCreatedAtDate(item.createdAt)}</Td>
-                        <Td>{item.name}</Td>
+                        <Td>{item.organization_name}</Td>
+                        <Td className="capitalize">{item.status}</Td>
                         <Td>{item.email}</Td>
-                        <Td>{item.isPay ? "Done" : "Pending"}</Td>
+                        <Td className="capitalize">
+                          {item.isPay ? "Done" : "Pending"}
+                        </Td>
                         <Td>{item.mobile}</Td>
                         <Td>{item.country}</Td>
-                        <Td>{item.status}</Td>
-                        <Td>{item.state}</Td>
+                        <Td className="capitalize">{item.state}</Td>
                         <Td>{item.address}</Td>
                         <Td>{item.language}</Td>
                         <Td>{item.policyCompany}</Td>

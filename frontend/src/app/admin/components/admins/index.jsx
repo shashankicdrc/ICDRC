@@ -7,7 +7,6 @@ import {
   Tr,
   Th,
   Td,
-  Button,
   TableContainer,
 } from "@chakra-ui/react";
 import { url } from "../../../api";
@@ -21,6 +20,12 @@ const TableItems = () => {
   const admin = useSelector((state) => state.admin);
   const [isloading, setIsloading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!admin._id) {
+      router.push("/admin/login");
+    }
+  }, [admin]);
 
   useEffect(() => {
     const getAdmins = async () => {
@@ -44,7 +49,6 @@ const TableItems = () => {
 
   return (
     <TableContainer>
-      {" "}
       <Table mt="8" variant="striped" colorScheme="orange">
         <Thead>
           <Tr>
