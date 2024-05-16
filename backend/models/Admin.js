@@ -13,7 +13,6 @@ const schema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-      select: false,
     },
     role: {
       type: String,
@@ -29,4 +28,3 @@ mongoose.models = {};
 const Admin = mongoose.model("admins", schema);
 
 module.exports = Admin;
-

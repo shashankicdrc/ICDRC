@@ -1,5 +1,40 @@
 const { asyncError } = require("../middlewares/error");
+const bcrypt = require("bcrypt");
 const Admin = require("../models/Admin");
+
+const ChangeAdminPassword = asyncError(async (req, res) => {
+  const { password, confirmpassword, newpassword } = req.body;
+  if (!password || !confirmpassword || !newpassword) {
+    return res.status(400).json({ error: "Fields is required." });
+  }
+  if (newpassword !== confirmpassword) {
+    return res.status(400).json({ error: "Password does not match." });
+  }
+  const adminId = req.admin.id;
+  const adminData = await Admin.findById(adminId);
+  if (!adminData) {
+    return res.status(400).json({ error: "User does not exist." });
+  }
+
+  const isMatch = await bcrypt.compare(password, adminData.password);
+
+  // If passwords don't match, return an error
+  if (!isMatch) {
+    return res.status(400).json({ error: "Invalid current password" });
+  }
+
+  // Hash the new password
+  const hashedPassword = await bcrypt.hash(newpassword, 10);
+
+  // Update the user's password with the new hashed password
+  adminData.password = hashedPassword;
+
+  // Save the updated user object
+  await adminData.save();
+
+  // Return a success message
+  return res.status(200).json({ data: "Password changed successfully" });
+});
 
 const Admins = asyncError(async (req, res) => {
   const admins = await Admin.find({}).select("-password");
@@ -32,4 +67,4 @@ const ChangeAdminRole = asyncError(async (req, res) => {
   return res.status(200).json({ data: "Role has been updated successfully." });
 });
 
-module.exports = { Admins, DeleteAdmin, ChangeAdminRole };
+module.exports = { Admins, DeleteAdmin, ChangeAdminRole, ChangeAdminPassword };
