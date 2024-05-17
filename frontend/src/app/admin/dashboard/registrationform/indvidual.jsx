@@ -99,7 +99,7 @@ const Indvidual = () => {
 
                       <Td>{formatCreatedAtDate(item.createdAt)}</Td>
                       <Td>{item.name}</Td>
-                      <Td>{item.status}</Td>
+                      <Td className="capitalize">{item.status}</Td>
                       <Td>{item.email}</Td>
                       <Td>{item.isPay ? "Done" : "Pending"}</Td>
                       <Td>{item.mobile}</Td>

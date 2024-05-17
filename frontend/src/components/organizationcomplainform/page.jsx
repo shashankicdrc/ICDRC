@@ -235,7 +235,7 @@ const OrganizationComplainForm = () => {
       const plainObject = {
         caseId: data.caseId,
         caseType: "organisational",
-        amount: 1 * 100,
+        amount: 5000 * 100,
       };
       setCaseData([plainObject]);
       const keys = await makeKeys();
@@ -275,7 +275,7 @@ const OrganizationComplainForm = () => {
                   please wait ...
                 </>
               ) : (
-                "Pay ₹500"
+                "Pay ₹5000"
               )}
             </Button>
             <Button onClick={onClose}>Cancel</Button>
@@ -740,7 +740,7 @@ const OrganizationComplainForm = () => {
                   className="inline-flex cursor-pointer px-4 py-2 border rounded-md hover:bg-orange-600
                  hover:text-white hover:border-orange-600"
                 >
-                  Pay ₹500
+                  Pay ₹5000
                 </button>
               )}
             </div>
