@@ -1,11 +1,7 @@
 const fs = require("fs");
 const ejs = require("ejs");
 
-const NewRegrecipients = [
-  "admin@icdrc.in",
-  "info@icdrc.in",
-  "ihayat855@gmail.com",
-];
+const NewRegrecipients = ["admin@icdrc.in", "info@icdrc.in"];
 
 const policyTypeToEmail = {
   "Life Insurance": "lifeinsurance@icdrc.in",

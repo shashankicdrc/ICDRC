@@ -2,10 +2,14 @@ const nodemailer = require("nodemailer");
 const { NOREPLYEMAIL } = require("./Mail");
 
 let transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "mail.icdrc.in",
+  port: 465,
+  tls: {
+    rejectUnauthorized: false,
+  },
   auth: {
-    user: "kartikey.chaudhary.webdesys@gmail.com",
-    pass: "pulz gygf jlct ragt",
+    user: NOREPLYEMAIL,
+    pass: process.env.MAIL_PASSWORD,
   },
 });
 
