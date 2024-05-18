@@ -133,11 +133,10 @@ export default function Footer() {
                 <div>
                   <p className="text-[14px]"> Corporate office:</p>
                   <p className="p-2 text-gray-500 flex gap-2">
-                    <ImLocation2 className="text-orange-500 text-xl md:text-3xl" />{" "}
-                    6th
+                    <ImLocation2 className="text-orange-500 text-2xl md:text-4xl" />{" "}
                     <span className="text-sm">
-                      Floor, Sanatan Building, Opposite CAG Office, Deendayal
-                      Upadhyay Marg, New Delhi
+                      6th Floor, Sanatan Building, Opposite CAG Office,
+                      Deendayal Upadhyay Marg, New Delhi
                     </span>
                   </p>
                 </div>

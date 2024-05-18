@@ -83,7 +83,7 @@ const Home2 = () => {
           >
             <Image
               className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-              src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/4_tq9yeo.svg"
+              src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1716053720/travel_mstw1f.svg"
               alt="Person"
               width={80}
               height={80}
@@ -107,7 +107,7 @@ const Home2 = () => {
               height={80}
             />
             <p className="text-gray-900 mt-2 text-center font-semibold text-sm md:text-md tracking-widest">
-              Agriculture Insurance
+              Crop Insurance
             </p>
           </div>
 
@@ -118,11 +118,11 @@ const Home2 = () => {
             data-aos-delay="900"
           >
             <Image
-              className="object-cover w-16 h-16 md:w-16 md:h-16 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-              src="https://i.ibb.co/LYSxBfW/image-removebg-preview.png"
+              className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
+              src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1716053735/fire_x7i4ud.svg"
               alt="Person"
-              width={50}
-              height={50}
+              width={80}
+              height={80}
             />
             <p className="text-gray-900 mt-2 text-center font-semibold text-sm md:text-md tracking-widest">
               Fire Insurance
@@ -236,7 +236,27 @@ const Home2 = () => {
               Event Insurance
             </p>
           </div>
+
         </div>
+          <div className="flex items-center  justify-center">
+            <div
+              className="flex flex-col items-center"
+              data-aos="zoom-in"
+              data-aos-duration="1500"
+              data-aos-delay="500"
+            >
+              <Image
+                className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
+                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1716053749/professional_rbuzrx.svg"
+                alt="Person"
+                width={80}
+                height={80}
+              />
+              <p className="text-gray-900 mt-2 text-center font-semibold text-sm md:text-md tracking-widest">
+                Professional Indemnity Insurance
+              </p>
+            </div>
+          </div>
       </div>
     </>
   );

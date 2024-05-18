@@ -72,7 +72,7 @@ const HomeNav = () => {
               href="/about"
               className={`${
                 scrollable ? "text-gray-900" : "text-white"
-              } py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
+              } py-7 px-3 capitalize inline-block font-semibold orange-link hover:text-orange-500`}
             >
               About us
             </Link>
@@ -83,7 +83,7 @@ const HomeNav = () => {
               href="/partner"
               className={`${
                 scrollable ? "text-gray-900" : "text-white"
-              } py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
+              } capitalize py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
             >
               Partner with us
             </Link>
@@ -93,7 +93,7 @@ const HomeNav = () => {
               href="/contact"
               className={`${
                 scrollable ? "text-gray-900" : "text-white"
-              } py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
+              } capitalize py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
             >
               Contact us
             </Link>

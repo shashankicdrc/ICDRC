@@ -6,6 +6,7 @@ import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
 import { useSelector } from "react-redux";
 import Image from "next/image";
+import Home7Contact from "../../components/HomeComponents/Home7Contact";
 
 const CaseStudies = () => {
   useEffect(() => {
@@ -31,11 +32,11 @@ const CaseStudies = () => {
         >
           <div className="flex h-full items-center justify-end flex-col">
             <h2
-              className=" mb-4 md:mb-8 text-white text-xl font-[Caveat] text-center md:text-3xl font-semibold"
+              className=" mb-4 md:mb-8 uppercase text-white text-3xl text-center md:text-6xl font-semibold"
               data-aos="fade-up"
               data-aos-duration="2000"
             >
-              Our casestudy
+              case studies
             </h2>
           </div>
         </div>
@@ -79,16 +80,15 @@ const CaseStudies = () => {
             ))
           ) : (
             <span className="font-semibold font-[Caveat] text-xl md:text-2xl">
-              No casestudy available.
+              No Case Study available.
             </span>
           )}
         </div>
       </div>
-
+      <Home7Contact />
       <Footer />
     </div>
   );
 };
 
 export default CaseStudies;
-

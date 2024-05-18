@@ -71,7 +71,7 @@ const CaseStatus = () => {
     <Fragment>
       <button
         onClick={onOpen}
-        className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md"
+        className="text-white capitalize bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md"
       >
         Case status{" "}
       </button>

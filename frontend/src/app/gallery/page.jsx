@@ -5,6 +5,7 @@ import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
 import Item from "./Item";
 import { useSelector } from "react-redux";
+import Home7Contact from "../../components/HomeComponents/Home7Contact";
 
 const Gallery = () => {
   useEffect(() => {
@@ -67,11 +68,10 @@ const Gallery = () => {
           )}
         </div>
       </div>
-
+      <Home7Contact />
       <Footer />
     </div>
   );
 };
 
 export default Gallery;
-

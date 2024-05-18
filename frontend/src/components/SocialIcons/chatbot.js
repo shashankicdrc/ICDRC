@@ -4,6 +4,7 @@ import { url } from "../../app/api";
 import { PiFinnTheHuman } from "react-icons/pi";
 import { IoMdSend } from "react-icons/io";
 import "./module.Socialicon.css";
+import Link from "next/link";
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -66,7 +67,7 @@ const ChatBot = () => {
         mobile,
         issue,
       });
-      setIssue("");
+      setIssue(" ");
       console.log("Data posted successfully");
     } catch (error) {
       console.error("Error posting data:", error);
@@ -126,6 +127,8 @@ const ChatBot = () => {
     }
   };
 
+    console.log('set issue',issue)
+
   return (
     <div ref={chatContainerRef} style={chatBotStyle}>
       {isOpen && (
@@ -159,6 +162,27 @@ const ChatBot = () => {
             {step !== 1 ? (
               <div className="text-white  bg-orange-500 py-2 px-2 rounded-md mr-20">
                 {getPromptMessage()}
+              </div>
+            ) : null}
+            {step === 5 ? (
+              <div className="space-y-2 my-2">
+                <p className="text-white  bg-orange-500 py-2 px-2 rounded-md mr-20">
+                  Meanwhile, to register your complaint with us, kindly click on
+                  the below
+                </p>
+                <Link
+                  href="/register"
+                  className="b relative mx-auto h-16 w-64 flex justify-center items-center"
+                >
+                  <div className="i h-16 w-64 bg-orange-500 items-center rounded-xl shadow-2xl cursor-pointer absolute overflow-hidden transform hover:scale-x-110 hover:scale-y-105 hover:bg-blue-500 transition duration-300 ease-out"></div>
+                  <div className="text-center text-white font-semibold z-10 pointer-events-none">
+                    Register your Complaint
+                  </div>
+                  <span className="absolute flex h-6 w-6 top-0 right-0 transform translate-x-2.5 -translate-y-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
+                    <span className="absolute inline-flex rounded-full h-6 w-6 bg-blue-500"></span>
+                  </span>
+                </Link>
               </div>
             ) : null}
             <div ref={lastMessageRef}></div>

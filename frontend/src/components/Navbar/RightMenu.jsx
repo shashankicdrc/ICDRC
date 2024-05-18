@@ -6,7 +6,7 @@ export default function RightMenu() {
   return (
     <Fragment>
       <CaseStatus />
-      <button className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md">
+      <button className="text-white capitalize bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md">
         <Link href="/register">Register complaints</Link>
       </button>
     </Fragment>

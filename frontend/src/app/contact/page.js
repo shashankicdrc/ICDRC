@@ -258,18 +258,18 @@ const Contact = () => {
                     <p className="text-gray-700 mb-4">
                       Need help or have any query? Don't hesitate, you can
                       directly shoot us an{" "}
-                      <a
-                        href="mailto:"
+                      <span
+                        href="mailto:info@icdrc.in"
                         className="text-orange-500 border-b border-transparent hover:border-orange-500 inline-block font-semibold"
                       >
                         email
-                      </a>{" "}
+                      </span>{" "}
                       or call us at{" "}
                       <a
-                        href="tel:"
+                        href="tel:+917070717167"
                         className="text-orange-500 font-semibold border-b border-transparent hover:border-orange-500 inline-block"
                       >
-                        +91 92345XXXXX
+                                                +91-7070717167
                       </a>
                     </p>
                     <p className="text-gray-700">
