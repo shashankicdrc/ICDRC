@@ -475,7 +475,6 @@ const OrganizationComplainForm = () => {
                   --- Select Language ---
                 </option>
                 <option value="English">English</option>
-                <option value="Hindi">Hindi</option>
               </select>
             </label>
 

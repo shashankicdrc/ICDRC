@@ -468,7 +468,6 @@ const ComplainForm = () => {
                   --- Select Language ---
                 </option>
                 <option value="English">English</option>
-                <option value="Hindi">Hindi</option>
               </select>
             </label>
 

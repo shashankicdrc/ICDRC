@@ -101,9 +101,6 @@ export default function Footer() {
             <div>
               <p className="font-medium">Helpful Links</p>
               <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500">
-                <a className="hover:opacity-75" href="/myprofile">
-                  User profile{" "}
-                </a>
                 <a className="hover:opacity-75" href="/casestatus">
                   Case status
                 </a>

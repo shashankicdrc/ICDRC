@@ -131,7 +131,7 @@ const ChatBot = () => {
       {isOpen && (
         <div
           style={chatBoxStyle}
-          className="mr-12 max-w-[340px] overflow-hidden"
+          className="mr-12 max-w-[290px] md:max-w-[340px] overflow-hidden"
         >
           <div className="bg-orange-500 w-full h-16 rounded-md text-white  flex items-center">
             <PiFinnTheHuman className="text-4xl m-2 border text-orange-500 bg-white rounded-full p-2 " />
@@ -186,7 +186,10 @@ const ChatBot = () => {
             <button
               className="bg-white p-2 rounded"
               disabled={step >= 5 ? true : false}
-              onClick={handleSendMessage}
+              onClick={(e) => {
+                e.preventDefault();
+                handleSendMessage(step, getPromptMessage());
+              }}
             >
               <IoMdSend className="text-orange-600 text-xl font-bold" />
             </button>
