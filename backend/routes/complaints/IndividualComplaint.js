@@ -58,44 +58,34 @@ Individualrouter.post("/", async (req, res) => {
       problemDetails,
       transactionId,
     });
-
-    let emailRecipient = email;
-    if (!policyTypeToEmail[email]) {
-      emailRecipient = policyTypeToEmail[policyType];
-    }
-
-    if (emailRecipient) {
-      const caseData = {
-        name: user.name,
-        email: user.email,
-        mobile: user.mobile,
-        date: user.createdAt.toLocaleString(),
-      };
-      const html = htmlTemplate(
-        "template/individual/NewRegTeam.html",
-        caseData,
-      );
-      const NewMessage = {
-        mailOptions: {
-          from: NOREPLYEMAIL,
-          to: [...NewRegrecipients],
-          subject:
-            "New Registration Form Submission on ICDRC Website for an Individual",
-          html,
-        },
-      };
-
-      const sendMail = fork(MailFilePath);
-      sendMail.send(NewMessage);
-      sendMail.on("message", (msg) => {
-        if (msg.error) {
-          console.error(msg.error.response);
-        } else if (msg.data) {
-          console.log(msg.data.response);
-        }
-      });
-    }
     res.status(200).json({ data: user });
+
+    const caseData = {
+      name: user.name,
+      email: user.email,
+      mobile: user.mobile,
+      date: user.createdAt.toLocaleString(),
+    };
+    const html = htmlTemplate("template/individual/NewRegTeam.html", caseData);
+    const NewMessage = {
+      mailOptions: {
+        from: NOREPLYEMAIL,
+        to: [...NewRegrecipients],
+        subject:
+          "New Registration Form Submission on ICDRC Website for an Individual",
+        html,
+      },
+    };
+
+    const sendMail = fork(MailFilePath);
+    sendMail.send(NewMessage);
+    sendMail.on("message", (msg) => {
+      if (msg.error) {
+        console.error(msg.error.response);
+      } else if (msg.data) {
+        console.log(msg.data.response);
+      }
+    });
   } catch (error) {
     return res.status(400).json({
       error: error.message,

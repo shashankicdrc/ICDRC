@@ -20,6 +20,11 @@ import {
 } from "@chakra-ui/react";
 import { payment } from "../../../action/serverActions";
 import { makeKeys, encryptData, decryptData } from "../../lib/Encryption";
+import {
+  insurance,
+  PolicyType as InsurancePolicyType,
+  problemOptions,
+} from "../../lib/constant";
 
 const ComplainForm = () => {
   const [name, setName] = useState("");
@@ -114,17 +119,17 @@ const ComplainForm = () => {
     // eslint-disable-next-line
   }, [state]);
 
-  useEffect(() => {
-    if (policyType !== "Other") {
-      setOtherPolicyType("");
-    }
-    if (problem !== "Other") {
-      setOtherProblem("");
-    }
-    if (policyCompany !== "Other") {
-      setOtherPolicyCompany("");
-    }
-  }, [policyType, problem, policyCompany]);
+  // useEffect(() => {
+  //   if (policyType !== "Other") {
+  //     setOtherPolicyType("");
+  //   }
+  //   if (problem !== "Other") {
+  //     setOtherProblem("");
+  //   }
+  //   if (policyCompany !== "Other") {
+  //     setOtherPolicyCompany("");
+  //   }
+  // }, [policyType, problem, policyCompany]);
 
   function validateEmailAddress(email) {
     const pattern = /^[a-z0-9._]+@[a-z]+\.[a-z]{2,6}$/;
@@ -175,12 +180,13 @@ const ComplainForm = () => {
           state,
           city,
           address,
-          policyType,
+          policyType: policyType === "Other" ? otherPolicyType : policyType,
+          policyCompany:
+            policyCompany === "Other" ? otherPolicyCompany : policyCompany,
           otherPolicyType,
           problem,
           otherProblem,
           problemDetails,
-          policyCompany,
           otherPolicyCompany,
         }),
       });
@@ -193,7 +199,7 @@ const ComplainForm = () => {
       const plainObject = {
         caseId: data.caseId,
         caseType: "individual",
-        amount: 500 * 100,
+        amount: 1 * 100,
       };
       setCaseData([plainObject]);
       const keys = await makeKeys();
@@ -449,7 +455,6 @@ const ComplainForm = () => {
               </span>
             </label>
 
-
             {/* Select Policy Company */}
             <label
               htmlFor="policyCompnay"
@@ -466,63 +471,32 @@ const ComplainForm = () => {
                 <option value="" disabled hidden className="">
                   --- Select Policy Company ---
                 </option>
-                <option value="Life Insurance Corporation of India (LIC)">
-                  Life Insurance Corporation of India (LIC)
-                </option>
-                <option value="HDFC Life Insurance">HDFC Life Insurance</option>
-                <option value="ICICI Prudential Life Insurance">
-                  ICICI Prudential Life Insurance
-                </option>
-                <option value="SBI Life Insurance">SBI Life Insurance</option>
-                <option value="Max Life Insurance">Max Life Insurance</option>
-                <option value="Bajaj Allianz Life Insurance">
-                  Bajaj Allianz Life Insurance
-                </option>
-                <option value="Kotak Mahindra Life Insurance">
-                  Kotak Mahindra Life Insurance
-                </option>
-                <option value="Aditya Birla Sun Life Insurance">
-                  Aditya Birla Sun Life Insurance
-                </option>
-                <option value="Tata AIA Life Insurance">
-                  Tata AIA Life Insurance
-                </option>
-                <option value="Reliance Nippon Life Insurance">
-                  Reliance Nippon Life Insurance
-                </option>
-                <option value="Bharti AXA Life Insurance">
-                  Bharti AXA Life Insurance
-                </option>
-                <option value="PNB MetLife India Insurance">
-                  PNB MetLife India Insurance
-                </option>
-                <option value="Exide Life Insurance">
-                  Exide Life Insurance
-                </option>
-                <option value="Canara HSBC Oriental Bank of Commerce Life Insurance">
-                  Canara HSBC Oriental Bank of Commerce Life Insurance
-                </option>
-                <option value="IDBI Federal Life Insurance">
-                  IDBI Federal Life Insurance
-                </option>
-                <option value="IndiaFirst Life Insurance">
-                  IndiaFirst Life Insurance
-                </option>
-                <option value="Star Union Dai-ichi Life Insurance">
-                  Star Union Dai-ichi Life Insurance
-                </option>
-                <option value="Aviva Life Insurance">
-                  Aviva Life Insurance
-                </option>
-                <option value="Edelweiss Tokio Life Insurance">
-                  Edelweiss Tokio Life Insurance
-                </option>
-                <option value="Future Generali India Life Insurance">
-                  Future Generali India Life Insurance
-                </option>
+                {insurance.sort().map((item, index) => (
+                  <option value={item} key={index}>
+                    {item}
+                  </option>
+                ))}
                 <option value="Other">Other</option>
               </select>
             </label>
+            {policyCompany === "Other" && (
+              <label
+                htmlFor="otherCompany"
+                className="p-2 relative block rounded-md border border-gray-400 shadow-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600 w-11/12"
+              >
+                <input
+                  id="otherCompany"
+                  type="text"
+                  className="peer border-none outline-none bg-white rounded px-1 placeholder-transparent focus:border-white focus:outline-none focus:ring-0 w-full text-gray-900 font-[Poppins] text-sm"
+                  placeholder="Enter other company name"
+                  value={otherPolicyCompany}
+                  onChange={(e) => setOtherPolicyCompany(e.target.value)}
+                />
+                <span className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-900 font-[Poppins] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
+                  Enter Other Company Name
+                </span>
+              </label>
+            )}
 
             {/* Policy Type */}
             <label
@@ -540,24 +514,33 @@ const ComplainForm = () => {
                 <option value="" disabled hidden className="">
                   --- Select Policy Type ---
                 </option>
-                <option value="Life Insurance">Life Insurance</option>
-                <option value="Health Insurance">Health Insurance</option>
-                <option value="Motor Insurance">Motor Insurance</option>
-                <option value="Travel Insurance">Travel Insurance</option>
-                <option value="Agriculture Insurance">
-                  Agriculture Insurance
-                </option>
-                <option value="Fire Insurance">Fire Insurance</option>
-                <option value="Marine Insurance">Marine Insurance</option>
-                <option value="Liability Insurance">Liability Insurance</option>
-                <option value="Cyber Insurance">Cyber Insurance</option>
-                <option value="Personal Accident Insurance">
-                  Personal Accident Insurance
-                </option>
-                <option value="Property Insurance">Property Insurance</option>
+                {InsurancePolicyType.sort().map((item, index) => (
+                  <option value={item} key={index}>
+                    {item}
+                  </option>
+                ))}
                 <option value="Other">Other</option>
               </select>
             </label>
+
+            {policyType === "Other" && (
+              <label
+                htmlFor="otherPolicyType"
+                className="p-2 relative block rounded-md border border-gray-400 shadow-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600 w-11/12"
+              >
+                <input
+                  placeholder="Enter other policy type"
+                  id="otherPolicyType"
+                  type="text"
+                  className="peer border-none outline-none bg-white rounded px-1 placeholder-transparent focus:border-white focus:outline-none focus:ring-0 w-full text-gray-900 font-[Poppins] text-sm"
+                  value={otherPolicyType}
+                  onChange={(e) => setOtherPolicyType(e.target.value)}
+                />
+                <span className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-900 font-[Poppins] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
+                  Enter Other Policy Category
+                </span>
+              </label>
+            )}
 
             {/* Select Your Problem */}
             <label
@@ -575,31 +558,36 @@ const ComplainForm = () => {
                 <option value="" disabled hidden className="">
                   --- Select Your Problem---
                 </option>
-                <option value="Claim is denied/Repudiated">
-                  Claim is denied/Repudiated
-                </option>
-                <option value="Short payment/less payment ">
-                  Short payment/less payment{" "}
-                </option>
-                <option value="Claim is delayed/No progress">
-                  Claim is delayed/No progress
-                </option>
-                <option value="No survey/Surveyor is nor appointed">
-                  No survey/Surveyor is nor appointed
-                </option>
-                <option value="Fraud">Fraud</option>
-                <option value="Mis-selling of policy">
-                  Mis-selling of policy
-                </option>
-                <option value="Policy document not received">
-                  Policy document not received
-                </option>
-                <option value="No Claim Bonus related issue">
-                  No Claim Bonus related issue
-                </option>
+                {problemOptions.sort().map((item, index) => (
+                  <option value={item} key={index}>
+                    {item}
+                  </option>
+                ))}
                 <option value="Other">Other</option>
               </select>
             </label>
+
+            {problem === "Other" && (
+              <label
+                htmlFor="otherProblem"
+                className="p-2 relative block rounded-md border border-gray-400 shadow-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600 w-11/12"
+              >
+                <input
+                  type="text"
+                  id="otherProblem"
+                  className="peer border-none outline-none bg-white rounded px-1 placeholder-transparent focus:border-white focus:outline-none focus:ring-0 w-full text-gray-900 font-[Poppins] text-sm"
+                  placeholder="Enter Your Problem"
+                  value={otherProblem}
+                  maxLength={500}
+                  required={true}
+                  onChange={(e) => setOtherProblem(e.target.value)}
+                />
+
+                <span className="pointer-events-none absolute start-2.5 top-0 -translate-y-1/2 bg-white p-0.5 text-xs text-gray-900 font-[Poppins] transition-all peer-placeholder-shown:top-1/2 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-xs">
+                  Enter Your Problem
+                </span>
+              </label>
+            )}
 
             {/* Problem in Detail textbox */}
             <textarea

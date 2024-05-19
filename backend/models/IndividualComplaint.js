@@ -30,10 +30,6 @@ const schema = new mongoose.Schema(
       type: String,
       required: [true, "address is required"],
     },
-    language: {
-      type: String,
-      required: [true, "state is required"],
-    },
     policyCompany: {
       type: String,
       required: [true, "policy_company is required"],

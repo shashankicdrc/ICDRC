@@ -51,9 +51,9 @@ const updatePayment = asyncError(async (req, res) => {
   }
 
   const policyEmail = getPolicyEmail(updateResult.policyType);
-  if (!policyEmail) {
-    return res.status(400).json({ error: "Invalid policy provided" });
-  }
+  // if (!policyEmail) {
+  //   return res.status(400).json({ error: "Invalid policy provided" });
+  // }
 
   const caseData = {
     caseId: updateResult.caseId,

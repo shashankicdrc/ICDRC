@@ -45,7 +45,6 @@ Organizationalrouter.post("/", async (req, res) => {
     state,
     city,
     address,
-    language,
     policyCompany,
     policyType,
     problem,
@@ -63,51 +62,43 @@ Organizationalrouter.post("/", async (req, res) => {
         state,
         city,
         address,
-        language,
         policyCompany,
         policyType,
         problem,
         problemDetails,
         transactionId,
       });
-
-      let emailRecipient = email;
-      if (!policyTypeToEmail[email]) {
-        emailRecipient = policyTypeToEmail[policyType];
-      }
-
-      if (emailRecipient) {
-        const caseData = {
-          name: user.organization_name,
-          email: user.email,
-          mobile: user.mobile,
-          date: user.createdAt.toLocaleString(),
-        };
-        const html = htmlTemplate(
-          "template/organisational/NewRegTeam.html",
-          caseData,
-        );
-        const NewMessage = {
-          mailOptions: {
-            from: NOREPLYEMAIL,
-            to: [...NewRegrecipients],
-            subject:
-              "New Registration Form Submission on ICDRC Website for an Organisation",
-            html,
-          },
-        };
-
-        const sendMail = fork(MailFilePath);
-        sendMail.send(NewMessage);
-        sendMail.on("message", (msg) => {
-          if (msg.error) {
-            console.error(msg.error.response);
-          } else if (msg.data) {
-            console.log(msg.data.response);
-          }
-        });
-      }
       res.status(200).json({ data: user });
+
+      const caseData = {
+        name: user.organization_name,
+        email: user.email,
+        mobile: user.mobile,
+        date: user.createdAt.toLocaleString(),
+      };
+      const html = htmlTemplate(
+        "template/organisational/NewRegTeam.html",
+        caseData,
+      );
+      const NewMessage = {
+        mailOptions: {
+          from: NOREPLYEMAIL,
+          to: [...NewRegrecipients],
+          subject:
+            "New Registration Form Submission on ICDRC Website for an Organisation",
+          html,
+        },
+      };
+
+      const sendMail = fork(MailFilePath);
+      sendMail.send(NewMessage);
+      sendMail.on("message", (msg) => {
+        if (msg.error) {
+          console.error(msg.error.response);
+        } else if (msg.data) {
+          console.log(msg.data.response);
+        }
+      });
     } catch (error) {
       console.log("12345");
       res.send({
