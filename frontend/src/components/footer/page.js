@@ -8,6 +8,7 @@ import { FaSquareXTwitter } from "react-icons/fa6";
 import { AiFillFacebook } from "react-icons/ai";
 import Image from "next/image";
 import Separator from "../../components/ui/separator";
+import CaseStatus from "../form/CaseStatus";
 
 export default function Footer() {
   return (
@@ -101,8 +102,11 @@ export default function Footer() {
             <div>
               <p className="font-medium">Helpful Links</p>
               <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500">
-                <a className="hover:opacity-75" href="/casestatus">
-                  Case status
+                <a>
+                  {" "}
+                  <CaseStatus className={"hover:opacity-75"}>
+                    Case status
+                  </CaseStatus>
                 </a>
 
                 <a className="hover:opacity-75" href="/admin/login">
@@ -116,29 +120,29 @@ export default function Footer() {
                 </a>
               </nav>
             </div>
+
             <div className="col-span-2">
               <p className="font-medium">Address</p>
-              <div>
-                <div>
-                  <p className="text-[14px]">Registered Office:</p>
-                  <p className="p-2 text-gray-500 flex gap-2">
-                    <ImLocation2 className="text-orange-500 text-2xl md:text-4xl" />
-                    <span className="text-sm">
+              <div className="flex-col space-y-2">
+                <div className="flex-col space-y-1">
+                  <h4>Registered office:</h4>
+                  <h4 className="flex gap-2">
+                    <ImLocation2 size={33} className="text-orange-500" />
+                    <p className=" text-sm text-gray-500">
                       A-62, BASEMENT, DDA SHED INDUSTRIAL AREA PHASE II Okhla
                       Industrial Estate New Delhi - 110020 India
-                    </span>
-                  </p>
+                    </p>
+                  </h4>
                 </div>
-
-                <div>
-                  <p className="text-[14px]"> Corporate office:</p>
-                  <p className="p-2 text-gray-500 flex gap-2">
-                    <ImLocation2 className="text-orange-500 text-2xl md:text-4xl" />{" "}
-                    <span className="text-sm">
+                <div className="flex-col space-y-1">
+                  <h4>Corporate office:</h4>
+                  <h4 className="flex gap-2">
+                    <ImLocation2 size={30} className="text-orange-500" />
+                    <p className="text-gray-500 text-[15px]">
                       6th Floor, Sanatan Building, Opposite CAG Office,
-                      Deendayal Upadhyay Marg, New Delhi
-                    </span>
-                  </p>
+                      Deendayal Upadhyay Marg, New Delhi{" "}
+                    </p>
+                  </h4>
                 </div>
               </div>
             </div>

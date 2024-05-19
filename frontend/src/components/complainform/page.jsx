@@ -29,7 +29,6 @@ const ComplainForm = () => {
   const [state, setState] = useState("");
   const [city, setCity] = useState("");
   const [address, setAddress] = useState("");
-  const [language, setLanguage] = useState("");
   const [policyCompany, setPolicyCompany] = useState("");
   const [policyType, setPolicyType] = useState("");
   const [otherPolicyType, setOtherPolicyType] = useState("");
@@ -176,7 +175,6 @@ const ComplainForm = () => {
           state,
           city,
           address,
-          language,
           policyType,
           otherPolicyType,
           problem,
@@ -451,25 +449,6 @@ const ComplainForm = () => {
               </span>
             </label>
 
-            {/* Language Select */}
-            <label
-              htmlFor="language"
-              className="p-2 block rounded-md border border-gray-400 shadow-sm focus-within:border-orange-600 focus-within:ring-1 focus-within:ring-orange-600 w-11/12 text-sm"
-            >
-              <select
-                name="language"
-                className="peer border-gray-400 outline-none bg-white rounded px-1 w-full placeholder-transparent focus:border-white focus:outline-none focus:ring-0 text-gray-900 font-[Poppins]"
-                required={true}
-                id="language"
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-              >
-                <option value="" disabled hidden className="">
-                  --- Select Language ---
-                </option>
-                <option value="English">English</option>
-              </select>
-            </label>
 
             {/* Select Policy Company */}
             <label

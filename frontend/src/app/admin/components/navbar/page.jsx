@@ -142,14 +142,6 @@ const AdminNav = () => {
               Chatbot
             </Link>
           </li>
-          <li>
-            <Link
-              href="/admin/dashboard/newsletter"
-              className="py-7 px-3 inline-block"
-            >
-              Subscriptions
-            </Link>
-          </li>
           <AdminNavLinks />
           <li>
             <Link

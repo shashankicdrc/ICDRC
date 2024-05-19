@@ -36,7 +36,7 @@ const Gallery = () => {
         >
           <div className="flex h-full items-center justify-end flex-col">
             <h2
-              className=" mb-4 md:mb-8 text-white text-xl font-[Caveat] text-center md:text-3xl font-semibold"
+              className=" mb-4 md:mb-8 uppercase text-white text-3xl text-center md:text-6xl font-semibold"
               data-aos="fade-up"
               data-aos-duration="2000"
             >

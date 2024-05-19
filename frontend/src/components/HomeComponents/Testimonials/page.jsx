@@ -5,16 +5,11 @@ import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 
-
 const Testimonial = () => {
   return (
-    <div className="my-16 py-4 md:py-12 rounded-xl bg-gradient-to-r from-orange-300 to-orange-500 ">
-      <div
-        className="py-4 text-white"
-        data-aos="fade-up"
-        data-aos-duration="1000"
-      >
-        <h1 className="text-3xl md:text-6xl font-[Roboto] font-bold text-center text-white px-8">
+    <div className="my-16 py-4 md:py-12 rounded-xl bg-white border-b">
+      <div className="py-4" data-aos="fade-up" data-aos-duration="1000">
+        <h1 className="text-3xl md:text-6xl font-[Roboto] font-bold text-center  px-8">
           CUSTOMER TESTIMONIALS
         </h1>
         <p className=" text-center font-medium text-md py-2  tracking-widest mx-auto px-8">
@@ -23,12 +18,10 @@ const Testimonial = () => {
         </p>
       </div>
 
-      
       <Swiper
         className="testimonial-slider mySwiper"
         scrollbar={true}
-          zoom={true}
-
+        zoom={true}
         autoplay={{
           delay: 40000,
           disableOnInteraction: true,
@@ -50,7 +43,7 @@ const Testimonial = () => {
         }}
         modules={[EffectCoverflow, Autoplay, Pagination]}
       >
-        <SwiperSlide className="testimonial-slide bg-white rounded-xl border-2 border-gray-800">
+        <SwiperSlide className="testimonial-slide bg-white rounded-xl shadow-xl border border-gray-300">
           <div className="mb-4  p-4 md:mb-0">
             <div className="mb-6 flex justify-center">
               <video
@@ -178,8 +171,6 @@ const Testimonial = () => {
           </div>
         </SwiperSlide> */}
       </Swiper>
-
-    
     </div>
   );
 };

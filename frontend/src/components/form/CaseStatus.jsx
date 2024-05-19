@@ -15,7 +15,7 @@ import {
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-const CaseStatus = () => {
+const CaseStatus = ({ className }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const caseType = ["individual", "organisational"];
   const router = useRouter();
@@ -71,7 +71,11 @@ const CaseStatus = () => {
     <Fragment>
       <button
         onClick={onOpen}
-        className="text-white capitalize bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md"
+        className={
+          className
+            ? className
+            : "text-white capitalize bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md"
+        }
       >
         Case status{" "}
       </button>
