@@ -2,6 +2,13 @@ const express = require("express");
 const { asyncError } = require("../../middlewares/error");
 const ChatBotData = require("../../models/ChatBotData");
 const verifyToken = require("../../utils/verifyToken");
+const {
+  htmlTemplate,
+  MailFilePath,
+  NOREPLYEMAIL,
+  NewRegrecipients,
+} = require("../../utils/Mail");
+const { fork } = require("child_process");
 
 const router = express.Router();
 
@@ -16,7 +23,61 @@ router.post(
         .json({ success: false, message: "Please Enter all fields." });
     }
 
-    await ChatBotData.create({ name, email, mobile, issue });
+    const chatData = await ChatBotData.create({ name, email, mobile, issue });
+
+    const emailData = {
+      name: chatData.name,
+      email: chatData.email,
+      mobile: chatData.mobile,
+      content: chatData.issue,
+      date: chatData.createdAt.toLocaleString(),
+    };
+
+    const emailTemplate = htmlTemplate(
+      `template/chatbot/index.html`,
+      emailData,
+    );
+    const emailTemplate2 = htmlTemplate(
+      `template/chatbot/client.html`,
+      emailData,
+    );
+
+    const emailMessage = {
+      mailOptions: {
+        from: NOREPLYEMAIL,
+        to: NewRegrecipients, // Specify recipient email address
+        subject: "New enquiry received in chatbot on ICDRC Website",
+        html: emailTemplate,
+      },
+    };
+    const emailMessage2 = {
+      mailOptions: {
+        from: NOREPLYEMAIL,
+        to: [chatData.email], // Specify recipient email address
+        subject: "Acknowledgement of Your Inquiry at ICDRC",
+        html: emailTemplate2,
+      },
+    };
+
+    const emailSender = fork(MailFilePath);
+    emailSender.send(emailMessage);
+    emailSender.on("message", (msg) => {
+      if (msg.error) {
+        console.error(msg.error.response);
+      } else if (msg.data) {
+        console.log(msg.data.response);
+      }
+    });
+
+    const emailSender2 = fork(MailFilePath);
+    emailSender2.send(emailMessage2);
+    emailSender2.on("message", (msg) => {
+      if (msg.error) {
+        console.error(msg.error.response);
+      } else if (msg.data) {
+        console.log(msg.data.response);
+      }
+    });
 
     res.status(201).json({ success: true, message: "Data Submitted." });
   }),
@@ -79,4 +140,3 @@ router.delete(
 );
 
 module.exports = router;
-

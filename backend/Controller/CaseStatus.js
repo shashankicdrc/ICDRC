@@ -77,7 +77,7 @@ const updatePayment = asyncError(async (req, res) => {
   const caseTypeMessage = {
     mailOptions: {
       from: NOREPLYEMAIL,
-      to: [...NewRegrecipients, policyEmail],
+      to: [updateResult.email],
       subject: `Confirmation of Successful Registration and Payment - Case ID: ${updateResult.caseId}`,
       html: caseTypeTemplate,
     },
