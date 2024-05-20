@@ -31,7 +31,7 @@ const Contact = () => {
   }
 
   function validateEmailAddress(email) {
-    const pattern = /^[a-z0-9]+@[a-z]+\.[a-z]{2,6}$/;
+    const pattern = /^[a-z0-9._]+@[a-z]+\.[a-z]{2,6}$/;
     return pattern.test(email);
   }
 
@@ -40,11 +40,15 @@ const Contact = () => {
     setLoading(true);
     if (!validateMobileNumber(mobile)) {
       toast.error("Enter valid mobile number");
+      setLoading(false);
+
       return;
     }
 
     if (!validateEmailAddress(email)) {
       toast.error("Enter valid email address");
+      setLoading(false);
+
       return;
     }
 
@@ -67,6 +71,7 @@ const Contact = () => {
         toast.success(res.data.message);
       }
     } catch (err) {
+      setLoading(false);
       toast.error(err?.response?.data?.message);
     }
 

@@ -227,7 +227,7 @@ const OrganizationComplainForm = () => {
       const plainObject = {
         caseId: data.caseId,
         caseType: "organisational",
-        amount: 1 * 100,
+        amount: 5000 * 100,
       };
       setCaseData([plainObject]);
       const keys = await makeKeys();
