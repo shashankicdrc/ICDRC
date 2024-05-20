@@ -1,15 +1,20 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import AdminButton from "./adminbutton";
 import AdminNavLinks from "./adminnavlinks";
 import "./navbar.modules.css";
-import Image from "next/image";
+import { useSelector } from "react-redux";
+import { IoMdMenu } from "react-icons/io";
+import dynamic from "next/dynamic";
+
+const MobileSideModal = dynamic(() => import("./MobileNavbarModal"));
 
 const AdminNav = () => {
   const [open, setOpen] = useState(false);
-
   const [navbar, setNavbar] = useState(false);
+  const admin = useSelector((state) => state.admin);
+
   const changeBackground = () => {
     // console.log(window.scrollY)
     if (window.scrollY >= 50) {
@@ -18,6 +23,8 @@ const AdminNav = () => {
       setNavbar(false);
     }
   };
+
+  const toggleMobileModal = useCallback((value) => setOpen(value), []);
 
   useEffect(() => {
     changeBackground();
@@ -41,9 +48,12 @@ const AdminNav = () => {
             />
           </Link>
 
-          <div className="text-3xl md:hidden" onClick={() => setOpen(!open)}>
-            <ion-icon name={`${open ? "close" : "menu"}`}></ion-icon>
-          </div>
+          <button
+            className={`text-3xl md:hidden ${open ? "hidden" : ""}`}
+            onClick={() => toggleMobileModal(!open)}
+          >
+            <IoMdMenu className={`${!navbar ? "text-white" : "text-black"}`} />
+          </button>
         </div>
         <ul className="md:flex hidden items-center gap-8 font-[Signika+Negative] z-20">
           <li>
@@ -66,26 +76,18 @@ const AdminNav = () => {
               Chatbot
             </Link>
           </li>
-          <li>
-            <Link
-              href="/admin/dashboard/newsletter"
-              className={`${
-                navbar ? "text-gray-900" : "text-white"
-              } py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
-            >
-              Subscriptions
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/admin/dashboard/admins"
-              className={`${
-                navbar ? "text-gray-900" : "text-white"
-              } py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
-            >
-              Admins
-            </Link>
-          </li>
+          {admin.role === "admin" ? (
+            <li>
+              <Link
+                href="/admin/dashboard/admins"
+                className={`${
+                  navbar ? "text-gray-900" : "text-white"
+                } py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
+              >
+                Admins
+              </Link>
+            </li>
+          ) : null}
 
           <AdminNavLinks navbar={navbar} />
           <li>
@@ -122,47 +124,7 @@ const AdminNav = () => {
         <div className="md:block hidden">
           <AdminButton />
         </div>
-        {/* Mobile nav */}
-        <ul
-          className={`
-        md:hidden w-4/5 bg-gray-100 text-gray-900 fixed top-0 overflow-y-auto bottom-0 py-24 pl-4
-        duration-500 ${open ? "left-0" : "left-[-100%]"}
-        `}
-        >
-          <li>
-            <Link href="/admin/dashboard" className="py-7 px-3 inline-block">
-              Home
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/admin/dashboard/chatbotleads"
-              className="py-7 px-3 inline-block"
-            >
-              Chatbot
-            </Link>
-          </li>
-          <AdminNavLinks />
-          <li>
-            <Link
-              href="/admin/dashboard/partnerdata"
-              className="py-7 px-3 inline-block"
-            >
-              Partners
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/admin/dashboard/contactmessages"
-              className="py-7 px-3 inline-block"
-            >
-              Contacts
-            </Link>
-          </li>
-          <div className="py-5">
-            <AdminButton />
-          </div>
-        </ul>
+        <MobileSideModal isOpen={open} toggleModal={toggleMobileModal} />
       </div>
     </nav>
   );

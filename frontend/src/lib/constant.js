@@ -8,6 +8,17 @@ export const navlinks = [
   { name: "Partner with us", link: "/partner" },
 ];
 
+export const adminnavlinks = [
+  { name: "Home", link: "/amdin/dashboard" },
+  { name: "Chat Bot", link: "/admin/dashboard/chatbotleads" },
+  { name: "Manage Case Studies", link: "/admin/dashboard/admincasestudy" },
+  { name: "Manage Blogs", link: "/admin/dashboard/adminblogs" },
+  { name: "Manage Gallery", link: "/admin/dashboard/adminmedia" },
+  { name: "Partner", link: "/admin/dashboard/partnerdata" },
+  { name: "Contacts", link: "/admin/dashboard/contactmessages" },
+  { name: "Complains", link: "/admin/dashboard/registrationform" },
+];
+
 export const problemOptions = [
   "Claim is denied/Repudiated",
   "Short payment/less payment",
