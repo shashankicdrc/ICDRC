@@ -4,24 +4,24 @@ import AttachmentTable from "../../components/CaseStatus/attachment/AttachmentTa
 import UploadAttachment from "../../components/CaseStatus/attachment/UploadDrawer";
 
 export default function page() {
-  return (
-    <main className="mx-5 md:mx-10 my-32">
-      <h1 className="text-5xl">Your case status details.</h1>
-      <section className="my-5 shadow-lg rounded-lg border-t">
-        <CaseTable />
-      </section>
-      <section className="my-5">
-        <div className="flex item-center justify-between">
-          <h1 className="text-4xl">Your previous attachments</h1>
-          <UploadAttachment />
-        </div>
-        <span className="text-sm text-gray-500">
-          Note: If you are not seeing your attachments, please refresh the page.
-        </span>
-        <div className="shadow-lg my-5 rounded-lg border-t">
-          <AttachmentTable />
-        </div>
-      </section>
-    </main>
-  );
+    return (
+        <main className="mx-5 md:mx-10 my-32">
+            <h1 className="text-5xl">Your Case Status Details.</h1>
+            <section className="my-5 shadow-lg rounded-lg border-t">
+                <CaseTable />
+            </section>
+            <section className="my-5">
+                <div className="flex item-center justify-between">
+                    <h1 className="text-4xl capitalize">Your previous attachments</h1>
+                    <UploadAttachment />
+                </div>
+                <span className="text-sm text-gray-500">
+                    Note: If you are not seeing your attachments, please refresh the page.
+                </span>
+                <div className="shadow-lg my-5 rounded-lg border-t">
+                    <AttachmentTable />
+                </div>
+            </section>
+        </main>
+    );
 }
