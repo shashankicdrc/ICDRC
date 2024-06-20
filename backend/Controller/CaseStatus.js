@@ -20,8 +20,8 @@ const { fork } = require("child_process");
 
 const updatePayment = asyncError(async (req, res) => {
     const { caseId, caseType, isPay, transactionId } = req.body;
-    if (!caseId || !isPay, transactionId) {
-        return res.status(400).json({ erro: "Invalid request." });
+    if (!caseId || !isPay || !transactionId || !caseType) {
+        return res.status(400).json({ error: "Invalid request." });
     }
 
     let updateResult;
