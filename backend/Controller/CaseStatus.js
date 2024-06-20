@@ -4,413 +4,414 @@ const { EventEmitter } = require("node:events");
 const { isValidObjectId } = require("mongoose");
 const ComplainMedia = require("../models/ComplainMedia");
 const {
-  OrganizationalComplaint,
+    OrganizationalComplaint,
 } = require("../models/OrganizationalComplaint");
 const { IndividualComplaint } = require("../models/IndividualComplaint");
 const { asyncError } = require("../middlewares/error");
 const {
-  getPolicyEmail,
-  htmlTemplate,
-  MailFilePath,
-  NOREPLYEMAIL,
-  NewRegrecipients,
-  TeamPaymentEmail,
+    getPolicyEmail,
+    htmlTemplate,
+    MailFilePath,
+    NOREPLYEMAIL,
+    NewRegrecipients,
+    TeamPaymentEmail,
 } = require("../utils/Mail");
 const { fork } = require("child_process");
 
 const updatePayment = asyncError(async (req, res) => {
-  const { caseId, caseType, isPay } = req.body;
-  if (!caseId || !isPay) {
-    return res.status(400).json({ erro: "Invalid request." });
-  }
-
-  let updateResult;
-
-  switch (caseType) {
-    case "individual":
-      updateResult = await IndividualComplaint.findOneAndUpdate(
-        { caseId },
-        { isPay },
-        { new: true },
-      );
-      break;
-
-    case "organisational":
-      updateResult = await OrganizationalComplaint.findOneAndUpdate(
-        { caseId },
-        { isPay },
-        { new: true },
-      );
-      break;
-    default:
-      return res.status(400).json({ error: "Invalid case type provided." });
-  }
-
-  if (!updateResult || !updateResult._id) {
-    return res.status(400).json({ error: "Invalid complaint provided." });
-  }
-
-  const policyEmail = getPolicyEmail(updateResult.policyType);
-  // if (!policyEmail) {
-  //   return res.status(400).json({ error: "Invalid policy provided" });
-  // }
-
-  const caseData = {
-    caseId: updateResult.caseId,
-    name:
-      caseType === "individual"
-        ? updateResult.name
-        : updateResult.organization_name,
-    email: updateResult.email,
-    mobile: updateResult.mobile,
-    amount: caseType === "individual" ? 500 : 5000,
-    registration_date: updateResult.createdAt.toLocaleString(),
-    insuranceCategory: updateResult.policyType,
-    isPay: updateResult.isPay ? "Received" : "Not paid",
-  };
-
-  const caseTypeTemplate = htmlTemplate(
-    `template/${caseType}/SuccessPayment.html`,
-    caseData,
-  );
-
-  const caseTypeMessage = {
-    mailOptions: {
-      from: NOREPLYEMAIL,
-      to: [updateResult.email],
-      subject: `Confirmation of Successful Registration and Payment - Case ID: ${updateResult.caseId}`,
-      html: caseTypeTemplate,
-    },
-  };
-
-  const caseTypeMail = fork(MailFilePath);
-  caseTypeMail.send(caseTypeMessage);
-  caseTypeMail.on("message", (msg) => {
-    if (msg.error) {
-      console.error(msg.error.response);
-    } else if (msg.data) {
-      console.log(msg.data.response);
+    const { caseId, caseType, isPay, transactionId } = req.body;
+    if (!caseId || !isPay, transactionId) {
+        return res.status(400).json({ erro: "Invalid request." });
     }
-  });
 
-  const teamTemplate = htmlTemplate(
-    `template/${caseType}/SuccessPaymentTeam.html`,
-    caseData,
-  );
+    let updateResult;
 
-  const teamMessage = {
-    mailOptions: {
-      from: NOREPLYEMAIL,
-      to: [...TeamPaymentEmail, policyEmail], // Specify the recipient for the additional email
-      subject: `Successful Registration and Payment Recieved - Case Id: ${updateResult.caseId}`,
-      html: teamTemplate,
-    },
-  };
+    switch (caseType) {
+        case "individual":
+            updateResult = await IndividualComplaint.findOneAndUpdate(
+                { caseId },
+                { isPay, transactionId },
+                { new: true },
+            );
+            break;
 
-  const teamSendMail = fork(MailFilePath);
-  teamSendMail.send(teamMessage);
-
-  teamSendMail.on("message", (msg) => {
-    if (msg.error) {
-      console.error(msg.error.response);
-    } else if (msg.data) {
-      console.log(msg.data.response);
+        case "organisational":
+            updateResult = await OrganizationalComplaint.findOneAndUpdate(
+                { caseId },
+                { isPay, transactionId },
+                { new: true },
+            );
+            break;
+        default:
+            return res.status(400).json({ error: "Invalid case type provided." });
     }
-  });
 
-  return res.status(200).json({ data: updateResult });
+    if (!updateResult || !updateResult._id) {
+        return res.status(400).json({ error: "Invalid complaint provided." });
+    }
+
+    const policyEmail = getPolicyEmail(updateResult.policyType);
+    // if (!policyEmail) {
+    //   return res.status(400).json({ error: "Invalid policy provided" });
+    // }
+
+    const caseData = {
+        caseId: updateResult.caseId,
+        name:
+            caseType === "individual"
+                ? updateResult.name
+                : updateResult.organization_name,
+        email: updateResult.email,
+        mobile: updateResult.mobile,
+        amount: caseType === "individual" ? 500 : 5000,
+        registration_date: updateResult.createdAt.toLocaleString(),
+        insuranceCategory: updateResult.policyType,
+        isPay: updateResult.isPay ? "Received" : "Not paid",
+        transactionId
+    };
+
+    const caseTypeTemplate = htmlTemplate(
+        `template/${caseType}/SuccessPayment.html`,
+        caseData,
+    );
+
+    const caseTypeMessage = {
+        mailOptions: {
+            from: NOREPLYEMAIL,
+            to: [updateResult.email],
+            subject: `Confirmation of Successful Registration and Payment - Case ID: ${updateResult.caseId}`,
+            html: caseTypeTemplate,
+        },
+    };
+
+    const caseTypeMail = fork(MailFilePath);
+    caseTypeMail.send(caseTypeMessage);
+    caseTypeMail.on("message", (msg) => {
+        if (msg.error) {
+            console.error(msg.error.response);
+        } else if (msg.data) {
+            console.log(msg.data.response);
+        }
+    });
+
+    const teamTemplate = htmlTemplate(
+        `template/${caseType}/SuccessPaymentTeam.html`,
+        caseData,
+    );
+
+    const teamMessage = {
+        mailOptions: {
+            from: NOREPLYEMAIL,
+            to: [...TeamPaymentEmail, policyEmail], // Specify the recipient for the additional email
+            subject: `Successful Registration and Payment Recieved - Case Id: ${updateResult.caseId}`,
+            html: teamTemplate,
+        },
+    };
+
+    const teamSendMail = fork(MailFilePath);
+    teamSendMail.send(teamMessage);
+
+    teamSendMail.on("message", (msg) => {
+        if (msg.error) {
+            console.error(msg.error.response);
+        } else if (msg.data) {
+            console.log(msg.data.response);
+        }
+    });
+
+    return res.status(200).json({ data: updateResult });
 });
 
 const deleteCase = asyncError(async (req, res) => {
-  const { caseId, caseType } = req.body;
+    const { caseId, caseType } = req.body;
 
-  switch (caseType) {
-    case "individual":
-      const ind_delete = await IndividualComplaint.findByIdAndDelete(caseId, {
-        new: true,
-      });
-      if (ind_delete._id) {
-        return res
-          .status(200)
-          .json({ data: "Complain has been deleted successfully." });
-      } else {
-        return res
-          .status(400)
-          .json({ data: "Invalid complain has been provided." });
-      }
-    case "organisational":
-      const org_delete = await OrganizationalComplaint.findByIdAndDelete(
-        caseId,
-        { new: true },
-      );
-      if (org_delete._id) {
-        return res
-          .status(200)
-          .json({ data: "Complain has been deleted successfully." });
-      } else {
-        return res
-          .status(400)
-          .json({ error: "Invalid complain has been provided." });
-      }
-    default:
-      return res
-        .status(400)
-        .json({ error: "Invalid case type has been provided." });
-  }
+    switch (caseType) {
+        case "individual":
+            const ind_delete = await IndividualComplaint.findByIdAndDelete(caseId, {
+                new: true,
+            });
+            if (ind_delete._id) {
+                return res
+                    .status(200)
+                    .json({ data: "Complain has been deleted successfully." });
+            } else {
+                return res
+                    .status(400)
+                    .json({ data: "Invalid complain has been provided." });
+            }
+        case "organisational":
+            const org_delete = await OrganizationalComplaint.findByIdAndDelete(
+                caseId,
+                { new: true },
+            );
+            if (org_delete._id) {
+                return res
+                    .status(200)
+                    .json({ data: "Complain has been deleted successfully." });
+            } else {
+                return res
+                    .status(400)
+                    .json({ error: "Invalid complain has been provided." });
+            }
+        default:
+            return res
+                .status(400)
+                .json({ error: "Invalid case type has been provided." });
+    }
 });
 
 const updateStatus = asyncError(async (req, res) => {
-  const { caseId, caseType, status } = req.body;
-  let updateResult;
+    const { caseId, caseType, status } = req.body;
+    let updateResult;
 
-  switch (caseType) {
-    case "individual":
-      updateResult = await IndividualComplaint.findByIdAndUpdate(
-        caseId,
-        {
-          status,
-        },
-        { new: true },
-      );
-      break;
-    case "organisational":
-      updateResult = await OrganizationalComplaint.findByIdAndUpdate(caseId, {
-        status,
-      });
-      break;
-    default:
-      return res
-        .status(400)
-        .json({ error: "Invalid case type has been provided." });
-  }
-
-  if (!updateResult || !updateResult._id) {
-    return res.status(400).json({ error: "Case does no exist." });
-  }
-
-  const caseData = {
-    caseId: updateResult.caseId,
-    name:
-      caseType === "individual"
-        ? updateResult.name
-        : updateResult.organization_name,
-    date: updateResult.updatedAt.toLocaleString(),
-    status: updateResult.status,
-  };
-
-  const caseTypeTemplate = htmlTemplate(`template/UpdateCase.html`, caseData);
-
-  const caseTypeMessage = {
-    mailOptions: {
-      from: NOREPLYEMAIL,
-      to: [...NewRegrecipients, updateResult.email],
-      subject: ` Update on Your Case Status with ICDRC - Case ID:  ${updateResult.caseId}`,
-      html: caseTypeTemplate,
-    },
-  };
-
-  const caseTypeMail = fork(MailFilePath);
-  caseTypeMail.send(caseTypeMessage);
-  caseTypeMail.on("message", (msg) => {
-    if (msg.error) {
-      console.error(msg.error.response);
-    } else if (msg.data) {
-      console.log(msg.data.response);
+    switch (caseType) {
+        case "individual":
+            updateResult = await IndividualComplaint.findByIdAndUpdate(
+                caseId,
+                {
+                    status,
+                },
+                { new: true },
+            );
+            break;
+        case "organisational":
+            updateResult = await OrganizationalComplaint.findByIdAndUpdate(caseId, {
+                status,
+            });
+            break;
+        default:
+            return res
+                .status(400)
+                .json({ error: "Invalid case type has been provided." });
     }
-  });
-  return res.status(200).json({ data: updateResult });
+
+    if (!updateResult || !updateResult._id) {
+        return res.status(400).json({ error: "Case does no exist." });
+    }
+
+    const caseData = {
+        caseId: updateResult.caseId,
+        name:
+            caseType === "individual"
+                ? updateResult.name
+                : updateResult.organization_name,
+        date: updateResult.updatedAt.toLocaleString(),
+        status: updateResult.status,
+    };
+
+    const caseTypeTemplate = htmlTemplate(`template/UpdateCase.html`, caseData);
+
+    const caseTypeMessage = {
+        mailOptions: {
+            from: NOREPLYEMAIL,
+            to: [...NewRegrecipients, updateResult.email],
+            subject: ` Update on Your Case Status with ICDRC - Case ID:  ${updateResult.caseId}`,
+            html: caseTypeTemplate,
+        },
+    };
+
+    const caseTypeMail = fork(MailFilePath);
+    caseTypeMail.send(caseTypeMessage);
+    caseTypeMail.on("message", (msg) => {
+        if (msg.error) {
+            console.error(msg.error.response);
+        } else if (msg.data) {
+            console.log(msg.data.response);
+        }
+    });
+    return res.status(200).json({ data: updateResult });
 });
 
 const Attachments = asyncError(async (req, res) => {
-  const { caseId, caseType } = req.query;
+    const { caseId, caseType } = req.query;
 
-  switch (caseType) {
-    case "individual":
-      const ind_attachments = await IndividualComplaint.findById(caseId, {
-        _id: true,
-      })
-        .populate("attachments")
-        .exec();
-      return res.status(200).json({ data: ind_attachments });
-    case "organisational":
-      const org_attachments = await OrganizationalComplaint.findById(caseId, {
-        _id: true,
-      })
-        .populate("attachments")
-        .exec();
-      return res.status(200).json({ data: org_attachments });
-    default:
-      return res
-        .status(400)
-        .json({ error: "Invalid case type has been provided." });
-  }
+    switch (caseType) {
+        case "individual":
+            const ind_attachments = await IndividualComplaint.findById(caseId, {
+                _id: true,
+            })
+                .populate("attachments")
+                .exec();
+            return res.status(200).json({ data: ind_attachments });
+        case "organisational":
+            const org_attachments = await OrganizationalComplaint.findById(caseId, {
+                _id: true,
+            })
+                .populate("attachments")
+                .exec();
+            return res.status(200).json({ data: org_attachments });
+        default:
+            return res
+                .status(400)
+                .json({ error: "Invalid case type has been provided." });
+    }
 });
 
 const CheckCaseStatus = asyncError(async (req, res) => {
-  const { email, id, type } = req.query;
-  switch (type) {
-    case "individual":
-      const individualComplaints = await IndividualComplaint.findOne({
-        email,
-        caseId: id,
-      });
-      if (!individualComplaints) {
-        return res.status(400).json({ error: "Case does not exist." });
-      }
-      return res.status(200).json({ data: individualComplaints });
-    case "organisational":
-      const organisationalComplaints = await OrganizationalComplaint.findOne({
-        email,
-        caseId: id,
-      });
-      if (!organisationalComplaints) {
-        return res.status(400).json({ error: "Case does not exist." });
-      }
-      return res.status(200).json({ data: organisationalComplaints });
+    const { email, id, type } = req.query;
+    switch (type) {
+        case "individual":
+            const individualComplaints = await IndividualComplaint.findOne({
+                email,
+                caseId: id,
+            });
+            if (!individualComplaints) {
+                return res.status(400).json({ error: "Case does not exist." });
+            }
+            return res.status(200).json({ data: individualComplaints });
+        case "organisational":
+            const organisationalComplaints = await OrganizationalComplaint.findOne({
+                email,
+                caseId: id,
+            });
+            if (!organisationalComplaints) {
+                return res.status(400).json({ error: "Case does not exist." });
+            }
+            return res.status(200).json({ data: organisationalComplaints });
 
-    default:
-      return res
-        .status(400)
-        .json({ error: `Invalid ${type} has been provided` });
-  }
+        default:
+            return res
+                .status(400)
+                .json({ error: `Invalid ${type} has been provided` });
+    }
 });
 
 const UploadAttachments = asyncError(async (req, res) => {
-  const validFields = ["attachment_name", "type", "id"];
-  const receivedFields = [];
-  const fieldData = new Map();
-  const emitter = new EventEmitter();
-  const bb = busboy({ headers: req.headers });
-  const typeField = ["individual", "organisational"];
+    const validFields = ["attachment_name", "type", "id"];
+    const receivedFields = [];
+    const fieldData = new Map();
+    const emitter = new EventEmitter();
+    const bb = busboy({ headers: req.headers });
+    const typeField = ["individual", "organisational"];
 
-  const checkMissingFields = () => {
-    const missingFields = validFields.filter(
-      (field) => !receivedFields.includes(field),
-    );
-    if (missingFields.length > 0) {
-      const fields = missingFields.join(",");
-      return { missing: true, message: `Missing fields: ${fields}` };
-    } else {
-      return { missing: false, message: "Fullfilled" };
-    }
-  };
-
-  async function handleError(fn) {
-    try {
-      await fn();
-    } catch (e) {
-      req.unpipe(bb);
-    }
-  }
-  let filesCount = 0;
-  const uploadedData = [];
-
-  const uploader = () => {
-    return cloudinary.v2.uploader.upload_stream(
-      { use_filename: true },
-      (error, data) => {
-        if (error) {
-          return res.status(error.http_code).json({ error: error.message });
-        } else if (data) {
-          uploadedData.push({
-            url: data.secure_url,
-            public_id: data.public_id,
-          });
-          if (filesCount === uploadedData.length)
-            emitter.emit("updateDatabase");
+    const checkMissingFields = () => {
+        const missingFields = validFields.filter(
+            (field) => !receivedFields.includes(field),
+        );
+        if (missingFields.length > 0) {
+            const fields = missingFields.join(",");
+            return { missing: true, message: `Missing fields: ${fields}` };
+        } else {
+            return { missing: false, message: "Fullfilled" };
         }
-      },
-    );
-  };
+    };
 
-  bb.on("error", (error) => {
-    return res.status(500).json({ error: error });
-  });
-
-  bb.on("field", (fieldname, value) => {
-    receivedFields.push(fieldname);
-    handleError(async () => {
-      switch (fieldname) {
-        case "attachment_name":
-          if (value.length < 4) {
-            return res.status(400).json({
-              error: "Attachment name should be at least 4 character.",
-            });
-          }
-
-          fieldData.set(fieldname, value);
-          break;
-        case "id":
-          if (!isValidObjectId(value)) {
-            return res
-              .status(400)
-              .json({ error: "Invalid id has been provided" });
-          }
-          fieldData.set(fieldname, value);
-          break;
-        case "type":
-          if (!typeField.includes(value)) {
-            return res
-              .status(400)
-              .json({ error: "Invalid type has been provided" });
-          }
-          fieldData.set(fieldname, value);
-          break;
-      }
-    });
-  });
-
-  bb.on("file", (filename, file, info) => {
-    handleError(async () => {
-      const checkField = checkMissingFields();
-      if (checkField.missing) {
-        return res.status(400).json({ error: checkField.message });
-      }
-      if (!checkField.missing) {
-        file.pipe(uploader());
-      } else {
-        file.resume();
-      }
-    });
-    file.on("end", () => (filesCount = filesCount + 1));
-  });
-
-  emitter.on("updateDatabase", async () => {
-    const attachment_name = fieldData.get("attachment_name");
-    const type = fieldData.get("type");
-    const id = fieldData.get("id");
-
-    const newMedia = await ComplainMedia.create({
-      type,
-      attachment_name,
-      media: uploadedData,
-    });
-
-    if (type === "individual") {
-      const indUpdatedData = await IndividualComplaint.findByIdAndUpdate(
-        id,
-        { $push: { attachments: newMedia._id } },
-        { new: true },
-      );
-      return res.status(200).json({ data: indUpdatedData });
+    async function handleError(fn) {
+        try {
+            await fn();
+        } catch (e) {
+            req.unpipe(bb);
+        }
     }
+    let filesCount = 0;
+    const uploadedData = [];
 
-    const orgUpdatedData = await OrganizationalComplaint.findByIdAndUpdate(
-      id,
-      { $push: { attachments: newMedia._id } },
-      { new: true },
-    );
-    return res.status(200).json({ data: orgUpdatedData });
-  });
+    const uploader = () => {
+        return cloudinary.v2.uploader.upload_stream(
+            { use_filename: true },
+            (error, data) => {
+                if (error) {
+                    return res.status(error.http_code).json({ error: error.message });
+                } else if (data) {
+                    uploadedData.push({
+                        url: data.secure_url,
+                        public_id: data.public_id,
+                    });
+                    if (filesCount === uploadedData.length)
+                        emitter.emit("updateDatabase");
+                }
+            },
+        );
+    };
 
-  req.pipe(bb);
+    bb.on("error", (error) => {
+        return res.status(500).json({ error: error });
+    });
+
+    bb.on("field", (fieldname, value) => {
+        receivedFields.push(fieldname);
+        handleError(async () => {
+            switch (fieldname) {
+                case "attachment_name":
+                    if (value.length < 4) {
+                        return res.status(400).json({
+                            error: "Attachment name should be at least 4 character.",
+                        });
+                    }
+
+                    fieldData.set(fieldname, value);
+                    break;
+                case "id":
+                    if (!isValidObjectId(value)) {
+                        return res
+                            .status(400)
+                            .json({ error: "Invalid id has been provided" });
+                    }
+                    fieldData.set(fieldname, value);
+                    break;
+                case "type":
+                    if (!typeField.includes(value)) {
+                        return res
+                            .status(400)
+                            .json({ error: "Invalid type has been provided" });
+                    }
+                    fieldData.set(fieldname, value);
+                    break;
+            }
+        });
+    });
+
+    bb.on("file", (filename, file, info) => {
+        handleError(async () => {
+            const checkField = checkMissingFields();
+            if (checkField.missing) {
+                return res.status(400).json({ error: checkField.message });
+            }
+            if (!checkField.missing) {
+                file.pipe(uploader());
+            } else {
+                file.resume();
+            }
+        });
+        file.on("end", () => (filesCount = filesCount + 1));
+    });
+
+    emitter.on("updateDatabase", async () => {
+        const attachment_name = fieldData.get("attachment_name");
+        const type = fieldData.get("type");
+        const id = fieldData.get("id");
+
+        const newMedia = await ComplainMedia.create({
+            type,
+            attachment_name,
+            media: uploadedData,
+        });
+
+        if (type === "individual") {
+            const indUpdatedData = await IndividualComplaint.findByIdAndUpdate(
+                id,
+                { $push: { attachments: newMedia._id } },
+                { new: true },
+            );
+            return res.status(200).json({ data: indUpdatedData });
+        }
+
+        const orgUpdatedData = await OrganizationalComplaint.findByIdAndUpdate(
+            id,
+            { $push: { attachments: newMedia._id } },
+            { new: true },
+        );
+        return res.status(200).json({ data: orgUpdatedData });
+    });
+
+    req.pipe(bb);
 });
 
 module.exports = {
-  UploadAttachments,
-  CheckCaseStatus,
-  Attachments,
-  updateStatus,
-  deleteCase,
-  updatePayment,
+    UploadAttachments,
+    CheckCaseStatus,
+    Attachments,
+    updateStatus,
+    deleteCase,
+    updatePayment,
 };
