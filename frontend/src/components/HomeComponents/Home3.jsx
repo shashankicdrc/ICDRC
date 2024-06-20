@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
@@ -5,6 +6,15 @@ import { Pagination, Autoplay } from "swiper/modules";
 import Image from "next/image";
 
 const Home3 = () => {
+    const swiperRefLocal = useRef()
+
+    const handleMouseEnter = () => {
+        swiperRefLocal?.current?.swiper?.autoplay?.stop()
+    };
+
+    const handleMouseLeave = () => {
+        swiperRefLocal?.current?.swiper?.autoplay?.start()
+    };
     return (
         <div className="bg-gradient-to-r from-orange-200 to-orange-400 px-4 md:px-8 py-6 my-4">
             {/* Desktop View */}
@@ -15,8 +25,13 @@ const Home3 = () => {
             >
                 Are You Facing Any of These ?
             </h1>
-            <div className="py-6 lg:flex justify-center items-center hidden ">
+            <div
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                className="py-6 lg:flex justify-center items-center hidden"
+            >
                 <Swiper
+                    ref={swiperRefLocal}
                     slidesPerView={3}
                     spaceBetween={30}
                     autoplay={{
