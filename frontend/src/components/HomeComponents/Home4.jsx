@@ -21,7 +21,7 @@ const Home4 = () => {
                 providing reliable insurance solutions for a worry-free future.
             </p>
 
-            <div className="container font-[Roboto] mx-auto overflow-hidden">
+            <div className="container mx-auto overflow-hidden">
                 <div className="row">
                     <div className="col-md-12">
                         <div className="road-map-main">
@@ -29,8 +29,8 @@ const Home4 = () => {
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
-                                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785538/Home_page/Home4/1_p9hy4z.svg"
-                                            alt=""
+                                            src="/images/process/reach.png"
+                                            alt="reach out"
                                             width={50}
                                             height={50}
                                         />
@@ -134,7 +134,7 @@ const Home4 = () => {
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
-                                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785538/Home_page/Home4/6_rgxxfx.svg"
+                                            src="/images/process/payment.png"
                                             alt=""
                                             width={70}
                                             height={70}

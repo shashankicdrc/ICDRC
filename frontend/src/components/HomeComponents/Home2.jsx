@@ -27,8 +27,8 @@ const Home2 = () => {
                         data-aos-duration="1500"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/1_qmm9t2.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src="/images/insurance/Life Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -45,8 +45,8 @@ const Home2 = () => {
                         data-aos-delay="100"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/2_u67069.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src="/images/insurance/Health Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -63,8 +63,8 @@ const Home2 = () => {
                         data-aos-delay="300"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/3_ylryzr.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm"
+                            src="/images/insurance/Motor Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -81,8 +81,8 @@ const Home2 = () => {
                         data-aos-delay="500"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1716053720/travel_mstw1f.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src="/images/insurance/Travel Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -99,8 +99,8 @@ const Home2 = () => {
                         data-aos-delay="700"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784295/Home_page/Home2/5_n9fvp9.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src="/images/insurance/Crop Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -117,8 +117,8 @@ const Home2 = () => {
                         data-aos-delay="900"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1716053735/fire_x7i4ud.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src="/images/insurance/Fire Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -135,8 +135,8 @@ const Home2 = () => {
                         data-aos-delay="1100"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/7_qdf20m.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src="/images/insurance/Marine Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -153,8 +153,8 @@ const Home2 = () => {
                         data-aos-delay="1300"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784296/Home_page/Home2/8_t092so.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src="/images/insurance/Liability Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -171,8 +171,8 @@ const Home2 = () => {
                         data-aos-delay="1500"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/9_thtox1.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src='/images/insurance/Cyber Insurance.png'
                             alt="Person"
                             width={80}
                             height={80}
@@ -189,8 +189,8 @@ const Home2 = () => {
                         data-aos-delay="1700"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/10_d7qssd.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src='/images/insurance/Personal Accident Insurance.png'
                             alt="Person"
                             width={80}
                             height={80}
@@ -207,8 +207,8 @@ const Home2 = () => {
                         data-aos-delay="1900"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/11_kj6i7t.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src="/images/insurance/Property Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -225,8 +225,9 @@ const Home2 = () => {
                         data-aos-delay="2100"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784297/Home_page/Home2/12_tg3bm9.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+
+                            src="/images/insurance/Event Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}
@@ -245,8 +246,8 @@ const Home2 = () => {
                         data-aos-delay="500"
                     >
                         <Image
-                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm drop-shadow-[2px_5px_10px_yellow]"
-                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1716053749/professional_rbuzrx.svg"
+                            className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
+                            src="/images/insurance/Professional Indemnity Insurance.png"
                             alt="Person"
                             width={80}
                             height={80}

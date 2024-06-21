@@ -6,26 +6,29 @@ import { Fragment } from 'react';
 
 const Home7Contact = () => {
     return (
+
         <Fragment>
             <div className="text-center mb-4">
                 <h1 className="text-5xl capitalize font-bold">Reach out to us</h1>
                 <p className="text-gray-500 text-sm">One Stop Solution For Insurance Claim Disputes!</p>
             </div>
 
-            <div
-                className="grid gap-5 grid-cols-1 md:grid-cols-7 mx-5 md:mx-10">
-                <div className="md:col-span-3">
-                    <Image src={"/images/reachout.png"} width={600} height={600} className="w-full" alt="reach-out pic" />
+            <div className="grid gap-5 grid-cols-1 lg:grid-cols-7 mx-5 lg:mx-10 items-center">
+                <div className="lg:col-span-3 flex justify-center">
+                    <Image
+                        src="/images/reachout.png"
+                        width={500}
+                        height={500}
+                        className="w-full lg:w-3/4"
+                        alt="reach-out pic"
+                    />
                 </div>
-                <div className="px-4 py-3 md:col-span-4 space-y-4 text-justify">
+                <div className="px-4 py-3 lg:col-span-4 space-y-4 text-justify">
                     <p>
                         ICDRC, we're here to help you with insurance claims and disputes. We're committed to protecting what matters most to you and providing reliable insurance solutions for a worry-free future.
                     </p>
                     <p>
-                        We're your trusted partner for insurance claims and dispute resolution! If you need
-                        expert guidance on insurance claims or resolving disputes, partner with us for a
-                        smooth experience. Our team of experienced professionals is ready to support you at
-                        every step.
+                        We're your trusted partner for insurance claims and dispute resolution! If you need expert guidance on insurance claims or resolving disputes, partner with us for a smooth experience. Our team of experienced professionals is ready to support you at every step.
                     </p>
                     <p>
                         If you're facing an insurance dispute, register your complaint with us now. Our skilled negotiators will work to find a fair solution for you.
@@ -34,27 +37,18 @@ const Home7Contact = () => {
                         Choose ICDRC for transparent, understanding, and effective insurance services. Click below to get started!
                     </p>
 
-                    <div className='mt-4 md:mt-8 flex justify-between gap-4 flex-col md:flex-row'
-                        data-aos="fade-up" data-aos-duration="1000" >
+                    <div className="mt-4 lg:mt-8 flex flex-col lg:flex-row justify-between gap-4" data-aos="fade-up" data-aos-duration="1000">
                         <Link href='/register' className="relative mx-auto h-16 w-64 flex justify-center items-center">
-                            <div className="h-16 w-64 bg-orange-500 items-center rounded-xl shadow-2xl cursor-pointer
-                                absolute overflow-hidden transform hover:scale-x-110
-                                hover:scale-y-105 hover:bg-blue-500 transition duration-300 ease-out">
-                            </div>
+                            <div className="h-16 w-64 bg-orange-500 rounded-xl shadow-2xl cursor-pointer absolute overflow-hidden transform hover:scale-x-110 hover:scale-y-105 hover:bg-blue-500 transition duration-300 ease-out"></div>
                             <div className="text-center text-white font-semibold z-10 pointer-events-none">Register Complaint</div>
                             <span className="absolute flex h-6 w-6 top-0 right-0 transform translate-x-2.5 -translate-y-2.5">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full
-                                    bg-blue-500 opacity-75"></span>
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
                                 <span className="absolute inline-flex rounded-full h-6 w-6 bg-blue-500"></span>
                             </span>
                         </Link>
 
-                        <Link href='/partner' className="animate-pulse mx-auto h-16 w-64 flex justify-center
-                            items-center">
-                            <div className="i h-16 w-64 bg-pink-600 items-center rounded-2xl shadow-2xl cursor-pointer
-                                absolute overflow-hidden transform hover:scale-x-110 hover:scale-y-105 transition
-                                duration-300 ease-out">
-                            </div>
+                        <Link href='/partner' className="animate-pulse mx-auto h-16 w-64 flex justify-center items-center">
+                            <div className="h-16 w-64 bg-pink-600 rounded-2xl shadow-2xl cursor-pointer absolute overflow-hidden transform hover:scale-x-110 hover:scale-y-105 transition duration-300 ease-out"></div>
                             <div className="text-center text-white font-semibold z-10 pointer-events-none">Partner With Us</div>
                         </Link>
                     </div>

@@ -116,7 +116,7 @@ const Contact = () => {
                                 data-aos-duration="2000"
                             >
                                 India’s most reliable and single
-                                <br /> window solution platform.
+                                <br /> window solution platform
                             </h2>
                             <Link
                                 href="/register"

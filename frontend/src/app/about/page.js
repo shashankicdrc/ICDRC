@@ -5,6 +5,7 @@ import Link from "next/link";
 import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
+import Image from 'next/image'
 
 const About = () => {
     useEffect(() => {
@@ -101,78 +102,62 @@ const About = () => {
                 One Stop Solution For Insurance Claim Disputes
             </p>
 
-            <p
-                className="font-medium text-md py-4  tracking-widest mx-auto px-8"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-            >
-                ICDRC stands as a dedicated entity, specializing in securing the
-                rightful financial compensation individuals are entitled to from their
-                insurance providers. Our adept team of professionals is committed to
-                collaborating closely with you, comprehending the nuances of your claim,
-                and fiercely advocating for your rights. We persistently pursue your
-                case until you receive the settlement you truly deserve.
-            </p>
+            <div className="grid gap-5 grid-cols-1 lg:grid-cols-7 mx-5 lg:mx-10 items-center">
 
-            <p
-                className="font-medium text-md py-2  tracking-widest mx-auto px-8"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-            >
-                Recognizing the often overwhelming nature of filing an insurance claim,
-                we have made it our primary objective to streamline the process for you.
-                Let us alleviate the burden by managing all paperwork and engaging in
-                direct communication with your insurance company, allowing you to
-                concentrate on restoring normalcy to your life. Our seasoned experts
-                possess an in-depth understanding of the insurance industry, ensuring
-                you receive the optimal outcome for your claim.
-            </p>
-
-            <p
-                className="font-medium text-md py-2  tracking-widest mx-auto px-8"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-            >
-                Our unwavering commitment extends to securing the maximum settlement
-                possible on your behalf. Leveraging our extensive expertise, we engage
-                in strategic negotiations and leave no stone unturned in fighting for
-                every penny you are entitled to. Your satisfaction with the resolution
-                of your claim remains our paramount priority.
-            </p>
-
-            <p
-                className="font-medium text-md py-2  tracking-widest mx-auto px-8"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-            >
-                One Stop Solution For Insurance Claim Disputes.
-            </p>
-            <p
-                className="font-medium text-md py-2  tracking-widest mx-auto px-8"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-            >
-                Trust ICDRC to expedite the settlement of your claim, ensuring a
-                prompt resolution to your financial compensation needs.
-            </p>
-            <p
-                className="font-medium text-md py-2  tracking-widest mx-auto px-8"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-            >
-                ICDRC can take the stress out of the claims process so you can focus
-                on your recovery or other important matters.
-            </p>
-
-            <p
-                className="font-medium text-md py-2  tracking-widest mx-auto px-8"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-            >
-                ICDRC is your partner in alleviating the stress associated with the
-                claims process, allowing you to focus on your recovery and other
-                critical matters.
-            </p>
+                <div className="lg:col-span-3 flex justify-center">
+                    <Image
+                        src="/images/aboutus.png"
+                        width={500}
+                        height={500}
+                        className="w-full lg:w-3/4"
+                        alt="commitment pic"
+                    />
+                </div>
+                <div className="px-4 py-3 lg:col-span-4 space-y-4 text-justify">
+                    <p
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                    >
+                        ICDRC stands as a dedicated entity, specializing in securing the rightful financial compensation individuals are entitled to from their insurance providers. Our adept team of professionals is committed to collaborating closely with you, comprehending the nuances of your claim, and fiercely advocating for your rights. We persistently pursue your case until you receive the settlement you truly deserve.
+                    </p>
+                    <p
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                    >
+                        Recognizing the often overwhelming nature of filing an insurance claim, we have made it our primary objective to streamline the process for you. Let us alleviate the burden by managing all paperwork and engaging in direct communication with your insurance company, allowing you to concentrate on restoring normalcy to your life. Our seasoned experts possess an in-depth understanding of the insurance industry, ensuring you receive the optimal outcome for your claim.
+                    </p>
+                    <p
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                    >
+                        Our unwavering commitment extends to securing the maximum settlement possible on your behalf. Leveraging our extensive expertise, we engage in strategic negotiations and leave no stone unturned in fighting for every penny you are entitled to. Your satisfaction with the resolution of your claim remains our paramount priority.
+                    </p>
+                    <p
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                    >
+                        One Stop Solution For Insurance Claim Disputes.
+                    </p>
+                    <p
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                    >
+                        Trust ICDRC to expedite the settlement of your claim, ensuring a prompt resolution to your financial compensation needs.
+                    </p>
+                    <p
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                    >
+                        ICDRC can take the stress out of the claims process so you can focus on your recovery or other important matters.
+                    </p>
+                    <p
+                        data-aos="fade-up"
+                        data-aos-duration="1000"
+                    >
+                        ICDRC is your partner in alleviating the stress associated with the claims process, allowing you to focus on your recovery and other critical matters.
+                    </p>
+                </div>
+            </div>
             <div className="h-1 border-t border-gray-200 my-5  w-full"></div>
             <Home7Contact />
             <Footer />

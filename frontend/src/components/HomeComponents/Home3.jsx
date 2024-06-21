@@ -25,6 +25,7 @@ const Home3 = () => {
             >
                 Are You Facing Any of These ?
             </h1>
+
             <div
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
@@ -50,21 +51,19 @@ const Home3 = () => {
                     <SwiperSlide className="bg-white rounded-xl px-4 py-6">
                         <div className="flex justify-around items-center">
                             <h1
-                                data-aos="zoom-in"
-                                data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 capitalize text-md font-semibold tracking-widest "
                             >
                                 Claim is denied/Repudiated
                             </h1>
                             <Image
-                                className="object-cover h-28 w-28"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784572/Home_page/Home3/1_tdky0g.svg"
-                                alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={110}
+                                height={100}
+                                src="/images/facing/Claim Denied.png"
+                                alt="claimDenied"
                             />
+
                         </div>
                     </SwiperSlide>
                     <SwiperSlide className="bg-white rounded-xl px-4 py-6">
@@ -72,18 +71,16 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 capitalize  text-md font-semibold tracking-widest "
                             >
                                 Short payment/less payment
                             </h1>
                             <Image
-                                className="object-cover h-28 w-28"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784571/Home_page/Home3/2_lqkcfb.svg"
+                                className="h-28 w-28"
+                                src="/images/facing/Short Payment.png"
                                 alt="Person"
-                                data-aos="zoom-in"
-                                data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120} // Add the width property
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>
@@ -92,18 +89,17 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 capitalize  text-md font-semibold tracking-widest "
                             >
                                 Claim is delayed/No progress
                             </h1>
                             <Image
-                                className="object-cover h-28 w-28"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785253/Home_page/Home3/3_sitvym.svg"
+                                src='/images/facing/Claim Delayed.png'
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120}
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>
@@ -112,18 +108,18 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 text-md font-semibold tracking-widest "
                             >
                                 No survey/Surveyor is nor appointed
                             </h1>
                             <Image
                                 className="object-cover h-28 w-28"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784571/Home_page/Home3/4_totxt9.svg"
+                                src="/images/facing/No surveyor.png"
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120} // Add the width property
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>
@@ -132,18 +128,18 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800  text-md font-semibold tracking-widest "
                             >
                                 Mis-selling of policy
                             </h1>
                             <Image
                                 className="object-cover h-28 w-28"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785253/Home_page/Home3/6_j8gvmt.svg"
+                                src="/images/facing/mis-selling.png"
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120} // Add the width property
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>
@@ -152,18 +148,18 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800  text-md font-semibold tracking-widest "
                             >
                                 Policy document not received
                             </h1>
                             <Image
                                 className="object-cover h-28 w-28"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784574/Home_page/Home3/7_ubcrj5.svg"
+                                src="/images/facing/Policy.png"
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120} // Add the width property
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>
@@ -172,18 +168,18 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 capitalize  text-md font-semibold tracking-widest "
                             >
                                 No Claim Bonus related issue
                             </h1>
                             <Image
                                 className="object-cover h-28 w-28"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785253/Home_page/Home3/8_gcgnqh.svg"
+                                src="/images/facing/Noclaim.png"
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120} // Add the width property
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>
@@ -215,13 +211,13 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800  text-md font-semibold tracking-widest "
                             >
-                                Claim is denied/Repudiated
+                                Claim is Denied/Reputed
                             </h1>
                             <Image
                                 className="object-cover h-20 w-20"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784572/Home_page/Home3/1_tdky0g.svg"
+                                src="/images/facing/ShortPayment.png"
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
@@ -235,13 +231,13 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800  text-md font-semibold tracking-widest "
                             >
                                 Short payment/less payment
                             </h1>
                             <Image
                                 className="object-cover h-20 w-20"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784571/Home_page/Home3/2_lqkcfb.svg"
+                                src="/images/facing/ShortPayment.png"
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
@@ -255,18 +251,18 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 text-md font-semibold tracking-widest "
                             >
                                 Claim is delayed/No progress
                             </h1>
                             <Image
                                 className="object-cover h-20 w-20"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785253/Home_page/Home3/3_sitvym.svg"
+                                src="/images/facing/ClaimDelayed.png"
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120} // Add the width property
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>
@@ -275,13 +271,13 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 capitalize text-md font-semibold tracking-widest"
                             >
                                 No survey/Surveyor is nor appointed
                             </h1>
                             <Image
                                 className="object-cover h-20 w-20"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784571/Home_page/Home3/4_totxt9.svg"
+                                src="/images/facing/Nosurveyor.png"
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
@@ -295,18 +291,18 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 capitalize text-md font-semibold tracking-widest "
                             >
-                                Mis-selling of policy
+                                Mis-Selling Of Policy
                             </h1>
                             <Image
                                 className="object-cover h-20 w-20"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785253/Home_page/Home3/6_j8gvmt.svg"
+                                src='/image/facing/mis-selling.png'
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120} // Add the width property
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>
@@ -315,18 +311,18 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 capitalize text-md font-semibold tracking-widest "
                             >
-                                Policy document not received
+                                Policy Document Not Received
                             </h1>
                             <Image
                                 className="object-cover h-20 w-20"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690784574/Home_page/Home3/7_ubcrj5.svg"
+                                src="/images/facing/Policy.png"
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120} // Add the width property
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>
@@ -335,18 +331,18 @@ const Home3 = () => {
                             <h1
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                className="text-gray-800 font-[Roboto] text-md font-semibold tracking-widest "
+                                className="text-gray-800 capitalize text-md font-semibold tracking-widest "
                             >
                                 No Claim Bonus related issue
                             </h1>
                             <Image
                                 className="object-cover h-20 w-20"
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785253/Home_page/Home3/8_gcgnqh.svg"
+                                src='/images/facing/Noclaim.png'
                                 alt="Person"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
-                                width={28} // Add the width property
-                                height={28}
+                                width={120} // Add the width property
+                                height={120}
                             />
                         </div>
                     </SwiperSlide>

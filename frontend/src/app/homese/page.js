@@ -21,7 +21,7 @@ const Home = () => {
     return (
         <div>
             <SocialIcons />
-            <Navbar />
+            <Navbar isWhiteBg={true} />
             <Home1 />
             <Home2 />
             <Home3 />
@@ -29,8 +29,6 @@ const Home = () => {
             <Home5 />
             <Testimonial />
             <Home7Contact />
-
-
             <Footer />
         </div>
     )
