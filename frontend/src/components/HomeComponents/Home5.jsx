@@ -14,7 +14,7 @@ const Home5 = () => {
                 <div className='m-14 gap-12 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1'>
 
                     <div className='border-2 bg-white border-gray-500 rounded-lg py-2 px-4'>
-                        <Image src="/images/expert.png" alt="" className='rounded-xl mb-2 md:mb-4 w-full' data-aos="fade-up" data-aos-duration="1000" width={400} height={400} />
+                        <Image src="/images/expert.webp" alt="" className='rounded-xl mb-2 md:mb-4 w-full' data-aos="fade-up" data-aos-duration="1000" width={400} height={400} />
                         <h1 className='text-gray-900 text-xl md:text-2xl font-[Roboto] font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent' data-aos="fade-up" data-aos-duration="1000">
                             Expert Insurance Guidance
                         </h1>
@@ -24,7 +24,7 @@ const Home5 = () => {
                     </div>
 
                     <div className='border-2 bg-white border-gray-500 rounded-lg py-2 px-4'>
-                        <Image src="/images/Seamless.png" alt="" className='rounded-xl mb-2 md:mb-4 w-full' data-aos="fade-up"
+                        <Image src="/images/Seamless.webp" alt="" className='rounded-xl mb-2 md:mb-4 w-full' data-aos="fade-up"
                             data-aos-duration="1000" width={400} height={400} />
                         <h1 className='text-gray-900 text-xl md:text-2xl font-[Roboto] font-bold  bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent' data-aos="fade-up" data-aos-duration="1000">
                             Seamless Claim Handling
@@ -36,7 +36,7 @@ const Home5 = () => {
 
                     <div className='border-2 bg-white border-gray-500 rounded-lg  py-2 px-4'>
                         <Image
-                            src="/images/client.png"
+                            src="/images/client.webp"
                             alt="image"
                             className='rounded-xl mb-2 md:mb-4 w-full'
                             data-aos="fade-up"
