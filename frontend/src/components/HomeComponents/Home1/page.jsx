@@ -37,10 +37,10 @@ const Home1 = () => {
                         </div>
                         <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end mb-8 md:mb-0">
                             <Image
-                                src="/images/hero/Hero1.png"
+                                src="/images/hero/2.webp"
                                 alt="Slide Image"
-                                width={400}
-                                height={350}
+                                width={2000}  // Use the original image width
+                                height={2000} // Use the original image height
                                 className="w-full h-full"
                                 style={{ maxHeight: '100%' }}
                             />
@@ -60,10 +60,10 @@ const Home1 = () => {
                         </div>
                         <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end mb-8 md:mb-0">
                             <Image
-                                src="/images/hero/Hero2.png"
+                                src="/images/hero/4.webp"
                                 alt="Slide Image"
-                                width={400}
-                                height={400}
+                                width={2000}
+                                height={2000}
                                 className="w-full h-full"
                                 style={{ maxHeight: '100%' }}
                             />
@@ -83,10 +83,10 @@ const Home1 = () => {
                         </div>
                         <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end mb-8 md:mb-0">
                             <Image
-                                src="/images/hero/Hero3.png"
+                                src="/images/hero/Hero 3.webp"
                                 alt="Slide Image"
-                                width={400}
-                                height={400}
+                                width={2000}
+                                height={2000}
                                 className="w-full h-full"
                                 style={{ maxHeight: '100%' }}
                             />

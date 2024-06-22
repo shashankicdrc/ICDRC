@@ -4,17 +4,17 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
+import "../../../styles/module.home3.css"
 
 const Testimonial = () => {
     return (
-        <div className="my-16 py-4 md:py-12 rounded-xl bg-white border-b">
+        <div className="my-16 py-4 md:py-12 rounded-xl home3-bg border-b">
             <div className="py-4" data-aos="fade-up" data-aos-duration="1000">
-                <h1 className="text-3xl md:text-6xl font-[Roboto] font-bold text-center px-8">
-                    Customer Testimonial
+                <h1 className="text-3xl uppercase md:text-6xl font-[Roboto] font-bold text-center px-8">
+                    Feedback from our valued customers
                 </h1>
                 <p className=" text-center font-medium text-md py-2  tracking-widest mx-auto px-8">
-                    At ICDRC, we're committed to safeguarding what matters most to you,
-                    providing reliable insurance solutions for a worry-free future.
+                    Let's hear what our valued customers have to say about their experiences with us.
                 </p>
             </div>
 

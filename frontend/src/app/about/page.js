@@ -15,27 +15,6 @@ const About = () => {
         <div>
             <SocialIcons />
             <HomeNav />
-
-
-            <>
-                {/* <Helmet>
-        <meta charSet="utf-8" />
-        <title>ICDRC: About</title>
-        <link rel="canonical" href="" />
-        <meta
-          name="description"
-          content="Insurance Claims and Dispute Resolution Center (ICDRC). ICDRC is a company that specializes in helping people get the money they deserve from their insurance companies."
-        />
-        <meta
-          name="keywords"
-          content="Insurance claim, About ICDRC, ICDRC, Insurance recovery, ICDRC official Claim advocates, Fast insurance settlements, InsuranceSamadhan Alternative"
-        />
-      </Helmet> */}
-            </>
-
-
-
-
             <div
                 className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"
                 style={{
@@ -94,26 +73,19 @@ const About = () => {
             >
                 About Us
             </h1>
-            <p
-                className="text-gray-500 text-center text-sm  mx-auto"
-                data-aos="fade-up"
-                data-aos-duration="1000"
-            >
-                One Stop Solution For Insurance Claim Disputes
-            </p>
 
-            <div className="grid gap-5 grid-cols-1 lg:grid-cols-7 mx-5 lg:mx-10 items-center">
+            <div className="grid gap-5 grid-cols-1 lg:grid-cols-7 mx-5 my-5 lg:mx-10 items-center">
 
                 <div className="lg:col-span-3 flex justify-center">
                     <Image
-                        src="/images/aboutus.png"
+                        src="/images/aboutus.webp"
                         width={500}
                         height={500}
                         className="w-full lg:w-3/4"
                         alt="commitment pic"
                     />
                 </div>
-                <div className="px-4 py-3 lg:col-span-4 space-y-4 text-justify">
+                <div className="px-4 lg:col-span-4 space-y-4 text-justify py-5">
                     <p
                         data-aos="fade-up"
                         data-aos-duration="1000"

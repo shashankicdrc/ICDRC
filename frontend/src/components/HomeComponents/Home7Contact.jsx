@@ -10,13 +10,12 @@ const Home7Contact = () => {
         <Fragment>
             <div className="text-center mb-4">
                 <h1 className="text-5xl capitalize font-bold">Reach out to us</h1>
-                <p className="text-gray-500 text-sm">One Stop Solution For Insurance Claim Disputes!</p>
             </div>
 
             <div className="grid gap-5 grid-cols-1 lg:grid-cols-7 mx-5 lg:mx-10 items-center">
                 <div className="lg:col-span-3 flex justify-center">
                     <Image
-                        src="/images/reachout.png"
+                        src="/images/reachout.webp"
                         width={500}
                         height={500}
                         className="w-full lg:w-3/4"

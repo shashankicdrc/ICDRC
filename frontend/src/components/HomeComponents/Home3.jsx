@@ -4,6 +4,8 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Pagination, Autoplay } from "swiper/modules";
 import Image from "next/image";
+import "../../styles/module.home3.css";
+
 
 const Home3 = () => {
     const swiperRefLocal = useRef()
@@ -34,8 +36,7 @@ const Home3 = () => {
 
 
     return (
-        <div className="bg-gradient-to-r from-orange-200 to-orange-400 px-4 md:px-8 py-6 my-4">
-            {/* Desktop View */}
+        <div className="home3-bg px-4 md:px-8 py-6 my-4">
             <h1
                 className="text-3xl md:text-6xl font-[Roboto] font-bold text-center px-8"
                 data-aos="fade-up"

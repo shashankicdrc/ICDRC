@@ -23,10 +23,10 @@ const Home = () => {
             <SocialIcons />
             <Navbar isWhiteBg={true} />
             <Home1 />
-            <Home2 />
             <Home3 />
-            <Home4 />
+            <Home2 />
             <Home5 />
+            <Home4 />
             <Testimonial />
             <Home7Contact />
             <Footer />

@@ -1,4 +1,4 @@
-"use client";
+"u/home/hayat/Downloads/Reach out to us, Our Process, About us/Complaint Resolution.webpse client";
 import "../../styles/module.home4.css";
 import Image from "next/image";
 
@@ -17,9 +17,7 @@ const Home4 = () => {
                 data-aos="fade-up"
                 data-aos-duration="1000"
             >
-                At ICDRC, we're committed to safeguarding what matters most to you,
-                providing reliable insurance solutions for a worry-free future.
-            </p>
+                At ICDRC, our process is designed to resolve your insurance disputes efficiently through expert arbitration, settlements, and litigation.            </p>
 
             <div className="container mx-auto overflow-hidden">
                 <div className="row">
@@ -29,7 +27,7 @@ const Home4 = () => {
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
-                                            src="/images/process/reach.png"
+                                            src="/images/process/reach.webp"
                                             alt="reach out"
                                             width={50}
                                             height={50}
@@ -55,7 +53,7 @@ const Home4 = () => {
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
-                                            src="/images/process/register.png"
+                                            src="/images/process/register.webp"
                                             width={70}
                                             height={70}
                                         />
@@ -80,7 +78,7 @@ const Home4 = () => {
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
-                                            src="/images/process/Verify.png"
+                                            src="/images/process/Verify.webp"
                                             //src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785537/Home_page/Home4/3_xiuwm5.svg"
                                             alt="image"
                                             width={70}
@@ -107,7 +105,7 @@ const Home4 = () => {
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
-                                            src="/images/process/Share.png"
+                                            src="/images/process/Share.webp"
                                             //src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785538/Home_page/Home4/4_m8wqfm.svg"
                                             alt=""
                                             width={70}
@@ -134,7 +132,7 @@ const Home4 = () => {
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
-                                            src="/images/process/payment.png"
+                                            src="/images/process/payment.webp"
                                             alt=""
                                             width={70}
                                             height={70}
@@ -160,7 +158,7 @@ const Home4 = () => {
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
-                                            src="/images/process/schedule.png"
+                                            src="/images/process/schedule.webp"
                                             alt=""
                                             width={50}
                                             height={50}
@@ -185,8 +183,8 @@ const Home4 = () => {
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
-                                            src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785539/Home_page/Home4/7_da1zns.svg"
-                                            alt=""
+                                            src="/images/process/resolution.webp"
+                                            alt="complaint resolution"
                                             width={50}
                                             height={50}
                                         />

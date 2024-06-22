@@ -16,9 +16,7 @@ const Home2 = () => {
                     data-aos="fade-up"
                     data-aos-duration="1000"
                 >
-                    At ICDRC, we're committed to safeguarding what matters most to you,
-                    providing reliable insurance solutions for a worry-free future.
-                </p>
+                    At ICDRC, we expertly handle a wide range of insurance disputes, ensuring you receive the support you need.                </p>
 
                 <div className="grid gap-10 my-10 md:my-16  mx-auto px-4  grid-cols-3 sm:grid-cols-4 lg:grid-cols-6">
                     <div
@@ -28,7 +26,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src="/images/insurance/Life Insurance.png"
+                            src="/images/insurance/Life Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -46,7 +44,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src="/images/insurance/Health Insurance.png"
+                            src="/images/insurance/Health Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -64,7 +62,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm"
-                            src="/images/insurance/Motor Insurance.png"
+                            src="/images/insurance/Motor Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -82,7 +80,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src="/images/insurance/Travel Insurance.png"
+                            src="/images/insurance/Travel Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -100,7 +98,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src="/images/insurance/Crop Insurance.png"
+                            src="/images/insurance/Crop Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -118,7 +116,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src="/images/insurance/Fire Insurance.png"
+                            src="/images/insurance/Fire Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -136,7 +134,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src="/images/insurance/Marine Insurance.png"
+                            src="/images/insurance/Marine Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -154,7 +152,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src="/images/insurance/Liability Insurance.png"
+                            src="/images/insurance/Liability Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -172,7 +170,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src='/images/insurance/Cyber Insurance.png'
+                            src='/images/insurance/Cyber Insurance.webp'
                             alt="Person"
                             width={80}
                             height={80}
@@ -190,7 +188,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src='/images/insurance/Personal Accident Insurance.png'
+                            src='/images/insurance/Personal Accident Insurance.webp'
                             alt="Person"
                             width={80}
                             height={80}
@@ -208,7 +206,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src="/images/insurance/Property Insurance.png"
+                            src="/images/insurance/Property Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -227,7 +225,7 @@ const Home2 = () => {
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
 
-                            src="/images/insurance/Event Insurance.png"
+                            src="/images/insurance/Event Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}
@@ -247,7 +245,7 @@ const Home2 = () => {
                     >
                         <Image
                             className="object-cover w-16 h-16 md:w-20 md:h-20 mb-2 rounded-sm "
-                            src="/images/insurance/Professional Indemnity Insurance.png"
+                            src="/images/insurance/Professional Indemnity Insurance.webp"
                             alt="Person"
                             width={80}
                             height={80}

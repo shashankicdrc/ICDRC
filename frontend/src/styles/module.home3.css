@@ -1,0 +1,11 @@
+.home3-bg {
+    background: hsla(37, 100%, 89%, 1);
+
+    background: linear-gradient(90deg, hsla(37, 100%, 89%, 1) 0%, hsla(34, 100%, 74%, 1) 100%);
+
+    background: -moz-linear-gradient(90deg, hsla(37, 100%, 89%, 1) 0%, hsla(34, 100%, 74%, 1) 100%);
+
+    background: -webkit-linear-gradient(90deg, hsla(37, 100%, 89%, 1) 0%, hsla(34, 100%, 74%, 1) 100%);
+
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr="#FFEAC9", endColorstr="#FFC578", GradientType=1);
+}

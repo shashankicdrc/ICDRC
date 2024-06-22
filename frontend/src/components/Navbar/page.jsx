@@ -40,20 +40,21 @@ const HomeNav = ({ isWhiteBg }) => {
                 justify-between
                 px-5 md:px-10">
                 <div className="hidden md:flex items-center space-x-3">
-                    <div className="flex items-center space-x-1">
-                        <HiOutlineMail fontSize={24} />
+                    <a href="mailto:info@icdrc.in" className="flex items-center space-x-1">
+                        <Image src='/images/9.webp' width={30} height={30} alt="mail" />
                         <span>info@icdrc.in</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                        <FaPhone fontSize={20} />
+                    </a>
+                    <a href="tel:+917070717167" className="flex items-center space-x-1">
+                        <Image src='/images/8.webp' width={30} height={30} alt="telephone" />
                         <span>+91-7070717167</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                        <Image src='/images/whatsapp.webp' width={25} height={25} />
+                    </a>
+                    <a href="https://wa.me/917070717167" className="flex items-center space-x-1">
+                        <Image src='/images/10.webp' width={30} height={30} alt="Whatsapp" />
                         <span>+91-7070717167</span>
-                    </div>
+                    </a>
                 </div>
-                <div className="z-40">                <ChatBot isheader={true} />
+                <div className="z-40">
+                    <ChatBot isheader={true} />
                 </div>
 
             </div>
@@ -85,7 +86,7 @@ const HomeNav = ({ isWhiteBg }) => {
                         <li>
                             <Link
                                 href="/"
-                                className={`${scrollable || isWhiteBg ? 'text-gray-900' : 'text-white'
+                                className={`${scrollable || isWhiteBg ? 'text-black' : 'text-white'
                                     } py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
                             >
                                 Home
@@ -94,7 +95,7 @@ const HomeNav = ({ isWhiteBg }) => {
                         <li>
                             <Link
                                 href="/about"
-                                className={`${scrollable || isWhiteBg ? 'text-gray-900' : 'text-white'
+                                className={`${scrollable || isWhiteBg ? 'text-black' : 'text-white'
                                     } py-7 px-3 capitalize inline-block font-semibold orange-link hover:text-orange-500`}
                             >
                                 About us
@@ -104,7 +105,7 @@ const HomeNav = ({ isWhiteBg }) => {
                         <li>
                             <Link
                                 href="/partner"
-                                className={`${scrollable || isWhiteBg ? 'text-gray-900' : 'text-white'
+                                className={`${scrollable || isWhiteBg ? 'text-black' : 'text-white'
                                     } capitalize py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
                             >
                                 Partner with us
@@ -113,7 +114,7 @@ const HomeNav = ({ isWhiteBg }) => {
                         <li>
                             <Link
                                 href="/contact"
-                                className={`${scrollable || isWhiteBg ? 'text-gray-900' : 'text-white'
+                                className={`${scrollable || isWhiteBg ? 'text-black' : 'text-white'
                                     } capitalize py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
                             >
                                 Contact us
@@ -126,7 +127,7 @@ const HomeNav = ({ isWhiteBg }) => {
                     <MobileSideModal isOpen={open} toggleModal={toggleMobileModal} />
                 </div>
             </nav>
-        </header>
+        </header >
     );
 };
 

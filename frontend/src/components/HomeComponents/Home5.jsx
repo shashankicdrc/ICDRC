@@ -1,16 +1,16 @@
 'use client';
 import Image from 'next/image';
+import "../../styles/module.home5.css"
 
 
 const Home5 = () => {
     return (
-        <div className='my-2 md:pt-4 mb-8 bg-orange-200'>
+        <div className='my-2 md:pt-4 mb-8 home5-bg'>
             <h1 className='text-3xl md:text-6xl font-[Roboto] font-bold text-center px-8' data-aos="fade-up" data-aos-duration="1000">Why ICDRC ?</h1>
-            <p className='text-gray-700 text-center font-medium text-md py-5  tracking-widest mx-auto px-8' data-aos="fade-up" data-aos-duration="1000">
-                At ICDRC, we're committed to safeguarding what matters most to you, providing reliable insurance solutions for a worry-free future.
-            </p>
+            <p className='text-gray-700 text-center font-medium text-md py-2 tracking-widest mx-auto px-8' data-aos="fade-up" data-aos-duration="1000">
+                At ICDRC, we offer unparalleled expertise and dedication to resolving your insurance disputes effectively and efficiently.            </p>
 
-            <div className='bg-orange-200 py-4 md:py-8'>
+            <div className='py-4 md:py-8'>
                 <div className='m-14 gap-12 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1'>
 
                     <div className='border-2 bg-white border-gray-500 rounded-lg py-2 px-4'>

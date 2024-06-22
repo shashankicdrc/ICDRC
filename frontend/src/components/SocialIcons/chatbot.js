@@ -5,6 +5,7 @@ import { PiFinnTheHuman } from "react-icons/pi";
 import { IoMdSend } from "react-icons/io";
 import "./module.Socialicon.css";
 import Link from "next/link";
+import Image from "next/image";
 
 const ChatBot = ({ isheader }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -225,9 +226,11 @@ const ChatBot = ({ isheader }) => {
                 className={`${!isheader ? 'hover:bg-orange-500' : null} flex items-center`}
             >
                 <span className={`${isheader ? 'mr-2' : null}`}>
-                    {isheader ? "Chat Assistant" : ''}
+                    {isheader ? "Chat with Assistant" : ''}
                 </span>
-                <PiFinnTheHuman className={`text-orange-500 border-orange-600 ${!isheader ? 'hover:bg-orange-500' : null} hover:text-white text-2xl`} />
+                {isheader ? <Image src="/images/12.webp" alt="chatbot" width={50} height={40} /> :
+                    <PiFinnTheHuman className={`text-orange-500 border-orange-600 ${!isheader ? 'hover:bg-orange-500' : null} hover:text-white text-2xl`} />
+                }
             </div>
         </div>
     );

@@ -14,8 +14,7 @@ const Home6 = () => {
         <div className='my-2 md:pt-4 mb-12 flex justify-around items-center flex-col'>
             <h1 className='text-gray-900 text-3xl md:text-6xl font-[Roboto] font-bold text-center bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent px-8' data-aos="fade-up" data-aos-duration="1000">TRUST WE GAINED</h1>
             <p className='text-gray-700 text-center font-medium text-md py-2  tracking-widest mx-auto px-8' data-aos="fade-up" data-aos-duration="1000">
-                At ICDRC, we're committed to safeguarding what matters most to you, providing reliable insurance solutions for a worry-free future.
-            </p>
+                At ICDRC, our process is designed to resolve your insurance disputes efficiently through expert arbitration, settlements, and litigation.            </p>
             <div className="mt-8 md:mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-20 place-items-center">
 
                 <div className="bg-orange-500 shadow-2xl p-4 md:p-6 rounded-2xl w-56 md:w-64">
