@@ -10,7 +10,7 @@ const Testimonial = () => {
     return (
         <div className="my-16 py-4 md:py-12 rounded-xl home3-bg border-b">
             <div className="py-4" data-aos="fade-up" data-aos-duration="1000">
-                <h1 className="text-3xl uppercase md:text-6xl font-[Roboto] font-bold text-center px-8">
+                <h1 className="text-3xl capitalize md:text-6xl font-[Roboto] font-bold text-center px-8">
                     Feedback from our valued customers
                 </h1>
                 <p className=" text-center font-medium text-md py-2  tracking-widest mx-auto px-8">
