@@ -40,7 +40,7 @@ const Home1 = () => {
                                 src="/images/hero/Hero1.png"
                                 alt="Slide Image"
                                 width={400}
-                                height={400}
+                                height={350}
                                 className="w-full h-full"
                                 style={{ maxHeight: '100%' }}
                             />

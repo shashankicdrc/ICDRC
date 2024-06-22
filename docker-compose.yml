@@ -1,16 +1,23 @@
-version: '3'
+version: '3.9'
 services:
-  frontend:
-    image: techwebdesys/icdrc-client:master
+  client:
+    container_name: nextapp
+    image: nextapp
+    build: ./frontend
     ports:
       - "3000:3000"
     depends_on:
       - backend
+    env_file:
+        - ./frontend/.env
 
   backend:
-    image: techwebdesys/icdrc-server:master
+    container_name: server_icdrc
+    build: ./backend
     ports:
       - "5000:5000"
-    environment:
-      - MONGO_URL=${MONGO_URL}
-      - JWT_SECRET=${JWT_SECRET}
+    env_file:
+        - ./backend/.env
+    volumes:
+      - ./backend/:/app
+
