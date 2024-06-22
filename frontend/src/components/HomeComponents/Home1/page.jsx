@@ -49,7 +49,7 @@ const Home1 = () => {
                 </SwiperSlide>
 
                 <SwiperSlide>
-                    <div className="relative overflow-hidden rounded-sm p-12 text-center flex flex-col md:flex-row items-center" style={{ minHeight: "720px" }}>
+                    <div className="relative overflow-hidden rounded-sm p-4  md:p-12 text-center flex flex-col md:flex-row items-center" style={{ minHeight: "720px" }}>
                         <div className="w-full md:w-1/2 order-2 md:order-1 flex justify-center md:justify-start mb-8 md:mb-0">
                             <div className="flex flex-col w-full px-2 text-left">
                                 <h2 className="mb-4 text-4xl md:text-5xl font-semibold" data-aos="fade-up" data-aos-duration="2000">
@@ -72,7 +72,7 @@ const Home1 = () => {
                 </SwiperSlide>
 
                 <SwiperSlide>
-                    <div className="relative overflow-hidden rounded-sm p-12 text-center flex flex-col md:flex-row items-center" style={{ minHeight: "720px" }}>
+                    <div className="relative overflow-hidden rounded-sm p-4 md:p-12 text-center flex flex-col md:flex-row items-center" style={{ minHeight: "720px" }}>
                         <div className="w-full md:w-1/2 order-2 md:order-1 flex justify-center md:justify-start mb-8 md:mb-0">
                             <div className="flex flex-col w-full px-2 text-left">
                                 <h2 className="mb-4 text-4xl md:text-5xl font-semibold" data-aos="fade-up" data-aos-duration="2000">
