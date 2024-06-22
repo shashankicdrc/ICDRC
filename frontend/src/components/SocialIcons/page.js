@@ -8,13 +8,13 @@ import { AiFillFacebook } from "react-icons/ai";
 import { BsInstagram } from "react-icons/bs";
 import { BsLinkedin } from "react-icons/bs";
 import { ImCross } from "react-icons/im";
-import { MdContactPhone } from "react-icons/md";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaWhatsapp } from "react-icons/fa";
 import { CiMail } from "react-icons/ci";
 import { useEffect } from "react";
 import { url } from "../../app/api";
 import axios from "axios";
+import Image from "next/image";
 
 const SocialIcons = () => {
     const [show, setShow] = useState(false);
@@ -52,13 +52,15 @@ const SocialIcons = () => {
     }, [name, email, mobile]);
 
     return (
-        <div className="main_icon z-50">
+        <div className="main_icon z-20">
             <div
                 onClick={() => setShowBot((prev) => !prev)}
-                className="main_icon rounded-full h-12 w-12 group border-2  cursor-pointer fixed bottom-36 md:bottom-36 right-4 text-orange-500 hover:text-orange-700 border-orange-400 flex justify-center items-center transition-all bg-white hover:bg-orange-400 300 ease-in-out"
+                className="main_icon rounded-full h-12 w-12 group 
+                border-2 border-orange-600 cursor-pointer fixed bottom-36
+                md:bottom-36 right-4  
+                flex justify-center items-center
+                transition-all px-2 bg-white 300 ease-in-out"
             >
-                {/* <TbMessageChatbot className=' text-xl font-semibold md:text-2xl' /> */}
-
                 <Chatbot />
             </div>
 
@@ -73,9 +75,12 @@ const SocialIcons = () => {
                         setShow2(true);
                         setShow(false);
                     }}
-                    className="main_icon rounded-full h-12 w-12 bg-white cursor-pointer fixed bottom-20 md:bottom-20 right-4  flex justify-center items-center border-2 border-orange-600 hover:bg-orange-600 transition-all 300 ease-in-out text-orange-600 hover:text-white"
+                    className="main_icon rounded-full h-12 w-12 bg-white cursor-pointer fixed 
+                    bottom-20 md:bottom-20 right-4 flex justify-center items-center 
+                   border-2 border-orange-600 transition-all 300 
+                    ease-in-out"
                 >
-                    <MdContactPhone className=" text-xl font-semibold md:text-2xl" />
+                    <Image src="/images/8.webp" width={30} height={30} />
                 </div>
             )}
             {show2 && (
@@ -151,9 +156,12 @@ const SocialIcons = () => {
                         setShow(true);
                         setShow2(false);
                     }}
-                    className="main_icon rounded-full h-12 w-12 bg-orange-600 cursor-pointer fixed bottom-4 right-4 flex justify-center items-center text-white border-2 border-orange-600  hover:border-orange-600 hover:bg-white hover:text-orange-600"
+                    className="main_icon rounded-full h-12 w-12 cursor-pointer
+                    fixed bottom-4 right-4 flex justify-center items-center 
+                     border-2 border-orange-600 hover:bg-white 
+                    "
                 >
-                    <IoShareSocialSharp className="text-xl md:text-2xl" />
+                    <Image src="/images/14.webp" width={30} height={30} />
                 </div>
             )}
 

@@ -223,13 +223,13 @@ const ChatBot = ({ isheader }) => {
             <div
                 style={{ cursor: "pointer" }}
                 onClick={handleToggleChat}
-                className={`${!isheader ? 'hover:bg-orange-500' : null} flex items-center`}
+                className={`flex items-center`}
             >
-                <span className={`${isheader ? 'mr-2' : null}`}>
+                <span className={`${isheader ? 'mr-2' : null} hidden md:block`}>
                     {isheader ? "Chat with Assistant" : ''}
                 </span>
-                {isheader ? <Image src="/images/12.webp" alt="chatbot" width={50} height={40} /> :
-                    <PiFinnTheHuman className={`text-orange-500 border-orange-600 ${!isheader ? 'hover:bg-orange-500' : null} hover:text-white text-2xl`} />
+                {isheader ? <Image src="/images/11.webp" alt="chatbot" width={50} height={40} /> :
+                    <Image src="/images/12.webp" alt="chatbot" width={50} height={40} />
                 }
             </div>
         </div>

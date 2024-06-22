@@ -17,7 +17,7 @@ const Home4 = () => {
                 data-aos="fade-up"
                 data-aos-duration="1000"
             >
-                At ICDRC, our process is designed to resolve your insurance disputes efficiently through expert arbitration, settlements, and litigation.            </p>
+                At ICDRC, our process is designed to resolve your insurance disputes efficiently through expert arbitration, settlements, and litigation            </p>
 
             <div className="container mx-auto overflow-hidden">
                 <div className="row">

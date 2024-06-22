@@ -16,7 +16,7 @@ const Home2 = () => {
                     data-aos="fade-up"
                     data-aos-duration="1000"
                 >
-                    At ICDRC, we expertly handle a wide range of insurance disputes, ensuring you receive the support you need.                </p>
+                    At ICDRC, we expertly handle a wide range of insurance disputes, ensuring you receive the support you need                </p>
 
                 <div className="grid gap-10 my-10 md:my-16  mx-auto px-4  grid-cols-3 sm:grid-cols-4 lg:grid-cols-6">
                     <div

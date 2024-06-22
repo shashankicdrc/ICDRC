@@ -6,8 +6,6 @@ import HomeNavLinks from "./HomeNavLinks";
 import { IoMdMenu } from "react-icons/io";
 import dynamic from "next/dynamic";
 import RightMenu from "./RightMenu";
-import { HiOutlineMail } from "react-icons/hi";
-import { FaPhone, FaWhatsapp } from "react-icons/fa6";
 import Image from 'next/image'
 import ChatBot from "../SocialIcons/chatbot";
 
@@ -39,18 +37,18 @@ const HomeNav = ({ isWhiteBg }) => {
                 text-white md:flex items-center text-sm 
                 justify-between
                 px-5 md:px-10">
-                <div className="hidden md:flex items-center space-x-3">
+                <div className="flex items-center space-x-3">
                     <a href="mailto:info@icdrc.in" className="flex items-center space-x-1">
                         <Image src='/images/9.webp' width={30} height={30} alt="mail" />
-                        <span>info@icdrc.in</span>
+                        <span className="hidden md:block">info@icdrc.in</span>
                     </a>
                     <a href="tel:+917070717167" className="flex items-center space-x-1">
                         <Image src='/images/8.webp' width={30} height={30} alt="telephone" />
-                        <span>+91-7070717167</span>
+                        <span className="hidden md:block">+91-7070717167</span>
                     </a>
                     <a href="https://wa.me/917070717167" className="flex items-center space-x-1">
                         <Image src='/images/10.webp' width={30} height={30} alt="Whatsapp" />
-                        <span>+91-7070717167</span>
+                        <span className="hidden md:block">+91-7070717167</span>
                     </a>
                 </div>
                 <div className="z-40">
