@@ -1,9 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { IoShareSocialSharp } from "react-icons/io5";
-
 import Chatbot from "./chatbot";
-
 import { AiFillFacebook } from "react-icons/ai";
 import { BsInstagram } from "react-icons/bs";
 import { BsLinkedin } from "react-icons/bs";
@@ -57,9 +54,10 @@ const SocialIcons = () => {
                 onClick={() => setShowBot((prev) => !prev)}
                 className="main_icon rounded-full h-12 w-12 group 
                 border-2 border-orange-600 cursor-pointer fixed bottom-36
-                md:bottom-36 right-4  
+                md:bottom-36 right-4 bg-white hover:bg-orange-600 
                 flex justify-center items-center
-                transition-all px-2 bg-white 300 ease-in-out"
+               ransform transition-transform duration-300 ease-in-out
+               shadow-lg hover:shadow-xl"
             >
                 <Chatbot />
             </div>
@@ -75,12 +73,13 @@ const SocialIcons = () => {
                         setShow2(true);
                         setShow(false);
                     }}
-                    className="main_icon rounded-full h-12 w-12 bg-white cursor-pointer fixed 
+                    className="main_icon rounded-full h-12 w-12 cursor-pointer fixed 
                     bottom-20 md:bottom-20 right-4 flex justify-center items-center 
-                   border-2 border-orange-600 transition-all 300 
-                    ease-in-out"
+             border-2 border-orange-600 hover:bg-orange-600 bg-white
+               transform transition-transform duration-300 ease-in-out hover:scale-110
+               shadow-lg hover:shadow-xl"
                 >
-                    <Image src="/images/8.webp" width={30} height={30} />
+                    <Image src="/images/23.webp" width={30} height={30} />
                 </div>
             )}
             {show2 && (
@@ -156,12 +155,13 @@ const SocialIcons = () => {
                         setShow(true);
                         setShow2(false);
                     }}
-                    className="main_icon rounded-full h-12 w-12 cursor-pointer
-                    fixed bottom-4 right-4 flex justify-center items-center 
-                     border-2 border-orange-600 hover:bg-white 
-                    "
+                    className="main_icon rounded-full h-12 w-12 cursor-pointer fixed bottom-4
+                    right-4 flex justify-center items-center
+               border-2 border-orange-600 hover:bg-orange-600 bg-white
+               transform transition-transform duration-300 ease-in-out hover:scale-110
+               shadow-lg hover:shadow-xl"
                 >
-                    <Image src="/images/14.webp" width={30} height={30} />
+                    <Image src="/images/21.webp" width={40} height={40} className="rounded-full" />
                 </div>
             )}
 

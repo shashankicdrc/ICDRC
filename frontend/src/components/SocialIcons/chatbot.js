@@ -229,7 +229,7 @@ const ChatBot = ({ isheader }) => {
                     {isheader ? "Chat with Assistant" : ''}
                 </span>
                 {isheader ? <Image src="/images/11.webp" alt="chatbot" width={50} height={40} /> :
-                    <Image src="/images/12.webp" alt="chatbot" width={50} height={40} />
+                    <Image src="/images/19.webp" alt="chatbot" width={50} height={40} />
                 }
             </div>
         </div>
