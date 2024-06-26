@@ -6,6 +6,7 @@ import Home7Contact from "./../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
 import Image from 'next/image'
+import TeamExperts from "../../components/about/TeamExperts";
 
 const About = () => {
     useEffect(() => {
@@ -67,7 +68,7 @@ const About = () => {
             </div>
 
             <h1
-                className="text-gray-900 text-3xl mt-6 md:mt-8 md:text-6xl font-[Roboto] font-bold text-center  px-8"
+                className="text-gray-900 text-3xl mt-6 md:mt-8 md:text-6xl  font-bold text-center  px-8"
                 data-aos="fade-up"
                 data-aos-duration="1000"
             >
@@ -130,7 +131,9 @@ const About = () => {
                     </p>
                 </div>
             </div>
-            <div className="h-1 border-t border-gray-200 my-5  w-full"></div>
+            <div className="h-1 border-t  my-5  w-full"></div>
+            <TeamExperts />
+            <div className="h-1 border-t  my-5  w-full"></div>
             <Home7Contact />
             <Footer />
         </div>

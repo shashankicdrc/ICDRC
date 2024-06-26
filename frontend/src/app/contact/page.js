@@ -277,16 +277,6 @@ const Contact = () => {
                                                 +91-7070717167
                                             </a>
                                         </p>
-                                        <p className="text-gray-700">
-                                            You can move to{" "}
-                                            <a
-                                                href="/"
-                                                className="text-orange-500 border-b border-transparent font-semibold hover:border-orange-500 inline-block"
-                                            >
-                                                FAQs
-                                            </a>{" "}
-                                            page to get more information about our site.
-                                        </p>
                                     </div>
                                 </div>
                             </div>
