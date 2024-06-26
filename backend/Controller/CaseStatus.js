@@ -276,13 +276,15 @@ const CheckCaseStatus = asyncError(async (req, res) => {
     }
 });
 
+
 const UploadAttachments = asyncError(async (req, res) => {
-    const validFields = ["attachment_name", "type", "id"];
+    const validFields = ["attachment_name", "type", "id", "attachment_type"];
     const receivedFields = [];
     const fieldData = new Map();
     const emitter = new EventEmitter();
     const bb = busboy({ headers: req.headers });
     const typeField = ["individual", "organisational"];
+    let hasError = false; // Flag to indicate an error
 
     const checkMissingFields = () => {
         const missingFields = validFields.filter(
@@ -301,8 +303,10 @@ const UploadAttachments = asyncError(async (req, res) => {
             await fn();
         } catch (e) {
             req.unpipe(bb);
+            hasError = true; // Set error flag
         }
     }
+
     let filesCount = 0;
     const uploadedData = [];
 
@@ -329,20 +333,23 @@ const UploadAttachments = asyncError(async (req, res) => {
     });
 
     bb.on("field", (fieldname, value) => {
+        console.log(fieldname, value)
+        if (hasError) return; // Skip processing if an error occurred
         receivedFields.push(fieldname);
         handleError(async () => {
             switch (fieldname) {
                 case "attachment_name":
                     if (value.length < 4) {
+                        hasError = true; // Set error flag
                         return res.status(400).json({
-                            error: "Attachment name should be at least 4 character.",
+                            error: "Attachment name should be at least 4 characters.",
                         });
                     }
-
                     fieldData.set(fieldname, value);
                     break;
                 case "id":
                     if (!isValidObjectId(value)) {
+                        hasError = true; // Set error flag
                         return res
                             .status(400)
                             .json({ error: "Invalid id has been provided" });
@@ -351,9 +358,19 @@ const UploadAttachments = asyncError(async (req, res) => {
                     break;
                 case "type":
                     if (!typeField.includes(value)) {
+                        hasError = true; // Set error flag
                         return res
                             .status(400)
                             .json({ error: "Invalid type has been provided" });
+                    }
+                    fieldData.set(fieldname, value);
+                    break;
+                case 'attachment_type':
+                    if (!["icdrc", "user"].includes(value)) {
+                        hasError = true; // Set error flag
+                        return res
+                            .status(400)
+                            .json({ error: "Invalid attachment_type value has been provided" });
                     }
                     fieldData.set(fieldname, value);
                     break;
@@ -362,9 +379,11 @@ const UploadAttachments = asyncError(async (req, res) => {
     });
 
     bb.on("file", (filename, file, info) => {
+        if (hasError) return; // Skip processing if an error occurred
         handleError(async () => {
             const checkField = checkMissingFields();
             if (checkField.missing) {
+                hasError = true; // Set error flag
                 return res.status(400).json({ error: checkField.message });
             }
             if (!checkField.missing) {
@@ -378,6 +397,7 @@ const UploadAttachments = asyncError(async (req, res) => {
 
     emitter.on("updateDatabase", async () => {
         const attachment_name = fieldData.get("attachment_name");
+        const attachment_type = fieldData.get("attachment_type");
         const type = fieldData.get("type");
         const id = fieldData.get("id");
 
@@ -385,6 +405,7 @@ const UploadAttachments = asyncError(async (req, res) => {
             type,
             attachment_name,
             media: uploadedData,
+            attachment_type
         });
 
         if (type === "individual") {

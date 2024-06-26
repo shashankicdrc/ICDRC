@@ -9,13 +9,26 @@ import { useRouter } from 'next/navigation';
 import { CreateSortQuery } from '../../../../lib/createQuery';
 
 const Sorting = () => {
-    const [userSorts, setUserSorts] = useState([])
+    const [userSorts, setUserSorts] = useState([{
+        column: "createdAt",
+        value: "desc"
+    }])
+
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter()
 
     useEffect(() => {
         const sorts = searchParams.getAll('sort');
+
+        if (!sorts.length) {
+            const params = new URLSearchParams(searchParams.toString());
+            const initialSortString = `desc(createdAt)`;
+            params.append('sort', initialSortString);
+            replace(`${pathname}?${params.toString()}`);
+            return
+        };
+
         const uniqueSorts = new Set();
         sorts.forEach(sort => {
             uniqueSorts.add(sort);
@@ -70,6 +83,7 @@ const Sorting = () => {
         params.delete('sort');
         replace(`${pathname}?${params.toString()}`);
     }
+
 
     return (
         <Popover.Root>

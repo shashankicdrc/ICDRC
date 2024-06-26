@@ -2,11 +2,12 @@ import React from "react";
 import CaseTable from "../../components/CaseStatus/CasedetailsTable";
 import AttachmentTable from "../../components/CaseStatus/attachment/AttachmentTable";
 import UploadAttachment from "../../components/CaseStatus/attachment/UploadDrawer";
+import CaseCommentSection from "../../components/CaseStatus/CaseCommentSection";
 
 export default function page() {
     return (
         <main className="mx-5 md:mx-10 my-32">
-            <h1 className="text-5xl">Your Case Status Details.</h1>
+            <h1 className="text-4xl">Your Case Status Details.</h1>
             <section className="my-5 shadow-lg rounded-lg border-t">
                 <CaseTable />
             </section>
@@ -20,6 +21,10 @@ export default function page() {
                 </span>
                 <div className="shadow-lg my-5 rounded-lg border-t">
                     <AttachmentTable />
+                </div>
+                <div className="my-5">
+                    <h3 className="my-5 text-4xl">Comments</h3>
+                    <CaseCommentSection />
                 </div>
             </section>
         </main>

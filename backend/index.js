@@ -18,7 +18,7 @@ const registerUser = require("./routes/auth/registerUser");
 const loginUser = require("./routes/auth/loginUser");
 const { Individualrouter } = require("./routes/complaints/IndividualComplaint");
 const {
-  Organizationalrouter,
+    Organizationalrouter,
 } = require("./routes/complaints/OrganizationalComplaint");
 const caseStatusRouter = require("./routes/caseStatus");
 const Payment = require("./routes/payment/payment");
@@ -26,6 +26,7 @@ const { Documentrouter } = require("./routes/document/document");
 const ResetPaswword = require("./routes/resetpassword/reset");
 const CloudinaryConfiguration = require("./utils/CloudinaryConfiguration");
 const adminRouter = require("./routes/admins/routes");
+const { commnetRouter } = require("./routes/comments/routes");
 
 //  Initializing app
 const app = express();
@@ -38,7 +39,7 @@ app.use(bodyParser.json());
 
 // Default Get Request
 app.get("/", async (req, res) => {
-  res.send("ICDRC - Webdesys");
+    res.send("ICDRC - Webdesys");
 });
 
 // Main Routes
@@ -78,12 +79,13 @@ app.use("/api", ResetPaswword);
 app.use("/api", caseStatusRouter.router);
 
 app.use("/api/admins", adminRouter);
+app.use("/api", commnetRouter);
 
 // const MONGO_URL = process.env.MONGO_URL;
 // APP LISTENING AND DB
 const PORT = process.env.PORT || 5000;
 connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log("Server running on port:", PORT);
-  });
+    app.listen(PORT, () => {
+        console.log("Server running on port:", PORT);
+    });
 });
