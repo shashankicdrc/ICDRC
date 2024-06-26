@@ -1,149 +1,104 @@
 "use client";
-
 import { useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useState } from "react";
 import { url } from "../../../api";
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-} from "@chakra-ui/react";
-import PageLoader from "../../components/pageloader/page";
-import Menu from "../../components/CaseStatus/Menu";
+import DataTable from './DataTable'
+import { OrganistionColumn } from './coloumn'
+import { useRouter, useSearchParams } from "next/navigation";
+import RowPerPageDropDown from './RowPerPageDropDown'
+import PaginationContorll from './PaginationControll'
+import { CreateFilterQuery } from './../../../../lib/createQuery'
+import { current } from "@reduxjs/toolkit";
+
 
 const ContactMessages = () => {
-  const [error, setError] = useState("");
-  const router = useRouter();
-  const admin = useSelector((state) => state.admin);
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const admin = useSelector((state) => state.admin);
+    const [result, setResult] = useState({ data: [], totalResults: 0 });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
+    const searchParams = useSearchParams();
 
-  useEffect(() => {
-    if (!admin._id) {
-      router.push("/admin/login");
-    }
-  }, [router, admin]);
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(`${url}/api/organizationalcomplaint/all`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
+    useEffect(() => {
+        if (!admin._id) {
+            router.push("/admin/login");
         }
-        const jsonData = await response.json();
-        console.log("API Response:", jsonData); // Log API response
-        // Check if the data is not an array
-        if (!Array.isArray(jsonData)) {
-          // If it's not an array, convert it to an array with a single item
-          setData([jsonData]);
-        } else {
-          setData(jsonData);
-        }
-      } catch (error) {
-        console.error(error);
-        setError("Failed to fetch data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
 
-    fetchData();
-  }, [admin.token]);
+        const current_page = searchParams.get('currentPage');
+        const rows_per_page = searchParams.get('perPage');
+        if (current_page) setCurrentPage(Number(current_page));
+        if (rows_per_page) setRowsPerPage(Number(rows_per_page));
+    }, [admin._id, searchParams, router]);
 
-  const formatCreatedAtDate = (createdAt) => {
-    const createdAtDate = new Date(createdAt);
-    return createdAtDate.toLocaleDateString();
-  };
+    useEffect(() => {
+        const fetchData = async () => {
+            const filters = searchParams.getAll('filter');
+            const uniqueFilters = Array.from(new Set(filters)).map(filter => {
+                const [column, operator, value] = filter.split(':');
+                return { column, operator, value };
+            });
+            const sorts = searchParams.get('sort')
 
-  return (
-    <div className="bg-gradient-to-r from-orange-300 to-red-300 min-h-screen">
-      {loading && <PageLoader />}
+            const filterString = CreateFilterQuery(uniqueFilters);
+            const Url = `${url}/api/organizationalcomplaint/all?currentPage=${currentPage}
+                        &rowsPerPage=${rowsPerPage}&filter=${filterString}&sort_by=${sorts || ''}`;
 
-      <div
-        className="border-2 bg-white border-gray-400 my-4 mx-4  md:px-3 py-2 md:py-4 rounded-md"
-        data-aos="zoom-in"
-        data-aos-duration="2000"
-      >
-        <div className="flex justify-between items-center">
-          <p className="text-md font-[Poppins] text-gray-700 md:text-xl font-medium pl-4 lg:pl-8">
-            Total: {data?.length}
-          </p>
+            try {
+                const response = await fetch(Url);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch data");
+                }
+                const { error, data, totalResults } = await response.json();
+                if (error) {
+                    toast.error(error);
+                    return;
+                }
+                setResult({ data, totalResults });
+            } catch (error) {
+                setError("Failed to fetch data. Please try again later.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [admin._id, currentPage, rowsPerPage, searchParams]);
+
+
+    return (
+        <div
+            className="border-2 bg-white border-gray-400 my-4 mx-4 md:px-3 py-2 md:py-4 rounded-md"
+            data-aos="zoom-in"
+            data-aos-duration="2000"
+        >
+            <DataTable
+                columns={OrganistionColumn}
+                data={result.data}
+                loading={loading}
+                tableType={"organisational"}
+            />
+            <div className="mx-5 my-5 space-y-3 md:space-y-0 md:flex md:items-center md:justify-between">
+                <div className="flex space-x-2 items-center">
+                    <p className="font-bold text-sm">Rows per page</p>
+                    <RowPerPageDropDown
+                        rowsPerPage={rowsPerPage}
+                        setRowsPerPage={setRowsPerPage}
+                    />
+                </div>
+                {result.totalResults > rowsPerPage && <div>
+                    <PaginationContorll
+                        totalResults={result.totalResults}
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                    />
+                </div>
+                }
+            </div>
         </div>
-        <div className="mt-4 md:mt-6 lg:mt-8">
-          <TableContainer>
-            <Table variant="striped" colorScheme="orange">
-              <Thead>
-                <Tr>
-                  <Th>S.No</Th>
-                  <Th>Date</Th>
-                  <Th>Name</Th>
-                  <Th>Status</Th>
-                  <Th>Email</Th>
-                  <Th>Payment</Th>
-                  <Th>Mobile</Th>
-                  <Th>Country</Th>
-                  <Th>State</Th>
-                  <Th>Address</Th>
-                  <Th>Language</Th>
-                  <Th>Policy Company</Th>
-                  <Th>Policy Type</Th>
-                  <Th>Problem</Th>
-                  <Th>Details</Th>
-                  <Th>Menu</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {data?.length > 0 ? (
-                  data?.map((item, index) => {
-                    return (
-                      <Tr className="cursor-pointer">
-                        <Td>{index + 1}</Td>
-                        <Td>{formatCreatedAtDate(item.createdAt)}</Td>
-                        <Td>{item.organization_name}</Td>
-                        <Td className="capitalize">{item.status}</Td>
-                        <Td>{item.email}</Td>
-                        <Td className="capitalize">
-                          {item.isPay ? "Done" : "Pending"}
-                        </Td>
-                        <Td>{item.mobile}</Td>
-                        <Td>{item.country}</Td>
-                        <Td className="capitalize">{item.state}</Td>
-                        <Td>{item.address}</Td>
-                        <Td>{item.language}</Td>
-                        <Td>{item.policyCompany}</Td>
-                        <Td>{item.policyType}</Td>
-                        <Td>{item.problem}</Td>
-                        <Td>{item.problemDetails}</Td>
-                        <Td>
-                          <Menu caseType={"organisational"} caseId={item._id} />
-                        </Td>
-                      </Tr>
-                    );
-                  })
-                ) : (
-                  <Tr>
-                    <Th>No Data found</Th>
-                  </Tr>
-                )}
-              </Tbody>
-            </Table>
-          </TableContainer>
-        </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ContactMessages;

@@ -9,6 +9,7 @@ import {
     PaginationPrevious,
 } from '../../../../components/ui/pagination';
 import { usePathname, useSearchParams, useRouter } from 'next/navigation';
+import { DOTS, usePagination } from '../../../../hook/usePagination'
 
 
 export default function PaginationControl({ totalResults }) {
@@ -17,6 +18,19 @@ export default function PaginationControl({ totalResults }) {
     const [rowPerPage, setRowPerPage] = useState(20);
     const pathname = usePathname();
     const { replace } = useRouter();
+    const pageCount = Math.ceil(totalResults / rowPerPage);
+
+
+    const paginationRange = usePagination({
+        currentPage,
+        totalPageCount: pageCount,
+    })
+
+
+    if (currentPage === 0 || paginationRange.length < 2) {
+        return null;
+    }
+
 
     useEffect(() => {
         const perPage = searchParams.get('perPage');
@@ -25,7 +39,6 @@ export default function PaginationControl({ totalResults }) {
         if (current_page) setCurrentPage(Number(current_page));
     }, [searchParams]);
 
-    const pageCount = Math.ceil(totalResults / rowPerPage);
     const numberOfPages = Array.from({ length: pageCount }, (_, i) => i + 1);
 
     const updatePage = (page) => {
@@ -44,16 +57,23 @@ export default function PaginationControl({ totalResults }) {
                         isDisabled={currentPage === 1}
                     />
                 </PaginationItem>
-                {numberOfPages.map((page) => (
-                    <PaginationItem key={page}>
-                        <PaginationLink
-                            onClick={() => updatePage(page)}
-                            isActive={page === currentPage}
-                        >
-                            {page}
-                        </PaginationLink>
-                    </PaginationItem>
-                ))}
+                {paginationRange.map((page) => {
+                    if (page === DOTS) {
+                        return <PaginationEllipsis />
+                    }
+                    return (
+                        <PaginationItem key={page}>
+                            <PaginationLink
+                                onClick={() => updatePage(page)}
+                                isActive={page === currentPage}
+                            >
+                                {page}
+                            </PaginationLink>
+                        </PaginationItem>
+
+                    )
+                }
+                )}
                 <PaginationItem>
                     <PaginationNext
                         onClick={() => updatePage(currentPage + 1)}

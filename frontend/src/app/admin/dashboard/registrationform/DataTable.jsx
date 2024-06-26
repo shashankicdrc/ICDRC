@@ -1,17 +1,19 @@
 import {
     useReactTable,
     getCoreRowModel,
-    getSortedRowModel,
-    getFilteredRowModel,
 } from '@tanstack/react-table';
 import { MdCheck } from "react-icons/md";
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Table, TableContainer, Thead, Tbody, Tr, Th, Td, Box, Button } from '@chakra-ui/react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown, } from "react-icons/io";
 import Filter from './Filter'
+import Sorting from './Sorting'
+import columnFilters, { OrganisationalcolumnFilters } from './ColumnFilter';
 
-export default function DataTable({ columns, data }) {
+export default function DataTable({ columns, data, loading, tableType }) {
+    const filters = tableType === 'individual' ? columnFilters : OrganisationalcolumnFilters;
+
     const [columnVisibility, setColumnVisibility] = useState({
         policyType: false,
         address: false,
@@ -31,12 +33,21 @@ export default function DataTable({ columns, data }) {
         onColumnVisibilityChange: setColumnVisibility,
     });
 
+    useEffect(() => {
+        const isPayTrue = data.some(row => row.isPay);
+        setColumnVisibility(prevVisibility => ({
+            ...prevVisibility,
+            transactionId: isPayTrue,
+        }));
+    }, [data]);
+
     return (
         <Fragment>
-            <div className="flex items-center justify-between mb-3 mx-5">
-                <div>
+            <div className="mb-3 flex items-center mx-5">
+                <div className="flex items-center space-x-5">
+                    <Filter columnFilters={filters} tableType={tableType} />
+                    <Sorting />
                 </div>
-
                 <DropdownMenu.Root>
                     <DropdownMenu.Trigger asChild>
                         <button
@@ -67,10 +78,9 @@ export default function DataTable({ columns, data }) {
                                         <DropdownMenu.ItemIndicator className="absolute left-0 w-[35px] inline-flex items-center justify-center">
                                             <MdCheck />
                                         </DropdownMenu.ItemIndicator>
-                                        {column.id}
+                                        {column.columnDef.header}
                                     </DropdownMenu.CheckboxItem>
-                                ))}
-                        </DropdownMenu.Content>
+                                ))}                        </DropdownMenu.Content>
                     </DropdownMenu.Portal>
                 </DropdownMenu.Root>
             </div>
@@ -99,22 +109,37 @@ export default function DataTable({ columns, data }) {
                         ))}
                     </Thead>
                     <Tbody>
-                        {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row, rowIndex) => (
-                                <Tr key={row.id} bg={rowIndex % 2 === 0 ? 'gray.50' : 'white'} _hover={{ bg: 'gray.100' }}>
-                                    {row.getVisibleCells().map((cell) => (
-                                        <Td key={cell.id} py={4} px={6} border="1px" borderColor="gray.200">
-                                            {cell.column.columnDef.cell(cell.getContext())}
-                                        </Td>
-                                    ))}
-                                </Tr>
+                        {loading ? (
+                            Array.from({ length: 5 }).map((_, index) => (
+                                <Tr key={index}>
+                                    {table
+                                        .getAllColumns()
+                                        .map((column) => (
+                                            column.getIsVisible() && (
+                                                <Td key={column.id} py={4} px={6} border="1px" borderColor="gray.200">
+                                                    <div className="animate-pulse bg-gray-200 rounded h-5 w-full"></div>
+                                                </Td>
+                                            )
+                                        ))}                                </Tr>
                             ))
                         ) : (
-                            <Tr>
-                                <Td colSpan={columns.length} py={4} px={6} textAlign="center">
-                                    No results.
-                                </Td>
-                            </Tr>
+                            table.getRowModel().rows?.length ? (
+                                table.getRowModel().rows.map((row, rowIndex) => (
+                                    <Tr key={row.id} bg={rowIndex % 2 === 0 ? 'gray.50' : 'white'} _hover={{ bg: 'gray.100' }}>
+                                        {row.getVisibleCells().map((cell) => (
+                                            <Td key={cell.id} py={4} px={6} border="1px" borderColor="gray.200">
+                                                {cell.column.columnDef.cell(cell.getContext())}
+                                            </Td>
+                                        ))}
+                                    </Tr>
+                                ))
+                            ) : (
+                                <Tr>
+                                    <Td colSpan={columns.length} py={4} px={6} textAlign="center">
+                                        No results.
+                                    </Td>
+                                </Tr>
+                            )
                         )}
                     </Tbody>
                 </Table>
