@@ -10,6 +10,7 @@ const CommentSection = ({ placed, caseId, caseType, email }) => {
     const [authorType, setauthorType] = useState('icdrc')
     const [authorName, setauthorName] = useState('ICDRC')
     const lastMessageRef = useRef()
+    const commentSectionRef = useRef();
 
     useEffect(() => {
         if (placed !== 'dashboard') {
@@ -19,8 +20,9 @@ const CommentSection = ({ placed, caseId, caseType, email }) => {
     }, [placed, caseId, caseType])
 
     useEffect(() => {
-        if (!lastMessageRef.current) return;
+        if (!lastMessageRef.current || !commentSectionRef.current) return;
         lastMessageRef.current.scrollIntoView({ behavior: 'smooth' });
+        commentSectionRef.current.scrollIntoView({ behavior: 'smooth' });
     }, [comments])
 
     useEffect(() => {
@@ -62,16 +64,14 @@ const CommentSection = ({ placed, caseId, caseType, email }) => {
     };
 
     return (
-
-        <div className="mx-auto px-4 pt-4 min-h-72 border rounded-lg shadow-md relative bg-white h-full">
+        <div ref={commentSectionRef} className="mx-auto px-5 pt-4 min-h-72 border rounded-lg shadow-md relative bg-white h-full">
             <div className="pb-20 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 150px)' }}>
                 <CommentList comments={comments} lastMessageRef={lastMessageRef} />
             </div>
             <div className="absolute bottom-0 w-full left-0">
                 <AddComment onAddComment={handleAddComment} />
             </div>
-        </div>
-    );
+        </div>);
 };
 
 export default CommentSection;

@@ -76,7 +76,7 @@ export default function AttachmentTable() {
                                     <Td>{attachment.attachment_name}</Td>
                                     <Td className="capitalize">{attachment.attachment_type}</Td>
                                     <Td>
-                                        <AttachmentView media={attachment.media} />
+                                        <AttachmentView media={attachment.media} filename={attachment.attachment_name} />
                                     </Td>
                                 </Tr>
                             ))}

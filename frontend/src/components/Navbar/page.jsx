@@ -34,10 +34,10 @@ const HomeNav = ({ isWhiteBg }) => {
     return (
         <header className="fixed top-0 w-full z-50">
             <div className="bg-[#222222] h-12 flex w-full
-                text-white md:flex items-center text-sm 
+                text-white md:flex items-center  
                 justify-between
                 px-5 md:px-10">
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-3 text-sm">
                     <a href="mailto:info@icdrc.in" className="flex items-center space-x-1">
                         <Image src='/images/9.webp' width={30} height={30} alt="mail" />
                         <span className="hidden md:block">info@icdrc.in</span>

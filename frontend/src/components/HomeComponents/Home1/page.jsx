@@ -70,7 +70,6 @@ const Home1 = () => {
                         </div>
                     </div>
                 </SwiperSlide>
-
                 <SwiperSlide>
                     <div className="relative overflow-hidden rounded-sm p-4 md:p-12 text-center flex flex-col md:flex-row items-center" style={{ minHeight: "720px" }}>
                         <div className="w-full md:w-1/2 order-2 md:order-1 flex justify-center md:justify-start mb-8 md:mb-0">
@@ -87,6 +86,29 @@ const Home1 = () => {
                                 alt="Slide Image"
                                 width={2000}
                                 height={2000}
+                                className="w-full h-full"
+                                style={{ maxHeight: '100%' }}
+                            />
+                        </div>
+                    </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                    <div className="relative overflow-hidden rounded-sm p-4 md:p-12 text-center flex flex-col md:flex-row items-center" style={{ minHeight: "720px" }}>
+                        <div className="w-full md:w-1/2 order-2 md:order-1 flex justify-center md:justify-start mb-8 md:mb-0">
+                            <div className="flex flex-col w-full px-2 text-left">
+                                <h2 className="mb-4 text-4xl md:text-5xl font-semibold" data-aos="fade-up" data-aos-duration="2000">
+                                    The startup India certificate we get
+                                </h2>
+                                <ComplaintButton />
+                            </div>
+                        </div>
+                        <div className="w-full md:w-1/2 order-1 md:order-2
+                            flex justify-center md:justify-end mt-14 md:mt-0 mb-8 md:mb-0">
+                            <Image
+                                src="/images/cert2.png"
+                                width={2000}
+                                height={2000}
+                                alt="Slider Image"
                                 className="w-full h-full"
                                 style={{ maxHeight: '100%' }}
                             />

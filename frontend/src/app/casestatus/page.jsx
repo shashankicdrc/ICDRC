@@ -13,7 +13,7 @@ export default function page() {
             </section>
             <section className="my-5">
                 <div className="flex item-center justify-between">
-                    <h1 className="text-4xl capitalize">Your previous attachments</h1>
+                    <h1 className="text-4xl capitalize">Your attachments</h1>
                     <UploadAttachment />
                 </div>
                 <span className="text-sm text-gray-500">

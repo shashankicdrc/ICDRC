@@ -11,7 +11,8 @@ import { CiMail } from "react-icons/ci";
 import { useEffect } from "react";
 import { url } from "../../app/api";
 import axios from "axios";
-import Image from "next/image";
+import { IoShareSocialSharp } from "react-icons/io5";
+import { MdContactPhone } from "react-icons/md";
 
 const SocialIcons = () => {
     const [show, setShow] = useState(false);
@@ -55,7 +56,7 @@ const SocialIcons = () => {
                 className="main_icon rounded-full h-12 w-12 group 
                 border-2 border-orange-600 cursor-pointer fixed bottom-36
                 md:bottom-36 right-4 bg-white hover:bg-orange-600 
-                flex justify-center items-center
+                flex justify-center items-center hover:text-white
                ransform transition-transform duration-300 ease-in-out
                shadow-lg hover:shadow-xl"
             >
@@ -73,13 +74,11 @@ const SocialIcons = () => {
                         setShow2(true);
                         setShow(false);
                     }}
-                    className="main_icon rounded-full h-12 w-12 cursor-pointer fixed 
-                    bottom-20 md:bottom-20 right-4 flex justify-center items-center 
-             border-2 border-orange-600 hover:bg-orange-600 bg-white
-               transform transition-transform duration-300 ease-in-out hover:scale-110
-               shadow-lg hover:shadow-xl"
-                >
-                    <Image src="/images/23.webp" width={30} height={30} />
+                    className="main_icon rounded-full h-12 w-12 bg-white cursor-pointer fixed bottom-20
+                    md:bottom-20 right-4  flex justify-center items-center border-2
+                    border-orange-600 hover:bg-orange-600 transition-all 300 ease-in-out
+                    text-orange-600 hover:text-white"                >
+                    <MdContactPhone className=" text-xl font-semibold md:text-2xl" />
                 </div>
             )}
             {show2 && (
@@ -156,19 +155,21 @@ const SocialIcons = () => {
                         setShow2(false);
                     }}
                     className="main_icon rounded-full h-12 w-12 cursor-pointer fixed bottom-4
-                    right-4 flex justify-center items-center
+                    right-4 flex justify-center items-center hover:text-white
                border-2 border-orange-600 hover:bg-orange-600 bg-white
-               transform transition-transform duration-300 ease-in-out hover:scale-110
-               shadow-lg hover:shadow-xl"
+               transform transition-transform duration-300 ease-in-out 
+               shadow-lg hover:shadow-xl text-orange-600"
                 >
-                    <Image src="/images/21.webp" width={40} height={40} className="rounded-full" />
+                    <IoShareSocialSharp className="text-xl md:text-2xl" />
                 </div>
             )}
 
             {show && (
                 <div
                     onClick={() => setShow(false)}
-                    className="main_icon rounded-full h-12 w-12 bg-orange-600 cursor-pointer fixed bottom-4 right-4 flex justify-center items-center text-white border-2 border-orange-600 hover:border-orange-600 hover:bg-white hover:text-orange-600"
+                    className="main_icon rounded-full h-12 w-12 bg-orange-600
+                    cursor-pointer fixed bottom-4 right-4 flex justify-center items-center
+                    text-white border-2 border-orange-600 hover:border-orange-600 hover:bg-white hover:text-orange-600"
                 >
                     <ImCross className="text-lg md:text-xl" />
                 </div>
