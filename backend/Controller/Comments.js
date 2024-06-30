@@ -7,13 +7,15 @@ const Comment = require("../models/Comment");
 
 const getComment = asyncError(async (req, res) => {
     const { caseId, caseType } = req.query;
-    const comments = await Comment.find({ caseId, caseType });
+    const comments = await Comment.find({ caseId, caseType }).populate({
+        path: 'attachment',
+        select: "-media.public_id"
+    });
     return res.status(200).json({ data: comments });
 })
 
 const addComment = asyncError(async (req, res) => {
     const { caseId, caseType, text, authorType, authorName } = req.body;
-    console.log(req.body)
     if (!caseId || !text || !caseType || !authorType || !authorName) {
         return res.status(400).json({ error: "Invalid request." });
     }

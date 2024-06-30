@@ -17,6 +17,7 @@ const {
     TeamPaymentEmail,
 } = require("../utils/Mail");
 const { fork } = require("child_process");
+const Comment = require("../models/Comment");
 
 const updatePayment = asyncError(async (req, res) => {
     const { caseId, caseType, isPay, transactionId } = req.body;
@@ -278,7 +279,7 @@ const CheckCaseStatus = asyncError(async (req, res) => {
 
 
 const UploadAttachments = asyncError(async (req, res) => {
-    const validFields = ["attachment_name", "type", "id", "attachment_type"];
+    const validFields = ["attachment_name", "caseType", "id", "authorType", "authorName"];
     const receivedFields = [];
     const fieldData = new Map();
     const emitter = new EventEmitter();
@@ -322,7 +323,8 @@ const UploadAttachments = asyncError(async (req, res) => {
                         public_id: data.public_id,
                     });
                     if (filesCount === uploadedData.length)
-                        emitter.emit("updateDatabase");
+                        console.log('finished')
+                    emitter.emit("updateDatabase");
                 }
             },
         );
@@ -333,11 +335,29 @@ const UploadAttachments = asyncError(async (req, res) => {
     });
 
     bb.on("field", (fieldname, value) => {
-        console.log(fieldname, value)
+        console.log('fieldname', fieldname, 'value', value)
         if (hasError) return; // Skip processing if an error occurred
         receivedFields.push(fieldname);
         handleError(async () => {
             switch (fieldname) {
+                case "authorName":
+                    if (value.length < 4) {
+                        hasError = true
+                        return res.status(400).json({
+                            error: "Author name should be at least 4 characters.",
+                        });
+                    }
+                    fieldData.set(fieldname, value);
+                    break;
+                case "authorType":
+                    if (value.length < 4) {
+                        hasError = true
+                        return res.status(400).json({
+                            error: "Author type should be at least 4 characters.",
+                        });
+                    }
+                    fieldData.set(fieldname, value);
+                    break;
                 case "attachment_name":
                     if (value.length < 4) {
                         hasError = true; // Set error flag
@@ -356,21 +376,12 @@ const UploadAttachments = asyncError(async (req, res) => {
                     }
                     fieldData.set(fieldname, value);
                     break;
-                case "type":
+                case "caseType":
                     if (!typeField.includes(value)) {
                         hasError = true; // Set error flag
                         return res
                             .status(400)
                             .json({ error: "Invalid type has been provided" });
-                    }
-                    fieldData.set(fieldname, value);
-                    break;
-                case 'attachment_type':
-                    if (!["icdrc", "user"].includes(value)) {
-                        hasError = true; // Set error flag
-                        return res
-                            .status(400)
-                            .json({ error: "Invalid attachment_type value has been provided" });
                     }
                     fieldData.set(fieldname, value);
                     break;
@@ -387,6 +398,7 @@ const UploadAttachments = asyncError(async (req, res) => {
                 return res.status(400).json({ error: checkField.message });
             }
             if (!checkField.missing) {
+                console.log('start uploading')
                 file.pipe(uploader());
             } else {
                 file.resume();
@@ -397,32 +409,33 @@ const UploadAttachments = asyncError(async (req, res) => {
 
     emitter.on("updateDatabase", async () => {
         const attachment_name = fieldData.get("attachment_name");
-        const attachment_type = fieldData.get("attachment_type");
-        const type = fieldData.get("type");
-        const id = fieldData.get("id");
+        const caseId = fieldData.get("id");
+        const caseType = fieldData.get("caseType");
+        const authorType = fieldData.get("authorType");
+        const authorName = fieldData.get("authorName");
+
+        console.log('authorType', authorType, 'authorName', authorName)
 
         const newMedia = await ComplainMedia.create({
-            type,
             attachment_name,
             media: uploadedData,
-            attachment_type
         });
 
-        if (type === "individual") {
-            const indUpdatedData = await IndividualComplaint.findByIdAndUpdate(
-                id,
-                { $push: { attachments: newMedia._id } },
-                { new: true },
-            );
-            return res.status(200).json({ data: indUpdatedData });
+        const commentData = {
+            caseId,
+            caseType,
+            authorType,
+            authorName,
+            attachment: newMedia._id
         }
 
-        const orgUpdatedData = await OrganizationalComplaint.findByIdAndUpdate(
-            id,
-            { $push: { attachments: newMedia._id } },
-            { new: true },
-        );
-        return res.status(200).json({ data: orgUpdatedData });
+        const addComment = await Comment.create(commentData)
+
+        const comments = await addComment.populate({
+            path: 'attachment',
+            select: '-media.public_id'
+        })
+        return res.status(200).json({ data: comments })
     });
 
     req.pipe(bb);

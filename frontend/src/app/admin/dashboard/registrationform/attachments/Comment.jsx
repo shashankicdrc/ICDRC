@@ -1,6 +1,8 @@
-
 import React from 'react';
 import * as Avatar from '@radix-ui/react-avatar';
+import dynamic from 'next/dynamic';
+const AttachmentView = dynamic(() => import('../../../../../components/CaseStatus/attachment/ViewAttachment'))
+
 
 const Comment = ({ comment }) => {
     const isAdmin = comment.authorType === 'icdrc';
@@ -23,12 +25,14 @@ const Comment = ({ comment }) => {
                     {isAdmin ? 'ID' : 'US'}
                 </Avatar.Fallback>
             </Avatar.Root>
-            <div>
-                <div className="text-sm font-semibold">{comment.authorName}</div>
-                <div className="mt-1 text-sm">{date}</div>
-                <div className="mt-2 text-sm">{comment.text}</div>
+            <div className={`max-w-xs p-3 rounded-lg shadow ${isAdmin ? 'bg-orange-600 text-white' : 'text-black'}`}>
+                <div className={`text-xs ${isAdmin ? 'text-white' : 'text-gray-400'}`}>{comment.authorName}</div>
+                <div className="mt-1">{comment.text ? comment.text : (
+                    <AttachmentView media={comment.attachment.media} filename={comment.attachment.attachment_name} />
+                )}</div>
+                <div className={`mt-1 text-xs ${isAdmin ? 'text-white' : 'text-gray-400'}`} > {date}</div>
             </div>
-        </div>
+        </div >
     );
 };
 

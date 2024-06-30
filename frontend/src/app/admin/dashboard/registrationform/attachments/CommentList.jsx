@@ -11,8 +11,8 @@ const CommentList = ({ comments, lastMessageRef }) => {
                     <div
                         key={comment._id}
                         className={`flex w-max max-w-md md:max-w-lg flex-col gap-2 rounded-md text-sm ${comment.authorType === 'icdrc'
-                            ? 'ml-auto bg-orange-600 text-white text-primary-foreground'
-                            : 'bg-muted'}`
+                            ? 'ml-auto'
+                            : ''}`
                         }
                     >
                         <Comment key={comment.id} comment={comment} />

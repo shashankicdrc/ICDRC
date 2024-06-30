@@ -17,21 +17,28 @@ export default function ViewAttachment({ media, filename }) {
     const btnRef = useRef();
     const [url, seturl] = useState('')
     const baseUrl = `https://res.cloudinary.com/dl5hosmxb/image/upload`
+    const [docViewerMedia, setdocViewerMedia] = useState([])
+
 
     useEffect(() => {
         const orginalFilename = media[0].url.split('/')
+
         const newUrl = `${baseUrl}/f_auto/fl_attachment:${filename}/v1719401983/${orginalFilename[orginalFilename.length - 1]}`
         seturl(newUrl)
+
+        setdocViewerMedia(media.map(item => {
+            return { uri: item.url }
+        }))
     }, [media])
+
 
     return (
         <Fragment>
             <button
                 onClick={onOpen}
                 ref={btnRef}
-                className="hover:bg-gray-100 px-2 py-2 rounded-md"
-            >
-                View Attachment
+                className="text-blue-500 underline">
+                {filename}
             </button>
             <Drawer
                 isOpen={isOpen}
@@ -55,7 +62,7 @@ export default function ViewAttachment({ media, filename }) {
                         </a >
                     </DrawerHeader >
                     <DrawerBody className="overflow-y-auto">
-                        <DocViewer documents={media} pluginRenderers={DocViewerRenderers} />
+                        <DocViewer documents={docViewerMedia} pluginRenderers={DocViewerRenderers} />
                     </DrawerBody>
                 </DrawerContent >
             </Drawer >

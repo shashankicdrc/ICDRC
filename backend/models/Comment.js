@@ -4,6 +4,7 @@ const commentSchema = new mongoose.Schema(
     {
         caseId: {
             type: mongoose.Schema.Types.ObjectId,
+            required: true
         },
         caseType: {
             type: String,
@@ -12,7 +13,6 @@ const commentSchema = new mongoose.Schema(
         },
         text: {
             type: String,
-            required: true
         },
         authorType: {
             type: String,
@@ -23,6 +23,7 @@ const commentSchema = new mongoose.Schema(
             type: String,
             required: true
         },
+        attachment: { type: mongoose.Schema.Types.ObjectId, ref: "complainMedia" },
     },
     { timestamps: true }
 );
