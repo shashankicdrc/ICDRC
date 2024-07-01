@@ -25,12 +25,12 @@ const Comment = ({ comment }) => {
                     {isAdmin ? 'ID' : 'US'}
                 </Avatar.Fallback>
             </Avatar.Root>
-            <div className={`max-w-xs p-3 rounded-lg shadow ${isAdmin ? 'bg-orange-600 text-white' : 'text-black'}`}>
-                <div className={`text-xs ${isAdmin ? 'text-white' : 'text-gray-400'}`}>{comment.authorName}</div>
+            <div className={`max-w-xs p-3 rounded-lg shadow ${isAdmin ? 'bg-white' : 'text-black'}`}>
+                <div className={`text-xs text-gray-400`}>{comment.authorName}</div>
                 <div className="mt-1">{comment.text ? comment.text : (
                     <AttachmentView media={comment.attachment.media} filename={comment.attachment.attachment_name} />
                 )}</div>
-                <div className={`mt-1 text-xs ${isAdmin ? 'text-white' : 'text-gray-400'}`} > {date}</div>
+                <div className={`mt-1 text-xs text-gray-400`} > {date}</div>
             </div>
         </div >
     );
