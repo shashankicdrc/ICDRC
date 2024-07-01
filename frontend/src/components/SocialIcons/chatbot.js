@@ -226,7 +226,7 @@ const ChatBot = ({ isheader }) => {
                 className={`flex items-center`}
             >
                 <span className={`${isheader ? 'mr-2' : null} hidden md:block text-sm`}>
-                    {isheader ? "Chat with Assistant" : ''}
+                    {isheader ? "Chat With Assistant" : ''}
                 </span>
                 {isheader ? <Image src="/images/11.webp" alt="chatbot" width={50} height={40} /> :
                     <PiFinnTheHuman className="text-orange-500 border-orange-600 hover:text-white text-2xl" />

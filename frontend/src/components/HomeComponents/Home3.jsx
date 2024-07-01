@@ -19,7 +19,7 @@ const Home3 = () => {
     };
 
     const sliderData = [
-        { text: "Claim is denied/reputed", imgSrc: "/images/facing/Denied.png", imgAlt: "Claim Denied Image" },
+        { text: "Claim is denied/Repudiated", imgSrc: "/images/facing/Denied.png", imgAlt: "Claim Denied Image" },
         { text: "Short payment/less payment", imgSrc: "/images/facing/ShortPayment.png", imgAlt: "Short Payment Image" },
         { text: "Claim is delayed/no progress", imgSrc: "/images/facing/Delayed.png", imgAlt: "Claim Delayed Image" },
         { text: "No survey/Surveyor is nor appointed", imgSrc: "/images/facing/Surveyor.png", imgAlt: "No Surveyro Image" },

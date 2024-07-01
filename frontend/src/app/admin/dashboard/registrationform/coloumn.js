@@ -9,7 +9,7 @@ const formatCreatedAtDate = (createdAt) => {
 export const OrganistionColumn = [
     {
         accessorKey: "caseId",
-        header: "CaseId",
+        header: "Case Id",
         cell: (props) => <p>{props.getValue()}</p>
     },
     {
@@ -21,7 +21,7 @@ export const OrganistionColumn = [
 
     {
         accessorKey: "organization_name",
-        header: "Organisation Name",
+        header: "Organization Name",
         cell: (props) => <p className="capitalize">{props.getValue()}</p>
     },
     {
@@ -92,7 +92,7 @@ export const OrganistionColumn = [
 const columns = [
     {
         accessorKey: "caseId",
-        header: "CaseId",
+        header: "Case Id",
         cell: (props) => <p>{props.getValue()}</p>
     },
     {

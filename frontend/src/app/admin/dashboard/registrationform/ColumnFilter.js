@@ -1,7 +1,7 @@
 export const OrganisationalcolumnFilters = [
     {
         accessorKey: "caseId",
-        header: "CaseId",
+        header: "Case Id",
         operators: [
             { label: "is", value: "eq" },             // MongoDB equivalent: $eq
             { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
@@ -23,7 +23,7 @@ export const OrganisationalcolumnFilters = [
     },
     {
         accessorKey: "organization_name",
-        header: "Organisation Name",
+        header: "Organization Name",
         operators: [
             { label: "is", value: "eq" },              // MongoDB equivalent: $eq
             { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
@@ -133,7 +133,7 @@ export const OrganisationalcolumnFilters = [
 const columnFilters = [
     {
         accessorKey: "caseId",
-        header: "CaseId",
+        header: "Case Id",
         operators: [
             { label: "is", value: "eq" },             // MongoDB equivalent: $eq
             { label: "is not", value: "ne" },          // MongoDB equivalent: $ne

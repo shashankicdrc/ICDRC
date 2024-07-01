@@ -15,7 +15,7 @@ const Home7Contact = () => {
             <div className="grid gap-5 grid-cols-1 lg:grid-cols-7 mx-5 lg:mx-10 items-center">
                 <div className="lg:col-span-3 flex justify-center">
                     <Image
-                        src="/images/reachout.webp"
+                        src="/images/myreachout.webp"
                         width={500}
                         height={500}
                         className="w-full lg:w-3/4"

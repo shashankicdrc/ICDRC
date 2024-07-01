@@ -15,6 +15,7 @@ const allowedFields = [
     "state",
     "country",
     "city",
+    "transactionId",
     "organization_name"
 ];
 

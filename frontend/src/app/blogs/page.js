@@ -6,7 +6,7 @@ import Home7Contact from "../../components/HomeComponents/Home7Contact";
 import Footer from "../../components/footer/page";
 import SocialIcons from "../../components/SocialIcons/page";
 import { useSelector } from "react-redux";
-
+import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import Image from "next/image";
 
 const Blogs = () => {
@@ -48,25 +48,29 @@ const Blogs = () => {
                 data-aos="zoom-in"
                 data-aos-duration="2000"
             >
-                <div className="grid gap-8 mt-5 md:mt-10 mx-4 md:mx-12 lg:grid-cols-3 sm:max-w-sm sm:mx-auto lg:max-w-full">
+                <div className="grid gap-8 mt-5 md:mt-10 mx-4 md:mx-12 lg:grid-cols-3
+                    sm:max-w-sm sm:mx-auto lg:max-w-full">
                     {blogs.data?.length > 0 ? (
                         blogs.data.map((item) => (
                             <div
                                 key={item._id}
-                                className="overflow-hidden border-2 border-orange-500 transition-shadow duration-300 bg-white rounded-2xl shadow-lg px-4 py-3"
+                                className="overflow-hidden border
+                                transition-shadow duration-300 bg-white rounded-md shadow-lg"
                                 data-aos="zoom-in"
                                 data-aos-duration="1000"
                             >
                                 <Link href={`/blogs/${item._id}`} aria-label="Article">
-                                    <Image
-                                        src={item.image}
-                                        className="object-cover w-full h-40 md:h-60 rounded-2xl"
-                                        alt=""
-                                        width={640}
-                                        height={360}
-                                    />
+                                    <AspectRatio.Root ratio={16 / 9}>
+                                        <Image
+                                            src={item.image}
+                                            className="w-full h-full rounded-t-md"
+                                            alt=""
+                                            width={640}
+                                            height={360}
+                                        />
+                                    </AspectRatio.Root>
                                 </Link>
-                                <div className="py-5">
+                                <div className="py-5 px-5">
                                     <Link href={`/blogs/${item._id}`} aria-label="Article">
                                         <p className="text-2xl font-semibold font-[Poppins] text-orange-600">
                                             {item.name}
@@ -86,7 +90,7 @@ const Blogs = () => {
                     )}
                 </div>
             </div>
-
+            <div className="border-t my-5"></div>
             <Home7Contact />
             <Footer />
         </div>

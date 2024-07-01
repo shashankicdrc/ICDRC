@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Image from 'next/image'
 
@@ -9,16 +8,17 @@ const TeamExperts = () => {
             name: 'NIRANJAN UPADHYAYA',
             bio: "Niranjan is a IRDAI licenced surveyor based at Bengaluru, Karnataka and is currently Partner at Spartan Surveyors & Loss Assessors for the last 4 years. He started his career at an automobile repair & service centre and then moved on to General Insurance company assessing motor claims growing from a Claims Executive to the Zonal Claims Manager at leading general insurance companies spanning overall 16 years.During his last stint, he also managed the role of Zonal Underwriting Manager for an Insurance Company. Niranjan is an Automobile Engineer by education from Karnataka University and a qualified Chartered Engineer.He is also an Associate member of Indian Institute of Insurance Surveyors and Loss Assessors & a Fellow of Insurance Institute of India.",
             image: '/images/team/niranjan.jpeg'
-        }, {
-            name: 'NIRANJAN UPADHYAYA',
-            bio: "Niranjan is a IRDAI licenced surveyor based at Bengaluru, Karnataka and is currently Partner at Spartan Surveyors & Loss Assessors for the last 4 years. He started his career at an automobile repair & service centre and then moved on to General Insurance company assessing motor claims growing from a Claims Executive to the Zonal Claims Manager at leading general insurance companies spanning overall 16 years.During his last stint, he also managed the role of Zonal Underwriting Manager for an Insurance Company. Niranjan is an Automobile Engineer by education from Karnataka University and a qualified Chartered Engineer.He is also an Associate member of Indian Institute of Insurance Surveyors and Loss Assessors & a Fellow of Insurance Institute of India.",
-            image: '/images/team/niranjan.jpeg'
         },
-        {
-            name: 'NIRANJAN UPADHYAYA',
-            bio: "Niranjan is a IRDAI licenced surveyor based at Bengaluru, Karnataka and is currently Partner at Spartan Surveyors & Loss Assessors for the last 4 years. He started his career at an automobile repair & service centre and then moved on to General Insurance company assessing motor claims growing from a Claims Executive to the Zonal Claims Manager at leading general insurance companies spanning overall 16 years.During his last stint, he also managed the role of Zonal Underwriting Manager for an Insurance Company. Niranjan is an Automobile Engineer by education from Karnataka University and a qualified Chartered Engineer.He is also an Associate member of Indian Institute of Insurance Surveyors and Loss Assessors & a Fellow of Insurance Institute of India.",
-            image: '/images/team/niranjan.jpeg'
-        },
+        //{
+        //    name: 'NIRANJAN UPADHYAYA',
+        //    bio: "Niranjan is a IRDAI licenced surveyor based at Bengaluru, Karnataka and is currently Partner at Spartan Surveyors & Loss Assessors for the last 4 years. He started his career at an automobile repair & service centre and then moved on to General Insurance company assessing motor claims growing from a Claims Executive to the Zonal Claims Manager at leading general insurance companies spanning overall 16 years.During his last stint, he also managed the role of Zonal Underwriting Manager for an Insurance Company. Niranjan is an Automobile Engineer by education from Karnataka University and a qualified Chartered Engineer.He is also an Associate member of Indian Institute of Insurance Surveyors and Loss Assessors & a Fellow of Insurance Institute of India.",
+        //    image: '/images/team/niranjan.jpeg'
+        //},
+        //{
+        //    name: 'NIRANJAN UPADHYAYA',
+        //    bio: "Niranjan is a IRDAI licenced surveyor based at Bengaluru, Karnataka and is currently Partner at Spartan Surveyors & Loss Assessors for the last 4 years. He started his career at an automobile repair & service centre and then moved on to General Insurance company assessing motor claims growing from a Claims Executive to the Zonal Claims Manager at leading general insurance companies spanning overall 16 years.During his last stint, he also managed the role of Zonal Underwriting Manager for an Insurance Company. Niranjan is an Automobile Engineer by education from Karnataka University and a qualified Chartered Engineer.He is also an Associate member of Indian Institute of Insurance Surveyors and Loss Assessors & a Fellow of Insurance Institute of India.",
+        //    image: '/images/team/niranjan.jpeg'
+        //},
     ];
 
     const toggleReadMore = (index) => {
@@ -29,8 +29,7 @@ const TeamExperts = () => {
     };
 
     return (
-
-        <div className="max-w-7xl mx-auto flex flex-col items-center">
+        <div className="mx-auto flex flex-col items-center">
             <div className="space-y-12">
                 <div className="max-w-fit mx-auto">
                     <div className="space-y-5 sm:space-y-4 text-center">
@@ -38,10 +37,9 @@ const TeamExperts = () => {
                         <p className="text-gray-500 -translate-y-4">Meet the experts behind our success</p>
                     </div>
                 </div>
-
-                <ul className="space-y-12 sm:grid sm:grid-cols-2 mx-5 2xl:mx-0 sm:gap-6 sm:space-y-0 lg:grid-cols-3 lg:gap-8">
+                <ul className="flex justify-center">
                     {experts.map((expert, index) => (
-                        <li key={index} className="bg-white border border-gray-200 rounded-lg shadow">
+                        <li className="border rounded-md w-96">
                             <Image
                                 src={expert.image}
                                 alt={expert.name}
@@ -63,8 +61,10 @@ const TeamExperts = () => {
                                     </button>
                                 </p>
                             </div>
+
                         </li>
                     ))}
+
                 </ul>
             </div>
         </div>

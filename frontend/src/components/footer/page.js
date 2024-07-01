@@ -83,7 +83,7 @@ export default function Footer() {
                     <div className="grid grid-cols-1 lg:col-span-2 sm:grid-cols-2 lg:grid-cols-4">
                         <div>
                             <p className="font-medium">Company</p>
-                            <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500">
+                            <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500 capitalize">
                                 <Link className="hover:opacity-75" href="/about">
                                     About{" "}
                                 </Link>
@@ -101,10 +101,10 @@ export default function Footer() {
 
                         <div>
                             <p className="font-medium">Helpful Links</p>
-                            <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500">
+                            <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500 capitalize">
                                 <a>
                                     {" "}
-                                    <CaseStatus className={"hover:opacity-75"}>
+                                    <CaseStatus className={"hover:opacity-75 capitalize"}>
                                         Case status
                                     </CaseStatus>
                                 </a>
@@ -116,7 +116,7 @@ export default function Footer() {
                                     Contact{" "}
                                 </a>
                                 <a className="hover:opacity-75" href="/register">
-                                    Register complaints
+                                    Register complaint
                                 </a>
                             </nav>
                         </div>
@@ -176,7 +176,7 @@ export default function Footer() {
                         .
                     </p>
                 </div>
-                <div className="flex items-center justify-center mx-auto mt-1 pb-10 space-x-4 sm:mt-0">
+                <div className="flex items-center justify-center mx-auto mt-1 pb-10 space-x-4 sm:mt-0 capitalize">
                     <a className="hover:opacity-75" href="/privacy_policy">
                         Privacy Policy{" "}
                     </a>
@@ -186,7 +186,7 @@ export default function Footer() {
                     <a className="hover:opacity-75" href="/refund_policy">
                         Returns Policy{" "}
                     </a>
-                    <a className="hover:opacity-75" href="/partner">
+                    <a className="hover:opacity-75 capitalize" href="/partner">
                         Partner with us
                     </a>
                 </div>
