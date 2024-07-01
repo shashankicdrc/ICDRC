@@ -97,13 +97,12 @@ const Home1 = () => {
                         <div className="w-full md:w-1/2 order-2 md:order-1 flex justify-center md:justify-start mb-8 md:mb-0">
                             <div className="flex flex-col w-full px-2 text-left">
                                 <h2 className="mb-4 text-4xl md:text-5xl font-semibold" data-aos="fade-up" data-aos-duration="2000">
-                                    The startup India certificate we get
-                                </h2>
+                                    Certificate Of Recognition-Startup India                                </h2>
                                 <ComplaintButton />
                             </div>
                         </div>
                         <div className="w-full md:w-1/2 order-1 md:order-2
-                            flex justify-center md:justify-end mt-14 md:mt-0 mb-8 md:mb-0">
+                            flex justify-center md:justify-end mt-14 lg:mt-0 2xl:mt-20 mb-8 md:mb-0">
                             <Image
                                 src="/images/cert2.png"
                                 width={2000}

@@ -29,16 +29,17 @@ const TeamExperts = () => {
     };
 
     return (
-        <div className="max-w-7xl mx-5 md:mx-10">
+
+        <div className="max-w-7xl mx-auto flex flex-col items-center">
             <div className="space-y-12">
-                <div className="mx-auto max-w-fit">
+                <div className="max-w-fit mx-auto">
                     <div className="space-y-5 sm:space-y-4 text-center">
                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight sm:text-4xl">Meet Our Team Of Experts</h2>
                         <p className="text-gray-500 -translate-y-4">Meet the experts behind our success</p>
                     </div>
                 </div>
 
-                <ul className="space-y-12 sm:grid sm:grid-cols-2 sm:gap-6 sm:space-y-0 lg:grid-cols-3 lg:gap-8">
+                <ul className="space-y-12 sm:grid sm:grid-cols-2 mx-5 2xl:mx-0 sm:gap-6 sm:space-y-0 lg:grid-cols-3 lg:gap-8">
                     {experts.map((expert, index) => (
                         <li key={index} className="bg-white border border-gray-200 rounded-lg shadow">
                             <Image
@@ -66,7 +67,8 @@ const TeamExperts = () => {
                     ))}
                 </ul>
             </div>
-        </div>);
+        </div>
+    );
 };
 
 export default TeamExperts;
