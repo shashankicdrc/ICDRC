@@ -94,7 +94,7 @@ export default function Filter({ columnFilters, tableType }) {
         const newFilters = [...userFilters];
         newFilters[index][field] = value;
 
-        if (field === 'column' && ['policyType', 'policyCompany', 'state'].includes(value)) {
+        if (field === 'column' && ['policyType', 'policyCompany', 'state', 'organization_name'].includes(value)) {
             newFilters[index].operator = 'eq';
         }
         // Change 2: Change the operator to 'ne' when the user selects "Others"
