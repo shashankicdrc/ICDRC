@@ -1,3 +1,12 @@
+import { PolicyType, insurance } from "../../../../lib/constant";
+import { State, } from "country-state-city";
+
+
+const defaultOperators = [
+    { label: 'Equals', value: 'eq' },
+    { label: 'Not Equals', value: 'neq' },
+];
+
 export const OrganisationalcolumnFilters = [
     {
         accessorKey: "caseId",
@@ -20,17 +29,6 @@ export const OrganisationalcolumnFilters = [
             { label: "after", value: "gt" }            // MongoDB equivalent: $gt
         ],
         inputType: "date"
-    },
-    {
-        accessorKey: "organization_name",
-        header: "Organization Name",
-        operators: [
-            { label: "is", value: "eq" },              // MongoDB equivalent: $eq
-            { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
-            { label: "contains", value: "regex" },     // MongoDB equivalent: $regex
-            { label: "does not contain", value: "not" } // MongoDB equivalent: $not (with $regex)
-        ],
-        inputType: "text"
     },
     {
         accessorKey: "status",
@@ -85,50 +83,31 @@ export const OrganisationalcolumnFilters = [
         inputType: "text"
     },
     {
-        accessorKey: "country",
-        header: "Country",
-        operators: [
-            { label: "is", value: "eq" },              // MongoDB equivalent: $eq
-            { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
-            { label: "contains", value: "regex" },     // MongoDB equivalent: $regex
-            { label: "does not contain", value: "not" } // MongoDB equivalent: $not (with $regex)
-        ],
-        inputType: "text"
-    },
-    {
         accessorKey: "state",
         header: "State",
-        operators: [
-            { label: "is", value: "eq" },              // MongoDB equivalent: $eq
-            { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
-            { label: "contains", value: "regex" },     // MongoDB equivalent: $regex
-            { label: "does not contain", value: "not" } // MongoDB equivalent: $not (with $regex)
-        ],
-        inputType: "text"
+        inputType: "select",
+        values: State.getStatesOfCountry("IN").map(item => item.name)
+    },
+    {
+        accessorKey: "organization_name",
+        header: "Organization Name",
+        inputType: "select",
+        values: []
     },
     {
         accessorKey: "policyCompany",
         header: "Policy Company",
-        operators: [
-            { label: "is", value: "eq" },              // MongoDB equivalent: $eq
-            { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
-            { label: "contains", value: "regex" },     // MongoDB equivalent: $regex
-            { label: "does not contain", value: "not" } // MongoDB equivalent: $not (with $regex)
-        ],
-        inputType: "text"
+        inputType: "select",
+        operatores: defaultOperators,
+        values: [...insurance, 'Others'],
     },
     {
         accessorKey: "policyType",
         header: "Policy Type",
-        operators: [
-            { label: "is", value: "eq" },              // MongoDB equivalent: $eq
-            { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
-            { label: "contains", value: "regex" },     // MongoDB equivalent: $regex
-            { label: "does not contain", value: "not" } // MongoDB equivalent: $not (with $regex)
-        ],
-        inputType: "text"
-    }
-];
+        inputType: "select",
+        operators: defaultOperators,
+        values: [...PolicyType, 'Others'],
+    }];
 
 const columnFilters = [
     {
@@ -217,50 +196,25 @@ const columnFilters = [
         inputType: "text"
     },
     {
-        accessorKey: "country",
-        header: "Country",
-        operators: [
-            { label: "is", value: "eq" },              // MongoDB equivalent: $eq
-            { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
-            { label: "contains", value: "regex" },     // MongoDB equivalent: $regex
-            { label: "does not contain", value: "not" } // MongoDB equivalent: $not (with $regex)
-        ],
-        inputType: "text"
-    },
-    {
         accessorKey: "state",
         header: "State",
-        operators: [
-            { label: "is", value: "eq" },              // MongoDB equivalent: $eq
-            { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
-            { label: "contains", value: "regex" },     // MongoDB equivalent: $regex
-            { label: "does not contain", value: "not" } // MongoDB equivalent: $not (with $regex)
-        ],
-        inputType: "text"
+        inputType: "select",
+        values: State.getStatesOfCountry("IN").map(item => item.name)
     },
     {
         accessorKey: "policyCompany",
         header: "Policy Company",
-        operators: [
-            { label: "is", value: "eq" },              // MongoDB equivalent: $eq
-            { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
-            { label: "contains", value: "regex" },     // MongoDB equivalent: $regex
-            { label: "does not contain", value: "not" } // MongoDB equivalent: $not (with $regex)
-        ],
-        inputType: "text"
+        inputType: "select",
+        operatores: defaultOperators,
+        values: [...insurance, 'Others'],
     },
     {
         accessorKey: "policyType",
         header: "Policy Type",
-        operators: [
-            { label: "is", value: "eq" },              // MongoDB equivalent: $eq
-            { label: "is not", value: "ne" },          // MongoDB equivalent: $ne
-            { label: "contains", value: "regex" },     // MongoDB equivalent: $regex
-            { label: "does not contain", value: "not" } // MongoDB equivalent: $not (with $regex)
-        ],
-        inputType: "text"
-    }
-];
+        inputType: "select",
+        operators: defaultOperators,
+        values: [...PolicyType, 'Others'],
+    }];
 
 export default columnFilters;
 

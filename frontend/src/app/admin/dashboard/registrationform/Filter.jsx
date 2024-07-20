@@ -5,14 +5,30 @@ import { IoAdd, IoClose } from 'react-icons/io5';
 import { Select, Input } from '@chakra-ui/react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+import { url } from '../../../api';
 
 
 export default function Filter({ columnFilters, tableType }) {
     const [userFilters, setUserFilters] = useState([])
+    const [organizationNames, setOrganizationNames] = useState([]);
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter()
+
+    useEffect(() => {
+        async function fetchOrganizationNames() {
+            try {
+                const response = await fetch(`${url}/api/organizationalcomplaint/organization_name`); // Update with your API endpoint
+                const { data } = await response.json()
+                setOrganizationNames(data);
+            } catch (error) {
+                console.error("Error fetching organization names:", error);
+            }
+        }
+
+        fetchOrganizationNames();
+    }, []);
 
 
     useEffect(() => {
@@ -77,9 +93,16 @@ export default function Filter({ columnFilters, tableType }) {
     const handleFilterChange = (index, field, value) => {
         const newFilters = [...userFilters];
         newFilters[index][field] = value;
-        setUserFilters(newFilters);
 
-        console.log(JSON.stringify({ index, value, field }))
+        if (field === 'column' && ['policyType', 'policyCompany', 'state'].includes(value)) {
+            newFilters[index].operator = 'eq';
+        }
+        // Change 2: Change the operator to 'ne' when the user selects "Others"
+        else if (field === 'value' && value === 'Others') {
+            newFilters[index].operator = 'ne';
+        }
+
+        setUserFilters(newFilters);
 
         if (!value || !field) return;
 
@@ -115,6 +138,9 @@ export default function Filter({ columnFilters, tableType }) {
         replace(`${pathname}?${params.toString()}`);
     }
 
+
+    const columnsWithNoOperators = ['policyType', 'policyCompany', 'state', 'organization_name'];
+
     return (
         <Popover.Root>
             <Popover.Trigger asChild onClick={() => !userFilters.length && handleAddFilter()}>
@@ -141,21 +167,23 @@ export default function Filter({ columnFilters, tableType }) {
                                     <option key={col.accessorKey} value={col.accessorKey}>{col.header}</option>
                                 ))}
                             </Select>
-                            <Select
-                                placeholder="Operator"
-                                value={filter.operator}
-                                onChange={(e) => handleFilterChange(index, 'operator', e.target.value)}
-                                className="w-auto"
-                                disabled={!filter.column}
-                            >
-                                {filter.column && columnFilters.find(col => col.accessorKey === filter.column).operators.map(op => (
-                                    <option key={op.label} value={op.value}>{op.label}</option>
-                                ))}
-                            </Select>
+                            {filter.column && !columnsWithNoOperators.includes(filter.column) && (
+                                <Select
+                                    placeholder="Operator"
+                                    value={filter.operator}
+                                    onChange={(e) => handleFilterChange(index, 'operator', e.target.value)}
+                                    className="w-auto"
+                                    disabled={!filter.column}
+                                >
+                                    {filter.column && columnFilters.find(col => col.accessorKey === filter.column).operators.map(op => (
+                                        <option key={op.label} value={op.value}>{op.label}</option>
+                                    ))}
+                                </Select>
+                            )}
                             {filter.column && columnFilters.find(col => col.accessorKey === filter.column).inputType === 'text' && (
                                 <Input
                                     disabled={!filter.operator}
-                                    placeholder="Filter value"
+                                    placeholder="Value"
                                     value={filter.value}
                                     onChange={(e) => handleFilterChange(index, 'value', e.target.value)}
                                     className="w-auto"
@@ -164,53 +192,59 @@ export default function Filter({ columnFilters, tableType }) {
                             {filter.column && columnFilters.find(col => col.accessorKey === filter.column).inputType === 'date' && (
                                 <Input
                                     disabled={!filter.operator}
+                                    placeholder="Value"
                                     type="date"
                                     value={filter.value}
                                     onChange={(e) => handleFilterChange(index, 'value', e.target.value)}
                                     className="w-auto"
                                 />
                             )}
-                            {filter.column && columnFilters.find(col => col.accessorKey === filter.column).inputType === 'boolean' && (
+                            {filter.column && filter.column === 'organization_name' && (
                                 <Select
-                                    disabled={!filter.operator}
-                                    placeholder="Status"
+                                    placeholder="Value"
                                     value={filter.value}
                                     onChange={(e) => handleFilterChange(index, 'value', e.target.value)}
-                                    className=""
+                                    className="w-auto"
                                 >
-                                    <option value="done">Done</option>
-                                    <option value="pending">Pending</option>
+                                    {organizationNames.map((val, i) => (
+                                        <option key={val._id} value={val.organization_name}>{val.organization_name}</option>
+                                    ))}
                                 </Select>
                             )}
-                            <button
-                                onClick={() => handleRemoveFilter(index)}
-                                className="inline-flex items-center justify-center 
-                  bg-white py-1 rounded-md px-2 outline-none
-                  hover:bg-gray-100 ml-auto h-10"
-                            >
+                            {filter.column && filter.column !== 'organization_name' && columnFilters.find(col => col.accessorKey === filter.column).inputType === 'select' && (
+                                <Select
+                                    placeholder="Value"
+                                    value={filter.value}
+                                    onChange={(e) => handleFilterChange(index, 'value', e.target.value)}
+                                    className="w-auto"
+                                >
+                                    {columnFilters.find(col => col.accessorKey === filter.column).values.map((val, i) => (
+                                        <option key={i} value={val}>{val}</option>
+                                    ))}
+                                </Select>
+                            )}
+                            <button onClick={() => handleRemoveFilter(index)} className="text-gray-400 hover:text-gray-600">
                                 <IoClose />
                             </button>
                         </div>
-                    ))}
-                </div>
+                    ))}                </div>
                 <div className="">
                     <button
                         onClick={handleAddFilter}
                         className="inline-flex items-center justify-center 
-              bg-white py-1 rounded-md px-2 outline-none
-              hover:bg-gray-100 ml-auto h-10"
+                bg-white py-1 rounded-md px-2 outline-none
+                hover:bg-gray-100 ml-auto h-10"
                     >
                         <IoAdd className="mr-2" /> Add Filter
                     </button>
                     <button
                         onClick={removeAllFilter}
                         className="inline-flex items-center justify-center 
-              bg-white py-1 rounded-md px-2 outline-none
-              hover:bg-gray-100 ml-auto h-10"
+                bg-white py-1 rounded-md px-2 outline-none
+                hover:bg-gray-100 ml-auto h-10"
                     >
                         <IoClose className="mr-2" /> Remove All Filter
                     </button>
-
                 </div>
             </Popover.Content>
         </Popover.Root>)

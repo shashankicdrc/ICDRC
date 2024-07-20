@@ -13,7 +13,8 @@ const {
 } = require("../../utils/Mail");
 const { fork } = require("child_process");
 const { pagination } = require("../../utils/pagination");
-const { filterSort, parseFilters } = require('../../utils/filterSort')
+const { filterSort, parseFilters } = require('../../utils/filterSort');
+const { AwsInstance } = require("twilio/lib/rest/accounts/v1/credential/aws");
 
 
 const policyTypeToEmail = {
@@ -37,6 +38,19 @@ var transporter = nodemailer.createTransport({
         pass: "pulz gygf jlct ragt",
     },
 });
+
+Organizationalrouter.get('/organization_name', async (req, res) => {
+    try {
+        const data = await OrganizationalComplaint.find({}).select('organization_name')
+        return res.status(200).json({ data })
+    } catch (error) {
+        res.send({
+            message: error.message,
+            status: 0,
+        });
+
+    }
+})
 
 Organizationalrouter.post("/", async (req, res) => {
     console.log("123");
