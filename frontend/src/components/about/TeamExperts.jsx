@@ -5,7 +5,7 @@ const experts = [
     {
         name: 'NIRANJAN UPADHYAYA',
         bio: "U.N. Niranjan is a seasoned professional with 24 years of varied experience in the automotive, general insurance, testing, inspection, and certification industries. He has over 4 years of experience in the TIC (Testing, Inspection, and Certification) industry. Niranjan has successfully led large teams comprising more than a hundred members. Currently, he serves as the Principal Surveyor (Director) at M/S Spartans Insurance Surveyors and Loss Assessors.",
-        image: '/images/team/niranjan.jpeg'
+        image: '/images/team/niranjan1.jpg'
     },
     {
         name: 'PRAVEEN KUMAR CHHAJED',
@@ -15,7 +15,7 @@ const experts = [
     {
         name: 'NUPUR NADDA',
         bio: "General Manager at National Insurance Company Ltd and a seasoned insurance relationship manager with 25 years of expertise.",
-        image: '/images/team/nupur.JPG'
+        image: '/images/team/nupur.jpg'
     }
 ];
 
@@ -38,16 +38,18 @@ const TeamExperts = () => {
                         <p className="text-gray-500 -translate-y-4">Meet the experts behind our success</p>
                     </div>
                 </div>
-                <ul className="flex flex-wrap justify-center space-x-4">
+                <div className="flex flex-wrap justify-center">
                     {experts.map((expert, index) => (
-                        <li key={index} className="border rounded-md w-96 mb-4">
-                            <Image
-                                src={expert.image}
-                                alt={expert.name}
-                                width={400}
-                                height={400}
-                                className="rounded-t-lg"
-                            />
+                        <div key={index} className="border rounded-md w-[400px] mb-4 mx-2">
+                            <div className="relative w-full h-[400px]">
+                                <Image
+                                    src={expert.image}
+                                    alt={expert.name}
+                                    layout="fill"
+                                    objectFit="cover"
+                                    className="rounded-t-md"
+                                />
+                            </div>
                             <div className="space-y-2 px-5 pt-5 pb-2">
                                 <div className="text-lg leading-6 font-medium">
                                     <h3>{expert.name}</h3>
@@ -64,12 +66,11 @@ const TeamExperts = () => {
                                     )}
                                 </p>
                             </div>
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
-        </div>
-    );
+        </div>);
 };
 
 export default TeamExperts;
