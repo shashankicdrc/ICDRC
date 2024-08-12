@@ -1,0 +1,32 @@
+{
+    "name": "server",
+    "version": "1.0.0",
+    "description": "",
+    "main": "src/index.js",
+    "type": "module",
+    "scripts": {
+        "dev": "nodemon --env-file=.env src/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "imports": {
+        "#config/*": "./src/config/*.js",
+        "#middlewares/*": "./src/middlewares/*.js",
+        "#utils/*": "./src/utils/*.js",
+        "#models/*": "./src/models/*.js",
+        "#controller/*": "./src/controller/*.js",
+        "#validation/*": "./src/validation/*.js",
+        "#services/*": "./src/services/*.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "express": "^4.19.2",
+        "mongoose": "^8.5.2",
+        "winston": "^3.14.1"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.4"
+    }
+}

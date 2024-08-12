@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "#config/*": [
+                "src/config/*"
+            ],
+            "#middlewares/*": [
+                "src/middlewares/*"
+            ],
+            "#utils/*": [
+                "src/utils/*"
+            ],
+            "#models/*": [
+                "src/models/*"
+            ],
+            "#controller/*": [
+                "src/controller/*"
+            ],
+            "#validation/*": [
+                "src/validation/*"
+            ],
+            "#services/*": [
+                "src/services/*"
+            ]
+        },
+        "module": "ESNext", // Ensure module system is set to ESNext for ES modules
+        "target": "ESNext", // Ensure target is set to a modern version
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true
+    },
+    "include": [
+        "src/**/*"
+    ]
+}
