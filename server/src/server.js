@@ -1,5 +1,6 @@
 
 import connectDb from '#config/connectDb';
+import userAuthController from '#controller/userAuthController';
 import ErrorMiddleware from '#middlewares/ErroMiddleware';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
@@ -14,7 +15,7 @@ const startServer = async () => {
     app.get('/', asyncHandler(async (req, res, next) => {
         return res.status(httpStatusCode.OK).json({ status: httpStatus.SUCCESS, message: "Hello Developers" })
     }))
-
+    app.use('/api', userAuthController)
     app.use(ErrorMiddleware)
 
     const isConnected = await connectDb()
