@@ -23,27 +23,27 @@ const paymentHistorySchema = new Schema(
         },
         paymentStatus: {
             type: String,
-            enum: ["Pending", "Completed", "Failed"],
+            enum: ["Pending", "Success", "Failed"],
             default: "Pending",
         },
-        caseType: {
+        complaintType: {
             type: String,
             enum: ["IndividualComplaint", "OrganizationComplaint"],
             required: function() { return this.paymentFor === "Case Registration"; },
         },
-        caseId: {
+        complaintId: {
             type: Schema.Types.ObjectId,
             required: function() { return this.paymentFor === "Case Registration"; },
-            refPath: 'caseType',
+            refPath: 'complaintType',
         },
         individualId: {
             type: Schema.Types.ObjectId,
-            ref: 'IndividualComplaint',
+            ref: 'individual_complaint',
             required: function() { return this.caseType === "IndividualComplaint"; },
         },
         organizationId: {
             type: Schema.Types.ObjectId,
-            ref: 'OrganizationComplaint',
+            ref: 'organization_complaint',
             required: function() { return this.caseType === "OrganizationComplaint"; },
         },
         subscriptionId: {

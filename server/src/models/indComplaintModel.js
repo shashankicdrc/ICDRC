@@ -97,7 +97,7 @@ schema.pre("save", async function(next) {
     }
 });
 
-const indComplaintModel = model('individual_complaint', schema)
+const indComplaintModel = model('IndividualComplaint', schema)
 
 export default indComplaintModel;
 

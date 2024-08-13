@@ -4,6 +4,8 @@ import ejs from 'ejs'
 
 export const NOREPLYEMAIL = "no_reply@icdrc.in";
 
+export const NewRegrecipients = ["admin@icdrc.in", "info@icdrc.in"];
+
 export const htmlTemplate = (templatePath, data) => {
     logger.info(`filePath: ${templatePath}`);
     const emailTemplate = fs.readFileSync(templatePath, "utf-8");

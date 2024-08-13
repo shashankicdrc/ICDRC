@@ -1,5 +1,7 @@
 
 import connectDb from '#config/connectDb';
+import individualController from '#controller/individualController';
+import paymentController from '#controller/paymentController';
 import userAuthController from '#controller/userAuthController';
 import ErrorMiddleware from '#middlewares/ErroMiddleware';
 import asyncHandler from '#utils/asyncHandler';
@@ -16,6 +18,8 @@ const startServer = async () => {
         return res.status(httpStatusCode.OK).json({ status: httpStatus.SUCCESS, message: "Hello Developers" })
     }))
     app.use('/api', userAuthController)
+    app.use('/api', individualController)
+    app.use('/api', paymentController)
     app.use(ErrorMiddleware)
 
     const isConnected = await connectDb()

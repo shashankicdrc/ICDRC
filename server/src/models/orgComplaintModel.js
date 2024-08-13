@@ -100,7 +100,7 @@ schema.pre("save", async function(next) {
     }
 });
 
-const orgComplaintModel = model('organization_complaint', schema)
+const orgComplaintModel = model('OrganizationComplaint', schema)
 
 export default orgComplaintModel;
 

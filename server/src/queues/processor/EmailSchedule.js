@@ -11,7 +11,6 @@ import logger from "#utils/logger";
  */
 const scheduleEmailProcessor = async (job) => {
     try {
-        console.log(job.id, process.env.MAIL_PASSWORD, NOREPLYEMAIL)
         let transporter = nodemailer.createTransport({
             host: "mail.icdrc.in",
             port: 465,
