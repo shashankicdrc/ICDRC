@@ -1,6 +1,7 @@
 import connectDb from '#config/connectDb';
 import caseStudyController from '#controller/caseStudyController';
 import chatBotController from '#controller/chatBotController';
+import contactController from '#controller/contactController';
 import individualController from '#controller/individualController';
 import organisationalController from '#controller/organisationalController';
 import partnerController from '#controller/partnerController';
@@ -33,6 +34,7 @@ const startServer = async () => {
     app.use('/api', chatBotController);
     app.use('/api', partnerController);
     app.use('/api', caseStudyController);
+    app.use('/api', contactController);
 
     app.use(ErrorMiddleware);
 

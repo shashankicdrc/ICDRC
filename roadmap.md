@@ -22,15 +22,15 @@
     - Delete
     - Render on client with SEO Best practice 
 5. Case Study
-    - CRUD operation
+    - CRUD operation (completed)
 6. Manage Gallery
     - CRUD operation
 7. Chat Bot
-    - No changes
+    - No changes (completed)
 8. Our Partners 
-    - No changes
+    - No changes (completed)
 9. Contacts
-   - No Changes
+   - No Changes (completed)
 10. Admin Side Complaints
 11. Admin Home Page Charts  
     - Revenue of current month
