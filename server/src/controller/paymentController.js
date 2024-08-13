@@ -2,10 +2,18 @@ import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 import indComplaintModel from '#models/indComplaintModel';
 import orgComplaintModel from '#models/orgComplaintModel';
 import PaymentHistory from '#models/paymentHistoryModel';
+import { queues } from '#queues/queue';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
-import { httpStatus, httpStatusCode } from '#utils/constant';
+import {
+    NOREPLYEMAIL,
+    NewRegrecipients,
+    getPolicyEmail,
+    htmlTemplate,
+    httpStatus,
+    httpStatusCode,
+} from '#utils/constant';
 import { Router } from 'express';
 
 class PaymentController extends Base {
@@ -101,6 +109,58 @@ class PaymentController extends Base {
                 'Somthing went wrong.please try again.',
                 httpStatusCode.BAD_REQUEST,
             );
+
+        // send Email to teams
+        const policyEmail = getPolicyEmail(updatedResult.policyType);
+
+        const caseData = {
+            caseId: updatedResult.caseId,
+            name:
+                complaintType === 'IndividualComplaint'
+                    ? updatedResult.name
+                    : updatedResult.organizationName,
+            email: updatedResult.email,
+            mobile: updatedResult.mobile,
+            amount: savePaymentHistory.amount,
+            registration_date: updatedResult.createdAt.toLocaleString(),
+            insuranceCategory: updatedResult.policyType,
+            isPay: updatedResult.paymentStatus,
+            transactionId: savePaymentHistory.transactionId,
+        };
+
+        const templateLinkType =
+            complaintType === 'IndividualComplaint'
+                ? 'individual'
+                : 'organisational';
+
+        const userTemplate = htmlTemplate(
+            process.cwd() +
+                `/src/templates/${templateLinkType}/SuccessPayment.html`,
+            caseData,
+        );
+        const teamTemplate = htmlTemplate(
+            process.cwd() +
+                `/src/templates/${templateLinkType}/SuccessPaymentTeam.html`,
+            caseData,
+        );
+
+        const caseTypeMessage = {
+            from: NOREPLYEMAIL,
+            to: [updatedResult.email],
+            subject: `Confirmation of Successful Registration and Payment - Case ID: ${updatedResult.caseId}`,
+            html: userTemplate,
+        };
+        queues.EmailQueue.add('send-mail', caseTypeMessage);
+
+        const teamMessage = {
+            from: NOREPLYEMAIL,
+            to: [...NewRegrecipients, policyEmail],
+            subject: `Successful Registration and Payment Recieved - Case Id: ${updatedResult.caseId}`,
+            html: teamTemplate,
+        };
+
+        queues.EmailQueue.add('send-mail', teamMessage);
+
         return this.response(
             res,
             httpStatusCode.OK,

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Registration Notification</title>
+    <title>Thank You for Your Interest in Partnering with ICDRC</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -37,23 +37,28 @@
   </head>
   <body>
     <div class="container">
-      <p>Dear Team,</p>
+      <p>Dear <%= name %>,</p>
       <p>
-        This is to inform that a new individual registration form has been
-        filled out on the ICDRC website www.icdrc.in. The details of the
-        submission are as follows:
+        Thank you for expressing your interest in partnering with ICDRC. We have
+        received your "Partner with Us" form submission, and we appreciate the
+        opportunity to explore potential collaboration with you.
       </p>
-
+      <p>Here are the details of your provided:</p>
       <div class="details">
         <table>
           <tr>
-            <th>Name of Registrant</th>
+            <th>Name of applicant</th>
             <td><%= name %></td>
           </tr>
           <tr>
             <th>Email Address</th>
             <td><%= email %></td>
           </tr>
+          <tr>
+            <th>Company</th>
+            <td><%= company %></td>
+          </tr>
+
           <tr>
             <th>Mobile Number</th>
             <td><%= mobile %></td>
@@ -65,21 +70,24 @@
         </table>
       </div>
       <p>
-        Please review the submitted information at your earliest convenience. If
-        any action is required from your end, kindly proceed accordingly.
+        Your interest in partnering with us demonstrates your commitment to
+        promoting consumer rights and advancing dispute resolution practices. We
+        value partnerships like yours that enable us to broaden our impact and
+        reach in the consumer advocacy community. We have received multiple
+        requests regarding partnerships and in the process of communicating back
+        to the prospects. Please be patient until one of our team member reaches
+        out to you to discuss further.
       </p>
       <p>
         Please note that this email is sent from a no-reply address (<a
           href="mailto:no_reply@icdrc.in"
           >no_reply@icdrc.in</a
-        >) and is intended solely for notification purposes. If you have any
-        inquiries or need further assistance, please contact us directly at
-        <a href="mailto:info@icdrc.in">info@icdrc.in</a>.
+        >) and is intended solely for notification purposes. If you need to
+        follow up with the applicant or require further details, please reach
+        out directly to the sender using the provided contact information.
       </p>
-      <div class="footer">
-        <p>Thank you for your attention to this matter.</p>
-        <p>Best regards,<br />ICDRC Team</p>
-      </div>
+      <p>Thank you for your attention to this matter.</p>
+      <p>Best regards,<br />ICDRC Team</p>
     </div>
   </body>
 </html>

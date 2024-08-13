@@ -37,36 +37,34 @@
   </head>
   <body>
     <div class="container">
-      <p>Dear Team,</p>
+      <p>Dear <%= name %>,</p>
+      <p>We hope this email finds you well.</p>
+
       <p>
-        This is to inform that a new individual registration form has been
-        filled out on the ICDRC website www.icdrc.in. The details of the
-        submission are as follows:
+        We are writing to inform you that there has been an update on the status
+        of your case with ICDRC. Please find below the details of the recent
+        update:
       </p>
 
       <div class="details">
         <table>
           <tr>
-            <th>Name of Registrant</th>
-            <td><%= name %></td>
+            <th>Case ID</th>
+            <td><%= caseId %></td>
           </tr>
           <tr>
-            <th>Email Address</th>
-            <td><%= email %></td>
-          </tr>
-          <tr>
-            <th>Mobile Number</th>
-            <td><%= mobile %></td>
-          </tr>
-          <tr>
-            <th>Date of Submission</th>
+            <th>Date of update</th>
             <td><%= date %></td>
+          </tr>
+          <tr>
+            <th>Current Status</th>
+            <td><%= status %></td>
           </tr>
         </table>
       </div>
       <p>
-        Please review the submitted information at your earliest convenience. If
-        any action is required from your end, kindly proceed accordingly.
+        Your case is important to us, and we are committed to keeping you
+        informed of any developments throughout the resolution process.
       </p>
       <p>
         Please note that this email is sent from a no-reply address (<a

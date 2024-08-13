@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>New Registration Notification</title>
+    <title>New Partner with Us Form Submission on ICDRC Website</title>
     <style>
       body {
         font-family: Arial, sans-serif;
@@ -38,16 +38,16 @@
   <body>
     <div class="container">
       <p>Dear Team,</p>
+      <p>I hope this email finds you well.</p>
       <p>
-        This is to inform that a new individual registration form has been
-        filled out on the ICDRC website www.icdrc.in. The details of the
-        submission are as follows:
+        We are writing to inform you that a new "Partner with Us" form has been
+        filled out on the ICDRC website www.icdrc.in. Below are the details of
+        the submission:
       </p>
-
       <div class="details">
         <table>
           <tr>
-            <th>Name of Registrant</th>
+            <th>Name of Applicant</th>
             <td><%= name %></td>
           </tr>
           <tr>
@@ -55,8 +55,12 @@
             <td><%= email %></td>
           </tr>
           <tr>
+            <th>Company/Organization</th>
+            <td><%= company %></td>
+          </tr>
+          <tr>
             <th>Mobile Number</th>
-            <td><%= mobile %></td>
+            <td><=% number %></td>
           </tr>
           <tr>
             <th>Date of Submission</th>
@@ -65,21 +69,19 @@
         </table>
       </div>
       <p>
-        Please review the submitted information at your earliest convenience. If
-        any action is required from your end, kindly proceed accordingly.
+        Please review the information provided and take appropriate action if
+        necessary.
       </p>
       <p>
         Please note that this email is sent from a no-reply address (<a
           href="mailto:no_reply@icdrc.in"
           >no_reply@icdrc.in</a
-        >) and is intended solely for notification purposes. If you have any
-        inquiries or need further assistance, please contact us directly at
-        <a href="mailto:info@icdrc.in">info@icdrc.in</a>.
+        >) and is intended solely for notification purposes. If you need to
+        follow up with the applicant or require further details, please reach
+        out directly to the sender using the provided contact information.
       </p>
-      <div class="footer">
-        <p>Thank you for your attention to this matter.</p>
-        <p>Best regards,<br />ICDRC Team</p>
-      </div>
+      <p>Thank you for your attention to this matter.</p>
+      <p>Best regards,<br />ICDRC Team</p>
     </div>
   </body>
 </html>
