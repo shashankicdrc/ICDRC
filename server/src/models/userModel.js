@@ -3,21 +3,21 @@ import { Schema, model } from "mongoose";
 const schema = new Schema({
     email: {
         type: String,
-        required: [true, "Email Id is required"],
-        unique: [true, "Email Id already exists"]
+        required: [true, "email id is required"],
+        unique: [true, "email id already exists"]
     },
     name: {
         type: String,
-        required: [true, "Name is required"],
+        required: [true, "name is required"],
     },
     password: {
         type: String,
-        required: [true, "Password is required"],
+        required: [true, "password is required"],
     },
 }, { timestamps: true });
 
 
-const userModel = model('User', schema)
+const usermodel = model('user', schema)
 
-export default userModel;
+export default usermodel;
 

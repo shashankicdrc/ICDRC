@@ -15,16 +15,20 @@
         "#models/*": "./src/models/*.js",
         "#controller/*": "./src/controller/*.js",
         "#validation/*": "./src/validation/*.js",
-        "#services/*": "./src/services/*.js"
+        "#services/*": "./src/services/*.js",
+        "#queues/*": "./src/queues/*.js"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "dependencies": {
         "bcrypt": "^5.1.1",
+        "bullmq": "^5.12.4",
+        "ejs": "^3.1.10",
         "express": "^4.19.2",
         "jsonwebtoken": "^9.0.2",
         "mongoose": "^8.5.2",
+        "nodemailer": "^6.9.14",
         "winston": "^3.14.1"
     },
     "devDependencies": {

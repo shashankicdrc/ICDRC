@@ -3,8 +3,8 @@
 ## Backend Design and feature
 
 1. User Authentication
-    - Signin (signin,credential and google)
-    - Signup
+    - Signin (signin,credential and google) google and facebook login remain
+    - Signup (completed)
     - Change password
     - Forget password 
 2. Case Registration

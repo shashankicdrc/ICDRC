@@ -1,3 +1,16 @@
+import logger from "#utils/logger";
+import fs from 'fs'
+import ejs from 'ejs'
+
+export const NOREPLYEMAIL = "no_reply@icdrc.in";
+
+export const htmlTemplate = (templatePath, data) => {
+    logger.info(`filePath: ${templatePath}`);
+    const emailTemplate = fs.readFileSync(templatePath, "utf-8");
+    const renderedEmail = ejs.render(emailTemplate, data);
+    return renderedEmail;
+};
+
 export const httpStatusCode = {
     UNPROCESSABLE_ENTITY: 422,
     OK: 200,

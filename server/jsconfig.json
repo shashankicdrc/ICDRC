@@ -22,6 +22,9 @@
             ],
             "#services/*": [
                 "src/services/*"
+            ],
+            "#queues/*": [
+                "src/queues/*"
             ]
         },
         "module": "ESNext", // Ensure module system is set to ESNext for ES modules

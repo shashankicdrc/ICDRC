@@ -1,7 +1,45 @@
 import userModel from "#models/userModel";
+import userTokenModel from "#models/userTokenModel";
 
 class UserService {
     constructor() {
+    }
+
+    async updateUserAndDeleteToken(userId, tokenId, hashedPassword) {
+        const updatedUser = await userModel.findByIdAndUpdate(
+            userId,
+            { password: hashedPassword },
+            { new: true }
+        ).select({ _id: 1 });
+
+        const deletedToken = await userTokenModel.findOneAndDelete({
+            _id: tokenId,
+            userId,
+        }).select({ _id: 1 });
+
+        if (updatedUser && deletedToken) {
+            return { updatedUser, deletedToken };
+        }
+        return null;
+    }
+
+    async deletePasswordToken(id) {
+        const isDeleted = await userTokenModel.findByIdAndDelete(id);
+        return isDeleted ? { deleted: true } : { deleted: false }
+    }
+    async addPasswordToken(data) {
+        const addToken = await userTokenModel.create(data)
+        return addToken ?? undefined;
+    }
+
+    async isPasswordTokenExist(userId) {
+        const isToken = await userTokenModel.findOne({ userId })
+        return isToken ?? undefined
+    }
+
+    async updatePassword(userId, hashedPassword) {
+        const updatePwd = await userModel.findByIdAndUpdate(userId, { password: hashedPassword }, { new: true })
+        return !updatePwd ? { updated: false } : { updated: true }
     }
 
     async isUserExistByEmail(email, showPassword = false) {
