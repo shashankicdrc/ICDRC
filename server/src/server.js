@@ -1,4 +1,5 @@
 import connectDb from '#config/connectDb';
+import chatBotController from '#controller/chatBotController';
 import individualController from '#controller/individualController';
 import organisationalController from '#controller/organisationalController';
 import paymentController from '#controller/paymentController';
@@ -27,6 +28,8 @@ const startServer = async () => {
     app.use('/api', individualController);
     app.use('/api', organisationalController);
     app.use('/api', paymentController);
+    app.use('/api', chatBotController);
+
     app.use(ErrorMiddleware);
 
     const isConnected = await connectDb();
