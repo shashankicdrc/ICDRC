@@ -44,6 +44,7 @@
     "froala-editor": "^4.1.4",
     "jodit-pro-react": "^4.0.6",
     "jodit-react": "^4.0.9",
+    "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^3.1.2",
     "mdb-react-ui-kit": "^7.2.0",
     "mongoose": "^8.2.1",

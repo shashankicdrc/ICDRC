@@ -17,11 +17,14 @@ import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
 import logger from '#utils/logger';
 import express from 'express';
+import cors from 'cors';
+import userController from '#controller/userController';
 
 const startServer = async () => {
     const app = express();
     const port = process.env.PORT || 8080;
     app.use(express.json());
+    app.use(cors());
 
     app.get(
         '/',
@@ -45,6 +48,7 @@ const startServer = async () => {
     app.use('/api', adminAuthController);
     app.use('/api', adminController);
     app.use('/api', complaintsController);
+    app.use('/api', userController);
 
     app.use(ErrorMiddleware);
 

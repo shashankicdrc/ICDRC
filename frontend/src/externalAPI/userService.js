@@ -1,0 +1,54 @@
+import { BASE_URL, httpStatus, httpStatusCode } from '../lib/constant'
+
+
+export const verifySocialtoken = async (token) => {
+    try {
+        const result = await fetch(`${BASE_URL}/api/auth/token/verification`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                idToken: token,
+            }),
+        });
+        const response = await result.json();
+        if (result.status !== 200) {
+            return { error: response.error };
+        }
+        return {
+            access_token: response.access_token,
+            refresh_token: response.refresh_token,
+        };
+    } catch (error) {
+        console.log(error.message)
+        throw error;
+    }
+};
+
+
+export const createUser = async (userData) => {
+    const result = await fetch(`${BASE_URL}/api/auth/signup`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...userData }),
+    });
+    const { message, statusCode, status } = await result.json();
+    if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
+        return { error: message };
+    } else {
+        return { message };
+    }
+};
+export const getUserByEmail = async (email) => {
+    const result = await fetch(`${BASE_URL}/api/users/email?email=${email}`);
+    const { message, statusCode, status, data } = await result.json();
+    if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+
+};

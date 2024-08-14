@@ -21,6 +21,9 @@ import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 import generateCode from '#utils/generateCode';
 import { queues } from '#queues/queue';
 import isValidDateTime from '#utils/validateTime';
+import { OAuth2Client } from 'google-auth-library';
+import logger from '#utils/logger';
+const client = new OAuth2Client();
 
 class UserController extends Base {
     #userService;
@@ -45,7 +48,39 @@ class UserController extends Base {
             this.#resetPasswordRequest,
         );
         this.router.post('/auth/reset/password', this.#resetPassword);
+        this.router.post('/auth/token/verification', this.#verifyToken);
     }
+
+    #verifyToken = asyncHandler(async (req, res) => {
+        const { idToken } = req.body;
+        const ticket = await client.verifyIdToken({
+            idToken,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const payload = ticket.getPayload();
+        const IsExist = await this.#userService.isUserExistByEmail(
+            payload.email,
+            false,
+        );
+        if (!IsExist) {
+            throw new CustomError(
+                'User does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
+        const tokenPayload = {
+            id: IsExist.id,
+            name: IsExist.name,
+            email: IsExist.email,
+        };
+
+        const access_token = await getAccessToken(tokenPayload);
+        const refresh_token = await getRefreshToken(tokenPayload);
+        return res
+            .status(httpStatusCode.OK)
+            .json({ access_token, refresh_token });
+    });
 
     #resetPassword = asyncHandler(async (req, res) => {
         const { email, code, password } = req.body;
@@ -277,7 +312,7 @@ class UserController extends Base {
     });
 
     #signup = asyncHandler(async (req, res) => {
-        const { name, email, password } = req.body;
+        const { name, email, password, provider, providerId } = req.body;
         const isExist = await this.#userService.isUserExistByEmail(email);
         if (isExist) {
             throw new CustomError(
@@ -286,12 +321,21 @@ class UserController extends Base {
             );
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
         const userData = {
             email,
             name,
-            password: hashedPassword,
+            provider,
+            providerId,
         };
+
+        if (provider === 'credential') {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            userData = {
+                ...userData,
+                password: hashedPassword,
+            };
+        }
+
         const createUser = await this.#userService.addNewUser(userData);
         if (!createUser.email) {
             throw new CustomError(

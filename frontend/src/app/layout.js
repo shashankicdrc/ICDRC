@@ -37,14 +37,12 @@ export default function RootLayout({ children }) {
                 <body>
                     <main>
                         <Suspense fallback={<PageLoader />}>
-
                             <ChakraProvider>
                                 <NextAuthProvider>
                                     {children}
                                 </NextAuthProvider>
-
-                                <Toaster /></ChakraProvider>
-
+                                <Toaster />
+                            </ChakraProvider>
                         </Suspense>
                     </main>
                 </body>
