@@ -15,7 +15,11 @@ export const providers = [
                 response_type: "code",
             },
         },
+        httpOptions: {
+            timeout: 40000,
+        },
     }),
+
     CredentialsProvider({
         name: "Credentials",
         credentials: {},
