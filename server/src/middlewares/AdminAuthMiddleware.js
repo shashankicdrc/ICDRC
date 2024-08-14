@@ -2,7 +2,7 @@ import AdminService from '#services/adminService';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatusCode } from '#utils/constant';
-import { verifyToken } from '#utils/jwt';
+import { options, verifyToken } from '#utils/jwt';
 
 const AdminAuthMiddleware = asyncHandler(async (req, res, next) => {
     const token = req.headers.authorization;
@@ -14,7 +14,7 @@ const AdminAuthMiddleware = asyncHandler(async (req, res, next) => {
     }
 
     const jwtToken = token.split(' ')[1];
-    const isVerified = await verifyToken(jwtToken);
+    const isVerified = await verifyToken(jwtToken, options);
 
     if (!isVerified) {
         throw new CustomError(
