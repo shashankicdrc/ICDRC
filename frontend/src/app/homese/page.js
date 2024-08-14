@@ -11,6 +11,7 @@ import Testimonial from '../../components/HomeComponents/Testimonials/page';
 import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
+import PricingCard from '../../components/HomeComponents/PricingCard'
 
 
 
@@ -26,6 +27,7 @@ const Home = () => {
             <Home3 />
             <Home2 />
             <Home5 />
+            <PricingCard />
             <Home4 />
             <Testimonial />
             <Home7Contact />
