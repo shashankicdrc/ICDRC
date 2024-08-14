@@ -16,7 +16,7 @@
     - check all the case status
     - Conversation in comment 
     - File sharing in Conversation
-4. Blog feature
+4. Blog feature (Completed)
     - create
     - Edit
     - Delete
@@ -24,7 +24,7 @@
 5. Case Study
     - CRUD operation (completed)
 6. Manage Gallery
-    - CRUD operation
+    - CRUD operation (completed)
 7. Chat Bot
     - No changes (completed)
 8. Our Partners 

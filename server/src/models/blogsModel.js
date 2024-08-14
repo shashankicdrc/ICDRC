@@ -18,6 +18,12 @@ const schema = new Schema(
             type: String,
             required: [true, 'Content is required'],
         },
+        keywords: [
+            {
+                type: String,
+                required: [true, 'keywords is required.'],
+            },
+        ],
     },
     { timestamps: true },
 );

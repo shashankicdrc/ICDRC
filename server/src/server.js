@@ -1,4 +1,5 @@
 import connectDb from '#config/connectDb';
+import adminAuthController from '#controller/adminAuthController';
 import blogController from '#controller/blogController';
 import caseStudyController from '#controller/caseStudyController';
 import chatBotController from '#controller/chatBotController';
@@ -39,6 +40,7 @@ const startServer = async () => {
     app.use('/api', contactController);
     app.use('/api', blogController);
     app.use('/api', mediaController);
+    app.use('/api', adminAuthController);
 
     app.use(ErrorMiddleware);
 

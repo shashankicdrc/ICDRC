@@ -87,12 +87,13 @@ class BlogController extends Base {
     });
 
     #addBlog = asyncHandler(async (req, res) => {
-        let { name, description, image, content } = req.body;
+        let { name, description, image, content, keywords } = req.body;
         await blogModel.create({
             name,
             image,
             content,
             description,
+            keywords,
         });
 
         return this.response(
