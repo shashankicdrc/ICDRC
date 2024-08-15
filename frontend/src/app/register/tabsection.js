@@ -41,11 +41,11 @@ export default function TabSection() {
                     >
                         Register as an Organization
                     </Tab>
-                    
+
                 </Tab.List>
                 <Tab.Panels>
                     <Tab.Panel>
-                    {/* <Cart /> */}
+                        {/* <Cart /> */}
                         <ComplainForm />
                     </Tab.Panel>
                     <Tab.Panel>

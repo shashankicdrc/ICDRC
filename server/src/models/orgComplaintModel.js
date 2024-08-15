@@ -18,10 +18,6 @@ const schema = new Schema(
             type: String,
             required: [true, 'Email is required'],
         },
-        country: {
-            type: String,
-            required: [true, 'country is required'],
-        },
         state: {
             type: String,
             required: [true, 'state is required'],

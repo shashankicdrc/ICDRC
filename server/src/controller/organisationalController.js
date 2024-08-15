@@ -4,7 +4,8 @@ import { Router } from 'express';
 import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 import OrgComplaintService from '#services/orgComplaintService';
 import asyncHandler from '#utils/asyncHandler';
-import {htmlTemplate, 
+import {
+    htmlTemplate,
     NOREPLYEMAIL,
     NewRegrecipients,
     httpStatus,
@@ -40,7 +41,6 @@ class OrgainsationalController extends Base {
             name,
             mobile,
             email,
-            country,
             state,
             city,
             address,
@@ -56,7 +56,6 @@ class OrgainsationalController extends Base {
             name,
             mobile,
             email,
-            country,
             state,
             city,
             address,
