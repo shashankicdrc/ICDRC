@@ -1,3 +1,5 @@
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
+import usermodel from '#models/userModel';
 import UserService from '#services/userService';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
@@ -17,7 +19,52 @@ class UserController extends Base {
 
     #initializeRoutes() {
         this.router.get('/users/email', this.#getUserByEmail);
+        this.router.get('/users', userAuthMiddleware, this.#getUserDetails);
+        this.router.put('/users', userAuthMiddleware, this.#updateProfile);
     }
+
+    #getUserDetails = asyncHandler(async (req, res) => {
+        console.log('req.id', req.id);
+        const userDetails = await usermodel.findById(req.id);
+        logger.info(userDetails);
+        if (!userDetails)
+            throw new CustomError(
+                "User doesn't exist.",
+                httpStatusCode.BAD_REQUEST,
+            );
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'User profile fetched successfully.',
+            userDetails,
+        );
+    });
+
+    #updateProfile = asyncHandler(async (req, res) => {
+        const { name } = req.body;
+        const updateName = await usermodel
+            .findByIdAndUpdate(
+                req.id,
+                {
+                    name,
+                },
+                { new: true },
+            )
+            .select('-password');
+        if (!updateName)
+            throw new CustomError(
+                "User doesn't exist.",
+                httpStatusCode.BAD_REQUEST,
+            );
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Your profile has been udpated successfully.',
+            updateName,
+        );
+    });
 
     #getUserByEmail = asyncHandler(async (req, res) => {
         const { email } = req.query;
@@ -26,7 +73,6 @@ class UserController extends Base {
             false,
         );
 
-        logger.info(isUserExist);
         if (!isUserExist) {
             throw new CustomError(
                 'User does not exist.',

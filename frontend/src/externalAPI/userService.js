@@ -1,12 +1,45 @@
-import { BASE_URL, httpStatus, httpStatusCode } from '../lib/constant'
+import { BASE_URL, httpStatus, httpStatusCode } from '../lib/constant';
 
+export const changePassword = async (token, values) => {
+    const result = await fetch(`${BASE_URL}/api/auth/change/password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(values),
+    });
+    const { message, statusCode, status, data } = await result.json();
+    if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
+
+export const updateProfile = async (token, values) => {
+    const result = await fetch(`${BASE_URL}/api/users`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(values),
+    });
+    const { message, statusCode, status, data } = await result.json();
+    if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
 
 export const verifySocialtoken = async (token) => {
     try {
         const result = await fetch(`${BASE_URL}/api/auth/token/verification`, {
-            method: "POST",
+            method: 'POST',
             headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 idToken: token,
@@ -21,17 +54,16 @@ export const verifySocialtoken = async (token) => {
             refresh_token: response.refresh_token,
         };
     } catch (error) {
-        console.log(error.message)
+        console.log(error.message);
         throw error;
     }
 };
 
-
 export const createUser = async (userData) => {
     const result = await fetch(`${BASE_URL}/api/auth/signup`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify({ ...userData }),
     });
@@ -42,6 +74,23 @@ export const createUser = async (userData) => {
         return { message };
     }
 };
+
+export const getUserDetails = async (token) => {
+    const result = await fetch(`${BASE_URL}/api/users`, {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    const { message, statusCode, status, data } = await result.json();
+    console.log(data);
+    if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
+
 export const getUserByEmail = async (email) => {
     const result = await fetch(`${BASE_URL}/api/users/email?email=${email}`);
     const { message, statusCode, status, data } = await result.json();
@@ -50,5 +99,4 @@ export const getUserByEmail = async (email) => {
     } else {
         return { message, data };
     }
-
 };
