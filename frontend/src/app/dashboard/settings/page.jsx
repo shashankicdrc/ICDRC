@@ -1,8 +1,5 @@
 import { getServerSession } from 'next-auth';
-import {
-    getUserByEmail,
-    getUserDetails,
-} from '../../../externalAPI/userService';
+import { getUserDetails } from '../../../externalAPI/userService';
 import { authOptions } from '../../../lib/authOptions';
 import {
     Card,
@@ -15,12 +12,10 @@ import ChangeName from '../.././../components/dashboard/settings/ChangeName';
 export default async function page() {
     const session = await getServerSession(authOptions);
     const token = session.user.AccessToken;
-    console.log(session.user);
     if (!session) {
         throw new Error('You are unauthorized.');
     }
     const { data, error } = await getUserDetails(token);
-    console.log(data);
     if (error) {
         return <div className="text-center">{error}</div>;
     }

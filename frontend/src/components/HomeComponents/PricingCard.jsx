@@ -1,8 +1,13 @@
-import { Button } from "@chakra-ui/react";
+import { Button } from '@chakra-ui/react';
+import Link from 'next/link';
 
 const PricingCard = () => {
+    const plans = [
+        '66be04806a80cde286203bcb',
+        '66be047a6a80cde286203bc9',
+        '66be04886a80cde286203bcd',
+    ];
     return (
-
         <section className="bg-background">
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
                 <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
@@ -10,18 +15,22 @@ const PricingCard = () => {
                         Our Subscription Pricing Plans
                     </h2>
                     <p className="text-gray-500">
-                        Here at ICDRC we focus on markets where technology, innovation, and
-                        capital can unlock long-term value and drive economic growth.
+                        Here at ICDRC we focus on markets where technology,
+                        innovation, and capital can unlock long-term value and
+                        drive economic growth.
                     </p>
                 </div>
                 <div className="space-y-8 lg:grid lg:grid-cols-3 sm:gap-6 xl:gap-10 lg:space-y-0">
                     <div className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border xl:p-8">
-                        <h3 className="mb-4 text-2xl font-semibold">Starter</h3>
+                        <h3 className="mb-4 text-2xl font-semibold">Basic</h3>
                         <p className="font-light text-gray-500 sm:text-lg">
-                            Best option for personal use & for your next project.
+                            Best option for personal use & for your next
+                            project.
                         </p>
                         <div className="flex justify-center items-baseline my-8">
-                            <span className="mr-2 text-5xl font-extrabold">$29</span>
+                            <span className="mr-2 text-5xl font-extrabold">
+                                $1
+                            </span>
                             <span className="text-gray-500">/month</span>
                         </div>
                         <ul role="list" className="mb-8 space-y-4 text-left">
@@ -69,7 +78,10 @@ const PricingCard = () => {
                                     ></path>
                                 </svg>
                                 <span>
-                                    Team size: <span className="font-semibold">1 developer</span>
+                                    Team size:{' '}
+                                    <span className="font-semibold">
+                                        1 developer
+                                    </span>
                                 </span>
                             </li>
                             <li className="flex items-center space-x-3">
@@ -86,7 +98,10 @@ const PricingCard = () => {
                                     ></path>
                                 </svg>
                                 <span>
-                                    Premium support: <span className="font-semibold">6 months</span>
+                                    Premium support:{' '}
+                                    <span className="font-semibold">
+                                        6 months
+                                    </span>
                                 </span>
                             </li>
                             <li className="flex items-center space-x-3">
@@ -103,24 +118,30 @@ const PricingCard = () => {
                                     ></path>
                                 </svg>
                                 <span>
-                                    Free updates: <span className="font-semibold">6 months</span>
+                                    Free updates:{' '}
+                                    <span className="font-semibold">
+                                        6 months
+                                    </span>
                                 </span>
                             </li>
                         </ul>
-                        <a
-                            href="#"
+                        <Link
+                            href={`/dashboard/subscription?plan=${plans[0]}`}
                             className="bg-primary hover:bg-primary/90 text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                         >
                             Get started
-                        </a>
+                        </Link>
                     </div>
                     <div className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border xl:p-8">
-                        <h3 className="mb-4 text-2xl font-semibold">Company</h3>
+                        <h3 className="mb-4 text-2xl font-semibold">Premium</h3>
                         <p className="font-light text-gray-500 sm:text-lg">
-                            Relevant for multiple users, extended & premium support.
+                            Relevant for multiple users, extended & premium
+                            support.
                         </p>
                         <div className="flex justify-center items-baseline my-8">
-                            <span className="mr-2 text-5xl font-extrabold">$99</span>
+                            <span className="mr-2 text-5xl font-extrabold">
+                                $2
+                            </span>
                             <span className="text-gray-500">/month</span>
                         </div>
                         <ul role="list" className="mb-8 space-y-4 text-left">
@@ -168,7 +189,10 @@ const PricingCard = () => {
                                     ></path>
                                 </svg>
                                 <span>
-                                    Team size: <span className="font-semibold">10 developers</span>
+                                    Team size:{' '}
+                                    <span className="font-semibold">
+                                        10 developers
+                                    </span>
                                 </span>
                             </li>
                             <li className="flex items-center space-x-3">
@@ -185,7 +209,10 @@ const PricingCard = () => {
                                     ></path>
                                 </svg>
                                 <span>
-                                    Premium support: <span className="font-semibold">24 months</span>
+                                    Premium support:{' '}
+                                    <span className="font-semibold">
+                                        24 months
+                                    </span>
                                 </span>
                             </li>
                             <li className="flex items-center space-x-3">
@@ -202,24 +229,32 @@ const PricingCard = () => {
                                     ></path>
                                 </svg>
                                 <span>
-                                    Free updates: <span className="font-semibold">24 months</span>
+                                    Free updates:{' '}
+                                    <span className="font-semibold">
+                                        24 months
+                                    </span>
                                 </span>
                             </li>
                         </ul>
-                        <a
-                            href="#"
+                        <Link
+                            href={`/dashboard/subscription?plan=${plans[1]}`}
                             className="bg-primary hover:bg-primary/90 text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                         >
                             Get started
-                        </a>
+                        </Link>
                     </div>
                     <div className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border  xl:p-8">
-                        <h3 className="mb-4 text-2xl font-semibold">Enterprise</h3>
+                        <h3 className="mb-4 text-2xl font-semibold">
+                            Enterprise
+                        </h3>
                         <p className="font-light text-gray-500 sm:text-lg">
-                            Best for large scale uses and extended redistribution rights.
+                            Best for large scale uses and extended
+                            redistribution rights.
                         </p>
                         <div className="flex justify-center items-baseline my-8">
-                            <span className="mr-2 text-5xl font-extrabold">$499</span>
+                            <span className="mr-2 text-5xl font-extrabold">
+                                $3
+                            </span>
                             <span className="text-gray-500">/month</span>
                         </div>
                         <ul role="list" className="mb-8 space-y-4 text-left">
@@ -267,7 +302,10 @@ const PricingCard = () => {
                                     ></path>
                                 </svg>
                                 <span>
-                                    Team size: <span className="font-semibold">100+ developers</span>
+                                    Team size:{' '}
+                                    <span className="font-semibold">
+                                        100+ developers
+                                    </span>
                                 </span>
                             </li>
                             <li className="flex items-center space-x-3">
@@ -284,7 +322,10 @@ const PricingCard = () => {
                                     ></path>
                                 </svg>
                                 <span>
-                                    Premium support: <span className="font-semibold">36 months</span>
+                                    Premium support:{' '}
+                                    <span className="font-semibold">
+                                        36 months
+                                    </span>
                                 </span>
                             </li>
                             <li className="flex items-center space-x-3">
@@ -301,12 +342,15 @@ const PricingCard = () => {
                                     ></path>
                                 </svg>
                                 <span>
-                                    Free updates: <span className="font-semibold">36 months</span>
+                                    Free updates:{' '}
+                                    <span className="font-semibold">
+                                        36 months
+                                    </span>
                                 </span>
                             </li>
                         </ul>
                         <a
-                            href="#"
+                            href={`/dashboard/subscription?plan=${plans[2]}`}
                             className="bg-primary hover:bg-primary/90 text-white font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                         >
                             Get started
@@ -315,8 +359,7 @@ const PricingCard = () => {
                 </div>
             </div>
         </section>
+    );
+};
 
-    )
-}
-
-export default PricingCard; 
+export default PricingCard;

@@ -83,7 +83,6 @@ export const getUserDetails = async (token) => {
         },
     });
     const { message, statusCode, status, data } = await result.json();
-    console.log(data);
     if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
         return { error: message };
     } else {

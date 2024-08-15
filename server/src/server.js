@@ -19,6 +19,7 @@ import logger from '#utils/logger';
 import express from 'express';
 import cors from 'cors';
 import userController from '#controller/userController';
+import planController from '#controller/planController';
 
 const startServer = async () => {
     const app = express();
@@ -49,6 +50,7 @@ const startServer = async () => {
     app.use('/api', adminController);
     app.use('/api', complaintsController);
     app.use('/api', userController);
+    app.use('/api', planController);
 
     app.use(ErrorMiddleware);
 

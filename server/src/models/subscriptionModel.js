@@ -1,5 +1,4 @@
-
-import { Schema, model } from "mongoose";
+import { Schema, model } from 'mongoose';
 
 const subscriptionSchema = new Schema(
     {
@@ -9,8 +8,8 @@ const subscriptionSchema = new Schema(
             required: true,
         },
         plan: {
-            type: String,
-            enum: ["Basic", "Premium", "Enterprise"],
+            type: Schema.Types.ObjectId,
+            ref: 'plan',
             required: true,
         },
         startDate: {
@@ -20,6 +19,11 @@ const subscriptionSchema = new Schema(
         endDate: {
             type: Date,
             required: true,
+            default: function () {
+                return new Date(
+                    Date.now() + this.plan.durationInDays * 24 * 60 * 60 * 1000,
+                );
+            },
         },
         isActive: {
             type: Boolean,
@@ -27,28 +31,19 @@ const subscriptionSchema = new Schema(
         },
         complaintLimit: {
             type: Number,
-            default: function() {
-                switch (this.plan) {
-                    case 'Basic':
-                        return 5;
-                    case 'Premium':
-                        return 10;
-                    case 'Enterprise':
-                        return 15
-                    default:
-                        return 5;
-                }
-            }
+            default: function () {
+                return this.plan.complaintLimit;
+            },
         },
         usedComplaints: {
             type: Number,
             default: 0,
-        }
+        },
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
-subscriptionSchema.methods.cancel = function() {
+subscriptionSchema.methods.cancel = function () {
     this.isActive = false;
     this.endDate = Date.now();
     return this.save();

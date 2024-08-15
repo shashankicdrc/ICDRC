@@ -24,9 +24,9 @@ class UserController extends Base {
     }
 
     #getUserDetails = asyncHandler(async (req, res) => {
-        console.log('req.id', req.id);
-        const userDetails = await usermodel.findById(req.id);
-        logger.info(userDetails);
+        const userDetails = await usermodel
+            .findById(req.id)
+            .select('-password');
         if (!userDetails)
             throw new CustomError(
                 "User doesn't exist.",
