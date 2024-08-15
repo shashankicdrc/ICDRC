@@ -34,7 +34,36 @@ class IndividualController extends Base {
             userAuthMiddleware,
             this.#getComplaints,
         );
+        this.router.get(
+            '/individual/complaints/:id',
+            userAuthMiddleware,
+            this.#getComplaintById,
+        );
     }
+
+    #getComplaintById = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const complaints = await indComplaintModel.findById(id);
+        if (!complaints) {
+            throw new CustomError(
+                'complaints does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+        if (complaints.userId.toString() !== req.id) {
+            throw new CustomError(
+                "You don't have any right to access the data.",
+                httpStatusCode.UNAUTHORIZED,
+            );
+        }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Complaints fetched successfully.',
+            complaints,
+        );
+    });
 
     #getComplaints = asyncHandler(async (req, res) => {
         const complaints = await indComplaintModel.find({ userId: req.id });

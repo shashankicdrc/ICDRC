@@ -105,7 +105,7 @@ const individualColumns = [
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer">
                             <Link
-                                href={`/dashboard/individuals/${individual._id}`}
+                                href={`/dashboard/complaints/individual/${individual._id}`}
                             >
                                 View Full Details
                             </Link>
