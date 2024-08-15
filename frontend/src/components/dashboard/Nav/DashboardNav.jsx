@@ -90,7 +90,7 @@ const DashboardNav = ({ isCollapsed }) => {
                         href="/dashboard/complaints/organisational"
                         className={cn(
                             'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                            pathname === '/dashboard/complaints/ogranisational'
+                            pathname === '/dashboard/complaints/organisational'
                                 ? ' rounded-lg bg-muted text-primary'
                                 : null,
                             isCollapsed ? 'w-fit' : 'w-full',
