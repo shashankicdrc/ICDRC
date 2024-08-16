@@ -1,6 +1,4 @@
 'use client';
-import { useEffect } from 'react';
-
 import Home1 from '../../components/HomeComponents/Home1/page';
 import Navbar from '../../components/Navbar/page';
 import Home2 from '../../components/HomeComponents/Home2';
@@ -11,14 +9,9 @@ import Testimonial from '../../components/HomeComponents/Testimonials/page';
 import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
-// import PricingCard from '../../components/HomeComponents/PricingCard'
-
-
+import PricingCard from '../../components/HomeComponents/PricingCard';
 
 const Home = () => {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, [])
     return (
         <div>
             <SocialIcons />
@@ -27,12 +20,13 @@ const Home = () => {
             <Home3 />
             <Home2 />
             <Home5 />
+            <PricingCard />
             <Home4 />
             <Testimonial />
             <Home7Contact />
             <Footer />
         </div>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;

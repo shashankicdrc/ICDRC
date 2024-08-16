@@ -20,6 +20,7 @@ import express from 'express';
 import cors from 'cors';
 import userController from '#controller/userController';
 import planController from '#controller/planController';
+import subscriptionController from '#controller/subscriptionController';
 
 const startServer = async () => {
     const app = express();
@@ -51,6 +52,7 @@ const startServer = async () => {
     app.use('/api', complaintsController);
     app.use('/api', userController);
     app.use('/api', planController);
+    app.use('/api', subscriptionController);
 
     app.use(ErrorMiddleware);
 

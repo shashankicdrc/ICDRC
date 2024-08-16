@@ -32,6 +32,9 @@ importers:
       mongoose:
         specifier: ^8.5.2
         version: 8.5.2
+      nanoid:
+        specifier: ^5.0.7
+        version: 5.0.7
       nodemailer:
         specifier: ^6.9.14
         version: 6.9.14
@@ -925,6 +928,11 @@ packages:
 
   msgpackr@1.11.0:
     resolution: {integrity: sha512-I8qXuuALqJe5laEBYoFykChhSXLikZmUhccjGsPuSJ/7uPip2TJ7lwdIQwWSAi0jGZDXv4WOP8Qg65QZRuXxXw==}
+
+  nanoid@5.0.7:
+    resolution: {integrity: sha512-oLxFY2gd2IqnjcYyOXD8XGCftpGtZP2AbHbOkthDkvRywH5ayNtPVy9YlOPcHckXzbLTCHpkb7FB+yuxKV13pQ==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
@@ -2260,6 +2268,8 @@ snapshots:
   msgpackr@1.11.0:
     optionalDependencies:
       msgpackr-extract: 3.0.3
+
+  nanoid@5.0.7: {}
 
   natural-compare@1.4.0: {}
 

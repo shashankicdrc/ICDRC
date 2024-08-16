@@ -1,13 +1,13 @@
 import { Schema, model } from 'mongoose';
 
-const subscriptionSchema = new Schema(
+const schema = new Schema(
     {
         userId: {
             type: Schema.Types.ObjectId,
             ref: 'user',
             required: true,
         },
-        plan: {
+        planId: {
             type: Schema.Types.ObjectId,
             ref: 'plan',
             required: true,
@@ -19,11 +19,6 @@ const subscriptionSchema = new Schema(
         endDate: {
             type: Date,
             required: true,
-            default: function () {
-                return new Date(
-                    Date.now() + this.plan.durationInDays * 24 * 60 * 60 * 1000,
-                );
-            },
         },
         isActive: {
             type: Boolean,
@@ -31,9 +26,7 @@ const subscriptionSchema = new Schema(
         },
         complaintLimit: {
             type: Number,
-            default: function () {
-                return this.plan.complaintLimit;
-            },
+            required: true,
         },
         usedComplaints: {
             type: Number,
@@ -43,12 +36,6 @@ const subscriptionSchema = new Schema(
     { timestamps: true },
 );
 
-subscriptionSchema.methods.cancel = function () {
-    this.isActive = false;
-    this.endDate = Date.now();
-    return this.save();
-};
+const subscriptionModel = model('Subscription', schema);
 
-const Subscription = model('Subscription', subscriptionSchema);
-
-export default Subscription;
+export default subscriptionModel;
