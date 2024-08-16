@@ -23,10 +23,26 @@ import {
 import { Button } from '../../ui/button';
 import { Loader2 } from 'lucide-react';
 import { makeKeys, encryptData, decryptData } from '../../../lib/Encryption';
-import { payment } from '../../../../action/serverActions';
 import toast from 'react-hot-toast';
 import { addIndividualComplaint } from '../../../externalAPI/complaintService';
+import { getUserSubscription } from '../../../externalAPI/subscriptionService';
 import { useSession } from 'next-auth/react';
+import {
+    SubscriptionStatus,
+    checkSubscriptionStatus,
+} from '../../../lib/subscription';
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+} from '@chakra-ui/react';
+import { initiatePayment } from '../../../externalAPI/paymentService';
+import { useRouter } from 'next/navigation';
 
 const IndividualForm = () => {
     const [name, setName] = useState('');
@@ -50,6 +66,54 @@ const IndividualForm = () => {
     const token = session?.user.AccessToken;
     const [cityData, setCityData] = useState();
 
+    const [subscriptionData, setsubscriptionData] = useState({});
+    const [subscriptionMessage, setsubscriptionMessage] = useState('');
+    const [isValidSubscription, setIsValidSubscription] = useState(false);
+    const [caseData, setCaseData] = useState({});
+    const router = useRouter();
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    useEffect(() => {
+        const subscriptions = async () => {
+            if (!token) return;
+            const { data } = await getUserSubscription(token);
+            setsubscriptionData(data);
+            const subscriptionStatus = checkSubscriptionStatus(data);
+            switch (subscriptionStatus) {
+                case SubscriptionStatus.EXPIRED:
+                    setIsValidSubscription(false);
+                    setsubscriptionMessage(
+                        'Your subscription has expired. You have to pay for case registration.',
+                    );
+                    break;
+                case SubscriptionStatus.LIMIT_EXCEEDED:
+                    setIsValidSubscription(false);
+                    setsubscriptionMessage(
+                        'You have exceeded your complaint limit. You have to pay for case registration.',
+                    );
+                    break;
+                case SubscriptionStatus.NOT_ACTIVE:
+                    setIsValidSubscription(false);
+                    setsubscriptionMessage(
+                        'Your subscription is not active. You to pay for case registration.',
+                    );
+                    break;
+                case SubscriptionStatus.VALID:
+                    setIsValidSubscription(true);
+                    setsubscriptionMessage('Your subscription is valid.');
+                    break;
+                case SubscriptionStatus.DOES_NOT_EXIST:
+                    setIsValidSubscription(false);
+                    console.log('Subscription does not exist.');
+                    break;
+                default:
+                    console.log('Unknown subscription status.');
+            }
+        };
+        subscriptions();
+    }, [session]);
+
     const states = State.getStatesOfCountry('IN');
 
     useEffect(() => {
@@ -65,18 +129,16 @@ const IndividualForm = () => {
                 console.error('error happend', db.error);
             };
 
-            // Create an objectStore for this database
             db.createObjectStore('individual', {
                 keyPath: 'id',
             });
         };
 
-        dbRequest.onerror = (event) => {
+        dbRequest.onerror = () => {
             console.log(`Error while loading`, dbRequest.error);
         };
 
-        dbRequest.onsuccess = (e) => {
-            console.log('sucessfully open');
+        dbRequest.onsuccess = () => {
             db = dbRequest.result;
 
             const objectStore = db
@@ -85,7 +147,6 @@ const IndividualForm = () => {
             const request = objectStore.get(1);
 
             request.onsuccess = async (e) => {
-                console.log('success');
                 const result = request.result;
                 if (result) {
                     const keys = result.keys;
@@ -95,7 +156,7 @@ const IndividualForm = () => {
                         decryptedData,
                     );
                     const decryptedObject = JSON.parse(decryptedJSON);
-                    setCaseData([decryptedObject]);
+                    setCaseData(decryptedObject);
                 }
             };
 
@@ -115,6 +176,35 @@ const IndividualForm = () => {
             setCity('');
         }
     }, [state]);
+
+    const updateDb = (data) => {
+        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+
+        dbRequest.onsuccess = (event) => {
+            const db = event.target.result;
+            const trx = db.transaction(['individual'], 'readwrite');
+            const store = trx.objectStore('individual');
+            store.put(data);
+        };
+
+        dbRequest.onerror = () => {
+            console.error('Error opening IndexedDB:', dbRequest.error);
+        };
+    };
+
+    const initiateCasePayment = async (data) => {
+        const plainObject = {
+            id: data._id,
+            complaintType: 'IndividualComplaint',
+            amount: 500,
+            userId: data.userId,
+        };
+        setCaseData(plainObject);
+        const keys = await makeKeys();
+        const encrypted = await encryptData(keys, JSON.stringify(plainObject));
+        updateDb({ id: 1, keys: keys, data: encrypted });
+        onOpen();
+    };
 
     const onSubmit = async () => {
         try {
@@ -143,8 +233,12 @@ const IndividualForm = () => {
                 otherProblem,
                 problemDetails,
                 otherPolicyCompany,
+                isSubcribed: isValidSubscription,
+                subcriptionId: !subscriptionData
+                    ? null
+                    : (subscriptionData._id ?? null),
             };
-            const { error, message } = await addIndividualComplaint(
+            const { error, message, data } = await addIndividualComplaint(
                 token,
                 complaintData,
             );
@@ -153,14 +247,92 @@ const IndividualForm = () => {
                 return toast.error(error);
             }
             toast.success(message);
+            setCaseData(data);
+            if (!subscriptionData || !isValidSubscription) {
+                initiateCasePayment(data);
+            }
         } catch (error) {
             setLoading((prevState) => !prevState);
             toast.error(error.message);
         }
     };
 
+    const deleteObjectStore = () => {
+        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+
+        dbRequest.onsuccess = (event) => {
+            const db = event.target.result;
+            const trx = db.transaction(['individual'], 'readwrite');
+            const store = trx.objectStore('individual');
+            store.delete(1);
+        };
+
+        dbRequest.onerror = () => {
+            console.error('Error opening IndexedDB:', dbRequest.error);
+        };
+    };
+
+    const makePayment = async (e) => {
+        e.preventDefault();
+        setpaymentLoading((prevState) => !prevState);
+        try {
+            if (!caseData) return setpaymentLoading((prevState) => !prevState);
+            const { error, data } = await initiatePayment(token, caseData);
+            setpaymentLoading((prevState) => !prevState);
+            if (error) {
+                toast.error(error);
+                return;
+            }
+            deleteObjectStore();
+            router.push(data.instrumentResponse.redirectInfo.url);
+        } catch (error) {
+            console.error('Error while making payment:', error);
+            setpaymentLoading((prevState) => !prevState);
+            toast.error(error.message);
+        }
+    };
+
     return (
         <Fragment>
+            <Modal
+                closeOnOverlayClick={false}
+                isOpen={isOpen}
+                onClose={onClose}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Make Payment</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        Your case has been registered sucessfully and an email
+                        has been send regarding the case. For further processing
+                        your case plase make the payment.
+                    </ModalBody>
+                    <ModalFooter className="space-x-3">
+                        <Button
+                            onClick={onClose}
+                            variant="outline"
+                            disable={paymentLoading}
+                        >
+                            Cancel
+                        </Button>
+                        <Button disabled={paymentLoading} onClick={makePayment}>
+                            {paymentLoading ? (
+                                <>
+                                    <Loader2
+                                        className="animate-spin mr-2 w-4 h-4"
+                                        size={30}
+                                    />
+                                    please wait ...
+                                </>
+                            ) : (
+                                'Pay ₹500'
+                            )}
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
             <form
                 className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8"
                 onSubmit={(e) => {
@@ -457,16 +629,27 @@ const IndividualForm = () => {
                         </CardContent>
                     </Card>
                 </div>
-                <Button className="w-fit" disabled={loading}>
-                    {loading ? (
-                        <Fragment>
-                            <Loader2 className="mr-2 animate-spin w-4 h-4" />
-                            Please wait...
-                        </Fragment>
-                    ) : (
-                        'Submit'
+                <div>
+                    {subscriptionData && !isValidSubscription && (
+                        <p className="pb-2 font-semibold">
+                            Note: {subscriptionMessage}
+                        </p>
                     )}
-                </Button>
+                    {!caseData.length ? (
+                        <Button className="w-fit" disabled={loading}>
+                            {loading ? (
+                                <Fragment>
+                                    <Loader2 className="mr-2 animate-spin w-4 h-4" />
+                                    Please wait...
+                                </Fragment>
+                            ) : (
+                                'Submit'
+                            )}
+                        </Button>
+                    ) : (
+                        <Button onClick={onOpen}> Pay ₹500</Button>
+                    )}
+                </div>
             </form>
         </Fragment>
     );

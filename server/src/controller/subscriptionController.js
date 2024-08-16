@@ -29,18 +29,30 @@ class SubscriptionController extends Base {
             '/subscription/status/:transactionId',
             this.#checkStatus,
         );
-        this.router.get('/subscription/user', this.#userSubscription);
+        this.router.get(
+            '/subscription/user',
+            userAuthMiddleware,
+            this.#userSubscription,
+        );
     }
 
     #userSubscription = asyncHandler(async (req, res) => {
         const subscription =
             await this.#subscriptionService.getUserSubscription(req.id);
+        console.log(subscription);
         if (!subscription) {
             throw new CustomError(
                 'User does not have any subscription',
                 httpStatusCode.BAD_REQUEST,
             );
         }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Subscription fetched successfully.',
+            subscription,
+        );
     });
 
     #checkStatus = asyncHandler(async (req, res) => {

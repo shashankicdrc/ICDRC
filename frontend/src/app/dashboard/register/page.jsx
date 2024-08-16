@@ -5,9 +5,6 @@ import {
     TabsList,
     TabsTrigger,
 } from '../../../components/ui/tabs';
-import { Button } from '../../../components/ui/button';
-import { IoMdArrowDropleft } from 'react-icons/io';
-import Link from 'next/link';
 import IndividualForm from '../../../components/dashboard/register/IndividualForm';
 import OrganisationalForm from '../../../components/dashboard/register/OrganisationalForm';
 
@@ -26,10 +23,10 @@ export default function page() {
                         Organisational
                     </TabsTrigger>
                 </TabsList>
-                <TabsContent value="individual" className="w-full bg-red2">
+                <TabsContent value="individual" className="w-full">
                     <IndividualForm />
                 </TabsContent>
-                <TabsContent value="organisational" className="w-full bg-red2">
+                <TabsContent value="organisational" className="w-full">
                     <OrganisationalForm />
                 </TabsContent>
             </Tabs>

@@ -246,7 +246,7 @@ const ComplainForm = () => {
         e.preventDefault();
         setpaymentLoading((prevState) => !prevState);
         try {
-            const formData = caseData[0];
+            const formData = caseData;
             if (!formData) return setpaymentLoading((prevState) => !prevState);
             const { url: redirect } = await payment(formData);
             deleteObjectStore();

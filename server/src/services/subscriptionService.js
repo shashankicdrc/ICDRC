@@ -3,7 +3,7 @@ import subscriptionModel from '#models/subscriptionModel';
 
 class SubscriptionService {
     async getUserSubscription(userId) {
-        const subscription = await subscriptionModel.findOne({ userId });
+        const subscription = await subscriptionModel.findOne({ userId }).exec();
         return subscription;
     }
 

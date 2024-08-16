@@ -15,9 +15,10 @@ import {
     httpStatusCode,
 } from '#utils/constant';
 import { Router } from 'express';
+import { nanoid } from 'nanoid';
+import crypto from 'crypto';
 
 class PaymentController extends Base {
-    #router;
     constructor() {
         super();
         this.router = Router();
@@ -25,51 +26,33 @@ class PaymentController extends Base {
     }
 
     #initializeRoutes() {
-        this.router.post('/payments', userAuthMiddleware, this.#updatePayment);
+        this.router.post(
+            '/payments/initiate',
+            userAuthMiddleware,
+            this.#initiatePayment,
+        );
         this.router.get(
             '/payments/history',
             userAuthMiddleware,
             this.#getUserPaymentHistory,
         );
+        this.router.post(
+            '/payments/status/:transactionId',
+            this.#paymentStatus,
+        );
     }
 
-    #getUserPaymentHistory = asyncHandler(async (req, res) => {
-        const paymentHistory = await PaymentHistory.find({ userId: req.id })
-            .populate({
-                path: 'complaintId',
-                select: 'name mobile email problem status organizationName',
-            })
-            .exec();
-        return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Payment history fetched successfully.',
-            paymentHistory,
-        );
-    });
+    #paymentStatus = asyncHandler(async (req, res) => {
+        const { transactionId } = req.params;
+        const { id, userId, complaintType } = req.query;
 
-    #updatePayment = asyncHandler(async (req, res) => {
-        const {
-            amount,
-            paymentFor,
-            transactionId,
-            paymentStatus,
-            complaintType,
-            id,
-        } = req.body;
-
-        let updatedResult;
+        let complaint;
         switch (complaintType) {
             case 'IndividualComplaint':
-                updatedResult = await indComplaintModel.findByIdAndUpdate(id, {
-                    paymentStatus,
-                });
+                complaint = await indComplaintModel.findById(id);
                 break;
             case 'OrganizationComplaint':
-                updatedResult = await orgComplaintModel.findByIdAndUpdate(id, {
-                    paymentStatus,
-                });
+                complaint = await orgComplaintModel.findById(id);
                 break;
             default:
                 throw new CustomError(
@@ -78,30 +61,54 @@ class PaymentController extends Base {
                 );
         }
 
-        if (!updatedResult) {
+        if (!complaint) {
             throw new CustomError(
                 'Complaints does not found.',
                 httpStatusCode.BAD_REQUEST,
             );
         }
 
+        const merchantId = process.env.MERCHANT_ID;
+        const keyIndex = process.env.SALT_INDEX;
+        const string =
+            `/pg/v1/status/${merchantId}/${transactionId}` +
+            process.env.SALT_KEY;
+        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
+        const checksum = sha256 + '###' + keyIndex;
+        const UAT_PAY_API_URL =
+            'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1';
+
+        const response = await fetch(
+            `${UAT_PAY_API_URL}/status/${merchantId}/${transactionId}`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-VERIFY': checksum,
+                    'X-MERCHANT-ID': `${merchantId}`,
+                },
+            },
+        );
+        const { success, data, message } = await response.json();
+
         const paymentHistoryData = {
-            userId: req.id,
-            transactionId,
-            paymentStatus,
-            amount,
+            paymentFor: 'Case Registration',
+            userId,
+            complaintId: complaint.id,
+            amount: data.amount / 100,
+            transactionId: data.transactionId,
             complaintType,
-            complaintId: updatedResult.id,
-            paymentFor,
+            paymentStatus: success ? 'Success' : 'Failed',
             individualId:
                 complaintType === 'IndividualComplaint'
-                    ? updatedResult.id
+                    ? complaint.id
                     : undefined,
             organizationId:
                 complaintType === 'OrganizationComplaint'
-                    ? updatedResult.id
+                    ? complaint.id
                     : undefined,
         };
+
         const savePaymentHistory =
             await PaymentHistory.create(paymentHistoryData);
         if (!savePaymentHistory)
@@ -110,21 +117,48 @@ class PaymentController extends Base {
                 httpStatusCode.BAD_REQUEST,
             );
 
+        if (!success) {
+            return res.redirect(
+                `http://localhost:3000/failure?message=${message}`,
+            );
+        }
+
+        let updatedComplaint;
+        switch (complaintType) {
+            case 'IndividualComplaint':
+                updatedComplaint = await indComplaintModel.findByIdAndUpdate(
+                    complaint.id,
+                    {
+                        paymentStatus: 'Paid',
+                    },
+                );
+                break;
+            case 'OrganizationComplaint':
+                updatedComplaint = await orgComplaintModel.findByIdAndUpdate(
+                    complaint.id,
+                    {
+                        paymentStatus: 'Paid',
+                    },
+                );
+                break;
+            default:
+                throw new CustomError('Invalid complaintType');
+        }
         // send Email to teams
-        const policyEmail = getPolicyEmail(updatedResult.policyType);
+        const policyEmail = getPolicyEmail(complaint.policyType);
 
         const caseData = {
-            caseId: updatedResult.caseId,
+            caseId: complaint.caseId,
             name:
                 complaintType === 'IndividualComplaint'
-                    ? updatedResult.name
-                    : updatedResult.organizationName,
-            email: updatedResult.email,
-            mobile: updatedResult.mobile,
+                    ? complaint.name
+                    : complaint.organizationName,
+            email: complaint.email,
+            mobile: complaint.mobile,
             amount: savePaymentHistory.amount,
-            registration_date: updatedResult.createdAt.toLocaleString(),
-            insuranceCategory: updatedResult.policyType,
-            isPay: updatedResult.paymentStatus,
+            registration_date: complaint.createdAt.toLocaleString(),
+            insuranceCategory: complaint.policyType,
+            isPay: updatedComplaint.paymentStatus,
             transactionId: savePaymentHistory.transactionId,
         };
 
@@ -146,8 +180,8 @@ class PaymentController extends Base {
 
         const caseTypeMessage = {
             from: NOREPLYEMAIL,
-            to: [updatedResult.email],
-            subject: `Confirmation of Successful Registration and Payment - Case ID: ${updatedResult.caseId}`,
+            to: [complaint.email],
+            subject: `Confirmation of Successful Registration and Payment - Case ID: ${complaint.caseId}`,
             html: userTemplate,
         };
         queues.EmailQueue.add('send-mail', caseTypeMessage);
@@ -155,7 +189,178 @@ class PaymentController extends Base {
         const teamMessage = {
             from: NOREPLYEMAIL,
             to: [...NewRegrecipients, policyEmail],
-            subject: `Successful Registration and Payment Recieved - Case Id: ${updatedResult.caseId}`,
+            subject: `Successful Registration and Payment Recieved - Case Id: ${complaint.caseId}`,
+            html: teamTemplate,
+        };
+
+        queues.EmailQueue.add('send-mail', teamMessage);
+        return res.redirect(
+            `http://localhost:3000/success?amount=${data.amount}&transactionId=${data.transactionId}`,
+        );
+    });
+
+    #getUserPaymentHistory = asyncHandler(async (req, res) => {
+        const paymentHistory = await PaymentHistory.find({ userId: req.id })
+            .populate({
+                path: 'complaintId',
+                select: 'name mobile email problem status organizationName',
+            })
+            .exec();
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Payment history fetched successfully.',
+            paymentHistory,
+        );
+    });
+
+    #initiatePayment = asyncHandler(async (req, res) => {
+        const { amount, complaintType, id } = req.body;
+
+        let complaint;
+        let price;
+        switch (complaintType) {
+            case 'IndividualComplaint':
+                complaint = await indComplaintModel.findById(id);
+                price = 500 * 100;
+                break;
+            case 'OrganizationComplaint':
+                complaint = await orgComplaintModel.findById(id);
+                price = 1000 * 100;
+                break;
+            default:
+                throw new CustomError(
+                    'Invalid case type has been provided.',
+                    httpStatusCode.BAD_REQUEST,
+                );
+        }
+
+        if (!complaint) {
+            throw new CustomError(
+                'Complaints does not found.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
+        const transactionId = nanoid();
+        const payload = {
+            userId: req.id,
+            email: req.email,
+            name: req.name,
+            amount: price,
+            merchantId: process.env.MERCHANT_ID,
+            merchantTransactionId: transactionId,
+            mobileNumber: complaint.mobile,
+            merchantUserId: 'MUId-' + req.id,
+            redirectUrl: `http://localhost:7000/api/payments/status/${transactionId}?complaintType=${complaintType}&userId=${req.id}&id=${complaint.id}`,
+            redirectMode: 'POST',
+            paymentInstrument: {
+                type: 'PAY_PAGE',
+            },
+        };
+
+        const dataPayload = JSON.stringify(payload);
+        const dataBase64 = Buffer.from(dataPayload).toString('base64');
+
+        const string = dataBase64 + '/pg/v1/pay' + process.env.SALT_KEY;
+        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
+        const checksum = sha256 + '###' + process.env.SALT_INDEX;
+        const UAT_PAY_API_URL =
+            'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
+
+        const response = await fetch(UAT_PAY_API_URL, {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-VERIFY': checksum,
+            },
+            body: JSON.stringify({ request: dataBase64 }),
+        });
+        const { data, success, message } = await response.json();
+        if (!success) {
+            throw new CustomError(message, httpStatusCode.BAD_REQUEST);
+        }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            message,
+            data,
+        );
+
+        const paymentHistoryData = {
+            userId: req.id,
+            transactionId,
+            paymentStatus,
+            amount,
+            complaintType,
+            complaintId: complaint.id,
+            paymentFor,
+            individualId:
+                complaintType === 'IndividualComplaint'
+                    ? complaint.id
+                    : undefined,
+            organizationId:
+                complaintType === 'OrganizationComplaint'
+                    ? complaint.id
+                    : undefined,
+        };
+        const savePaymentHistory =
+            await PaymentHistory.create(paymentHistoryData);
+        if (!savePaymentHistory)
+            throw new CustomError(
+                'Somthing went wrong.please try again.',
+                httpStatusCode.BAD_REQUEST,
+            );
+
+        // send Email to teams
+        const policyEmail = getPolicyEmail(complaint.policyType);
+
+        const caseData = {
+            caseId: complaint.caseId,
+            name:
+                complaintType === 'IndividualComplaint'
+                    ? complaint.name
+                    : complaint.organizationName,
+            email: complaint.email,
+            mobile: complaint.mobile,
+            amount: savePaymentHistory.amount,
+            registration_date: complaint.createdAt.toLocaleString(),
+            insuranceCategory: complaint.policyType,
+            isPay: complaint.paymentStatus,
+            transactionId: savePaymentHistory.transactionId,
+        };
+
+        const templateLinkType =
+            complaintType === 'IndividualComplaint'
+                ? 'individual'
+                : 'organisational';
+
+        const userTemplate = htmlTemplate(
+            process.cwd() +
+                `/src/templates/${templateLinkType}/SuccessPayment.html`,
+            caseData,
+        );
+        const teamTemplate = htmlTemplate(
+            process.cwd() +
+                `/src/templates/${templateLinkType}/SuccessPaymentTeam.html`,
+            caseData,
+        );
+
+        const caseTypeMessage = {
+            from: NOREPLYEMAIL,
+            to: [complaint.email],
+            subject: `Confirmation of Successful Registration and Payment - Case ID: ${complaint.caseId}`,
+            html: userTemplate,
+        };
+        queues.EmailQueue.add('send-mail', caseTypeMessage);
+
+        const teamMessage = {
+            from: NOREPLYEMAIL,
+            to: [...NewRegrecipients, policyEmail],
+            subject: `Successful Registration and Payment Recieved - Case Id: ${complaint.caseId}`,
             html: teamTemplate,
         };
 
