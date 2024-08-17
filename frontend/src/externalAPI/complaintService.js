@@ -55,11 +55,11 @@ export const addOrganizationComplaint = async (token, userData) => {
 
         body: JSON.stringify({ ...userData }),
     });
-    const { message, statusCode, status } = await result.json();
+    const { message, statusCode, status, data } = await result.json();
     if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
         return { error: message };
     } else {
-        return { message };
+        return { message, data };
     }
 };
 

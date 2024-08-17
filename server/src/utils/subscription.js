@@ -1,0 +1,29 @@
+export const SubscriptionStatus = {
+    EXPIRED: 'EXPIRED',
+    LIMIT_EXCEEDED: 'LIMIT_EXCEEDED',
+    NOT_ACTIVE: 'NOT_ACTIVE',
+    VALID: 'VALID',
+    DOES_NOT_EXIST: 'DOES_NOT_EXIST',
+};
+
+export function checkSubscriptionStatus(subscription) {
+    if (!subscription) {
+        return SubscriptionStatus.DOES_NOT_EXIST;
+    }
+
+    const now = new Date();
+
+    if (now > new Date(subscription.endDate)) {
+        return SubscriptionStatus.EXPIRED;
+    }
+
+    if (subscription.usedComplaints >= subscription.complaintLimit) {
+        return SubscriptionStatus.LIMIT_EXCEEDED;
+    }
+
+    if (!subscription.isActive) {
+        return SubscriptionStatus.NOT_ACTIVE;
+    }
+
+    return SubscriptionStatus.VALID;
+}

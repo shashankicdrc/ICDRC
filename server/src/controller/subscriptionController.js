@@ -39,7 +39,6 @@ class SubscriptionController extends Base {
     #userSubscription = asyncHandler(async (req, res) => {
         const subscription =
             await this.#subscriptionService.getUserSubscription(req.id);
-        console.log(subscription);
         if (!subscription) {
             throw new CustomError(
                 'User does not have any subscription',

@@ -7,6 +7,7 @@ import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import {
+    FRONTEND_URL,
     NOREPLYEMAIL,
     NewRegrecipients,
     getPolicyEmail,
@@ -17,6 +18,7 @@ import {
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
 import crypto from 'crypto';
+import logger from '#utils/logger';
 
 class PaymentController extends Base {
     constructor() {
@@ -43,6 +45,7 @@ class PaymentController extends Base {
     }
 
     #paymentStatus = asyncHandler(async (req, res) => {
+        logger.info('Payment status hit');
         const { transactionId } = req.params;
         const { id, userId, complaintType } = req.query;
 
@@ -55,16 +58,14 @@ class PaymentController extends Base {
                 complaint = await orgComplaintModel.findById(id);
                 break;
             default:
-                throw new CustomError(
-                    'Invalid case type has been provided.',
-                    httpStatusCode.BAD_REQUEST,
+                return res.redirect(
+                    `${FRONTEND_URL}/failure?message=Invalid case type has been provided.`,
                 );
         }
 
         if (!complaint) {
-            throw new CustomError(
-                'Complaints does not found.',
-                httpStatusCode.BAD_REQUEST,
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Complaints does not found.`,
             );
         }
 
@@ -112,15 +113,13 @@ class PaymentController extends Base {
         const savePaymentHistory =
             await PaymentHistory.create(paymentHistoryData);
         if (!savePaymentHistory)
-            throw new CustomError(
-                'Somthing went wrong.please try again.',
-                httpStatusCode.BAD_REQUEST,
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Somthing went wrong.please try again.`,
             );
 
         if (!success) {
-            return res.redirect(
-                `http://localhost:3000/failure?message=${message}`,
-            );
+            logger.info(data);
+            return res.redirect(`${FRONTEND_URL}/failure?message=${message}`);
         }
 
         let updatedComplaint;
@@ -142,7 +141,9 @@ class PaymentController extends Base {
                 );
                 break;
             default:
-                throw new CustomError('Invalid complaintType');
+                return res.redirect(
+                    `${FRONTEND_URL}/failure?message=Invalid complaintType`,
+                );
         }
         // send Email to teams
         const policyEmail = getPolicyEmail(complaint.policyType);
@@ -195,7 +196,7 @@ class PaymentController extends Base {
 
         queues.EmailQueue.add('send-mail', teamMessage);
         return res.redirect(
-            `http://localhost:3000/success?amount=${data.amount}&transactionId=${data.transactionId}`,
+            `${FRONTEND_URL}/success?amount=${data.amount}&transactionId=${data.transactionId}`,
         );
     });
 
@@ -227,7 +228,7 @@ class PaymentController extends Base {
                 break;
             case 'OrganizationComplaint':
                 complaint = await orgComplaintModel.findById(id);
-                price = 1000 * 100;
+                price = 700 * 100;
                 break;
             default:
                 throw new CustomError(

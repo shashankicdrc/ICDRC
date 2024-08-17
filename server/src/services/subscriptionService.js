@@ -2,6 +2,10 @@ import planModel from '#models/planModel';
 import subscriptionModel from '#models/subscriptionModel';
 
 class SubscriptionService {
+    async getSubscriptionById(id) {
+        return await subscriptionModel.findById(id);
+    }
+
     async getUserSubscription(userId) {
         const subscription = await subscriptionModel.findOne({ userId }).exec();
         return subscription;

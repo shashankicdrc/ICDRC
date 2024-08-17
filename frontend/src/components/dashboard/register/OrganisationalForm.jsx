@@ -23,10 +23,26 @@ import {
 import { Button } from '../../ui/button';
 import { Loader2 } from 'lucide-react';
 import { makeKeys, encryptData, decryptData } from '../../../lib/Encryption';
-import { payment } from '../../../../action/serverActions';
 import toast from 'react-hot-toast';
 import { addOrganizationComplaint } from '../../../externalAPI/complaintService';
 import { useSession } from 'next-auth/react';
+import {
+    SubscriptionStatus,
+    checkSubscriptionStatus,
+} from '../../../lib/subscription';
+import {
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+} from '@chakra-ui/react';
+import { initiatePayment } from '../../../externalAPI/paymentService';
+import { useRouter } from 'next/navigation';
+import { getUserSubscription } from '../../../externalAPI/subscriptionService';
 
 const OganisationalForm = () => {
     const [organizationName, setorganizationName] = useState('');
@@ -52,6 +68,70 @@ const OganisationalForm = () => {
     const [cityData, setCityData] = useState();
 
     const states = State.getStatesOfCountry('IN');
+    const [subscriptionData, setsubscriptionData] = useState({});
+    const [subscriptionMessage, setsubscriptionMessage] = useState('');
+    const [isValidSubscription, setIsValidSubscription] = useState(false);
+    const [caseData, setCaseData] = useState({});
+    const router = useRouter();
+
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const clearForm = () => {
+        setorganizationName('');
+        setName('');
+        setMobile('');
+        setEmail('');
+        setState('');
+        setCity('');
+        setAddress('');
+        setPolicyCompany(null);
+        setPolicyType(null);
+        setOtherPolicyType(null);
+        setProblem(null);
+        setProblemDetails('');
+        setOtherPolicyCompany(null);
+        setOtherProblem('');
+    };
+
+    useEffect(() => {
+        const subscriptions = async () => {
+            if (!token) return;
+            const { data } = await getUserSubscription(token);
+            setsubscriptionData(data);
+            const subscriptionStatus = checkSubscriptionStatus(data);
+            switch (subscriptionStatus) {
+                case SubscriptionStatus.EXPIRED:
+                    setIsValidSubscription(false);
+                    setsubscriptionMessage(
+                        'Your subscription has expired. You have to pay for case registration.',
+                    );
+                    break;
+                case SubscriptionStatus.LIMIT_EXCEEDED:
+                    setIsValidSubscription(false);
+                    setsubscriptionMessage(
+                        'You have exceeded your complaint limit. You have to pay for case registration.',
+                    );
+                    break;
+                case SubscriptionStatus.NOT_ACTIVE:
+                    setIsValidSubscription(false);
+                    setsubscriptionMessage(
+                        'Your subscription is not active. You to pay for case registration.',
+                    );
+                    break;
+                case SubscriptionStatus.VALID:
+                    setIsValidSubscription(true);
+                    setsubscriptionMessage('Your subscription is valid.');
+                    break;
+                case SubscriptionStatus.DOES_NOT_EXIST:
+                    setIsValidSubscription(false);
+                    console.log('Subscription does not exist.');
+                    break;
+                default:
+                    console.log('Unknown subscription status.');
+            }
+        };
+        subscriptions();
+    }, [session]);
 
     useEffect(() => {
         let db;
@@ -109,6 +189,21 @@ const OganisationalForm = () => {
         };
     }, []);
 
+    const updateDb = (data) => {
+        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+
+        dbRequest.onsuccess = (event) => {
+            const db = event.target.result;
+            const trx = db.transaction(['organisational'], 'readwrite');
+            const store = trx.objectStore('organisational');
+            store.put(data);
+        };
+
+        dbRequest.onerror = () => {
+            console.error('Error opening IndexedDB:', dbRequest.error);
+        };
+    };
+
     useEffect(() => {
         if (state?.length > 1) {
             let data = states.find((s) => s.name === state);
@@ -116,6 +211,20 @@ const OganisationalForm = () => {
             setCity('');
         }
     }, [state]);
+
+    const initiateCasePayment = async (data) => {
+        const plainObject = {
+            id: data._id,
+            complaintType: 'OrganizationComplaint',
+            amount: 5000,
+            userId: data.userId,
+        };
+        setCaseData(plainObject);
+        const keys = await makeKeys();
+        const encrypted = await encryptData(keys, JSON.stringify(plainObject));
+        updateDb({ id: 1, keys: keys, data: encrypted });
+        onOpen();
+    };
 
     const onSubmit = async () => {
         try {
@@ -145,8 +254,12 @@ const OganisationalForm = () => {
                 otherProblem,
                 problemDetails,
                 otherPolicyCompany,
+                isSubscribed: isValidSubscription,
+                subscriptionId: !subscriptionData
+                    ? null
+                    : (subscriptionData._id ?? null),
             };
-            const { error, message } = await addOrganizationComplaint(
+            const { error, message, data } = await addOrganizationComplaint(
                 token,
                 complaintData,
             );
@@ -155,14 +268,93 @@ const OganisationalForm = () => {
                 return toast.error(error);
             }
             toast.success(message);
+            setCaseData(data);
+            clearForm();
+            if (!subscriptionData || !isValidSubscription) {
+                initiateCasePayment(data);
+            }
         } catch (error) {
             setLoading((prevState) => !prevState);
             toast.error(error.message);
         }
     };
 
+    const deleteObjectStore = () => {
+        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+
+        dbRequest.onsuccess = (event) => {
+            const db = event.target.result;
+            const trx = db.transaction(['organisational'], 'readwrite');
+            const store = trx.objectStore('organisational');
+            store.delete(1);
+        };
+
+        dbRequest.onerror = () => {
+            console.error('Error opening IndexedDB:', dbRequest.error);
+        };
+    };
+
+    const makePayment = async (e) => {
+        e.preventDefault();
+        setpaymentLoading((prevState) => !prevState);
+        try {
+            if (!caseData) return setpaymentLoading((prevState) => !prevState);
+            const { error, data } = await initiatePayment(token, caseData);
+            setpaymentLoading((prevState) => !prevState);
+            if (error) {
+                toast.error(error);
+                return;
+            }
+            deleteObjectStore();
+            router.push(data.instrumentResponse.redirectInfo.url);
+        } catch (error) {
+            console.error('Error while making payment:', error);
+            setpaymentLoading((prevState) => !prevState);
+            toast.error(error.message);
+        }
+    };
+
     return (
         <Fragment>
+            <Modal
+                closeOnOverlayClick={false}
+                isOpen={isOpen}
+                onClose={onClose}
+            >
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Make Payment</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody pb={6}>
+                        Your case has been registered sucessfully and an email
+                        has been send regarding the case. For further processing
+                        your case plase make the payment.
+                    </ModalBody>
+                    <ModalFooter className="space-x-3">
+                        <Button
+                            onClick={onClose}
+                            variant="outline"
+                            disable={paymentLoading}
+                        >
+                            Cancel
+                        </Button>
+                        <Button disabled={paymentLoading} onClick={makePayment}>
+                            {paymentLoading ? (
+                                <>
+                                    <Loader2
+                                        className="animate-spin mr-2 w-4 h-4"
+                                        size={30}
+                                    />
+                                    please wait ...
+                                </>
+                            ) : (
+                                'Pay ₹5000'
+                            )}
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
+
             <form
                 className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8"
                 onSubmit={(e) => {
@@ -211,7 +403,7 @@ const OganisationalForm = () => {
                                             setEmail(e.target.value)
                                         }
                                         value={email}
-                                        maxLength={20}
+                                        maxength={50}
                                         required={true}
                                         type="email"
                                         placeholder="Enter your email"
@@ -247,6 +439,7 @@ const OganisationalForm = () => {
                                         onValueChange={(value) =>
                                             setPolicyCompany(value)
                                         }
+                                        value={policyCompany}
                                         required={true}
                                     >
                                         <SelectTrigger>
@@ -291,7 +484,7 @@ const OganisationalForm = () => {
                                         onValueChange={(value) =>
                                             setPolicyType(value)
                                         }
-                                        required
+                                        value={policyType}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select a policy type" />
@@ -361,6 +554,7 @@ const OganisationalForm = () => {
                                     <Fragment>
                                         <Label>State</Label>
                                         <Select
+                                            value={state}
                                             onValueChange={(value) =>
                                                 setState(value)
                                             }
@@ -390,6 +584,7 @@ const OganisationalForm = () => {
                                             onValueChange={(value) =>
                                                 setCity(value)
                                             }
+                                            value={city}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a state" />
@@ -435,6 +630,7 @@ const OganisationalForm = () => {
                                         onValueChange={(value) =>
                                             setProblem(value)
                                         }
+                                        value={problem}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select a problem" />
@@ -473,16 +669,33 @@ const OganisationalForm = () => {
                         </CardContent>
                     </Card>
                 </div>
-                <Button className="w-fit" disabled={loading}>
-                    {loading ? (
-                        <Fragment>
-                            <Loader2 className="mr-2 animate-spin w-4 h-4" />
-                            Please wait...
-                        </Fragment>
-                    ) : (
-                        'Submit'
+                <div>
+                    {subscriptionData && !isValidSubscription && (
+                        <p className="pb-2 font-semibold">
+                            Note: {subscriptionMessage}
+                        </p>
                     )}
-                </Button>
+                    {!caseData.hasOwnProperty('id') ? (
+                        <Button className="w-fit" disabled={loading}>
+                            {loading ? (
+                                <Fragment>
+                                    <Loader2 className="mr-2 animate-spin w-4 h-4" />
+                                    Please wait...
+                                </Fragment>
+                            ) : (
+                                'Submit'
+                            )}
+                        </Button>
+                    ) : (
+                        <div className="w-full space-y-2">
+                            <p className="text-accent-foreground">
+                                You have sucessfully register your case. Please
+                                pay ₹5000 for further processing your case.{' '}
+                            </p>
+                            <Button onClick={onOpen}> Pay ₹5000</Button>
+                        </div>
+                    )}
+                </div>
             </form>
         </Fragment>
     );

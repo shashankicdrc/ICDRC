@@ -1,7 +1,9 @@
 import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 import indComplaintModel from '#models/indComplaintModel';
+import subscriptionModel from '#models/subscriptionModel';
 import { queues } from '#queues/queue';
 import IndComplaintService from '#services/indComplaintService';
+import SubscriptionService from '#services/subscriptionService';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
@@ -12,15 +14,21 @@ import {
     httpStatus,
     httpStatusCode,
 } from '#utils/constant';
+import {
+    SubscriptionStatus,
+    checkSubscriptionStatus,
+} from '#utils/subscription';
 import { Router } from 'express';
 
 class IndividualController extends Base {
     #indComplaintsService;
+    #subscriptionService;
     constructor() {
         super();
         this.router = Router();
         this.#indComplaintsService = new IndComplaintService();
         this.#initializeRoutes();
+        this.#subscriptionService = new SubscriptionService();
     }
 
     #initializeRoutes() {
@@ -65,6 +73,33 @@ class IndividualController extends Base {
         );
     });
 
+    #checkSubscription(subscriptionStatus) {
+        switch (subscriptionStatus) {
+            case SubscriptionStatus.EXPIRED:
+                throw new CustomError(
+                    'Your subscription has expired.',
+                    httpStatusCode.BAD_REQUEST,
+                );
+            case SubscriptionStatus.NOT_ACTIVE:
+                throw new CustomError(
+                    'Your subscription is not active.',
+                    httpStatusCode.BAD_REQUEST,
+                );
+            case SubscriptionStatus.DOES_NOT_EXIST:
+                throw new CustomError(
+                    'Subscription does not exist.',
+                    httpStatusCode.BAD_REQUEST,
+                );
+            case SubscriptionStatus.LIMIT_EXCEEDED:
+                throw new CustomError(
+                    'You have exceeded your complaints limit.',
+                    httpStatusCode.BAD_REQUEST,
+                );
+            case SubscriptionStatus.VALID:
+                return true;
+        }
+    }
+
     #getComplaints = asyncHandler(async (req, res) => {
         const complaints = await indComplaintModel.find({ userId: req.id });
         return this.response(
@@ -89,6 +124,8 @@ class IndividualController extends Base {
             policyType,
             problem,
             problemDetails,
+            isSubscribed,
+            subscriptionId,
         } = req.body;
 
         const addData = {
@@ -106,6 +143,16 @@ class IndividualController extends Base {
             userId: req.id,
         };
 
+        if (isSubscribed) {
+            const subscription =
+                await this.#subscriptionService.getSubscriptionById(
+                    subscriptionId,
+                );
+            const subscriptionStatus = checkSubscriptionStatus(subscription);
+            this.#checkSubscription(subscriptionStatus);
+            addData.paymentStatus = 'Paid';
+        }
+
         const addComplaints =
             await this.#indComplaintsService.addComplaints(addData);
         if (!addComplaints)
@@ -113,6 +160,23 @@ class IndividualController extends Base {
                 'Somthing went wrong please try agian.',
                 httpStatusCode.BAD_REQUEST,
             );
+
+        if (isSubscribed) {
+            logger.info('subscription Updated');
+            const updateSubscriptionLimit =
+                await subscriptionModel.findByIdAndUpdate(
+                    subscriptionId,
+                    { $inc: { usedComplaints: 1 } },
+                    { new: true },
+                );
+
+            if (!updateSubscriptionLimit) {
+                throw new CustomError(
+                    'Subscription does not exist.',
+                    httpStatusCode.BAD_REQUEST,
+                );
+            }
+        }
 
         const caseData = {
             name: addComplaints.name,

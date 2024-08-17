@@ -74,6 +74,22 @@ const IndividualForm = () => {
 
     const { isOpen, onOpen, onClose } = useDisclosure();
 
+    const clearForm = () => {
+        setName('');
+        setMobile('');
+        setEmail('');
+        setState('');
+        setCity('');
+        setAddress('');
+        setPolicyCompany(null);
+        setPolicyType(null);
+        setOtherPolicyType(null);
+        setProblem(null);
+        setProblemDetails('');
+        setOtherPolicyCompany(null);
+        setOtherProblem('');
+    };
+
     useEffect(() => {
         const subscriptions = async () => {
             if (!token) return;
@@ -233,8 +249,8 @@ const IndividualForm = () => {
                 otherProblem,
                 problemDetails,
                 otherPolicyCompany,
-                isSubcribed: isValidSubscription,
-                subcriptionId: !subscriptionData
+                isSubscribed: isValidSubscription,
+                subscriptionId: !subscriptionData
                     ? null
                     : (subscriptionData._id ?? null),
             };
@@ -248,6 +264,7 @@ const IndividualForm = () => {
             }
             toast.success(message);
             setCaseData(data);
+            clearForm();
             if (!subscriptionData || !isValidSubscription) {
                 initiateCasePayment(data);
             }
@@ -291,6 +308,8 @@ const IndividualForm = () => {
             toast.error(error.message);
         }
     };
+
+    console.log(caseData);
 
     return (
         <Fragment>
@@ -404,6 +423,7 @@ const IndividualForm = () => {
                                             setPolicyCompany(value)
                                         }
                                         required={true}
+                                        value={policyCompany}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select a policy company" />
@@ -447,6 +467,7 @@ const IndividualForm = () => {
                                         onValueChange={(value) =>
                                             setPolicyType(value)
                                         }
+                                        value={policyType}
                                         required
                                     >
                                         <SelectTrigger>
@@ -521,6 +542,7 @@ const IndividualForm = () => {
                                                 setState(value)
                                             }
                                             required
+                                            value={state}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a state" />
@@ -546,6 +568,7 @@ const IndividualForm = () => {
                                             onValueChange={(value) =>
                                                 setCity(value)
                                             }
+                                            value={city}
                                         >
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a state" />
@@ -591,6 +614,7 @@ const IndividualForm = () => {
                                         onValueChange={(value) =>
                                             setProblem(value)
                                         }
+                                        value={problem}
                                     >
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select a problem" />
@@ -635,7 +659,7 @@ const IndividualForm = () => {
                             Note: {subscriptionMessage}
                         </p>
                     )}
-                    {!caseData.length ? (
+                    {!caseData.hasOwnProperty('id') ? (
                         <Button className="w-fit" disabled={loading}>
                             {loading ? (
                                 <Fragment>
@@ -647,7 +671,13 @@ const IndividualForm = () => {
                             )}
                         </Button>
                     ) : (
-                        <Button onClick={onOpen}> Pay ₹500</Button>
+                        <div className="w-full space-y-2">
+                            <p className="text-accent-foreground">
+                                You have sucessfully register your case. Please
+                                pay ₹500 for further processing your case.{' '}
+                            </p>
+                            <Button onClick={onOpen}> Pay ₹500</Button>
+                        </div>
                     )}
                 </div>
             </form>
