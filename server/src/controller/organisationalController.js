@@ -172,7 +172,9 @@ class OrgainsationalController extends Base {
     });
 
     #getComplaints = asyncHandler(async (req, res) => {
-        const complaints = await orgComplaintModel.find({ userId: req.id });
+        const complaints = await orgComplaintModel
+            .find({ userId: req.id })
+            .sort({ createdAt: -1 });
         return this.response(
             res,
             httpStatusCode.OK,

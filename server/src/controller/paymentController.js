@@ -206,6 +206,7 @@ class PaymentController extends Base {
                 path: 'complaintId',
                 select: 'name mobile email problem status organizationName',
             })
+            .sort({ createdAt: -1 })
             .exec();
         return this.response(
             res,

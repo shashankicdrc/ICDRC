@@ -101,7 +101,9 @@ class IndividualController extends Base {
     }
 
     #getComplaints = asyncHandler(async (req, res) => {
-        const complaints = await indComplaintModel.find({ userId: req.id });
+        const complaints = await indComplaintModel
+            .find({ userId: req.id })
+            .sort({ createdAt: -1 });
         return this.response(
             res,
             httpStatusCode.OK,
