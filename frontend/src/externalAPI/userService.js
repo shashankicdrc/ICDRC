@@ -1,5 +1,53 @@
 import { BASE_URL, httpStatus, httpStatusCode } from '../lib/constant';
 
+export const resetPassword = async (values) => {
+    const result = await fetch(`${BASE_URL}/api/auth/reset/password`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+    });
+    const { message, statusCode, status, data } = await result.json();
+    if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
+
+export const resetPasswordReq = async (values) => {
+    const result = await fetch(`${BASE_URL}/api/auth/reset/password/request`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+    });
+    const { message, statusCode, status, data } = await result.json();
+    if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
+
+export const signup = async (values) => {
+    const result = await fetch(`${BASE_URL}/api/auth/signup`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+    });
+    const { message, statusCode, status, data } = await result.json();
+    if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
+
 export const changePassword = async (token, values) => {
     const result = await fetch(`${BASE_URL}/api/auth/change/password`, {
         method: 'POST',

@@ -1,9 +1,21 @@
-'use client'
-import React, { Suspense } from 'react'
-import SigninForm from '../../../components/form/SigninForm'
-import AuthForm from '../../../components/form/AuthForm'
-import * as AlertDialog from '@radix-ui/react-alert-dialog';
+'use client';
+import React, { Suspense } from 'react';
+import SigninForm from '../../../components/form/SigninForm';
+import AuthForm from '../../../components/form/AuthForm';
 import Link from 'next/link';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogTitle,
+    DialogTrigger,
+} from '../../../components/ui/dialog';
+import { Button } from '../../../components/ui/button';
+import dynamic from 'next/dynamic';
+
+const PasswordResetReq = dynamic(
+    () => import('../../../components/form/PasswordResetReq'),
+);
 
 export default function page() {
     return (
@@ -40,25 +52,23 @@ export default function page() {
                         Sign up
                     </Link>
                 </div>
-                <AlertDialog.Root>
-                    <AlertDialog.Trigger asChild>
-                        <button aria-label="Reset password" variant="link">
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button aria-label="Reset password" variant="link">
                             Reset password
-                        </button>
-                    </AlertDialog.Trigger>
-                    <AlertDialog.Portal>                    <AlertDialog.Content>
-                        <AlertDialog.Title>Reset password request</AlertDialog.Title>
-                        <AlertDialog.Description>
-                            We will send a verification email to your existing email. Please
-                            ensure that you have type correct email.
-                        </AlertDialog.Description>
-                    </AlertDialog.Content>
-                    </AlertDialog.Portal>
-                </AlertDialog.Root>
-            </div>{" "}
-
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogTitle>Reset password request</DialogTitle>
+                        <DialogDescription>
+                            We will send a verification email to your existing
+                            email. Please ensure that you have type correct
+                            email.
+                        </DialogDescription>
+                        <PasswordResetReq />
+                    </DialogContent>
+                </Dialog>
+            </div>{' '}
         </section>
-
-    )
+    );
 }
-

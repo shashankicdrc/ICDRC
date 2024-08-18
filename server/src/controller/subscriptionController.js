@@ -122,7 +122,6 @@ class SubscriptionController extends Base {
             amount: isPlan.price * 100,
             merchantId: process.env.MERCHANT_ID,
             merchantTransactionId: transactionId,
-            mobileNumber: '9999999999',
             merchantUserId: 'MUId-' + req.id,
             redirectUrl: `http://localhost:7000/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`,
             redirectMode: 'POST',
