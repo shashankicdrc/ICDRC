@@ -1,19 +1,24 @@
-"use client";
-import { Button } from "@chakra-ui/react";
-import { signIn } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import React from "react";
+'use client';
+import { Button } from '@chakra-ui/react';
+import { signIn } from 'next-auth/react';
+import { useSearchParams } from 'next/navigation';
+import React from 'react';
 
 export default function AuthForm() {
     const searchParams = useSearchParams();
     const googleHandler = () => {
-        const callbackUrl = searchParams.get("url") || "/dashboard";
-        signIn("google", { callbackUrl });
+        const callbackUrl =
+            decodeURIComponent(searchParams.get('url')) || '/dashboard';
+        signIn('google', { callbackUrl });
     };
 
     return (
         <div className="flex items-center gap-5">
-            <Button variant={"outline"} onClick={googleHandler} className="w-full">
+            <Button
+                variant={'outline'}
+                onClick={googleHandler}
+                className="w-full"
+            >
                 <svg
                     aria-hidden="true"
                     focusable="false"
@@ -31,7 +36,11 @@ export default function AuthForm() {
                 </svg>
                 Google
             </Button>
-            <Button variant={"outline"} onClick={googleHandler} className="w-full">
+            <Button
+                variant={'outline'}
+                onClick={googleHandler}
+                className="w-full"
+            >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
