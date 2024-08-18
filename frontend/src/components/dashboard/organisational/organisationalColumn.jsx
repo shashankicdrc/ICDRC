@@ -104,9 +104,9 @@ const organisaitonlColumns = [
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="cursor-pointer">
                             <Link
-                                href={`/dashboard/organisation/payments/${organisaitonl._id}`}
+                                href={`/dashboard/chat/${organisaitonl._id}?type=organizational`}
                             >
-                                View Payment Details
+                                Chat
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer">

@@ -26,6 +26,7 @@ import { PlusCircle } from 'lucide-react';
 export function OrganisationlDataTable({ columns, data }) {
     const [columnVisibility, setColumnVisibility] = React.useState({
         _id: false,
+        name: false,
         updatedAt: false,
         createdAt: false,
         problemDetails: false,

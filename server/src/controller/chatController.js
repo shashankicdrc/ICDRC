@@ -1,0 +1,336 @@
+import adminModel from '#models/adminModel';
+import chatModel from '#models/chatModel';
+import indComplaintModel from '#models/indComplaintModel';
+import orgComplaintModel from '#models/orgComplaintModel';
+import usermodel from '#models/userModel';
+import { Base } from '#utils/Base';
+import CustomError from '#utils/CustomError';
+import asyncHandler from '#utils/asyncHandler';
+import { httpStatus, httpStatusCode } from '#utils/constant';
+import { Router } from 'express';
+import busboy from 'busboy';
+import { EventEmitter } from 'node:events';
+import logger from '#utils/logger';
+import { isValidObjectId } from 'mongoose';
+import complaintMedia from '#models/complaintMediaModel';
+import { v2 as cloudinary } from 'cloudinary';
+
+class ChatController extends Base {
+    constructor() {
+        super();
+        this.router = Router();
+        this.#initializeRoutes();
+    }
+
+    #initializeRoutes() {
+        this.router.post('/chats', this.#addChat);
+        this.router.get('/chats/:complaintId', this.#getChat);
+        this.router.post('/chats/attachment', this.#attachment);
+    }
+
+    #checkMissingFields(validFields, receivedFields) {
+        const missingFields = validFields.filter(
+            (field) => !receivedFields.includes(field),
+        );
+        if (missingFields.length > 0) {
+            return {
+                missing: true,
+                message: `Missing fields: ${missingFields.join(', ')}`,
+            };
+        }
+        return { missing: false };
+    }
+
+    #attachment = asyncHandler(async (req, res) => {
+        const validFields = [
+            'attachment_name',
+            'complaintType',
+            'complaintId',
+            'authorType',
+            'authorId',
+        ];
+        const complaintTypeArray = [
+            'OrganizationalComplaint',
+            'IndividualComplaint',
+        ];
+        const authorTypeArr = ['user', 'admins'];
+        const receivedFields = [];
+        const fieldData = new Map();
+        let hasError = false;
+
+        const emitter = new EventEmitter();
+
+        let filesCount = 0;
+        const uploadedData = [];
+        const bb = busboy({ headers: req.headers });
+
+        async function handleError(fn) {
+            try {
+                await fn();
+            } catch (e) {
+                req.unpipe(bb);
+                hasError = true;
+            }
+        }
+
+        const uploader = () => {
+            console.log('designer');
+            return cloudinary.uploader.upload_stream(
+                { use_filename: true },
+                (error, data) => {
+                    if (error) {
+                        console.log(error, 'error occured');
+                        return res.status(error.http_code).json({
+                            message: error.message,
+                            status: httpStatus.ERROR,
+                            statusCode: httpStatusCode.BAD_REQUEST,
+                        });
+                    } else if (data) {
+                        uploadedData.push({
+                            url: data.secure_url,
+                            public_id: data.public_id,
+                        });
+                        if (filesCount === uploadedData.length)
+                            console.log('finished');
+                        emitter.emit('updateDatabase');
+                    }
+                },
+            );
+        };
+
+        emitter.on('updateDatabase', async () => {
+            const attachment_name = fieldData.get('attachment_name');
+            const complaintId = fieldData.get('complaintId');
+            const complaintType = fieldData.get('complaintType');
+            const authorType = fieldData.get('authorType');
+            const authorId = fieldData.get('authorId');
+
+            const newMedia = await complaintMedia.create({
+                attachment_name,
+                media: uploadedData,
+            });
+
+            const chatData = {
+                complaintType,
+                complaintId,
+                authorType,
+                authorId,
+                attachment: newMedia._id,
+            };
+
+            const addChat = await chatModel.create(chatData);
+
+            const comments = await addChat.populate([
+                {
+                    path: 'attachment',
+                    select: '-media.public_id',
+                },
+                {
+                    path: 'authorId',
+                    select: 'name email',
+                },
+            ]);
+            return res.status(httpStatusCode.OK).json({
+                data: comments,
+                message: 'Uploaded successfully',
+                status: httpStatus.SUCCESS,
+                statusCode: httpStatusCode.OK,
+            });
+        });
+
+        bb.on('file', (filename, file) => {
+            if (hasError) return;
+            handleError(async () => {
+                const checkField = this.#checkMissingFields(
+                    validFields,
+                    receivedFields,
+                );
+                if (checkField.missing) {
+                    hasError = true;
+                    return res.status(httpStatusCode.BAD_REQUEST).json({
+                        message: checkField.message,
+                        status: httpStatus.ERROR,
+                    });
+                }
+
+                if (!checkField.missing) {
+                    console.log('start uploading');
+                    file.pipe(uploader());
+                } else {
+                    file.resume();
+                }
+            });
+
+            file.on('end', () => (filesCount = filesCount + 1));
+        });
+
+        bb.on('field', (fieldName, value) => {
+            console.log(fieldName, value);
+            if (hasError) return;
+            receivedFields.push(fieldName);
+            handleError(async () => {
+                switch (fieldName) {
+                    case 'authorType':
+                        if (!authorTypeArr.includes(value)) {
+                            hasError = true;
+                            console.log(value);
+                            return res.status(httpStatusCode.BAD_REQUEST).json({
+                                error: 'Invalid type',
+                                status: httpStatus.ERROR,
+                                statusCode: httpStatusCode.BAD_REQUEST,
+                            });
+                        }
+                        fieldData.set(fieldName, value);
+                        break;
+                    case 'authorId':
+                        if (!isValidObjectId(value)) {
+                            hasError = true;
+                            return res.status(httpStatusCode.BAD_REQUEST).json({
+                                error: 'Invalid authorId',
+                                status: httpStatus.ERROR,
+                                statusCode: httpStatusCode.BAD_REQUEST,
+                            });
+                        }
+                        fieldData.set(fieldName, value);
+                        break;
+                    case 'complaintType':
+                        if (!complaintTypeArray.includes(value)) {
+                            hasError = true;
+                            return res.status(httpStatusCode.BAD_REQUEST).json({
+                                error: 'Invalid complaint Type',
+                                status: httpStatus.ERROR,
+                                statusCode: httpStatusCode.BAD_REQUEST,
+                            });
+                        }
+                        fieldData.set(fieldName, value);
+                        break;
+                    case 'complaintId':
+                        if (!isValidObjectId(value)) {
+                            hasError = true;
+                            return res.status(httpStatusCode.BAD_REQUEST).json({
+                                error: 'Invalid complaint Id',
+                                status: httpStatus.ERROR,
+                                statusCode: httpStatusCode.BAD_REQUEST,
+                            });
+                        }
+                        fieldData.set(fieldName, value);
+                        break;
+                    case 'attachment_name':
+                        if (value.length < 4) {
+                            hasError = true;
+                            return res.status(httpStatusCode.BAD_REQUEST).json({
+                                error: 'Attachment Name must be atleast 4 characters.',
+                                status: httpStatus.ERROR,
+                                statusCode: httpStatusCode.BAD_REQUEST,
+                            });
+                        }
+                        fieldData.set(fieldName, value);
+                        break;
+                }
+            });
+        });
+
+        bb.on('error', (error) => {
+            logger.error(error);
+            return res.status(httpStatusCode.INTERNAL_SERVER_ERROR).json({
+                message: error,
+                status: httpStatus.ERROR,
+                statusCode: httpStatusCode.BAD_REQUEST,
+            });
+        });
+
+        bb.on('finish', () => {
+            if (!hasError) {
+                logger.info('Finished');
+            }
+        });
+
+        req.pipe(bb);
+    });
+
+    #getChat = asyncHandler(async (req, res) => {
+        const { complaintId } = req.params;
+        const chats = await chatModel
+            .find({ complaintId })
+            .populate({
+                path: 'attachment',
+                select: '-media.public_id',
+            })
+            .populate({
+                path: 'authorId',
+                select: 'name email',
+            })
+            .select('-updatedAt');
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Fetched successfully',
+            chats,
+        );
+    });
+
+    #addChat = asyncHandler(async (req, res) => {
+        const { authorId, complaintId, authorType, complaintType, text } =
+            req.body;
+        let complaint;
+
+        switch (complaintType) {
+            case 'IndividualComplaint':
+                complaint = await indComplaintModel.findById(complaintId);
+                break;
+            case 'OrganizationalComplaint':
+                complaint = await orgComplaintModel.findById(complaintId);
+                break;
+            default:
+                throw new CustomError(
+                    'Invalid complaint Type',
+                    httpStatusCode.BAD_REQUEST,
+                );
+        }
+
+        if (!complaint) {
+            throw new CustomError('Complaint does not exist.');
+        }
+
+        let author;
+
+        switch (authorType) {
+            case 'admins':
+                author = await adminModel.findById(authorId);
+                break;
+            case 'user':
+                author = await usermodel.findById(authorId);
+                break;
+            default:
+                throw new CustomError(
+                    'Invalid author type',
+                    httpStatusCode.BAD_REQUEST,
+                );
+        }
+
+        let chatData = {
+            authorId: author.id,
+            authorType,
+            complaintType,
+            complaintId: complaint.id,
+            text,
+        };
+
+        const chat = await chatModel.create(chatData);
+
+        const newChat = await chat.populate({
+            path: 'authorId',
+            select: 'name email',
+        });
+        this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Chat is added successfully',
+            newChat,
+        );
+    });
+}
+
+export default new ChatController().router;

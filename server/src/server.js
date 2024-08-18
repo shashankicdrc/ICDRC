@@ -21,12 +21,15 @@ import cors from 'cors';
 import userController from '#controller/userController';
 import planController from '#controller/planController';
 import subscriptionController from '#controller/subscriptionController';
+import chatController from '#controller/chatController';
+import cloudinaryConfiguration from '#config/cloudinaryConfiguration';
 
 const startServer = async () => {
     const app = express();
     const port = process.env.PORT || 8080;
     app.use(express.json());
     app.use(cors());
+    cloudinaryConfiguration();
 
     app.get(
         '/',
@@ -53,6 +56,7 @@ const startServer = async () => {
     app.use('/api', userController);
     app.use('/api', planController);
     app.use('/api', subscriptionController);
+    app.use('/api', chatController);
 
     app.use(ErrorMiddleware);
 

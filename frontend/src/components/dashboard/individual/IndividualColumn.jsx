@@ -98,9 +98,9 @@ const individualColumns = [
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="cursor-pointer">
                             <Link
-                                href={`/dashboard/individuals/payments/${individual._id}`}
+                                href={`/dashboard/chat/${individual._id}?type=individual`}
                             >
-                                View Payment Details
+                                Chat
                             </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem className="cursor-pointer">
