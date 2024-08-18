@@ -21,9 +21,5 @@ export function checkSubscriptionStatus(subscription) {
         return SubscriptionStatus.LIMIT_EXCEEDED;
     }
 
-    if (!subscription.isActive) {
-        return SubscriptionStatus.NOT_ACTIVE;
-    }
-
     return SubscriptionStatus.VALID;
 }

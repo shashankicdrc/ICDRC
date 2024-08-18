@@ -2,6 +2,15 @@ import planModel from '#models/planModel';
 import subscriptionModel from '#models/subscriptionModel';
 
 class SubscriptionService {
+    async updateSubscription(id, data) {
+        const updatedSubscription = await subscriptionModel.findByIdAndUpdate(
+            id,
+            data,
+            { new: true },
+        );
+        return updatedSubscription;
+    }
+
     async getSubscriptionById(id) {
         return await subscriptionModel.findById(id);
     }

@@ -112,12 +112,6 @@ const OganisationalForm = () => {
                         'You have exceeded your complaint limit. You have to pay for case registration.',
                     );
                     break;
-                case SubscriptionStatus.NOT_ACTIVE:
-                    setIsValidSubscription(false);
-                    setsubscriptionMessage(
-                        'Your subscription is not active. You to pay for case registration.',
-                    );
-                    break;
                 case SubscriptionStatus.VALID:
                     setIsValidSubscription(true);
                     setsubscriptionMessage('Your subscription is valid.');

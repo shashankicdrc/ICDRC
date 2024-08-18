@@ -6,6 +6,7 @@ const schema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'user',
             required: true,
+            unique: true,
         },
         planId: {
             type: Schema.Types.ObjectId,
@@ -19,10 +20,6 @@ const schema = new Schema(
         endDate: {
             type: Date,
             required: true,
-        },
-        isActive: {
-            type: Boolean,
-            default: true,
         },
         complaintLimit: {
             type: Number,

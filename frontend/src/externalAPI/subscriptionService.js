@@ -6,6 +6,7 @@ export const getUserSubscription = async (token) => {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
         },
+        cache: 'no-cache',
     });
     const { message, statusCode, status, data } = await result.json();
     if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {

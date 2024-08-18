@@ -2,13 +2,18 @@ import planModel from '#models/planModel';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
-import { httpStatus, httpStatusCode } from '#utils/constant';
+import { FRONTEND_URL, httpStatus, httpStatusCode } from '#utils/constant';
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
 import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 import crypto from 'crypto';
 import SubscriptionService from '#services/subscriptionService';
 import PaymentHistory from '#models/paymentHistoryModel';
+import {
+    SubscriptionStatus,
+    checkSubscriptionStatus,
+} from '#utils/subscription';
+import logger from '#utils/logger';
 
 class SubscriptionController extends Base {
     #subscriptionService;
@@ -36,6 +41,20 @@ class SubscriptionController extends Base {
         );
     }
 
+    #checkSubscription(subscriptionStatus) {
+        switch (subscriptionStatus) {
+            case SubscriptionStatus.EXPIRED:
+                return false;
+            case SubscriptionStatus.DOES_NOT_EXIST:
+                return false;
+            case SubscriptionStatus.LIMIT_EXCEEDED:
+                return false;
+            case SubscriptionStatus.VALID:
+                console.log('checkSubscription', true);
+                return true;
+        }
+    }
+
     #userSubscription = asyncHandler(async (req, res) => {
         const subscription =
             await this.#subscriptionService.getUserSubscription(req.id);
@@ -57,6 +76,13 @@ class SubscriptionController extends Base {
     #checkStatus = asyncHandler(async (req, res) => {
         const { transactionId } = req.params;
         const { planId, userId } = req.query;
+
+        const plan = await planModel.findById(planId);
+        if (!plan) {
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Plan does not exist.`,
+            );
+        }
 
         const merchantId = process.env.MERCHANT_ID;
         const keyIndex = process.env.SALT_INDEX;
@@ -81,12 +107,35 @@ class SubscriptionController extends Base {
         );
         const { success, data, message } = await response.json();
         if (!success) {
-            return res.redirect(
-                `http://localhost:3000/failure?message=${message}`,
-            );
+            return res.redirect(`${FRONTEND_URL}/failure?message=${message}`);
         }
-        const addSubscription =
-            await this.#subscriptionService.createSubscription(planId, userId);
+        let subscriptionData;
+
+        const isUserSubscription =
+            await this.#subscriptionService.getUserSubscription(userId);
+
+        if (isUserSubscription) {
+            const updateSubscriptionData = {
+                planId: plan.id,
+                complaintLimit: plan.complaintLimit,
+                usedComplaints: 0,
+                startDate: new Date(),
+                endDate: new Date(
+                    Date.now() + plan.durationInDays * 24 * 60 * 60 * 1000,
+                ),
+            };
+            subscriptionData =
+                await this.#subscriptionService.updateSubscription(
+                    isUserSubscription._id,
+                    updateSubscriptionData,
+                );
+        } else {
+            subscriptionData =
+                await this.#subscriptionService.createSubscription(
+                    planId,
+                    userId,
+                );
+        }
 
         const paymentHistoryData = {
             userId,
@@ -94,13 +143,13 @@ class SubscriptionController extends Base {
             transactionId: data.transactionId,
             paymentFor: 'Subscription',
             paymentStatus: 'Success',
-            subscriptionId: addSubscription.id,
+            subscriptionId: subscriptionData.id,
         };
 
         await PaymentHistory.create(paymentHistoryData);
 
         return res.redirect(
-            `http://localhost:3000/success?amount=${data.amount}&transactionId=${data.transactionId}`,
+            `${FRONTEND_URL}/success?amount=${data.amount}&transactionId=${data.transactionId}`,
         );
     });
 
@@ -110,6 +159,23 @@ class SubscriptionController extends Base {
         if (!isPlan) {
             throw new CustomError(
                 'Plan does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
+        const isUserSubscription =
+            await this.#subscriptionService.getUserSubscription(req.id);
+        logger.info(isUserSubscription);
+
+        const subscriptionStatus = checkSubscriptionStatus(isUserSubscription);
+
+        const isValidSubscription = this.#checkSubscription(subscriptionStatus);
+        if (
+            isValidSubscription &&
+            isUserSubscription.planId.toString() === planId
+        ) {
+            throw new CustomError(
+                'You have already an active subscription with same plan.',
                 httpStatusCode.BAD_REQUEST,
             );
         }
