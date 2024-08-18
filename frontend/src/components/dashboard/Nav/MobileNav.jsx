@@ -1,11 +1,14 @@
-"use client";
-import React from "react";
-import { Sheet, SheetContent, SheetTrigger } from "../../ui/sheet";
-import { Button } from "../../ui/button";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "../../../lib/utils";
-import { CiEdit, CiHome } from "react-icons/ci";
+'use client';
+import React from 'react';
+import { Sheet, SheetContent, SheetTrigger } from '../../ui/sheet';
+import { Button } from '../../ui/button';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { cn } from '../../../lib/utils';
+import { CiEdit, CiHome } from 'react-icons/ci';
+import { MdPayment } from 'react-icons/md';
+import { Settings, ShieldQuestion } from 'lucide-react';
+import { GoProjectRoadmap } from 'react-icons/go';
 
 const MobileNav = () => {
     const [open, setopen] = React.useState(false);
@@ -61,9 +64,9 @@ const MobileNav = () => {
                         href="/dashboard"
                         onClick={() => setopen(!open)}
                         className={cn(
-                            "mx-[-0.65rem] mt-5 flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
-                            pathname === "/dashboard"
-                                ? "rounded-xl bg-muted text-foreground"
+                            'mx-[-0.65rem] mt-5 flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground',
+                            pathname === '/dashboard'
+                                ? 'rounded-xl bg-muted text-primary'
                                 : null,
                         )}
                     >
@@ -74,14 +77,66 @@ const MobileNav = () => {
                         href="/dashboard/register"
                         onClick={() => setopen(!open)}
                         className={cn(
-                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
-                            pathname === "/dashboard/register"
-                                ? "rounded-xl bg-muted text-foreground"
+                            'mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground',
+                            pathname === '/dashboard/register'
+                                ? 'rounded-xl bg-muted text-primary'
                                 : null,
                         )}
                     >
                         <CiEdit className="h-5 w-5" />
                         Regist Complaint
+                    </Link>
+                    <Link
+                        href="/dashboard/complaints/individual"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            'mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground',
+                            pathname === '/dashboard/complaints/individual'
+                                ? 'rounded-xl bg-muted text-primary'
+                                : null,
+                        )}
+                    >
+                        <GoProjectRoadmap className="h-5 w-5" />
+                        Individual Case
+                    </Link>
+                    <Link
+                        href="/dashboard/complaints/organisational"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            'mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground',
+                            pathname === '/dashboard/complaints/organisational'
+                                ? 'rounded-xl bg-muted text-primary'
+                                : null,
+                        )}
+                    >
+                        <ShieldQuestion className="h-5 w-5" />
+                        Organisational Case{' '}
+                    </Link>
+                    <Link
+                        href="/dashboard/payment/history"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            'mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground',
+                            pathname === '/dashboard/payment/history'
+                                ? 'rounded-xl bg-muted text-primary'
+                                : null,
+                        )}
+                    >
+                        <MdPayment className="h-5 w-5" />
+                        Payment History{' '}
+                    </Link>
+                    <Link
+                        href="/dashboard/settings"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            'mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground',
+                            pathname === '/dashboard/settings'
+                                ? 'rounded-xl bg-muted text-primary'
+                                : null,
+                        )}
+                    >
+                        <Settings className="h-5 w-5" />
+                        Settings{' '}
                     </Link>
                 </nav>
             </SheetContent>
