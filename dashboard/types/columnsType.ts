@@ -1,3 +1,13 @@
+export interface chatBotType {
+    _id: string,
+    name: string,
+    email: string,
+    mobile: string,
+    issue: string,
+    createdAt: string
+
+}
+
 export interface contactType {
     _id: string,
     name: string,
