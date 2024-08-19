@@ -38,11 +38,29 @@ class PaymentController extends Base {
             userAuthMiddleware,
             this.#getUserPaymentHistory,
         );
+        this.router.get(
+            '/payments/history/recent',
+            userAuthMiddleware,
+            this.#userRecentPaymentHistory,
+        );
         this.router.post(
             '/payments/status/:transactionId',
             this.#paymentStatus,
         );
     }
+
+    #userRecentPaymentHistory = asyncHandler(async (req, res) => {
+        const transaction = await PaymentHistory.find({ userId: req.id })
+            .sort({ createdAt: -1 })
+            .limit(5);
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Recent Transaction',
+            transaction,
+        );
+    });
 
     #paymentStatus = asyncHandler(async (req, res) => {
         logger.info('Payment status hit');

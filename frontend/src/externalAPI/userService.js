@@ -1,4 +1,47 @@
 import { BASE_URL, httpStatus, httpStatusCode } from '../lib/constant';
+import { indCompalintCount, orgComplaintCount } from './complaintService';
+import { userRecentPayments } from './paymentService';
+
+export async function handleResponses(token) {
+    if (!token) return;
+    const errors = {
+        individualComplaintError: null,
+        organizationComplaintError: null,
+        paymentError: null,
+    };
+
+    try {
+        const [indResp, orgResp, paymentResp] = await Promise.all([
+            indCompalintCount(token),
+            orgComplaintCount(token),
+            userRecentPayments(token),
+        ]);
+
+        if (indResp.error) {
+            errors.individualComplaintError =
+                indResp.message || 'Unknown error';
+        }
+
+        if (orgResp.error) {
+            errors.organizationComplaintError =
+                orgResp.message || 'Unknown error';
+        }
+
+        if (paymentResp.error) {
+            errors.paymentError = paymentResp.message || 'Unknown error';
+        }
+
+        return {
+            individualComplaints: indResp.data || null,
+            organizationComplaints: orgResp.data || null,
+            recentPayments: paymentResp.data || null,
+            errors,
+        };
+    } catch (error) {
+        console.error('Unexpected Error:', error.message);
+        throw error;
+    }
+}
 
 export const resetPassword = async (values) => {
     const result = await fetch(`${BASE_URL}/api/auth/reset/password`, {

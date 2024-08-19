@@ -39,12 +39,33 @@ class OrgainsationalController extends Base {
             userAuthMiddleware,
             this.#getComplaints,
         );
+        this.router.get(
+            '/organisational/complaints/count',
+            userAuthMiddleware,
+            this.#totalComplaintsOfUser,
+        );
+
         this.router.post(
             '/organisational/complaints',
             userAuthMiddleware,
             this.#addComplaints,
         );
     }
+
+    #totalComplaintsOfUser = asyncHandler(async (req, res) => {
+        const count = await orgComplaintModel.countDocuments({
+            userId: req.id,
+        });
+
+        const formattedCount = count < 10 ? `0${count}` : `${count}`;
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Total Organisational complaint fetched susccessfully.',
+            formattedCount,
+        );
+    });
 
     #checkSubscription(subscriptionStatus) {
         switch (subscriptionStatus) {

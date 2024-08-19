@@ -43,11 +43,32 @@ class IndividualController extends Base {
             this.#getComplaints,
         );
         this.router.get(
+            '/individual/complaints/count',
+            userAuthMiddleware,
+            this.#totalComplaintsOfUser,
+        );
+
+        this.router.get(
             '/individual/complaints/:id',
             userAuthMiddleware,
             this.#getComplaintById,
         );
     }
+
+    #totalComplaintsOfUser = asyncHandler(async (req, res) => {
+        const count = await indComplaintModel.countDocuments({
+            userId: req.id,
+        });
+
+        const formattedCount = count < 10 ? `0${count}` : `${count}`;
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Total Individual complaint fetched susccessfully.',
+            formattedCount,
+        );
+    });
 
     #getComplaintById = asyncHandler(async (req, res) => {
         const { id } = req.params;
