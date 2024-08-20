@@ -24,7 +24,8 @@ export type ColumnFilter = {
     accessorKey: string;
     header: string;
     operators: Operator[];
-    inputType: string;
+    inputType: 'text' | 'select' | 'date';
+    values?: string[]
 };
 
 export type UserFilter = {

@@ -20,6 +20,8 @@ import {
 import CustomError from '#utils/CustomError';
 import subscriptionModel from '#models/subscriptionModel';
 import logger from '#utils/logger';
+import { filterSort, parseFilters } from '#utils/filterSort';
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 
 class OrgainsationalController extends Base {
     #orgComplaintService;
@@ -50,7 +52,60 @@ class OrgainsationalController extends Base {
             userAuthMiddleware,
             this.#addComplaints,
         );
+        this.router.get(
+            '/admin/organisational/complaints',
+            AdminAuthMiddleware,
+            this.#getadminsComplaint,
+        );
+        this.router.get(
+            '/admin/organisational/complaints/organisationName',
+            AdminAuthMiddleware,
+            this.#getOrganizationName,
+        );
     }
+    #getOrganizationName = asyncHandler(async (req, res) => {
+        const orgName = await orgComplaintModel
+            .find({})
+            .select('organizationName');
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Organization Name fetched successfully.',
+            orgName,
+        );
+    });
+
+    #getadminsComplaint = asyncHandler(async (req, res) => {
+        let { perRow, page } = req.query;
+        const { search } = new URL(req.url, `http://${req.headers.host}`);
+        const { filters, Sorts } = filterSort(search);
+
+        const filterQuery = parseFilters(filters);
+
+        page = Number(page) || 1;
+        perRow = Number(perRow) || 20;
+
+        const [complaints, totalCount] = await Promise.all([
+            orgComplaintModel
+                .find(filterQuery)
+                .sort(Sorts)
+                .limit(perRow)
+                .exec(),
+            orgComplaintModel.countDocuments(filterQuery).exec(),
+        ]);
+        const data = {
+            complaints,
+            totalCount,
+        };
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Organisational Complaint data has been fetched Successfully.',
+            data,
+        );
+    });
 
     #totalComplaintsOfUser = asyncHandler(async (req, res) => {
         const count = await orgComplaintModel.countDocuments({

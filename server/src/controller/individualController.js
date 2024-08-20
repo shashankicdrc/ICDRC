@@ -1,3 +1,4 @@
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 import indComplaintModel from '#models/indComplaintModel';
 import subscriptionModel from '#models/subscriptionModel';
@@ -14,6 +15,7 @@ import {
     httpStatus,
     httpStatusCode,
 } from '#utils/constant';
+import { filterSort, parseFilters } from '#utils/filterSort';
 import {
     SubscriptionStatus,
     checkSubscriptionStatus,
@@ -53,7 +55,43 @@ class IndividualController extends Base {
             userAuthMiddleware,
             this.#getComplaintById,
         );
+        this.router.get(
+            '/admin/individual/complaints',
+            AdminAuthMiddleware,
+            this.#adminGetComplaints,
+        );
     }
+
+    #adminGetComplaints = asyncHandler(async (req, res) => {
+        let { perRow, page } = req.query;
+        const { search } = new URL(req.url, `http://${req.headers.host}`);
+        const { filters, Sorts } = filterSort(search);
+
+        const filterQuery = parseFilters(filters);
+
+        page = Number(page) || 1;
+        perRow = Number(perRow) || 20;
+
+        const [complaints, totalCount] = await Promise.all([
+            indComplaintModel
+                .find(filterQuery)
+                .sort(Sorts)
+                .limit(perRow)
+                .exec(),
+            indComplaintModel.countDocuments(filterQuery).exec(),
+        ]);
+        const data = {
+            complaints,
+            totalCount,
+        };
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Individual Complaint data has been fetched Successfully.',
+            data,
+        );
+    });
 
     #totalComplaintsOfUser = asyncHandler(async (req, res) => {
         const count = await indComplaintModel.countDocuments({

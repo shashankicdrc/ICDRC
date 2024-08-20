@@ -18,6 +18,9 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
+import { getOrganisationName } from "@/externalAPI/orgCaseService";
+import { useSession } from "next-auth/react";
+import { toast } from "sonner";
 
 interface Props {
     columnFilters: ColumnFilter[];
@@ -25,10 +28,29 @@ interface Props {
 
 export const Filter = ({ columnFilters }: Props) => {
     const [userFilters, setUserFilters] = React.useState<UserFilter[]>([]);
+    const [organizationNames, setOrganizationNames] = React.useState<{ _id: string, organizationName: string }[]>([]);
+    const { data: session } = useSession()
+    const token = session?.user.AccessToken as string;
 
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const { replace } = useRouter();
+
+    React.useEffect(() => {
+        async function fetchOrganizationNames() {
+            try {
+                if (!token) return;
+                const { data, error } = await getOrganisationName(token)
+                if (error) return toast.error(error)
+                setOrganizationNames(data)
+            } catch (error: any) {
+                toast.error(error.message);
+            }
+        }
+        if (pathname === '/dashboard/organisational') {
+            fetchOrganizationNames();
+        }
+    }, [session]);
 
     React.useEffect(() => {
         const filters = searchParams.getAll("filter");
@@ -200,6 +222,39 @@ export const Filter = ({ columnFilters }: Props) => {
                                         className="w-auto"
                                     />
                                 )}
+                            {filter.column && filter.column === 'organizationName' && columnFilters.find(col => col.accessorKey === filter.column)?.inputType === 'select' && (
+                                <Select
+                                    value={filter.value}
+                                    onValueChange={(val) => handleFilterChange(index, 'value', val)}
+                                >
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Select a value" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {organizationNames.map(item =>
+                                            <SelectItem key={item._id} value={item.organizationName}>
+                                                {item.organizationName}
+                                            </SelectItem>)}
+                                    </SelectContent>
+                                </Select>
+                            )}
+
+
+                            {filter.column && filter.column !== 'organizationName' && columnFilters.find(col => col.accessorKey === filter.column)?.inputType === 'select' && (
+                                <Select
+                                    value={filter.value}
+                                    onValueChange={(val) => handleFilterChange(index, 'value', val)}
+                                >
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Select a value" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {columnFilters.find(col => col.accessorKey === filter.column)?.values?.map((value, index) => (
+                                            <SelectItem key={index} value={value}>{value}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
 
                             <button
                                 onClick={() => handleRemoveFilter(index)}
