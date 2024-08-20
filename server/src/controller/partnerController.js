@@ -11,6 +11,7 @@ import {
     httpStatusCode,
 } from '#utils/constant';
 import { filterSort, parseFilters } from '#utils/filterSort';
+import pagination from '#utils/pagination';
 import { Router } from 'express';
 
 class PartnerController extends Base {
@@ -56,8 +57,15 @@ class PartnerController extends Base {
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;
 
+        const skip = pagination(page, perRow);
+
         const [partners, totalCount] = await Promise.all([
-            partnerModel.find(filterQuery).sort(Sorts).limit(perRow).exec(),
+            partnerModel
+                .find(filterQuery)
+                .sort(Sorts)
+                .skip(skip)
+                .limit(perRow)
+                .exec(),
             partnerModel.countDocuments(filterQuery).exec(),
         ]);
 

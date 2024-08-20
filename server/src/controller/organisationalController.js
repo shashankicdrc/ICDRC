@@ -22,6 +22,7 @@ import subscriptionModel from '#models/subscriptionModel';
 import logger from '#utils/logger';
 import { filterSort, parseFilters } from '#utils/filterSort';
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
+import pagination from '#utils/pagination';
 
 class OrgainsationalController extends Base {
     #orgComplaintService;
@@ -86,10 +87,13 @@ class OrgainsationalController extends Base {
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;
 
+        const skip = pagination(page, perRow);
+
         const [complaints, totalCount] = await Promise.all([
             orgComplaintModel
                 .find(filterQuery)
                 .sort(Sorts)
+                .skip(skip)
                 .limit(perRow)
                 .exec(),
             orgComplaintModel.countDocuments(filterQuery).exec(),

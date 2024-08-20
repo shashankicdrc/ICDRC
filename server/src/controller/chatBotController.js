@@ -11,6 +11,7 @@ import {
     httpStatusCode,
 } from '#utils/constant';
 import { filterSort, parseFilters } from '#utils/filterSort';
+import pagination from '#utils/pagination';
 import { Router } from 'express';
 
 class ChatBotController extends Base {
@@ -53,8 +54,15 @@ class ChatBotController extends Base {
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;
 
+        const skip = pagination(page, perRow);
+
         const [chatbots, totalCount] = await Promise.all([
-            chatBotModel.find(filterQuery).sort(Sorts).limit(perRow).exec(),
+            chatBotModel
+                .find(filterQuery)
+                .sort(Sorts)
+                .skip(skip)
+                .limit(perRow)
+                .exec(),
             chatBotModel.countDocuments(filterQuery).exec(),
         ]);
 

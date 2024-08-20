@@ -16,6 +16,7 @@ import {
     httpStatusCode,
 } from '#utils/constant';
 import { filterSort, parseFilters } from '#utils/filterSort';
+import pagination from '#utils/pagination';
 import {
     SubscriptionStatus,
     checkSubscriptionStatus,
@@ -72,10 +73,13 @@ class IndividualController extends Base {
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;
 
+        const skip = pagination(page, perRow);
+
         const [complaints, totalCount] = await Promise.all([
             indComplaintModel
                 .find(filterQuery)
                 .sort(Sorts)
+                .skip(skip)
                 .limit(perRow)
                 .exec(),
             indComplaintModel.countDocuments(filterQuery).exec(),
