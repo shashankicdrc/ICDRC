@@ -1,3 +1,12 @@
+import { adminRole } from "@/lib/commonEnum";
+
+export type adminType = {
+    _id: string;
+    name: string;
+    email: string;
+    role: adminRole;
+    createdAt: string;
+};
 
 export type caseStatus = "Pending" | "Processing" | "Completed"
 export type paymentStatus = "Pending" | "Paid"
