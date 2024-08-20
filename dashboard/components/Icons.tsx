@@ -1,4 +1,4 @@
-import { ArrowLeftToLine, ArrowRightToLine, ArrowUpDown, Edit, Home, ListFilter, Loader2, Mail, MoreHorizontal, PlusCircle, Trash, User, X } from "lucide-react";
+import { ArrowLeftToLine, ArrowRightToLine, ArrowUpDown, Edit, Home, ListFilter, Loader2, Mail, MoreHorizontal, MoreVertical, PlusCircle, Trash, User, X } from "lucide-react";
 
 export const Icons = {
     delete: Trash,
@@ -7,6 +7,7 @@ export const Icons = {
     sort: ArrowUpDown,
     filter: ListFilter,
     horizontalDot: MoreHorizontal,
+    verticalDot: MoreVertical,
     loader: Loader2,
     home: Home,
     user: User,

@@ -1,5 +1,16 @@
 import { adminRole } from "@/lib/commonEnum";
 
+export type blogType = {
+    _id: string;
+    name: string;
+    image: string;
+    description: string;
+    keywords: string[]
+    content: string;
+    createdAt: string;
+    updatedAt: string
+};
+
 export type adminType = {
     _id: string;
     name: string;
