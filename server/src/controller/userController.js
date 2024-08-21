@@ -5,7 +5,6 @@ import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
-import logger from '#utils/logger';
 import { Router } from 'express';
 
 class UserController extends Base {

@@ -1,6 +1,7 @@
-import { ArrowLeftToLine, ArrowRightToLine, ArrowUpDown, BotMessageSquare, CreditCard, Edit, Gift, Handshake, Home, ListFilter, Loader2, Mail, MoreHorizontal, MoreVertical, NotebookPen, Pencil, PlusCircle, Trash, User, X } from "lucide-react";
+import { ArrowLeftToLine, ArrowRightToLine, ArrowUpDown, BotMessageSquare, CreditCard, Edit, Gift, Handshake, Home, ListFilter, Loader2, Mail, MoreHorizontal, MoreVertical, NotebookPen, Pencil, PlusCircle, Settings, Trash, User, X } from "lucide-react";
 
 export const Icons = {
+    settings: Settings,
     edit: Pencil,
     caseStudy: NotebookPen,
     subscription: Gift,

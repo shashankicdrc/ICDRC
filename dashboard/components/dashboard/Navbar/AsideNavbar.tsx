@@ -9,6 +9,8 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface Props {
     isCollapsed: boolean;
@@ -16,6 +18,7 @@ interface Props {
 }
 
 export const AsideNavbar = ({ isCollapsed, setIsCollapsed }: Props) => {
+    const pathname = usePathname();
     return (
         <aside
             className={cn(
@@ -53,6 +56,26 @@ export const AsideNavbar = ({ isCollapsed, setIsCollapsed }: Props) => {
                     )}
                 </Tooltip>{" "}
                 <DashboardNav isCollapsed={isCollapsed} />
+            </nav>
+            <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Link
+                            href="/dashboard/settings"
+                            className={cn(
+                                "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                                pathname === "/dashboard/settings"
+                                    ? " rounded-lg bg-muted text-primary"
+                                    : null,
+                                isCollapsed ? "w-fit" : "w-full",
+                            )}
+                        >
+                            <Icons.settings className="h-5 w-5" />
+                            {!isCollapsed && <span>Settings</span>}
+                        </Link>
+                    </TooltipTrigger>
+                    {isCollapsed && <TooltipContent side="right">Settings</TooltipContent>}
+                </Tooltip>{" "}
             </nav>
         </aside>
     );

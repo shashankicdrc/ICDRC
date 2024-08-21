@@ -1,5 +1,59 @@
+import { changePasswordInput } from "@/components/form/settings/ChangePasswordForm";
 import { httpStatus, httpStatusCode } from "@/lib/commonEnum";
 import { BASE_URL } from "@/lib/constant";
+
+
+export const getAdminById = async (token: string, id: any) => {
+    const result = await fetch(`${BASE_URL}/api/admins/${id}`, {
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    const { status, statusCode, message, data } = await result.json();
+    if (status !== httpStatus.SUCCESS && statusCode !== httpStatusCode.OK) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
+
+export const changePassword = async (
+    token: string,
+    value: changePasswordInput,
+) => {
+    const result = await fetch(`${BASE_URL}/api/admin/auth/change/password`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ ...value }),
+    });
+    const { message, statusCode, status } = await result.json();
+    if (statusCode !== 200 && status !== "success") {
+        return { error: message };
+    } else {
+        return { message };
+    }
+};
+
+export const updateProfile = async (token: string, value: any) => {
+    const result = await fetch(`${BASE_URL}/api/admins`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(value),
+    });
+    const { status, statusCode, message, data } = await result.json();
+    if (status !== httpStatus.SUCCESS && statusCode !== httpStatusCode.OK) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
 
 export const changeRole = async (token: string, value: any) => {
     const result = await fetch(`${BASE_URL}/api/admins/role`, {

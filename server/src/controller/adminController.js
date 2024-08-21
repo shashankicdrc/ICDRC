@@ -15,9 +15,50 @@ class AdminController extends Base {
 
     #initializeRoutes() {
         this.router.get('/admins', AdminAuthMiddleware, this.#getAdmins);
+        this.router.get('/admins/:id', AdminAuthMiddleware, this.#getAdminById);
         this.router.put('/admins/role', AdminAuthMiddleware, this.#changeRole);
         this.router.delete('/admins', AdminAuthMiddleware, this.#deleteAdmins);
+        this.router.put('/admins', AdminAuthMiddleware, this.#updateProfile);
     }
+
+    #updateProfile = asyncHandler(async (req, res) => {
+        const { name } = req.body;
+        const update = await adminModel
+            .findByIdAndUpdate(req.id, {
+                name,
+            })
+            .select('-password');
+        if (!update) {
+            throw new CustomError(
+                'Admin does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Your profile has been updated.',
+            update,
+        );
+    });
+
+    #getAdminById = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const admin = await adminModel.findById(id).select('-password');
+        if (!admin)
+            throw new CustomError(
+                'Admin does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Admin Fetched successfully.',
+            admin,
+        );
+    });
 
     #deleteAdmins = asyncHandler(async (req, res) => {
         const { adminIds } = req.body;

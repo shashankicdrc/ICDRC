@@ -48,7 +48,7 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 if (trigger === "update") {
-                    token = { ...token, ...session.user };
+                    return { ...token, ...session.user }
                 }
 
                 const shouldRefreshTime = isResfreshToken(token.AccessTokenExpiry);
@@ -88,8 +88,8 @@ export const authOptions: NextAuthOptions = {
                 session.user.AccessToken = token.AccessToken;
                 session.user.RefreshToken = token.RefreshToken;
                 session.user.id = accessToken.id;
-                session.user.email = accessToken.email;
-                session.user.name = accessToken.name;
+                session.user.email = token.email;
+                session.user.name = token.name;
                 session.user.image = (token.image as string) || token.picture;
                 session.user.role = accessToken.role;
                 session.error = token.error;
