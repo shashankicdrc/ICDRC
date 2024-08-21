@@ -1,12 +1,9 @@
 import ErrorFallback from '@/components/ErrorFallback';
-import CaseColumns from '@/components/individualCase/columns';
-import { IndividualDataTable } from '@/components/individualCase/DataTable';
 import OrgCaseColumns from '@/components/organisationalCase/columns';
 import { OrganisationalDataTable } from '@/components/organisationalCase/DataTable';
 import PaginationComponent from '@/components/PaginationController';
 import PerRowSelect from '@/components/perRowSelect';
 import { Card, CardContent } from '@/components/ui/card';
-import { getIndividualCase } from '@/externalAPI/indCaseService';
 import { getOrganisationalCase } from '@/externalAPI/orgCaseService';
 import { authOptions } from '@/lib/authOptions';
 import { BASE_URL } from '@/lib/constant';

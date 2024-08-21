@@ -19,7 +19,7 @@ interface Props {
 export const DashboardNav = ({ isCollapsed }: Props) => {
     const pathname = usePathname();
     return (
-        <React.Fragment>
+        <div className="flex flex-col gap-3">
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Link
@@ -55,6 +55,43 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                     </Link>
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Contacts</TooltipContent>}
+            </Tooltip>
+            <Separator />
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/individual"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname.startsWith("/dashboard/individual")
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.individual className="h-5 w-5" />
+                        {!isCollapsed && <span>Individual Case</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Individual Complaints</TooltipContent>}
+            </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/organisational"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname.startsWith("/dashboard/organisational")
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.organisational className="h-5 w-5" />
+                        {!isCollapsed && <span>Organisational Case</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Organisational Complaints</TooltipContent>}
             </Tooltip>
             <Tooltip>
                 <TooltipTrigger asChild>
@@ -184,6 +221,25 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Case Study</TooltipContent>}
             </Tooltip>
-        </React.Fragment>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/settings"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname === "/dashboard/settings"
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.settings className="h-5 w-5" />
+                        {!isCollapsed && <span>Settings</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Settings</TooltipContent>}
+            </Tooltip>{" "}
+
+        </div>
     );
 };

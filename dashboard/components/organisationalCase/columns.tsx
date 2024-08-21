@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Checkbox } from "@/components/ui/checkbox";
 import { organisationalCaseType } from "@/types/columnsType";
 import { formatDate } from "@/lib/formatDate";
+import Link from "next/link";
 
 const OrgCaseColumns: ColumnDef<organisationalCaseType>[] = [
     {
@@ -132,6 +133,9 @@ const OrgCaseColumns: ColumnDef<organisationalCaseType>[] = [
                             onClick={copyCaseId}
                         >
                             Copy Case ID
+                        </DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <Link href={`/dashboard/chats/${caseData._id}?type=organizational`}>Chat</Link>
                         </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
