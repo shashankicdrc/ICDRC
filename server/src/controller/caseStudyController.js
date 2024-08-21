@@ -4,6 +4,7 @@ import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
 import { filterSort, parseFilters } from '#utils/filterSort';
+import pagination from '#utils/pagination';
 import { Router } from 'express';
 
 class CaseStudyController extends Base {
@@ -67,9 +68,15 @@ class CaseStudyController extends Base {
 
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;
+        const skip = pagination(page, perRow);
 
         const [caseStudy, totalCount] = await Promise.all([
-            caseStudyModel.find(filterQuery).sort(Sorts).limit(perRow).exec(),
+            caseStudyModel
+                .find(filterQuery)
+                .skip(skip)
+                .sort(Sorts)
+                .limit(perRow)
+                .exec(),
             caseStudyModel.countDocuments(filterQuery).exec(),
         ]);
 

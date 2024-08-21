@@ -1,5 +1,20 @@
 import { adminRole } from "@/lib/commonEnum";
 
+export interface subscriptionType {
+    _id: string,
+    userId: string,
+    planId: {
+        _id: string,
+        name: string,
+    },
+    complaintLimit: number,
+    usedComplaints: number,
+    startDate: string,
+    endDate: string,
+    createdAt: string,
+
+}
+
 export type PaymentFor = 'Subscription' | 'Case Registration'
 export type PaymentHistoryStatus = 'Success' | "Failed"
 export type complaintType = 'OrganizationComplaint' | "IndividualComplaint"

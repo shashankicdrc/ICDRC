@@ -1,6 +1,7 @@
 
 "use client";
 import { Icons } from "@/components/Icons";
+import { Separator } from "@/components/ui/separator";
 import {
     Tooltip,
     TooltipContent,
@@ -73,6 +74,80 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Admins</TooltipContent>}
             </Tooltip>
+
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/payments"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname.startsWith("/dashboard/payments")
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.payment className="h-5 w-5" />
+                        {!isCollapsed && <span>Payments</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Payments</TooltipContent>}
+            </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/subscriptions"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname.startsWith("/dashboard/subscriptions")
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.subscription className="h-5 w-5" />
+                        {!isCollapsed && <span>Subscriptions</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Subscriptions</TooltipContent>}
+            </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/partners"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname.startsWith("/dashboard/partners")
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.partner className="h-5 w-5" />
+                        {!isCollapsed && <span>Partners</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Partners</TooltipContent>}
+            </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/chatbot"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname.startsWith("/dashboard/chatbot")
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.bot className="h-5 w-5" />
+                        {!isCollapsed && <span>Chat Bot</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Chat Bot</TooltipContent>}
+            </Tooltip>
+            <Separator />
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Link
@@ -94,20 +169,20 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Link
-                        href="/dashboard/payments"
+                        href="/dashboard/case-study"
                         className={cn(
                             "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-                            pathname.startsWith("/dashboard/payments")
+                            pathname.startsWith("/dashboard/case-study")
                                 ? " rounded-lg bg-muted text-primary"
                                 : null,
                             isCollapsed ? "w-fit" : "w-full",
                         )}
                     >
-                        <Icons.payment className="h-5 w-5" />
-                        {!isCollapsed && <span>Payments</span>}
+                        <Icons.caseStudy className="h-5 w-5" />
+                        {!isCollapsed && <span>Case Study</span>}
                     </Link>
                 </TooltipTrigger>
-                {isCollapsed && <TooltipContent side="right">Payments</TooltipContent>}
+                {isCollapsed && <TooltipContent side="right">Case Study</TooltipContent>}
             </Tooltip>
         </React.Fragment>
     );

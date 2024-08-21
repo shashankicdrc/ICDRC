@@ -14,6 +14,11 @@ import {
     checkSubscriptionStatus,
 } from '#utils/subscription';
 import logger from '#utils/logger';
+import { filterSort, parseFilters } from '#utils/filterSort';
+import pagination from '#utils/pagination';
+import subscriptionModel from '#models/subscriptionModel';
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
+import mongoose from 'mongoose';
 
 class SubscriptionController extends Base {
     #subscriptionService;
@@ -39,7 +44,70 @@ class SubscriptionController extends Base {
             userAuthMiddleware,
             this.#userSubscription,
         );
+        this.router.get(
+            '/admin/subscription',
+            AdminAuthMiddleware,
+            this.#adminSubscription,
+        );
     }
+
+    #adminSubscription = asyncHandler(async (req, res, next) => {
+        try {
+            let { perRow, page } = req.query;
+            const { search } = new URL(req.url, `http://${req.headers.host}`);
+            const { filters, Sorts } = filterSort(search);
+
+            const filterQuery = parseFilters(filters);
+
+            page = Number(page) || 1;
+            perRow = Number(perRow) || 20;
+
+            const skip = pagination(page, perRow);
+
+            const [subscriptions, totalCount] = await Promise.all([
+                subscriptionModel
+                    .find(filterQuery)
+                    .populate({
+                        path: 'planId',
+                        select: 'name',
+                    })
+                    .sort(Sorts)
+                    .skip(skip)
+                    .limit(perRow)
+                    .exec(),
+                subscriptionModel.countDocuments(filterQuery).exec(),
+            ]);
+            const data = {
+                subscriptions,
+                totalCount,
+            };
+            return this.response(
+                res,
+                httpStatusCode.OK,
+                httpStatus.SUCCESS,
+                'Subscription data has been fetched Successfully.',
+                data,
+            );
+        } catch (error) {
+            // send ok response because when we query on the id fields like userId, complaintId, subscriptionId
+            // it throws error when it's not a valid objectId , to prevent it we will send the ok response
+
+            if (error instanceof mongoose.Error.CastError) {
+                const data = {
+                    subscriptions: [],
+                    totalCount: 0,
+                };
+                return this.response(
+                    res,
+                    httpStatusCode.OK,
+                    httpStatus.SUCCESS,
+                    'Not Found',
+                    data,
+                );
+            }
+            next(error);
+        }
+    });
 
     #checkSubscription(subscriptionStatus) {
         switch (subscriptionStatus) {

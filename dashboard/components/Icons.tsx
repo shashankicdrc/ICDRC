@@ -1,6 +1,10 @@
-import { ArrowLeftToLine, ArrowRightToLine, ArrowUpDown, CreditCard, Edit, Home, ListFilter, Loader2, Mail, MoreHorizontal, MoreVertical, PlusCircle, Trash, User, X } from "lucide-react";
+import { ArrowLeftToLine, ArrowRightToLine, ArrowUpDown, BotMessageSquare, CreditCard, Edit, Gift, Handshake, Home, ListFilter, Loader2, Mail, MoreHorizontal, MoreVertical, NotebookPen, PlusCircle, Trash, User, X } from "lucide-react";
 
 export const Icons = {
+    caseStudy: NotebookPen,
+    subscription: Gift,
+    partner: Handshake,
+    bot: BotMessageSquare,
     payment: CreditCard,
     delete: Trash,
     add: PlusCircle,
