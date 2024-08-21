@@ -1,3 +1,4 @@
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import caseStudyModel from '#models/caseStudyModel';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
@@ -15,11 +16,52 @@ class CaseStudyController extends Base {
     }
 
     #initializeRoutes() {
-        this.router.post('/case-study', this.#addCaseStudy);
+        this.router.post(
+            '/case-study',
+            AdminAuthMiddleware,
+            this.#addCaseStudy,
+        );
         this.router.get('/case-study', this.#getCaseStudy);
         this.router.get('/case-study/:id', this.#getCaseStudyById);
-        this.router.delete('/case-study', this.#deleteCaseStudys);
+        this.router.delete(
+            '/case-study',
+            AdminAuthMiddleware,
+            this.#deleteCaseStudys,
+        );
+        this.router.put(
+            '/case-study',
+            AdminAuthMiddleware,
+            this.#updateCaseStudy,
+        );
     }
+
+    #updateCaseStudy = asyncHandler(async (req, res) => {
+        let { caseStudyId, name, description, image, content } = req.body;
+        if (req.role !== 'admin') {
+            throw new CustomError("You don't have any right to delete.");
+        }
+        const updateCaseStudy = await caseStudyModel.findByIdAndUpdate(
+            caseStudyId,
+            {
+                name,
+                description,
+                image,
+                content,
+            },
+        );
+        if (!updateCaseStudy) {
+            throw new CustomError(
+                'Blog does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Case Study is updated successfully.',
+        );
+    });
 
     #getCaseStudyById = asyncHandler(async (req, res) => {
         const { id } = req.params;
@@ -41,6 +83,10 @@ class CaseStudyController extends Base {
 
     #deleteCaseStudys = asyncHandler(async (req, res) => {
         const { caseStudyIds } = req.body;
+        if (req.role !== 'admin') {
+            throw new CustomError("You don't have any right to delete.");
+        }
+
         const deletedData = await caseStudyModel.deleteMany({
             _id: { $in: caseStudyIds },
         });
