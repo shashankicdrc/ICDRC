@@ -1,6 +1,7 @@
-import { ArrowLeftToLine, ArrowRightToLine, ArrowUpDown, Edit, Home, ListFilter, Loader2, Mail, MoreHorizontal, MoreVertical, PlusCircle, Trash, User, X } from "lucide-react";
+import { ArrowLeftToLine, ArrowRightToLine, ArrowUpDown, CreditCard, Edit, Home, ListFilter, Loader2, Mail, MoreHorizontal, MoreVertical, PlusCircle, Trash, User, X } from "lucide-react";
 
 export const Icons = {
+    payment: CreditCard,
     delete: Trash,
     add: PlusCircle,
     close: X,

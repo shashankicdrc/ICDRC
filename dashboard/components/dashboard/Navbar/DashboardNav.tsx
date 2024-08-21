@@ -91,6 +91,24 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Blogs</TooltipContent>}
             </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/payments"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname.startsWith("/dashboard/payments")
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.payment className="h-5 w-5" />
+                        {!isCollapsed && <span>Payments</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Payments</TooltipContent>}
+            </Tooltip>
         </React.Fragment>
     );
 };

@@ -1,5 +1,24 @@
 import { adminRole } from "@/lib/commonEnum";
 
+export type PaymentFor = 'Subscription' | 'Case Registration'
+export type PaymentHistoryStatus = 'Success' | "Failed"
+export type complaintType = 'OrganizationComplaint' | "IndividualComplaint"
+
+export type paymentType = {
+    _id: string,
+    userId: string,
+    transactionId: string,
+    paymentFor: PaymentFor,
+    amount: number,
+    paymentStatus: PaymentHistoryStatus,
+    paymentDate: string,
+    subscriptionId?: string,
+    complaintType?: complaintType,
+    complaintId?: string,
+    organizationId?: string,
+    individualId?: string
+}
+
 export type blogType = {
     _id: string;
     name: string;

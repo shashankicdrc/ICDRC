@@ -19,6 +19,10 @@ import { Router } from 'express';
 import { nanoid } from 'nanoid';
 import crypto from 'crypto';
 import logger from '#utils/logger';
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
+import { filterSort, parseFilters } from '#utils/filterSort';
+import pagination from '#utils/pagination';
+import mongoose from 'mongoose';
 
 class PaymentController extends Base {
     constructor() {
@@ -39,6 +43,11 @@ class PaymentController extends Base {
             this.#getUserPaymentHistory,
         );
         this.router.get(
+            '/admin/payments/history',
+            AdminAuthMiddleware,
+            this.#getAdminPaymentHistory,
+        );
+        this.router.get(
             '/payments/history/recent',
             userAuthMiddleware,
             this.#userRecentPaymentHistory,
@@ -48,6 +57,59 @@ class PaymentController extends Base {
             this.#paymentStatus,
         );
     }
+
+    #getAdminPaymentHistory = asyncHandler(async (req, res, next) => {
+        try {
+            let { perRow, page } = req.query;
+            const { search } = new URL(req.url, `http://${req.headers.host}`);
+            const { filters, Sorts } = filterSort(search);
+
+            const filterQuery = parseFilters(filters);
+
+            page = Number(page) || 1;
+            perRow = Number(perRow) || 20;
+
+            const skip = pagination(page, perRow);
+
+            const [payments, totalCount] = await Promise.all([
+                PaymentHistory.find(filterQuery)
+                    .sort(Sorts)
+                    .skip(skip)
+                    .limit(perRow)
+                    .exec(),
+                PaymentHistory.countDocuments(filterQuery).exec(),
+            ]);
+
+            const data = {
+                payments,
+                totalCount,
+            };
+            return this.response(
+                res,
+                httpStatusCode.OK,
+                httpStatus.SUCCESS,
+                'Payment History data has been fetched Successfully.',
+                data,
+            );
+        } catch (error) {
+            if (error instanceof mongoose.Error.CastError) {
+                // send ok response because when we query on the id fields like userId, complaintId, subscriptionId
+                // it throws error when it's not a valid objectId , to prevent it we will send the ok response
+                const data = {
+                    payments: [],
+                    totalCount: 0,
+                };
+                return this.response(
+                    res,
+                    httpStatusCode.OK,
+                    httpStatus.SUCCESS,
+                    'Not found',
+                    data,
+                );
+            }
+            next(error); // Pass the error to the default error handler
+        }
+    });
 
     #userRecentPaymentHistory = asyncHandler(async (req, res) => {
         const transaction = await PaymentHistory.find({ userId: req.id })
