@@ -22,6 +22,12 @@ const schema = new Schema(
             type: String,
             required: [true, 'Message is required'],
         },
+
+        isDeleted: {
+            type: Boolean,
+            required: [true, 'isDeleted is required.'],
+            default: false,
+        },
     },
     { timestamps: true },
 );

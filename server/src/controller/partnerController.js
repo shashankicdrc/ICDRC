@@ -29,13 +29,14 @@ class PartnerController extends Base {
 
     #deletePartners = asyncHandler(async (req, res) => {
         const { partnerIds } = req.body;
-        const deletedData = await partnerModel.deleteMany({
-            _id: { $in: partnerIds },
-        });
+        const deletedData = await partnerModel.updateMany(
+            { _id: { $in: partnerIds } },
+            { $set: { isDeleted: true } },
+        );
 
-        if (deletedData.deletedCount !== partnerIds.length) {
+        if (deletedData.modifiedCount !== partnerIds.length) {
             throw new CustomError(
-                'Partner data does not exist.',
+                'Some partner data does not exist or is already deleted.',
                 httpStatusCode.BAD_REQUEST,
             );
         }
@@ -52,7 +53,7 @@ class PartnerController extends Base {
         const { search } = new URL(req.url, `http://${req.headers.host}`);
         const { filters, Sorts } = filterSort(search);
 
-        const filterQuery = parseFilters(filters);
+        const filterQuery = { ...parseFilters(filters), isDeleted: false };
 
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;

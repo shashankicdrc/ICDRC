@@ -29,12 +29,16 @@ class ChatBotController extends Base {
 
     #deleteChatBots = asyncHandler(async (req, res) => {
         const { chatbotIds } = req.body;
-        const deletedData = await chatBotModel.deleteMany({
-            _id: { $in: chatbotIds },
-        });
+        const deletedData = await chatBotModel.updateMany(
+            { _id: { $in: chatbotIds } },
+            { $set: { isDeleted: true } },
+        );
 
-        if (deletedData.deletedCount !== chatbotIds.length) {
-            throw new CustomError('ChatBot data does not exist.');
+        if (deletedData.modifiedCount !== chatbotIds.length) {
+            throw new CustomError(
+                'Some chat bot data does not exist or is already deleted.',
+                httpStatusCode.BAD_REQUEST,
+            );
         }
         return this.response(
             res,
@@ -49,7 +53,7 @@ class ChatBotController extends Base {
         const { search } = new URL(req.url, `http://${req.headers.host}`);
         const { filters, Sorts } = filterSort(search);
 
-        const filterQuery = parseFilters(filters);
+        const filterQuery = { ...parseFilters(filters), isDeleted: false };
 
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;

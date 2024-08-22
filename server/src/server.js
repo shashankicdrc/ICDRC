@@ -41,6 +41,7 @@ const startServer = async () => {
             });
         }),
     );
+
     app.use('/api', userAuthController);
     app.use('/api', individualController);
     app.use('/api', organisationalController);

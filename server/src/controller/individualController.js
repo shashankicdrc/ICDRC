@@ -61,14 +61,46 @@ class IndividualController extends Base {
             AdminAuthMiddleware,
             this.#adminGetComplaints,
         );
+        this.router.delete(
+            '/admin/individual/complaints',
+            AdminAuthMiddleware,
+            this.#adminDeleteComplaints,
+        );
     }
+
+    #adminDeleteComplaints = asyncHandler(async (req, res) => {
+        const { individualIds } = req.body;
+        if (req.role !== 'admin') {
+            throw new CustomError(
+                "You don't have any right to change the admin role.",
+                httpStatusCode.FORBIDDEN,
+            );
+        }
+        const deleted = await indComplaintModel.updateMany(
+            { _id: { $in: individualIds } },
+            { $set: { isDeleted: true } },
+        );
+
+        if (deleted.modifiedCount !== individualIds.length) {
+            throw new CustomError(
+                'One or more individual complaints does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Individual complaints have been deleted successfully.',
+        );
+    });
 
     #adminGetComplaints = asyncHandler(async (req, res) => {
         let { perRow, page } = req.query;
         const { search } = new URL(req.url, `http://${req.headers.host}`);
         const { filters, Sorts } = filterSort(search);
 
-        const filterQuery = parseFilters(filters);
+        const filterQuery = { ...parseFilters(filters), isDeleted: false };
 
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;
@@ -100,6 +132,7 @@ class IndividualController extends Base {
     #totalComplaintsOfUser = asyncHandler(async (req, res) => {
         const count = await indComplaintModel.countDocuments({
             userId: req.id,
+            isDeleted: false,
         });
 
         const formattedCount = count < 10 ? `0${count}` : `${count}`;
@@ -165,7 +198,7 @@ class IndividualController extends Base {
 
     #getComplaints = asyncHandler(async (req, res) => {
         const complaints = await indComplaintModel
-            .find({ userId: req.id })
+            .find({ userId: req.id, isDeleted: false })
             .sort({ createdAt: -1 });
         return this.response(
             res,

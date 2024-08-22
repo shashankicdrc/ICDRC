@@ -18,6 +18,11 @@ const schema = new Schema(
             type: String,
             required: [true, 'Content is required'],
         },
+        isDeleted: {
+            type: Boolean,
+            requried: [true, 'isDeleted is required'],
+            default: false,
+        },
     },
     { timestamps: true },
 );

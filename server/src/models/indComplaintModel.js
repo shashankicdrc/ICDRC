@@ -61,6 +61,11 @@ const schema = new Schema(
             required: [true, 'userId is required'],
             ref: 'user',
         },
+        isDeleted: {
+            type: Boolean,
+            required: [true, 'isDeleted is required.'],
+            default: false,
+        },
     },
     { timestamps: true },
 );

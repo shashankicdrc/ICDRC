@@ -244,7 +244,7 @@ class AdminAuthController extends Base {
             true,
         );
 
-        if (!isAdminExist)
+        if (!isAdminExist || isAdminExist.isDeleted)
             throw new CustomError(
                 'Invalid email/password',
                 httpStatusCode.BAD_REQUEST,

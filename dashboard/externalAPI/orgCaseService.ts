@@ -1,6 +1,23 @@
 import { httpStatus, httpStatusCode } from "@/lib/commonEnum";
 import { BASE_URL } from "@/lib/constant";
 
+export const deleteOrganisationalCase = async (token: string, arr: string[]) => {
+    const response = await fetch(`${BASE_URL}/api/admin/organisational/complaints`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ organisationalIds: arr })
+    });
+    const { status, statusCode, message, data } = await response.json();
+    if (httpStatus.SUCCESS !== status && httpStatusCode.OK !== statusCode) {
+        return { error: message };
+    }
+    return { message, data };
+};
+
+
 export const getOrganisationName = async (token: string) => {
     const response = await fetch(`${BASE_URL}/api/admin/organisational/complaints/organisationName`, {
         headers: {

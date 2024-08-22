@@ -24,6 +24,11 @@ const schema = new Schema(
                 required: [true, 'keywords is required.'],
             },
         ],
+        isDeleted: {
+            type: Boolean,
+            required: [true, 'isDeleted is required.'],
+            default: false,
+        },
     },
     { timestamps: true },
 );

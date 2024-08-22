@@ -16,7 +16,7 @@ class BlogController extends Base {
     }
 
     #initializeRoutes() {
-        this.router.post('/blogs', AdminAuthMiddleware, this.#addBlog);
+        this.router.post('/blogs', this.#addBlog);
         this.router.get('/blogs', this.#getBlog);
         this.router.get('/blogs/:id', this.#getBlogById);
         this.router.delete('/blogs', AdminAuthMiddleware, this.#deleteBlogs);
@@ -48,7 +48,10 @@ class BlogController extends Base {
 
     #getBlogById = asyncHandler(async (req, res) => {
         const { id } = req.params;
-        const getBlogData = await blogModel.findById(id);
+        const getBlogData = await blogModel.findOne({
+            _id: id,
+            isDeleted: false,
+        });
         if (!getBlogData) {
             throw new CustomError(
                 'Blog does not exist.',
@@ -72,11 +75,14 @@ class BlogController extends Base {
                 httpStatusCode.UNAUTHORIZED,
             );
         }
-        const deletedData = await blogModel.deleteMany({
-            _id: { $in: blogIds },
-        });
+        const deletedData = await blogModel.updateMany(
+            {
+                _id: { $in: blogIds },
+            },
+            { $set: { isDeleted: true } },
+        );
 
-        if (deletedData.deletedCount !== blogIds.length) {
+        if (deletedData.modifiedCount !== blogIds.length) {
             throw new CustomError(
                 'Blog data does not exist.',
                 httpStatusCode.BAD_REQUEST,
@@ -95,7 +101,7 @@ class BlogController extends Base {
         const { search } = new URL(req.url, `http://${req.headers.host}`);
         const { filters, Sorts } = filterSort(search);
 
-        const filterQuery = parseFilters(filters);
+        const filterQuery = { ...parseFilters(filters), isDeleted: false };
 
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;

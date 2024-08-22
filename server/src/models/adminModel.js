@@ -21,6 +21,11 @@ const schema = new Schema(
             default: 'subadmin',
             enum: ['admin', 'subadmin'],
         },
+        isDeleted: {
+            type: Boolean,
+            required: [true, 'isDeleted is required'],
+            default: false,
+        },
     },
     { timestamps: true },
 );

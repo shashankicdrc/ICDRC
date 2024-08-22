@@ -68,8 +68,12 @@ class AdminController extends Base {
                 httpStatusCode.FORBIDDEN,
             );
         }
-        const deleted = await adminModel.deleteMany({ _id: { $in: adminIds } });
-        if (deleted.deletedCount !== adminIds.length) {
+        const deleted = await adminModel.updateMany(
+            { _id: { $in: adminIds } },
+            { $set: { isDeleted: true } },
+        );
+
+        if (deleted.modifiedCount !== adminIds.length) {
             throw new CustomError(
                 'One or more admins does not exist.',
                 httpStatusCode.BAD_REQUEST,
@@ -111,7 +115,7 @@ class AdminController extends Base {
 
     #getAdmins = asyncHandler(async (req, res) => {
         const admins = await adminModel
-            .find({ _id: { $ne: req.id } })
+            .find({ _id: { $ne: req.id }, isDeleted: false })
             .select('-password');
         return this.response(
             res,

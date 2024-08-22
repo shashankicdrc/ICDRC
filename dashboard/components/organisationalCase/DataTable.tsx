@@ -28,6 +28,7 @@ import Sort from "../Sort";
 import { Filter } from "../Filter";
 import OrgCaseColumnSort from "../Sort/orgCaseColumnSort";
 import OrgCaseColumnFilters from "../Filter/orgCaseFilter";
+import AlertDelete from "../AlertDelete";
 
 
 interface DataTableProps<TData, TValue> {
@@ -86,6 +87,7 @@ export function OrganisationalDataTable<TData, TValue>({
                 <div className="flex items-center space-x-2">
                     <Filter columnFilters={OrgCaseColumnFilters} />
                     <Sort columnSorts={OrgCaseColumnSort} />
+                    {indiCaseIds.length ? <AlertDelete type="organisational" arr={indiCaseIds} /> : null}
                 </div>
                 <div className="flex items-center space-x-2">
                     <DropdownMenu>

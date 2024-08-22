@@ -19,6 +19,8 @@ import {
     deleteAdminsAction,
     deleteChatBotAction,
     deleteContactAction,
+    deleteIndCaseAction,
+    deleteOrgCaseAction,
     deleteParntersAction,
 } from "@/action";
 import { tableType } from "@/types/tableType";
@@ -42,6 +44,22 @@ const AlertDelete = ({ type, arr }: Props) => {
         let error = "";
 
         switch (type) {
+            case 'organisational':
+                const organisationalDeleteRes = await deleteOrgCaseAction(token, arr)
+                if (organisationalDeleteRes.error) {
+                    error = organisationalDeleteRes.error;
+                } else {
+                    message = organisationalDeleteRes.message
+                }
+                break;
+            case 'individual':
+                const individualDeleteRes = await deleteIndCaseAction(token, arr)
+                if (individualDeleteRes.error) {
+                    error = individualDeleteRes.error;
+                } else {
+                    message = individualDeleteRes.message
+                }
+                break;
             case 'contacts':
                 const contactDeleteRes = await deleteContactAction(token, arr);
                 if (contactDeleteRes.error) {

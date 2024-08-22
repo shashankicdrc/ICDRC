@@ -4,8 +4,29 @@ import { createBlog, deleteBlog, updateBlog } from "@/externalAPI/blogSerice";
 import { createCaseStudy, deleteCaseStudy, updateCaseStudy } from "@/externalAPI/caseStudyService";
 import { deleteChatBots } from "@/externalAPI/chatBotService";
 import { deleteContacts } from "@/externalAPI/contactService";
+import { deleteIndividualCase } from "@/externalAPI/indCaseService";
+import { deleteOrganisationalCase } from "@/externalAPI/orgCaseService";
 import { deletePartners } from "@/externalAPI/partnerService";
 import { revalidateTag } from "next/cache";
+
+export const deleteOrgCaseAction = async (token: string, value: string[]) => {
+    const { message, error } = await deleteOrganisationalCase(token, value);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getOrganisationalCase");
+    return { message };
+};
+
+
+export const deleteIndCaseAction = async (token: string, value: string[]) => {
+    const { message, error } = await deleteIndividualCase(token, value);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getIndividualCase");
+    return { message };
+};
 
 export const deleteContactAction = async (token: string, value: string[]) => {
     const { message, error } = await deleteContacts(token, value);

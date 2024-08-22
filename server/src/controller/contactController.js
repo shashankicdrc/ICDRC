@@ -29,12 +29,16 @@ class ContactController extends Base {
 
     #deleteContacts = asyncHandler(async (req, res) => {
         const { contactIds } = req.body;
-        const deletedData = await contactModel.deleteMany({
-            _id: { $in: contactIds },
-        });
+        const deletedData = await contactModel.updateMany(
+            { _id: { $in: contactIds } },
+            { $set: { isDeleted: true } },
+        );
 
-        if (deletedData.deletedCount !== contactIds.length) {
-            throw new CustomError('Contact data does not exist.');
+        if (deletedData.modifiedCount !== contactIds.length) {
+            throw new CustomError(
+                'Some contact data does not exist or is already deleted.',
+                httpStatusCode.BAD_REQUEST,
+            );
         }
         return this.response(
             res,
@@ -49,7 +53,7 @@ class ContactController extends Base {
         const { search } = new URL(req.url, `http://${req.headers.host}`);
         const { filters, Sorts } = filterSort(search);
 
-        const filterQuery = parseFilters(filters);
+        const filterQuery = { ...parseFilters(filters), isDeleted: false };
 
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;

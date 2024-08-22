@@ -28,6 +28,9 @@ import Sort from "../Sort";
 import { Filter } from "../Filter";
 import IndCaseColumnSort from "../Sort/indCaseColumnSort";
 import CaseColumnFilters from "../Filter/indCaseFilter";
+import dynamic from 'next/dynamic';
+
+const AlertDelete = dynamic(() => import('../AlertDelete'))
 
 
 interface DataTableProps<TData, TValue> {
@@ -85,6 +88,7 @@ export function IndividualDataTable<TData, TValue>({
                 <div className="flex items-center space-x-2">
                     <Filter columnFilters={CaseColumnFilters} />
                     <Sort columnSorts={IndCaseColumnSort} />
+                    {indiCaseIds.length ? <AlertDelete type="individual" arr={indiCaseIds} /> : null}
                 </div>
                 <div className="flex items-center space-x-2">
                     <DropdownMenu>

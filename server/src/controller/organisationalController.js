@@ -58,12 +58,41 @@ class OrgainsationalController extends Base {
             AdminAuthMiddleware,
             this.#getadminsComplaint,
         );
+        this.router.delete(
+            '/admin/organisational/complaints',
+            AdminAuthMiddleware,
+            this.#adminComplaintDelete,
+        );
+
         this.router.get(
             '/admin/organisational/complaints/organisationName',
             AdminAuthMiddleware,
             this.#getOrganizationName,
         );
     }
+    #adminComplaintDelete = asyncHandler(async (req, res) => {
+        const { organisationalIds } = req.body;
+        const deletedData = await orgComplaintModel.updateMany(
+            {
+                _id: { $in: organisationalIds },
+            },
+            { $set: { isDeleted: true } },
+        );
+        if (deletedData.modifiedCount !== organisationalIds.length) {
+            throw new CustomError(
+                'One or more organisational complaints does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Organisational complaints have been deleted successfully.',
+        );
+    });
+
     #getOrganizationName = asyncHandler(async (req, res) => {
         const orgName = await orgComplaintModel
             .find({})
@@ -82,7 +111,7 @@ class OrgainsationalController extends Base {
         const { search } = new URL(req.url, `http://${req.headers.host}`);
         const { filters, Sorts } = filterSort(search);
 
-        const filterQuery = parseFilters(filters);
+        const filterQuery = { ...parseFilters(filters), isDeleted: false };
 
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;
@@ -253,7 +282,7 @@ class OrgainsationalController extends Base {
 
     #getComplaints = asyncHandler(async (req, res) => {
         const complaints = await orgComplaintModel
-            .find({ userId: req.id })
+            .find({ userId: req.id, isDeleted: false })
             .sort({ createdAt: -1 });
         return this.response(
             res,

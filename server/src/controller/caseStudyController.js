@@ -87,13 +87,14 @@ class CaseStudyController extends Base {
             throw new CustomError("You don't have any right to delete.");
         }
 
-        const deletedData = await caseStudyModel.deleteMany({
-            _id: { $in: caseStudyIds },
-        });
+        const deleted = await caseStudyModel.updateMany(
+            { _id: { $in: caseStudyIds } },
+            { $set: { isDeleted: true } },
+        );
 
-        if (deletedData.deletedCount !== caseStudyIds.length) {
+        if (deleted.modifiedCount !== caseStudyIds.length) {
             throw new CustomError(
-                'CaseStudy data does not exist.',
+                'One or more case study does not exist.',
                 httpStatusCode.BAD_REQUEST,
             );
         }
@@ -110,7 +111,7 @@ class CaseStudyController extends Base {
         const { search } = new URL(req.url, `http://${req.headers.host}`);
         const { filters, Sorts } = filterSort(search);
 
-        const filterQuery = parseFilters(filters);
+        const filterQuery = { ...parseFilters(filters), isDeleted: false };
 
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;
