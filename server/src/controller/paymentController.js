@@ -48,6 +48,12 @@ class PaymentController extends Base {
             this.#getAdminPaymentHistory,
         );
         this.router.get(
+            '/admin/payments/history/recent',
+            AdminAuthMiddleware,
+            this.#getAdminRecentPaymentHistory,
+        );
+
+        this.router.get(
             '/payments/history/recent',
             userAuthMiddleware,
             this.#userRecentPaymentHistory,
@@ -57,6 +63,22 @@ class PaymentController extends Base {
             this.#paymentStatus,
         );
     }
+
+    #getAdminRecentPaymentHistory = asyncHandler(async (req, res) => {
+        const paymentHistory = await PaymentHistory.find({})
+            .sort({ paymentDate: -1 })
+            .limit(5)
+            .select(
+                'transactionId paymentDate amount paymentStatus paymentFor',
+            );
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Recent Payment fetched successfully.',
+            paymentHistory,
+        );
+    });
 
     #getAdminPaymentHistory = asyncHandler(async (req, res, next) => {
         try {

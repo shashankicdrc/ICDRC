@@ -1,4 +1,7 @@
 import { ComplaintChart } from '@/components/Charts/ComplaintChat'
+import RecentIndComplaint from '@/components/dashboard/RecentIndComplaint'
+import RecentOrgComplaint from '@/components/dashboard/RecentOrgComplaints'
+import RecentTransactions from '@/components/dashboard/RecentTransactions'
 import { getCompalintChartData } from '@/externalAPI/analyticsService'
 import { authOptions } from '@/lib/authOptions'
 import { BASE_URL } from '@/lib/constant'
@@ -23,6 +26,11 @@ export default async function page({ searchParams }: Props) {
     return (
         <main className="p-4 sm:px-6 py-5 md:gap-8">
             <ComplaintChart chartData={data} />
+            <RecentTransactions />
+            <section className="grid grid-cols-1 gap-5 md:grid-cols-2">
+                <RecentOrgComplaint />
+                <RecentIndComplaint />
+            </section>
         </main>
     )
 }

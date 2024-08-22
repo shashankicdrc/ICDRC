@@ -58,6 +58,12 @@ class OrgainsationalController extends Base {
             AdminAuthMiddleware,
             this.#getadminsComplaint,
         );
+        this.router.get(
+            '/admin/organisational/complaints/recent',
+            AdminAuthMiddleware,
+            this.#adminRecentComplaints,
+        );
+
         this.router.delete(
             '/admin/organisational/complaints',
             AdminAuthMiddleware,
@@ -70,6 +76,23 @@ class OrgainsationalController extends Base {
             this.#getOrganizationName,
         );
     }
+    #adminRecentComplaints = asyncHandler(async (req, res) => {
+        const complaints = await orgComplaintModel
+            .find({})
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .select(
+                'caseId paymentStatus status  mobile policyType  createdAt organizationName',
+            );
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Recent organisational compalints fetched successfully.',
+            complaints,
+        );
+    });
+
     #adminComplaintDelete = asyncHandler(async (req, res) => {
         const { organisationalIds } = req.body;
         const deletedData = await orgComplaintModel.updateMany(

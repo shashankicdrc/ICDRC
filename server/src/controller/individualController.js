@@ -61,12 +61,35 @@ class IndividualController extends Base {
             AdminAuthMiddleware,
             this.#adminGetComplaints,
         );
+        this.router.get(
+            '/admin/individual/complaints/recent',
+            AdminAuthMiddleware,
+            this.#adminRecentComplaints,
+        );
+
         this.router.delete(
             '/admin/individual/complaints',
             AdminAuthMiddleware,
             this.#adminDeleteComplaints,
         );
     }
+
+    #adminRecentComplaints = asyncHandler(async (req, res) => {
+        const complaints = await indComplaintModel
+            .find({})
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .select(
+                'caseId paymentStatus status  mobile policyType  createdAt email',
+            );
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Recent individual compalints fetched successfully.',
+            complaints,
+        );
+    });
 
     #adminDeleteComplaints = asyncHandler(async (req, res) => {
         const { individualIds } = req.body;
