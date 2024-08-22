@@ -27,6 +27,8 @@ import Sort from "../Sort";
 import { Filter } from "../Filter";
 import ChatBotColumnFilters from "../Filter/chatBotFilter";
 import ChatBotColumnSort from "../Sort/chatBotColumnSort";
+import dynamic from 'next/dynamic'
+const AlertDelete = dynamic(() => import('../AlertDelete'))
 
 
 interface DataTableProps<TData, TValue> {
@@ -78,6 +80,7 @@ export function ChatBotDataTable<TData, TValue>({
                 <div className="flex items-center space-x-2">
                     <Filter columnFilters={ChatBotColumnFilters} />
                     <Sort columnSorts={ChatBotColumnSort} />
+                    {chatbotIds.length ? <AlertDelete type="chatbot" arr={chatbotIds} /> : null}
                 </div>
                 <div className="flex items-center space-x-2">
                     <DropdownMenu>

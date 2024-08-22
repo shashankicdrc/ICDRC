@@ -23,6 +23,7 @@ import planController from '#controller/planController';
 import subscriptionController from '#controller/subscriptionController';
 import chatController from '#controller/chatController';
 import cloudinaryConfiguration from '#config/cloudinaryConfiguration';
+import analyticsController from '#controller/analyticsController';
 
 const startServer = async () => {
     const app = express();
@@ -57,6 +58,7 @@ const startServer = async () => {
     app.use('/api', planController);
     app.use('/api', subscriptionController);
     app.use('/api', chatController);
+    app.use('/api', analyticsController);
 
     app.use(ErrorMiddleware);
 

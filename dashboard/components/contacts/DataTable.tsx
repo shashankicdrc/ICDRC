@@ -28,6 +28,9 @@ import Sort from "../Sort";
 import { Filter } from "../Filter";
 import ContactColumnSort from "../Sort/contactColumnSort";
 import ContactColumnFilters from "../Filter/contactFilter";
+import dynamic from 'next/dynamic';
+
+const AlertDelete = dynamic(() => import('../AlertDelete'));
 
 
 interface DataTableProps<TData, TValue> {
@@ -79,6 +82,7 @@ export function ContactDataTable<TData, TValue>({
                 <div className="flex items-center space-x-2">
                     <Filter columnFilters={ContactColumnFilters} />
                     <Sort columnSorts={ContactColumnSort} />
+                    {contactsId.length ? <AlertDelete type="contacts" arr={contactsId} /> : null}
                 </div>
                 <div className="flex items-center space-x-2">
                     <DropdownMenu>

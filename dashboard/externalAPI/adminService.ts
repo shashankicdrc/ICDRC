@@ -2,6 +2,22 @@ import { changePasswordInput } from "@/components/form/settings/ChangePasswordFo
 import { httpStatus, httpStatusCode } from "@/lib/commonEnum";
 import { BASE_URL } from "@/lib/constant";
 
+export const deleteAdmins = async (token: string, value: string[]) => {
+    const result = await fetch(`${BASE_URL}/api/admins`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ adminIds: value }),
+    });
+    const { status, statusCode, message, data } = await result.json();
+    if (status !== httpStatus.SUCCESS && statusCode !== httpStatusCode.OK) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
 
 export const getAdminById = async (token: string, id: any) => {
     const result = await fetch(`${BASE_URL}/api/admins/${id}`, {

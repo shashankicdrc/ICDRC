@@ -59,7 +59,7 @@ export const AlertDeleteCaseStudy = ({ caseStudyIds }: Props) => {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action cannot be undone. This will permanently delete blog and
+                        This action cannot be undone. This will permanently delete case study and
                         remove your data from the servers.
                     </AlertDialogDescription>
                 </AlertDialogHeader>

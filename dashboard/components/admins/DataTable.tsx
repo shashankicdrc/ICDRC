@@ -24,6 +24,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { partnerType } from "@/types/columnsType";
 import AddAdmin from "./AddAdmin";
+import dynamic from 'next/dynamic';
+
+const AlertDelete = dynamic(() => import('../AlertDelete'))
 
 
 interface DataTableProps<TData, TValue> {
@@ -72,7 +75,10 @@ export function AdminsDataTable<TData, TValue>({
     return (
         <Fragment>
             <div className="flex justify-between my-3">
-                <AddAdmin />
+                <div className="flex items-center space-x-3">
+                    <AddAdmin />
+                    {adminIds.length ? <AlertDelete type='admins' arr={adminIds} /> : null}
+                </div>
                 <div className="flex items-center space-x-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

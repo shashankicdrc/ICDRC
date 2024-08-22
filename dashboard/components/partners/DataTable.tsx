@@ -28,6 +28,9 @@ import Sort from "../Sort";
 import PartnerColumnSort from "../Sort/partnerColumnSort";
 import { Filter } from "../Filter";
 import PartnerColumnFilters from "../Filter/partnerFilter";
+import dynamic from 'next/dynamic';
+
+const AlertDelete = dynamic(() => import('../AlertDelete'))
 
 
 interface DataTableProps<TData, TValue> {
@@ -79,6 +82,7 @@ export function PartnerDataTable<TData, TValue>({
                 <div className="flex items-center space-x-2">
                     <Filter columnFilters={PartnerColumnFilters} />
                     <Sort columnSorts={PartnerColumnSort} />
+                    {partnersId.length ? <AlertDelete type="partners" arr={partnersId} /> : null}
                 </div>
                 <div className="flex items-center space-x-2">
                     <DropdownMenu>
