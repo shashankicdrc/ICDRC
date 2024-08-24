@@ -1,3 +1,4 @@
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import indComplaintModel from '#models/indComplaintModel';
 import orgComplaintModel from '#models/orgComplaintModel';
 import PaymentHistory from '#models/paymentHistoryModel';
@@ -15,9 +16,21 @@ class AnalyticsController extends Base {
     }
 
     #initializeRoutes() {
-        this.router.get('/analytics/complaints', this.#getComplaintsChartData);
-        this.router.get('/analytics/revenue', this.#getRevenueChart);
-        this.router.get('/analytics/subscription', this.#getSubscription);
+        this.router.get(
+            '/analytics/complaints',
+            AdminAuthMiddleware,
+            this.#getComplaintsChartData,
+        );
+        this.router.get(
+            '/analytics/revenue',
+            AdminAuthMiddleware,
+            this.#getRevenueChart,
+        );
+        this.router.get(
+            '/analytics/subscription',
+            AdminAuthMiddleware,
+            this.#getSubscription,
+        );
     }
 
     #getSubscription = asyncHandler(async (req, res) => {
