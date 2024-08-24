@@ -1,18 +1,20 @@
-
-
-import { Tab } from '@headlessui/react'
+import { Tab } from '@headlessui/react';
 import ComplainForm from '../../components/complainform/page';
 import OrganizationComplainForm from '../../components/organizationcomplainform/page';
 // import Cart from '../../components/cart/cart';
 // import OrgCart from '../../components/cart/orgcart';
 
 function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
+    return classes.filter(Boolean).join(' ');
 }
 
 export default function TabSection() {
     return (
-        <div className="w-full py-4" data-aos="fade-up" data-aos-duration="1000">
+        <div
+            className="w-full py-4"
+            data-aos="fade-up"
+            data-aos-duration="1000"
+        >
             <Tab.Group>
                 <Tab.List className="container flex gap-x-2 gap-y-2 md:gap-y-0.5 md:gap-x-4 justify-center items-center flex-wrap mx-auto w-screen py-2">
                     <Tab
@@ -22,7 +24,7 @@ export default function TabSection() {
                                 ' focus:outline-none',
                                 selected
                                     ? 'bg-white shadow-lg text-orange-600 border-2 border-orange-400'
-                                    : 'text-gray-500 hover:bg-orange-400 hover:text-white transition-all duration-300 ease'
+                                    : 'text-gray-500 hover:bg-orange-400 hover:text-white transition-all duration-300 ease',
                             )
                         }
                     >
@@ -35,13 +37,12 @@ export default function TabSection() {
                                 ' focus:outline-none',
                                 selected
                                     ? 'bg-white shadow-lg text-orange-600 border-2 border-orange-400'
-                                    : 'text-gray-500 hover:bg-orange-400 hover:text-white transition-all duration-300 ease'
+                                    : 'text-gray-500 hover:bg-orange-400 hover:text-white transition-all duration-300 ease',
                             )
                         }
                     >
                         Register as an Organization
                     </Tab>
-
                 </Tab.List>
                 <Tab.Panels>
                     <Tab.Panel>
@@ -55,5 +56,5 @@ export default function TabSection() {
                 </Tab.Panels>
             </Tab.Group>
         </div>
-    )
+    );
 }
