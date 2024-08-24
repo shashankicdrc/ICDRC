@@ -10,7 +10,16 @@ services:
       - backend
     env_file:
         - ./frontend/.env
-
+  
+  server:
+    container_name: new_server
+    build: ./server
+    restart: always
+    env_file:
+      - ./server/.env
+    ports:
+      - 7000:7000
+    
   backend:
     container_name: server_icdrc
     build: ./backend
@@ -20,4 +29,11 @@ services:
         - ./backend/.env
     volumes:
       - ./backend/:/app
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    restart: always
+    ports:
+      - 6379:6379
 

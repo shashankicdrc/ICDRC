@@ -5,7 +5,7 @@
  * @type {{ host: string, port: number }}
  */
 const connector = {
-    host: process.env.NODE_ENV === "production" ? "redis" : "localhost",
+    host: process.env.NODE_ENV === 'production' ? 'redis' : 'localhost',
     port: 6379,
 };
 
