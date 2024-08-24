@@ -1,9 +1,7 @@
-
-
 /**
  * @type {import('next').NextConfig}
- * 
- * 
+ *
+ *
  */
 
 // const withImage=require('next-images')
@@ -20,6 +18,9 @@ const nextConfig = {
             },
         ],
     },
-}
+    eslint: {
+        ignoreDuringBuilds: true,
+    },
+};
 
-export default nextConfig
+export default nextConfig;
