@@ -3,34 +3,9 @@ import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
 import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from '../ui/chart'
 import { Pie, Label, PieChart } from 'recharts'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/authOptions'
 import { getCompalintChartData } from '@/externalAPI/analyticsService'
 import { useSession } from 'next-auth/react'
 
-
-const chartData = [
-    {
-        "date": "2024-08-13",
-        "individual": 1,
-        "organisational": 2
-    },
-    {
-        "date": "2024-08-15",
-        "individual": 2,
-        "organisational": 1
-    },
-    {
-        "date": "2024-08-16",
-        "individual": 8,
-        "organisational": 1
-    },
-    {
-        "date": "2024-08-17",
-        "individual": 3,
-        "organisational": 9
-    }
-]
 
 const chartConfig = {
     complaints: {
@@ -69,7 +44,7 @@ export default function ComplaintChart() {
             }
             complaintChartData()
         }
-    }, [session])
+    }, [session, token, status])
     if (status === 'loading') {
         return <p>Loading...</p>
     }
