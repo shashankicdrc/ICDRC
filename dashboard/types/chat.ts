@@ -3,7 +3,7 @@ type chatType = {
     _id: string;
     text: string;
     complaintId: string;
-    complaintType: 'individual' | 'organizational'
+    complaintType: 'IndividualComplaint' | 'OrganizationalComplaint'
     authorId: {
         _id: string;
         email: string;

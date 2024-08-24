@@ -1,6 +1,21 @@
 import { httpStatusCode } from "@/lib/commonEnum";
 import { BASE_URL } from "@/lib/constant";
 
+export const getRecentMessage = async (token: string) => {
+    const response = await fetch(`${BASE_URL}/api/admin/chats/recent`, {
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+        },
+    });
+    const { data, message } = await response.json();
+    if (response.status !== httpStatusCode.OK) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
+
 
 export const addMessage = async (values: any) => {
     const response = await fetch(`${BASE_URL}/api/chats`, {

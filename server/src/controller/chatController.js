@@ -14,6 +14,7 @@ import logger from '#utils/logger';
 import { isValidObjectId } from 'mongoose';
 import complaintMedia from '#models/complaintMediaModel';
 import { v2 as cloudinary } from 'cloudinary';
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 
 class ChatController extends Base {
     constructor() {
@@ -26,7 +27,47 @@ class ChatController extends Base {
         this.router.post('/chats', this.#addChat);
         this.router.get('/chats/:complaintId', this.#getChat);
         this.router.post('/chats/attachment', this.#attachment);
+        this.router.get(
+            '/admin/chats/recent',
+            AdminAuthMiddleware,
+            this.#recentadminRecentChats,
+        );
     }
+
+    #recentadminRecentChats = asyncHandler(async (req, res) => {
+        const recentChats = await chatModel
+            .aggregate([
+                {
+                    $match: { authorType: 'user' },
+                },
+                {
+                    $sort: { createdAt: -1 },
+                },
+                {
+                    $group: {
+                        _id: '$complaintId',
+                        mostRecentChat: { $first: '$$ROOT' },
+                    },
+                },
+                {
+                    $replaceRoot: { newRoot: '$mostRecentChat' },
+                },
+                {
+                    $limit: 5,
+                },
+            ])
+            .exec();
+        const populatedChats = await chatModel.populate(recentChats, [
+            { path: 'authorId', select: 'name email' },
+        ]);
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Fetched recent chats successfully.',
+            populatedChats,
+        );
+    });
 
     #checkMissingFields(validFields, receivedFields) {
         const missingFields = validFields.filter(

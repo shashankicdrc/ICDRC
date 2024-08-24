@@ -4,6 +4,7 @@ import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
+import logger from '#utils/logger';
 import { Router } from 'express';
 
 class AdminController extends Base {
@@ -19,7 +20,28 @@ class AdminController extends Base {
         this.router.put('/admins/role', AdminAuthMiddleware, this.#changeRole);
         this.router.delete('/admins', AdminAuthMiddleware, this.#deleteAdmins);
         this.router.put('/admins', AdminAuthMiddleware, this.#updateProfile);
+        this.router.get(
+            '/admins/recent/list',
+            AdminAuthMiddleware,
+            this.#recentAdmins,
+        );
     }
+
+    #recentAdmins = asyncHandler(async (req, res) => {
+        const admins = await adminModel
+            .find({ isDeleted: false, _id: { $ne: req.id } })
+            .sort({ createdAt: -1 })
+            .limit(5)
+            .select('-password -updatedAt');
+
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Fetched',
+            admins,
+        );
+    });
 
     #updateProfile = asyncHandler(async (req, res) => {
         const { name } = req.body;
