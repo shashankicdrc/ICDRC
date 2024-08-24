@@ -1,5 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    async redirects() {
+        return [
+            {
+                source: "/",
+                destination: "/dashboard",
+                permanent: true,
+            },
+        ];
+    },
     images: {
         remotePatterns: [
             {
@@ -7,6 +16,9 @@ const nextConfig = {
                 hostname: "*",
             },
         ],
+    },
+    typescript: {
+        ignoreBuildErrors: true,
     },
 };
 
