@@ -117,7 +117,7 @@ const organisaitonlColumns = [
                         )}
                         <DropdownMenuItem className="cursor-pointer">
                             <Link
-                                href={`/dashboard/organisation/${organisaitonl._id}`}
+                                href={`/dashboard/complaints/organisational/${organisaitonl._id}`}
                             >
                                 View Full Details
                             </Link>

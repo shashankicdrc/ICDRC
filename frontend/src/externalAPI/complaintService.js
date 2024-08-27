@@ -33,6 +33,24 @@ export const indCompalintCount = async (token) => {
     }
 };
 
+export const getOrgasizatinalComplaintById = async (token, id) => {
+    const result = await fetch(
+        `${BASE_URL}/api/organisational/complaints/${id}`,
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        },
+    );
+    const { message, statusCode, status, data } = await result.json();
+    if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
+        return { error: message };
+    } else {
+        return { message, data };
+    }
+};
+
 export const getIndividualComplaintById = async (token, id) => {
     const result = await fetch(`${BASE_URL}/api/individual/complaints/${id}`, {
         headers: {

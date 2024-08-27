@@ -75,7 +75,31 @@ class OrgainsationalController extends Base {
             AdminAuthMiddleware,
             this.#getOrganizationName,
         );
+        this.router.get(
+            '/organisational/complaints/:id',
+            userAuthMiddleware,
+            this.#getOrganisationCaseById,
+        );
     }
+
+    #getOrganisationCaseById = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const data = await orgComplaintModel.findById(id);
+        if (!data)
+            throw new CustomError(
+                'Case does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Fetched successfully',
+            data,
+        );
+    });
+
     #adminRecentComplaints = asyncHandler(async (req, res) => {
         const complaints = await orgComplaintModel
             .find({})

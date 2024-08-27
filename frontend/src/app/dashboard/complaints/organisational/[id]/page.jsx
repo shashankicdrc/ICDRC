@@ -12,7 +12,7 @@ import React from 'react';
 import { authOptions } from '../../.././../../lib/authOptions';
 import { formatDate } from '../../.././../../lib/formateDate';
 import { ArrowLeft } from 'lucide-react';
-import { getIndividualComplaintById } from '../../../../../externalAPI/complaintService';
+import { getOrgasizatinalComplaintById } from '../../../../../externalAPI/complaintService';
 
 export default async function page({ params }) {
     const session = await getServerSession(authOptions);
@@ -20,7 +20,10 @@ export default async function page({ params }) {
         throw new Error('You are unauthorized');
     }
     const token = session.user.AccessToken;
-    const { error, data } = await getIndividualComplaintById(token, params.id);
+    const { error, data } = await getOrgasizatinalComplaintById(
+        token,
+        params.id,
+    );
     if (error) {
         return (
             <div className="mx-auto md:w-[70%] my-5 md:my-10">
@@ -52,11 +55,18 @@ export default async function page({ params }) {
                         <Card>
                             <CardHeader>
                                 <CardTitle className="capitalize">
-                                    {data.name}
+                                    {data.organizationName}
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <div className="grid gap-2">
+                                    <div className="flex items-center space-x-2">
+                                        <span>Name:</span>
+                                        <p className="capitalize">
+                                            {data.name}
+                                        </p>
+                                    </div>
+
                                     <div className="flex items-center space-x-2">
                                         <span>Email:</span>
                                         <p>{data.email}</p>
