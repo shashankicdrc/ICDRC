@@ -158,15 +158,12 @@ class IndividualController extends Base {
             userId: req.id,
             isDeleted: false,
         });
-
-        const formattedCount = count < 10 ? `0${count}` : `${count}`;
-        return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Total Individual complaint fetched susccessfully.',
-            formattedCount,
-        );
+        return res.status(httpStatusCode.OK).json({
+            status: httpStatus.SUCCESS,
+            statusCode: httpStatusCode.OK,
+            message: 'Total Individual complaint fetched.',
+            data: count,
+        });
     });
 
     #getComplaintById = asyncHandler(async (req, res) => {

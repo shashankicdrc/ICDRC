@@ -84,7 +84,7 @@ const MobileNav = () => {
                         )}
                     >
                         <CiEdit className="h-5 w-5" />
-                        Regist Complaint
+                        Register Complaints
                     </Link>
                     <Link
                         href="/dashboard/complaints/individual"

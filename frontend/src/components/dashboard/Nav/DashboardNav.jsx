@@ -51,7 +51,7 @@ const DashboardNav = ({ isCollapsed }) => {
                         )}
                     >
                         <CiEdit className="h-5 w-5" />
-                        {!isCollapsed && <span>Register</span>}
+                        {!isCollapsed && <span>Register Complaints</span>}
                     </Link>
                 </TooltipTrigger>
                 {isCollapsed && (

@@ -59,12 +59,14 @@ export default async function page() {
                             {response.errors.individualComplaintError ??
                                 response.individualComplaints}
                         </div>
-                        <Button asChild size="sm" className="ml-auto gap-1">
-                            <Link href="/dashboard/complaints/individual">
-                                View All
-                                <ArrowUpRight className="h-4 w-4" />
-                            </Link>
-                        </Button>
+                        {response.individualComplaints ? (
+                            <Button asChild size="sm" className="ml-auto gap-1">
+                                <Link href="/dashboard/complaints/individual">
+                                    View All
+                                    <ArrowUpRight className="h-4 w-4" />
+                                </Link>
+                            </Button>
+                        ) : null}
                     </CardContent>
                 </Card>
                 <Card>
@@ -79,14 +81,15 @@ export default async function page() {
                             {response.errors.organizationComplaintError ??
                                 response.organizationComplaints}
                         </div>
-                        <Button asChild size="sm" className="ml-auto gap-1">
-                            <Link href="/dashboard/complaints/organisational">
-                                View All
-                                <ArrowUpRight className="h-4 w-4" />
-                            </Link>
-                        </Button>
+                        {response.organizationComplaints ? (
+                            <Button asChild size="sm" className="ml-auto gap-1">
+                                <Link href="/dashboard/complaints/organisational">
+                                    View All
+                                    <ArrowUpRight className="h-4 w-4" />
+                                </Link>
+                            </Button>
+                        ) : null}
                     </CardContent>
-                    <CardFooter></CardFooter>
                 </Card>
             </div>
             <div className="">
@@ -117,42 +120,55 @@ export default async function page() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {response.recentPayments.map((payment) => (
-                                    <TableRow key={payment._id}>
-                                        <TableCell>
-                                            <div className="font-medium">
-                                                {payment.transactionId}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <p className="flex items-center">
-                                                <IndianRupee className="h-4 w-4" />
-                                                {payment.amount}
-                                            </p>
-                                        </TableCell>
-                                        <TableCell>
-                                            {payment.paymentStatus ===
-                                            'Success' ? (
-                                                <Badge
-                                                    variant="outline"
-                                                    className="text-green-700"
-                                                >
-                                                    {payment.paymentStatus}
-                                                </Badge>
-                                            ) : (
-                                                <Badge variant="destructive">
-                                                    {payment.paymentStatus}
-                                                </Badge>
-                                            )}
-                                        </TableCell>
-                                        <TableCell>
-                                            {payment.paymentFor}
-                                        </TableCell>
-                                        <TableCell>
-                                            {formatDate(payment.paymentDate)}
+                                {response.recentPayments.length ? (
+                                    response.recentPayments.map((payment) => (
+                                        <TableRow key={payment._id}>
+                                            <TableCell>
+                                                <div className="font-medium">
+                                                    {payment.transactionId}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <p className="flex items-center">
+                                                    <IndianRupee className="h-4 w-4" />
+                                                    {payment.amount}
+                                                </p>
+                                            </TableCell>
+                                            <TableCell>
+                                                {payment.paymentStatus ===
+                                                'Success' ? (
+                                                    <Badge
+                                                        variant="outline"
+                                                        className="text-green-700"
+                                                    >
+                                                        {payment.paymentStatus}
+                                                    </Badge>
+                                                ) : (
+                                                    <Badge variant="destructive">
+                                                        {payment.paymentStatus}
+                                                    </Badge>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                {payment.paymentFor}
+                                            </TableCell>
+                                            <TableCell>
+                                                {formatDate(
+                                                    payment.paymentDate,
+                                                )}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))
+                                ) : (
+                                    <TableRow>
+                                        <TableCell
+                                            className="text-center h-24"
+                                            colSpan={5}
+                                        >
+                                            Transaction not found
                                         </TableCell>
                                     </TableRow>
-                                ))}{' '}
+                                )}{' '}
                             </TableBody>
                         </Table>
                     </CardContent>

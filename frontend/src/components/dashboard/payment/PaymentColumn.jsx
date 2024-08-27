@@ -6,11 +6,9 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
     DropdownMenuLabel,
-    DropdownMenuSeparator,
 } from '../../ui/dropdown';
 import { Button } from '../../ui/button';
 import { Badge } from '../../ui/badge';
-import Link from 'next/link';
 import { Ellipsis } from 'lucide-react';
 import { formatDate } from '../../../lib/formateDate';
 
@@ -51,9 +49,9 @@ const paymentHistoryColumn = [
         enableHiding: false,
         cell: ({ row }) => {
             const paymentHistory = row.original;
-            const copyPyamentHistoryId = () => {
-                navigator.clipboard.writeText(paymentHistory._id);
-                toast.success(`Payment History has been copied.`);
+            const copyTransactionId = () => {
+                navigator.clipboard.writeText(paymentHistory.transactionId);
+                toast.success(`Transation Id  has been copied.`);
             };
 
             return (
@@ -68,11 +66,10 @@ const paymentHistoryColumn = [
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuItem
                             className="cursor-pointer"
-                            onClick={copyPyamentHistoryId}
+                            onClick={copyTransactionId}
                         >
-                            Copy Payment History ID
+                            Copy Transation Id
                         </DropdownMenuItem>
-                        <DropdownMenuSeparator />
                     </DropdownMenuContent>
                 </DropdownMenu>
             );

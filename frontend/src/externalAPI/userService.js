@@ -32,9 +32,9 @@ export async function handleResponses(token) {
         }
 
         return {
-            individualComplaints: indResp.data || null,
-            organizationComplaints: orgResp.data || null,
-            recentPayments: paymentResp.data || null,
+            individualComplaints: indResp.data,
+            organizationComplaints: orgResp.data,
+            recentPayments: paymentResp.data,
             errors,
         };
     } catch (error) {

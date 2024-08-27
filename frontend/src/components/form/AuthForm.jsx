@@ -7,8 +7,9 @@ import React from 'react';
 export default function AuthForm() {
     const searchParams = useSearchParams();
     const googleHandler = () => {
-        const callbackUrl =
-            decodeURIComponent(searchParams.get('url')) || '/dashboard';
+        const callbackUrl = decodeURIComponent(
+            searchParams.get('url') || '/dashboard',
+        );
         signIn('google', { callbackUrl });
     };
 

@@ -22,7 +22,10 @@ const SignupForm = () => {
     const onSubmit = async (values) => {
         try {
             setIsLoading((prevState) => !prevState);
-            const { message, error } = await signup(values);
+            const { message, error } = await signup({
+                ...values,
+                provider: 'credential',
+            });
             setIsLoading((prevState) => !prevState);
             if (error) {
                 return toast.error(error);

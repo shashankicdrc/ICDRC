@@ -22,6 +22,7 @@ import generateCode from '#utils/generateCode';
 import { queues } from '#queues/queue';
 import isValidDateTime from '#utils/validateTime';
 import { OAuth2Client } from 'google-auth-library';
+import logger from '#utils/logger';
 const client = new OAuth2Client();
 
 class UserController extends Base {
@@ -320,7 +321,7 @@ class UserController extends Base {
             );
         }
 
-        const userData = {
+        let userData = {
             email,
             name,
             provider,
