@@ -96,13 +96,19 @@ const individualColumns = [
                             Copy Case ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="cursor-pointer">
-                            <Link
-                                href={`/dashboard/chat/${individual._id}?type=individual`}
+                        {individual.paymentStatus !== 'Pending' && (
+                            <DropdownMenuItem
+                                className="cursor-pointer"
+                                asChild
                             >
-                                Chat
-                            </Link>
-                        </DropdownMenuItem>
+                                <Link
+                                    className="w-full"
+                                    href={`/dashboard/chat/${individual._id}?type=individual`}
+                                >
+                                    Chat
+                                </Link>
+                            </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem className="cursor-pointer">
                             <Link
                                 href={`/dashboard/complaints/individual/${individual._id}`}

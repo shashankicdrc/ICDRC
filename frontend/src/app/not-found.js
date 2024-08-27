@@ -1,31 +1,34 @@
-
 import Link from 'next/link';
-import Image from 'next/image';
+import { Button } from '../components/ui/button';
 
 const NotFound = () => {
     return (
-        <>
-            <div className="h-screen w-screen bg-gray-100">
-
-                <div className='w-full grid place-items-center pt-4 md:pt-8'>
-                    <Image src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1692866749/Logo/Copy_of_ICDRC_912_273_px_rwkrry.png" alt="logo" className="md:cursor-pointer h-20" width={200} height={50} />
-                </div>
-
-                <div className="w-full relative grid place-items-center pt-8 md:pt-16
-                 before:pointer-events-none before:absolute before:inset-0 before:block before:h-full before:w-full before:bg-[url('https://res.cloudinary.com/dl5hosmxb/image/upload/v1692869015/404/Untitled_design_wxujrp.png')] before:bg-contain before:bg-no-repeat before:opacity-30 before:bg-center before:mt-56  
-                ">
-                    <p className='text-8xl font-bold text-orange-600 font-[Roboto]'>404</p>
-                    <p className='text-5xl font-semibold text-orange-600 font-[Poppins] mt-4 '>The Page you are looking for is not available.</p>
-                    <p className='text-3xl font-semibold text-orange-600 font-[Poppins] mt-4'>You can return back to home page.</p>
-
-                    <Link href="/" className="max-w-max mt-4 md:mt-7 rounded-md px-3.5 py-1 flex justify-center items-center m-1 overflow-hidden relative group cursor-pointer border-2 font-medium border-orange-600 text-indigo-600 hover:text-white">
-                        <span className="absolute w-64 h-0 transition-all duration-500 origin-center rotate-45 -translate-x-20 bg-orange-600 top-1/2 group-hover:h-64 group-hover:-translate-y-32 ease"></span>
-                        <span className="relative text-orange-600 transition text-xl duration-300 group-hover:text-white ease">Go to home</span>
-                    </Link>
+        <div className="h-screen flex flex-col justify-center items-center">
+            <div className="mx-5 md:mx-auto md:w-[70%] flex flex-col items-center justify-center">
+                <div className="flex flex-col text-center">
+                    <p className="text-8xl font-bold text-primary font-[Roboto]">
+                        404
+                    </p>
+                    <p className="text-5xl font-semibold text-primary font-[Poppins] mt-4">
+                        The Page you are looking for is not available.
+                    </p>
+                    <p className="text-3xl font-semibold text-primary font-[Poppins] mt-4">
+                        You can return back to home page.
+                    </p>
+                    <div className="flex items-center space-x-3 my-5 justify-center">
+                        <Button asChild>
+                            <Link href="/dashboard">Go to Dashboard</Link>
+                        </Button>
+                        <span>or</span>
+                        <Button asChild variant="outline">
+                            <Link href="/">Go to Home</Link>
+                        </Button>
+                    </div>
                 </div>
             </div>
-        </>
-    )
-}
+        </div>
+    );
+};
 
-export default NotFound
+export default NotFound;
+
