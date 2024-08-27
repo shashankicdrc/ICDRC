@@ -244,6 +244,15 @@ class OrgainsationalController extends Base {
                 await this.#subscriptionService.getSubscriptionById(
                     subscriptionId,
                 );
+            logger.info(subscription);
+            const plan = await subscription.populate('planId');
+            logger.info(plan);
+            if (plan.planId.name !== 'Organisational') {
+                throw new CustomError(
+                    'Your subscription does not support organisational complaints. Please upgrade the subscription.',
+                    httpStatusCode.BAD_REQUEST,
+                );
+            }
             const subscriptionStatus = checkSubscriptionStatus(subscription);
             this.#checkSubscription(subscriptionStatus);
             addData.paymentStatus = 'Paid';

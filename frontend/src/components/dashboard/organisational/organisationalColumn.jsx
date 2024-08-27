@@ -19,7 +19,7 @@ const organisaitonlColumns = [
     },
     {
         accessorKey: 'organizationName',
-        header: 'Organisation Name',
+        header: 'Organization Name',
     },
     {
         accessorKey: 'name',
@@ -102,13 +102,19 @@ const organisaitonlColumns = [
                             Copy Case ID
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="cursor-pointer">
-                            <Link
-                                href={`/dashboard/chat/${organisaitonl._id}?type=organizational`}
+                        {organisaitonl.paymentStatus === 'Paid' && (
+                            <DropdownMenuItem
+                                className="cursor-pointer"
+                                aschild
                             >
-                                Chat
-                            </Link>
-                        </DropdownMenuItem>
+                                <Link
+                                    className="w-full"
+                                    href={`/dashboard/chat/${organisaitonl._id}?type=organizational`}
+                                >
+                                    Chat
+                                </Link>
+                            </DropdownMenuItem>
+                        )}
                         <DropdownMenuItem className="cursor-pointer">
                             <Link
                                 href={`/dashboard/organisation/${organisaitonl._id}`}

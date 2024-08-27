@@ -97,7 +97,7 @@ const DashboardNav = ({ isCollapsed }) => {
                         )}
                     >
                         <ShieldQuestion className="h-5 w-5" />
-                        {!isCollapsed && <span>Organisational Case</span>}
+                        {!isCollapsed && <span>Organizational Case</span>}
                     </Link>
                 </TooltipTrigger>
                 {isCollapsed && (

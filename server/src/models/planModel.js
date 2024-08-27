@@ -3,7 +3,7 @@ import { Schema, model } from 'mongoose';
 const planSchema = new Schema({
     name: {
         type: String,
-        enum: ['Basic', 'Premium', 'Enterprise'],
+        enum: ['Individual', 'Organisational'],
         required: true,
     },
     price: {
@@ -11,12 +11,10 @@ const planSchema = new Schema({
         required: true,
         default: function () {
             switch (this.name) {
-                case 'Basic':
-                    return 1;
-                case 'Premium':
-                    return 2;
-                case 'Enterprise':
-                    return 3;
+                case 'Individual':
+                    return 99;
+                case 'Organisational':
+                    return 399;
                 default:
                     return 0;
             }
@@ -27,12 +25,10 @@ const planSchema = new Schema({
         required: true,
         default: function () {
             switch (this.name) {
-                case 'Basic':
-                    return 1;
-                case 'Premium':
-                    return 1;
-                case 'Enterprise':
-                    return 1;
+                case 'Individual':
+                    return 30 * 6;
+                case 'Organisational':
+                    return 30 * 6;
                 default:
                     return 0;
             }
@@ -43,12 +39,10 @@ const planSchema = new Schema({
         required: true,
         default: function () {
             switch (this.name) {
-                case 'Basic':
-                    return 2;
-                case 'Premium':
-                    return 3;
-                case 'Enterprise':
-                    return 4;
+                case 'Individual':
+                    return 10;
+                case 'Organisational':
+                    return 10;
                 default:
                     return 0;
             }

@@ -16,6 +16,7 @@ import {
     httpStatusCode,
 } from '#utils/constant';
 import { filterSort, parseFilters } from '#utils/filterSort';
+import logger from '#utils/logger';
 import pagination from '#utils/pagination';
 import {
     SubscriptionStatus,
@@ -269,6 +270,13 @@ class IndividualController extends Base {
                 await this.#subscriptionService.getSubscriptionById(
                     subscriptionId,
                 );
+            const plan = await subscription.populate('planId');
+            if (plan.planId.name !== 'Individual') {
+                throw new CustomError(
+                    'Your subscription does not support individual complaints. Please upgrade the subscription.',
+                    httpStatusCode.BAD_REQUEST,
+                );
+            }
             const subscriptionStatus = checkSubscriptionStatus(subscription);
             this.#checkSubscription(subscriptionStatus);
             addData.paymentStatus = 'Paid';

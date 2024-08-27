@@ -110,7 +110,7 @@ const MobileNav = () => {
                         )}
                     >
                         <ShieldQuestion className="h-5 w-5" />
-                        Organisational Case{' '}
+                        Organizational Case{' '}
                     </Link>
                     <Link
                         href="/dashboard/payment/history"

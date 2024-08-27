@@ -20,7 +20,7 @@ export default async function Organisational() {
     return (
         <main className="p-4 sm:px-6 sm:py-0 md:gap-8">
             <h1 className="my-2 text-4xl font-semibold">
-                Your Organisational Complaints
+                Your Organizational Complaints
             </h1>
             <Card>
                 <CardContent>
