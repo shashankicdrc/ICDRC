@@ -21,7 +21,7 @@ export const DashboardBreadCrumb = () => {
                         '/' + pathSegments.slice(0, index + 1).join('/');
                     const isLast = index === pathSegments.length - 1;
                     return !isLast ? (
-                        <React.Fragment>
+                        <React.Fragment key={index + 2}>
                             <BreadcrumbItem>
                                 <BreadcrumbLink
                                     href={href}

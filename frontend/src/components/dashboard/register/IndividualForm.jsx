@@ -303,8 +303,6 @@ const IndividualForm = () => {
         }
     };
 
-    console.log(caseData);
-
     return (
         <Fragment>
             <Modal

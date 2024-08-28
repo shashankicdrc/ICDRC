@@ -11,6 +11,7 @@ import {
 import { Button } from '../../ui/button';
 import Link from 'next/link';
 import { Ellipsis } from 'lucide-react';
+import MakePendingPayment from '../../form/MakePendingPayment';
 
 const individualColumns = [
     {
@@ -79,6 +80,13 @@ const individualColumns = [
                 toast.success(`${individual.name} Case ID has been copied.`);
             };
 
+            const plainObject = {
+                id: individual._id,
+                complaintType: 'IndividualComplaint',
+                amount: 500,
+                userId: individual.userId,
+            };
+
             return (
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -108,6 +116,9 @@ const individualColumns = [
                                     Chat
                                 </Link>
                             </DropdownMenuItem>
+                        )}
+                        {individual.paymentStatus === 'Pending' && (
+                            <MakePendingPayment paymentData={plainObject} />
                         )}
                         <DropdownMenuItem className="cursor-pointer">
                             <Link
