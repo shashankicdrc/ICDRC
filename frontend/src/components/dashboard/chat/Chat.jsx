@@ -80,7 +80,7 @@ export default function Chat({ chatData }) {
                 complaintType:
                     searchParams.get('type') === 'individual'
                         ? 'IndividualComplaint'
-                        : 'OrganizationalComplaint',
+                        : 'OrganizationComplaint',
                 complaintId: params.id,
             };
             const { data, error } = await addMessage(chatData);
@@ -108,6 +108,9 @@ export default function Chat({ chatData }) {
                       document.body,
                   )
                 : null}
+            <p className="bg-muted/40 text-center py-2">
+                You are chating for case: <b>{searchParams.get('caseId')}</b>
+            </p>
             <ScrollArea className="px-3 md:px-5 lg:px-10 py-3 flex-1 bg-muted/40">
                 <ChatList chats={chats} lastMessageRef={lastMessageRef} />
             </ScrollArea>

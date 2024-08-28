@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Image from 'next/image';
-import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 import { IoSendSharp } from 'react-icons/io5';
 import { PiSpinner } from 'react-icons/pi';
 import { Button, Input } from '@chakra-ui/react';
@@ -48,6 +47,7 @@ export default function AttachmentpreviewModal({
         setisLoading(true);
         if (images.length < 1 || !messgevalue) {
             setisLoading(false);
+            toast.error('Please provide a messsage.');
             return;
         }
         const formData = new FormData();
@@ -56,7 +56,7 @@ export default function AttachmentpreviewModal({
             'complaintType',
             searchParams.get('type') === 'individual'
                 ? 'IndividualComplaint'
-                : 'OrganizationalComplaint',
+                : 'OrganizationComplaint',
         );
         formData.set('complaintId', params.id);
         formData.set('authorType', 'user');
@@ -97,21 +97,17 @@ export default function AttachmentpreviewModal({
                         <div>Hold on we are loading ... </div>
                     ) : !isImageloaded && images.length > 0 ? (
                         <Fragment>
-                            <div className="px-10 my-2 flex items-center flex-1">
-                                <AspectRatio.Root
-                                    ratio={10 / 4}
-                                    className="my-0"
-                                >
-                                    <Image
-                                        src={
-                                            images[current_imageIndex]
-                                                .image_preview.url
-                                        }
-                                        alt="no image preview is available"
-                                        fill
-                                        className="rounded-md object-fill "
-                                    />
-                                </AspectRatio.Root>
+                            <div className="px-10 my-2 flex items-center justify-center flex-1">
+                                <Image
+                                    src={
+                                        images[current_imageIndex].image_preview
+                                            .url
+                                    }
+                                    width={400}
+                                    height={400}
+                                    alt="no image preview is available"
+                                    className="rounded-md"
+                                />
                             </div>
                         </Fragment>
                     ) : null}

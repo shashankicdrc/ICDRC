@@ -109,7 +109,7 @@ const organisaitonlColumns = [
                             >
                                 <Link
                                     className="w-full"
-                                    href={`/dashboard/chat/${organisaitonl._id}?type=organizational`}
+                                    href={`/dashboard/chat/${organisaitonl._id}?type=organizational&caseId=${organisaitonl.caseId}`}
                                 >
                                     Chat
                                 </Link>

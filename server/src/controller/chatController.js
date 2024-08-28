@@ -91,7 +91,7 @@ class ChatController extends Base {
             'authorId',
         ];
         const complaintTypeArray = [
-            'OrganizationalComplaint',
+            'OrganizationComplaint',
             'IndividualComplaint',
         ];
         const authorTypeArr = ['user', 'admins'];
@@ -115,12 +115,10 @@ class ChatController extends Base {
         }
 
         const uploader = () => {
-            console.log('designer');
             return cloudinary.uploader.upload_stream(
                 { use_filename: true },
                 (error, data) => {
                     if (error) {
-                        console.log(error, 'error occured');
                         return res.status(error.http_code).json({
                             message: error.message,
                             status: httpStatus.ERROR,
@@ -195,7 +193,6 @@ class ChatController extends Base {
                 }
 
                 if (!checkField.missing) {
-                    console.log('start uploading');
                     file.pipe(uploader());
                 } else {
                     file.resume();
@@ -206,7 +203,6 @@ class ChatController extends Base {
         });
 
         bb.on('field', (fieldName, value) => {
-            console.log(fieldName, value);
             if (hasError) return;
             receivedFields.push(fieldName);
             handleError(async () => {
@@ -214,7 +210,6 @@ class ChatController extends Base {
                     case 'authorType':
                         if (!authorTypeArr.includes(value)) {
                             hasError = true;
-                            console.log(value);
                             return res.status(httpStatusCode.BAD_REQUEST).json({
                                 error: 'Invalid type',
                                 status: httpStatus.ERROR,
@@ -320,7 +315,7 @@ class ChatController extends Base {
             case 'IndividualComplaint':
                 complaint = await indComplaintModel.findById(complaintId);
                 break;
-            case 'OrganizationalComplaint':
+            case 'OrganizationComplaint':
                 complaint = await orgComplaintModel.findById(complaintId);
                 break;
             default:

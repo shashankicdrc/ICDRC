@@ -103,7 +103,7 @@ const individualColumns = [
                             >
                                 <Link
                                     className="w-full"
-                                    href={`/dashboard/chat/${individual._id}?type=individual`}
+                                    href={`/dashboard/chat/${individual._id}?type=individual&caseId=${individual.caseId}`}
                                 >
                                     Chat
                                 </Link>

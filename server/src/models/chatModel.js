@@ -5,11 +5,11 @@ const schema = new Schema(
         complaintId: {
             type: Schema.Types.ObjectId,
             required: true,
-            refPat: 'complaintType',
+            refPath: 'complaintType',
         },
         complaintType: {
             type: String,
-            enum: ['IndividualComplaint', 'OrganizationalComplaint'],
+            enum: ['IndividualComplaint', 'OrganizationComplaint'],
             required: true,
         },
         authorId: {
