@@ -127,76 +127,76 @@ const OganisationalForm = () => {
         subscriptions();
     }, [session]);
 
-    useEffect(() => {
-        let db;
+    // useEffect(() => {
+    //     let db;
+    //
+    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+    //
+    //     dbRequest.onupgradeneeded = function (e) {
+    //         console.log('upgrading...');
+    //         db = e.target.result;
+    //
+    //         db.onerror = (e) => {
+    //             console.error('error happend', db.error);
+    //         };
+    //
+    //         // Create an objectStore for this database
+    //         db.createObjectStore('organisational', {
+    //             keyPath: 'id',
+    //         });
+    //     };
+    //
+    //     dbRequest.onerror = (event) => {
+    //         console.log(`Error while loading`, dbRequest.error);
+    //     };
+    //
+    //     dbRequest.onsuccess = (e) => {
+    //         console.log('sucessfully open');
+    //         db = dbRequest.result;
+    //
+    //         const objectStore = db
+    //             .transaction('organisational', 'readonly')
+    //             .objectStore('organisational');
+    //         const request = objectStore.get(1);
+    //
+    //         request.onsuccess = async (e) => {
+    //             console.log('success');
+    //             const result = request.result;
+    //             if (result) {
+    //                 const keys = result.keys;
+    //                 const encryptData = result.data;
+    //                 const decryptedData = await decryptData(encryptData, keys);
+    //                 const decryptedJSON = new TextDecoder().decode(
+    //                     decryptedData,
+    //                 );
+    //                 const decryptedObject = JSON.parse(decryptedJSON);
+    //                 setCaseData([decryptedObject]);
+    //             }
+    //         };
+    //
+    //         request.onerror = (e) => {
+    //             console.error(
+    //                 'Error fetching data from IndexedDB:',
+    //                 e.target.error,
+    //             );
+    //         };
+    //     };
+    // }, []);
 
-        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-
-        dbRequest.onupgradeneeded = function (e) {
-            console.log('upgrading...');
-            db = e.target.result;
-
-            db.onerror = (e) => {
-                console.error('error happend', db.error);
-            };
-
-            // Create an objectStore for this database
-            db.createObjectStore('organisational', {
-                keyPath: 'id',
-            });
-        };
-
-        dbRequest.onerror = (event) => {
-            console.log(`Error while loading`, dbRequest.error);
-        };
-
-        dbRequest.onsuccess = (e) => {
-            console.log('sucessfully open');
-            db = dbRequest.result;
-
-            const objectStore = db
-                .transaction('organisational', 'readonly')
-                .objectStore('organisational');
-            const request = objectStore.get(1);
-
-            request.onsuccess = async (e) => {
-                console.log('success');
-                const result = request.result;
-                if (result) {
-                    const keys = result.keys;
-                    const encryptData = result.data;
-                    const decryptedData = await decryptData(encryptData, keys);
-                    const decryptedJSON = new TextDecoder().decode(
-                        decryptedData,
-                    );
-                    const decryptedObject = JSON.parse(decryptedJSON);
-                    setCaseData([decryptedObject]);
-                }
-            };
-
-            request.onerror = (e) => {
-                console.error(
-                    'Error fetching data from IndexedDB:',
-                    e.target.error,
-                );
-            };
-        };
-    }, []);
-
-    const updateDb = (data) => {
-        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-
-        dbRequest.onsuccess = (event) => {
-            const db = event.target.result;
-            const trx = db.transaction(['organisational'], 'readwrite');
-            const store = trx.objectStore('organisational');
-            store.put(data);
-        };
-
-        dbRequest.onerror = () => {
-            console.error('Error opening IndexedDB:', dbRequest.error);
-        };
-    };
+    // const updateDb = (data) => {
+    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+    //
+    //     dbRequest.onsuccess = (event) => {
+    //         const db = event.target.result;
+    //         const trx = db.transaction(['organisational'], 'readwrite');
+    //         const store = trx.objectStore('organisational');
+    //         store.put(data);
+    //     };
+    //
+    //     dbRequest.onerror = () => {
+    //         console.error('Error opening IndexedDB:', dbRequest.error);
+    //     };
+    // };
 
     useEffect(() => {
         if (state?.length > 1) {
@@ -214,9 +214,6 @@ const OganisationalForm = () => {
             userId: data.userId,
         };
         setCaseData(plainObject);
-        const keys = await makeKeys();
-        const encrypted = await encryptData(keys, JSON.stringify(plainObject));
-        updateDb({ id: 1, keys: keys, data: encrypted });
         onOpen();
     };
 
@@ -273,20 +270,20 @@ const OganisationalForm = () => {
         }
     };
 
-    const deleteObjectStore = () => {
-        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-
-        dbRequest.onsuccess = (event) => {
-            const db = event.target.result;
-            const trx = db.transaction(['organisational'], 'readwrite');
-            const store = trx.objectStore('organisational');
-            store.delete(1);
-        };
-
-        dbRequest.onerror = () => {
-            console.error('Error opening IndexedDB:', dbRequest.error);
-        };
-    };
+    // const deleteObjectStore = () => {
+    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+    //
+    //     dbRequest.onsuccess = (event) => {
+    //         const db = event.target.result;
+    //         const trx = db.transaction(['organisational'], 'readwrite');
+    //         const store = trx.objectStore('organisational');
+    //         store.delete(1);
+    //     };
+    //
+    //     dbRequest.onerror = () => {
+    //         console.error('Error opening IndexedDB:', dbRequest.error);
+    //     };
+    // };
 
     const makePayment = async (e) => {
         e.preventDefault();
@@ -299,7 +296,6 @@ const OganisationalForm = () => {
                 toast.error(error);
                 return;
             }
-            deleteObjectStore();
             router.push(data.instrumentResponse.redirectInfo.url);
         } catch (error) {
             console.error('Error while making payment:', error);

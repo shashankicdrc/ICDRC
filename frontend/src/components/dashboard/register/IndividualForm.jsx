@@ -22,7 +22,7 @@ import {
 } from '../../../lib/constant';
 import { Button } from '../../ui/button';
 import { Loader2 } from 'lucide-react';
-import { makeKeys, encryptData, decryptData } from '../../../lib/Encryption';
+// import { makeKeys, encryptData, decryptData } from '../../../lib/Encryption';
 import toast from 'react-hot-toast';
 import { addIndividualComplaint } from '../../../externalAPI/complaintService';
 import { getUserSubscription } from '../../../externalAPI/subscriptionService';
@@ -126,58 +126,58 @@ const IndividualForm = () => {
 
     const states = State.getStatesOfCountry('IN');
 
-    useEffect(() => {
-        let db;
-
-        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-
-        dbRequest.onupgradeneeded = function (e) {
-            console.log('upgrading...');
-            db = e.target.result;
-
-            db.onerror = (e) => {
-                console.error('error happend', db.error);
-            };
-
-            db.createObjectStore('individual', {
-                keyPath: 'id',
-            });
-        };
-
-        dbRequest.onerror = () => {
-            console.log(`Error while loading`, dbRequest.error);
-        };
-
-        dbRequest.onsuccess = () => {
-            db = dbRequest.result;
-
-            const objectStore = db
-                .transaction('individual', 'readonly')
-                .objectStore('individual');
-            const request = objectStore.get(1);
-
-            request.onsuccess = async (e) => {
-                const result = request.result;
-                if (result) {
-                    const keys = result.keys;
-                    const encryptData = result.data;
-                    const decryptedData = await decryptData(encryptData, keys);
-                    const decryptedJSON = new TextDecoder().decode(
-                        decryptedData,
-                    );
-                    const decryptedObject = JSON.parse(decryptedJSON);
-                    setCaseData(decryptedObject);
-                }
-            };
-
-            request.onerror = (e) => {
-                console.error(
-                    'Error fetching data from IndexedDB:',
-                    e.target.error,
-                );
-            };
-        };
-    }, []);
+    // useEffect(() => {
+    //     let db;
+    //
+    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+    //
+    //     dbRequest.onupgradeneeded = function (e) {
+    //         console.log('upgrading...');
+    //         db = e.target.result;
+    //
+    //         db.onerror = (e) => {
+    //             console.error('error happend', db.error);
+    //         };
+    //
+    //         db.createObjectStore('individual', {
+    //             keyPath: 'id',
+    //         });
+    //     };
+    //
+    //     dbRequest.onerror = () => {
+    //         console.log(`Error while loading`, dbRequest.error);
+    //     };
+    //
+    //     dbRequest.onsuccess = () => {
+    //         db = dbRequest.result;
+    //
+    //         const objectStore = db
+    //             .transaction('individual', 'readonly')
+    //             .objectStore('individual');
+    //         const request = objectStore.get(1);
+    //
+    //         request.onsuccess = async (e) => {
+    //             const result = request.result;
+    //             if (result) {
+    //                 const keys = result.keys;
+    //                 const encryptData = result.data;
+    //                 const decryptedData = await decryptData(encryptData, keys);
+    //                 const decryptedJSON = new TextDecoder().decode(
+    //                     decryptedData,
+    //                 );
+    //                 const decryptedObject = JSON.parse(decryptedJSON);
+    //                 setCaseData(decryptedObject);
+    //             }
+    //         };
+    //
+    //         request.onerror = (e) => {
+    //             console.error(
+    //                 'Error fetching data from IndexedDB:',
+    //                 e.target.error,
+    //             );
+    //         };
+    //     };
+    // }, []);
 
     useEffect(() => {
         if (state?.length > 1) {
@@ -187,20 +187,20 @@ const IndividualForm = () => {
         }
     }, [state]);
 
-    const updateDb = (data) => {
-        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-
-        dbRequest.onsuccess = (event) => {
-            const db = event.target.result;
-            const trx = db.transaction(['individual'], 'readwrite');
-            const store = trx.objectStore('individual');
-            store.put(data);
-        };
-
-        dbRequest.onerror = () => {
-            console.error('Error opening IndexedDB:', dbRequest.error);
-        };
-    };
+    // const updateDb = (data) => {
+    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+    //
+    //     dbRequest.onsuccess = (event) => {
+    //         const db = event.target.result;
+    //         const trx = db.transaction(['individual'], 'readwrite');
+    //         const store = trx.objectStore('individual');
+    //         store.put(data);
+    //     };
+    //
+    //     dbRequest.onerror = () => {
+    //         console.error('Error opening IndexedDB:', dbRequest.error);
+    //     };
+    // };
 
     const initiateCasePayment = async (data) => {
         const plainObject = {
@@ -210,9 +210,6 @@ const IndividualForm = () => {
             userId: data.userId,
         };
         setCaseData(plainObject);
-        const keys = await makeKeys();
-        const encrypted = await encryptData(keys, JSON.stringify(plainObject));
-        updateDb({ id: 1, keys: keys, data: encrypted });
         onOpen();
     };
 
@@ -268,20 +265,20 @@ const IndividualForm = () => {
         }
     };
 
-    const deleteObjectStore = () => {
-        const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-
-        dbRequest.onsuccess = (event) => {
-            const db = event.target.result;
-            const trx = db.transaction(['individual'], 'readwrite');
-            const store = trx.objectStore('individual');
-            store.delete(1);
-        };
-
-        dbRequest.onerror = () => {
-            console.error('Error opening IndexedDB:', dbRequest.error);
-        };
-    };
+    // const deleteObjectStore = () => {
+    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
+    //
+    //     dbRequest.onsuccess = (event) => {
+    //         const db = event.target.result;
+    //         const trx = db.transaction(['individual'], 'readwrite');
+    //         const store = trx.objectStore('individual');
+    //         store.delete(1);
+    //     };
+    //
+    //     dbRequest.onerror = () => {
+    //         console.error('Error opening IndexedDB:', dbRequest.error);
+    //     };
+    // };
 
     const makePayment = async (e) => {
         e.preventDefault();
@@ -294,7 +291,6 @@ const IndividualForm = () => {
                 toast.error(error);
                 return;
             }
-            deleteObjectStore();
             router.push(data.instrumentResponse.redirectInfo.url);
         } catch (error) {
             console.error('Error while making payment:', error);
