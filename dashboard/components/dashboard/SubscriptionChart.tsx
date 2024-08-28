@@ -69,59 +69,60 @@ export default function SubscriptionData() {
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 {error ? <p>{error}</p> :
-                    <ChartContainer
-                        config={chartConfig}
-                        className="mx-auto aspect-square max-h-[250px]"
-                    >
-                        <PieChart>
-                            <ChartTooltip
-                                cursor={false}
-                                content={<ChartTooltipContent hideLabel />}
-                            />
-                            <Pie
-                                data={subscriptionData?.chartData}
-                                dataKey="total"
-                                nameKey="plan"
-                                innerRadius={60}
-                                strokeWidth={5}
-                            >
-                                <Label
-                                    content={({ viewBox }) => {
-                                        if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                                            return (
-                                                <text
-                                                    x={viewBox.cx}
-                                                    y={viewBox.cy}
-                                                    textAnchor="middle"
-                                                    dominantBaseline="middle"
-                                                >
-                                                    <tspan
+                    subscriptionData?.totalSubscription > 0 ?
+                        <ChartContainer
+                            config={chartConfig}
+                            className="mx-auto aspect-square max-h-[250px]"
+                        >
+                            <PieChart>
+                                <ChartTooltip
+                                    cursor={false}
+                                    content={<ChartTooltipContent hideLabel />}
+                                />
+                                <Pie
+                                    data={subscriptionData?.chartData}
+                                    dataKey="total"
+                                    nameKey="plan"
+                                    innerRadius={60}
+                                    strokeWidth={5}
+                                >
+                                    <Label
+                                        content={({ viewBox }) => {
+                                            if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                                                return (
+                                                    <text
                                                         x={viewBox.cx}
                                                         y={viewBox.cy}
-                                                        className="fill-foreground text-3xl font-bold"
+                                                        textAnchor="middle"
+                                                        dominantBaseline="middle"
                                                     >
-                                                        {subscriptionData?.totalSubscription.toLocaleString()}
-                                                    </tspan>
-                                                    <tspan
-                                                        x={viewBox.cx}
-                                                        y={(viewBox.cy || 0) + 24}
-                                                        className="fill-muted-foreground"
-                                                    >
-                                                        Subscriptions
-                                                    </tspan>
-                                                </text>
-                                            )
-                                        }
-                                    }}
+                                                        <tspan
+                                                            x={viewBox.cx}
+                                                            y={viewBox.cy}
+                                                            className="fill-foreground text-3xl font-bold"
+                                                        >
+                                                            {subscriptionData?.totalSubscription.toLocaleString()}
+                                                        </tspan>
+                                                        <tspan
+                                                            x={viewBox.cx}
+                                                            y={(viewBox.cy || 0) + 24}
+                                                            className="fill-muted-foreground"
+                                                        >
+                                                            Subscriptions
+                                                        </tspan>
+                                                    </text>
+                                                )
+                                            }
+                                        }}
+                                    />
+                                </Pie>
+                                <ChartLegend
+                                    content={<ChartLegendContent nameKey="plan" />}
+                                    className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
                                 />
-
-                            </Pie>
-                            <ChartLegend
-                                content={<ChartLegendContent nameKey="plan" />}
-                                className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-                            />
-                        </PieChart>
-                    </ChartContainer>
+                            </PieChart>
+                        </ChartContainer>
+                        : <div className="flex items-center justify-center my-5"> 0 Subscriptions</div>
                 }
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">

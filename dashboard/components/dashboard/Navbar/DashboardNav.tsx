@@ -224,6 +224,24 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Link
+                        href="/dashboard/teams"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname === "/dashboard/teams"
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.team className="h-5 w-5" />
+                        {!isCollapsed && <span>Teams</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Teams</TooltipContent>}
+            </Tooltip>{" "}
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
                         href="/dashboard/settings"
                         className={cn(
                             "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
@@ -239,7 +257,6 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Settings</TooltipContent>}
             </Tooltip>{" "}
-
         </div>
     );
 };

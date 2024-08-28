@@ -7,7 +7,39 @@ import { deleteContacts } from "@/externalAPI/contactService";
 import { deleteIndividualCase } from "@/externalAPI/indCaseService";
 import { deleteOrganisationalCase } from "@/externalAPI/orgCaseService";
 import { deletePartners } from "@/externalAPI/partnerService";
+import { addTeams, deleteTeams, updateTeams } from "@/externalAPI/teamService";
 import { revalidateTag } from "next/cache";
+
+export const addTeamAction = async (token: string, values: any) => {
+    const { message, error } = await addTeams(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getTeams");
+    return { data: message };
+};
+
+
+
+export const updateTeamAction = async (token: string, values: any) => {
+    const { message, error } = await updateTeams(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getTeams");
+    return { data: message };
+};
+
+
+export const deleteTeamAction = async (token: string, value: string[]) => {
+    const { message, error } = await deleteTeams(token, value);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getTeams");
+    return { message };
+};
+
 
 export const deleteOrgCaseAction = async (token: string, value: string[]) => {
     const { message, error } = await deleteOrganisationalCase(token, value);
