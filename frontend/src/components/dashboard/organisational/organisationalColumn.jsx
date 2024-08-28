@@ -11,6 +11,7 @@ import {
 import { Button } from '../../ui/button';
 import Link from 'next/link';
 import { Ellipsis } from 'lucide-react';
+import MakePendingPayment from '../../form/MakePendingPayment';
 
 const organisaitonlColumns = [
     {
@@ -84,6 +85,12 @@ const organisaitonlColumns = [
                     `${organisaitonl.organizationName} Case ID has been copied.`,
                 );
             };
+            const plainObject = {
+                id: organisaitonl._id,
+                complaintType: 'OrganizationComplaint',
+                amount: 5000,
+                userId: organisaitonl.userId,
+            };
 
             return (
                 <DropdownMenu>
@@ -115,6 +122,10 @@ const organisaitonlColumns = [
                                 </Link>
                             </DropdownMenuItem>
                         )}
+                        {organisaitonl.paymentStatus === 'Pending' && (
+                            <MakePendingPayment paymentData={plainObject} />
+                        )}
+
                         <DropdownMenuItem className="cursor-pointer">
                             <Link
                                 href={`/dashboard/complaints/organisational/${organisaitonl._id}`}
