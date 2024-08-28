@@ -1,20 +1,21 @@
-"use client";
-import { useEffect, useState } from "react";
+'use client';
+import { useEffect, useState } from 'react';
 
-import Footer from "../../components/footer/page";
-import HomeNav from "../../components/Navbar/page";
-import SocialIcons from "../../components/SocialIcons/page";
+import Footer from '../../components/footer/page';
+import HomeNav from '../../components/Navbar/page';
+import SocialIcons from '../../components/SocialIcons/page';
 
-import { toast } from "react-hot-toast";
-import Loader from "../../components/Loader/page";
-import axios from "axios";
-import { url } from "../api";
+import { toast } from 'react-hot-toast';
+import Loader from '../../components/Loader/page';
+import axios from 'axios';
+import { url } from '../api';
+import { BASE_URL, httpStatus, httpStatusCode } from '../../lib/constant';
 
 const Partner = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [mobile, setMobile] = useState("");
-    const [company, setCompany] = useState("");
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [mobile, setMobile] = useState('');
+    const [company, setCompany] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -30,26 +31,37 @@ const Partner = () => {
         e.preventDefault();
         setLoading(true);
         if (!validateEmailAddress(email)) {
-            toast.error("Enter valid email address");
+            toast.error('Enter valid email address');
             return;
         }
 
         console.log({ name, email, mobile, company });
 
         try {
-            const res = await axios.post(`${url}/api/handlepartner`, {
-                name,
-                email,
-                mobile,
-                company,
+            const res = await fetch(`${BASE_URL}/api/partners`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    mobile,
+                    company,
+                }),
             });
-            if (res?.data?.success) {
-                setName("");
-                setEmail("");
-                setMobile("");
-                setCompany("");
-                toast.success(res.data.message);
+            const { message, statusCode, status } = await res.json();
+            if (
+                httpStatusCode.OK !== statusCode &&
+                httpStatus.SUCCESS !== status
+            ) {
+                return toast.error(message);
             }
+            setName('');
+            setEmail('');
+            setMobile('');
+            setCompany('');
+            toast.success(message);
         } catch (err) {
             toast.error(err?.response?.data?.message);
         }
@@ -70,7 +82,7 @@ const Partner = () => {
             >
                 <div
                     className="flex bg-cover bg-no-repeat justify-center items-center h-screen w-screen px-4 md:px-0"
-                    style={{ backgroundColor: "rgba(0, 0, 0, 0.4)" }}
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
                 >
                     <div className=" rounded-xl relative mx-auto w-full max-w-md bg-white px-6 pt-10 mt-24 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:rounded-xl sm:px-10">
                         <div className="w-full">
@@ -90,7 +102,11 @@ const Partner = () => {
                                     If you want to come on board as a Partner
                                 </p>
                             </div>
-                            <div className="mt-5" data-aos="fade-up" data-aos-duration="1000">
+                            <div
+                                className="mt-5"
+                                data-aos="fade-up"
+                                data-aos-duration="1000"
+                            >
                                 <form onSubmit={handleSubmit}>
                                     <div className="relative mt-6">
                                         <input
@@ -101,7 +117,9 @@ const Partner = () => {
                                             className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none"
                                             autoComplete="off"
                                             value={name}
-                                            onChange={(e) => setName(e.target.value)}
+                                            onChange={(e) =>
+                                                setName(e.target.value)
+                                            }
                                             required={true}
                                         />
                                         <label
@@ -121,7 +139,9 @@ const Partner = () => {
                                             className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none"
                                             autoComplete="off"
                                             value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            onChange={(e) =>
+                                                setEmail(e.target.value)
+                                            }
                                             required={true}
                                         />
                                         <label
@@ -142,7 +162,9 @@ const Partner = () => {
                                             maxLength={10}
                                             minLength={10}
                                             value={mobile}
-                                            onChange={(e) => setMobile(e.target.value)}
+                                            onChange={(e) =>
+                                                setMobile(e.target.value)
+                                            }
                                             required={true}
                                         />
                                         <label
@@ -161,7 +183,9 @@ const Partner = () => {
                                             className="peer mt-1 w-full border-b-2 border-gray-300 px-0 py-1 placeholder:text-transparent focus:border-gray-500 focus:outline-none"
                                             autoComplete="off"
                                             value={company}
-                                            onChange={(e) => setCompany(e.target.value)}
+                                            onChange={(e) =>
+                                                setCompany(e.target.value)
+                                            }
                                             required={true}
                                         />
                                         <label
@@ -176,7 +200,11 @@ const Partner = () => {
                                             type="submit"
                                             className="w-full grid place-items-center rounded-md bg-orange-500 px-3 py-4 text-white focus:bg-orange-700 focus:outline-none"
                                         >
-                                            {loading ? <Loader color="white" /> : "Submit"}
+                                            {loading ? (
+                                                <Loader color="white" />
+                                            ) : (
+                                                'Submit'
+                                            )}
                                         </button>
                                     </div>
                                 </form>

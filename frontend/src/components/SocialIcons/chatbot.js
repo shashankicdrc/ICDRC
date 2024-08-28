@@ -1,23 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
-import { url } from "../../app/api";
-import { PiFinnTheHuman } from "react-icons/pi";
-import { IoMdSend } from "react-icons/io";
-import "./module.Socialicon.css";
-import Link from "next/link";
-import Image from "next/image";
+import React, { useState, useEffect, useRef } from 'react';
+import { PiFinnTheHuman } from 'react-icons/pi';
+import { IoMdSend } from 'react-icons/io';
+import './module.Socialicon.css';
+import Link from 'next/link';
+import { BASE_URL } from '../../lib/constant';
+import Image from 'next/image';
+import toast from 'react-hot-toast';
 
 const ChatBot = ({ isheader }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [step, setStep] = useState(1);
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [mobile, setMobile] = useState("");
-    const [issue, setIssue] = useState("");
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [mobile, setMobile] = useState('');
+    const [issue, setIssue] = useState('');
 
     const [messages, setMessages] = useState([
         {
-            type: "bot",
+            type: 'bot',
             text: "Welcome to ICDRC! We're here to assist you with your concerns. To get started, could you please provide your Name?",
         },
     ]);
@@ -32,7 +32,7 @@ const ChatBot = ({ isheader }) => {
     useEffect(() => {
         if (lastMessageRef.current) {
             lastMessageRef.current.scrollIntoView({
-                behavior: "smooth",
+                behavior: 'smooth',
             });
         }
     }, [messages]);
@@ -42,14 +42,14 @@ const ChatBot = ({ isheader }) => {
         if (step !== 1) {
             const newMessage = {
                 text: message,
-                type: "bot",
+                type: 'bot',
             };
             setMessages((prevMessages) => [...prevMessages, newMessage]);
         }
         const value = valueAttrChange();
         const userMessage = {
             text: value,
-            type: "user",
+            type: 'user',
         };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
         if (step <= 4) {
@@ -62,16 +62,22 @@ const ChatBot = ({ isheader }) => {
 
     const postFormData = async () => {
         try {
-            await axios.post(`${url}/api/createchatdata`, {
-                name,
-                email,
-                mobile,
-                issue,
+            await fetch(`${BASE_URL}/api/chat-bots`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    mobile,
+                    issue,
+                }),
             });
-            setIssue(" ");
-            console.log("Data posted successfully");
+            setIssue(' ');
         } catch (error) {
-            console.error("Error posting data:", error);
+            toast.error(error.message);
+            console.error('Error posting data:', error);
         }
     };
 
@@ -80,7 +86,7 @@ const ChatBot = ({ isheader }) => {
             case 2:
                 return `Thanks ${name}. What's your email address? This will help us reach out to you.`;
             case 3:
-                return "Great! Could you please share your mobile number with us?";
+                return 'Great! Could you please share your mobile number with us?';
             case 4:
                 return "Thank you for sharing your contact details. Finally, could you briefly describe the issue or concern you're facing? This will help us understand how we can assist you better.";
             case 5:
@@ -89,23 +95,23 @@ const ChatBot = ({ isheader }) => {
     };
 
     const chatBotStyle = {
-        bottom: "1px",
-        zIndex: "1000",
+        bottom: '1px',
+        zIndex: '1000',
     };
 
     const chatBoxStyle = {
-        width: "500px",
-        height: "400px",
-        borderRadius: "8px",
-        backgroundColor: "white",
-        boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
-        position: "fixed",
-        bottom: "60px",
-        right: "20px",
-        transform: isOpen ? "translateX(0)" : "translateX(100%)",
-        transition: "transform 0.3s ease-in-out",
-        display: "flex",
-        flexDirection: "column",
+        width: '500px',
+        height: '400px',
+        borderRadius: '8px',
+        backgroundColor: 'white',
+        boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+        position: 'fixed',
+        bottom: '60px',
+        right: '20px',
+        transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
+        transition: 'transform 0.3s ease-in-out',
+        display: 'flex',
+        flexDirection: 'column',
     };
 
     const changeHandler = (e) => {
@@ -127,8 +133,6 @@ const ChatBot = ({ isheader }) => {
                 return issue;
         }
     };
-
-    console.log('set issue', issue)
 
     return (
         <div ref={chatContainerRef} style={chatBotStyle}>
@@ -152,8 +156,9 @@ const ChatBot = ({ isheader }) => {
                     <section className="px-5 pt-5 pb-20 overflow-y-auto">
                         {messages.map((message, index) => (
                             <div
-                                className={`flex bg-orange-500 max-w-60 text-white items-center rounded-md mb-5 px-5 min-h-10 ${message.type !== "bot" ? "ml-auto" : ""
-                                    } `}
+                                className={`flex bg-orange-500 max-w-60 text-white items-center rounded-md mb-5 px-5 min-h-10 ${
+                                    message.type !== 'bot' ? 'ml-auto' : ''
+                                } `}
                                 key={index}
                             >
                                 {message.text}
@@ -167,8 +172,8 @@ const ChatBot = ({ isheader }) => {
                         {step === 5 ? (
                             <div className="space-y-2 my-2">
                                 <p className="text-white  bg-orange-500 py-2 px-2 rounded-md mr-20">
-                                    Meanwhile, to register your complaint with us, kindly click on
-                                    the below
+                                    Meanwhile, to register your complaint with
+                                    us, kindly click on the below
                                 </p>
                                 <Link
                                     href="/register"
@@ -201,7 +206,7 @@ const ChatBot = ({ isheader }) => {
                             disabled={step >= 5 ? true : false}
                             onChange={changeHandler}
                             onKeyDown={(e) => {
-                                if (e.key === "Enter") {
+                                if (e.key === 'Enter') {
                                     e.preventDefault();
                                     handleSendMessage(step, getPromptMessage());
                                 }
@@ -221,16 +226,25 @@ const ChatBot = ({ isheader }) => {
                 </div>
             )}
             <div
-                style={{ cursor: "pointer" }}
+                style={{ cursor: 'pointer' }}
                 onClick={handleToggleChat}
                 className={`flex items-center`}
             >
-                <span className={`${isheader ? 'mr-2' : null} hidden md:block text-sm`}>
-                    {isheader ? "Chat With Assistant" : ''}
+                <span
+                    className={`${isheader ? 'mr-2' : null} hidden md:block text-sm`}
+                >
+                    {isheader ? 'Chat With Assistant' : ''}
                 </span>
-                {isheader ? <Image src="/images/11.webp" alt="chatbot" width={50} height={40} /> :
+                {isheader ? (
+                    <Image
+                        src="/images/11.webp"
+                        alt="chatbot"
+                        width={50}
+                        height={40}
+                    />
+                ) : (
                     <PiFinnTheHuman className="text-orange-500 border-orange-600 hover:text-white text-2xl" />
-                }
+                )}
             </div>
         </div>
     );

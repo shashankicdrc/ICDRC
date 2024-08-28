@@ -1,23 +1,23 @@
-"use client";
-import { useEffect, useState } from "react";
-import Head from "next/head";
-import Link from "next/link";
-import HomeNav from "../../components/Navbar/page";
-import Footer from "../../components/footer/page";
-import SocialIcons from "../../components/SocialIcons/page";
-import { toast } from "react-hot-toast";
-import "react-phone-number-input/style.css";
-import PhoneInput from "react-phone-number-input";
-import axios from "axios";
-import { url } from "../api";
-import Styles from "./Contact.module.css";
+'use client';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import HomeNav from '../../components/Navbar/page';
+import Footer from '../../components/footer/page';
+import SocialIcons from '../../components/SocialIcons/page';
+import { toast } from 'react-hot-toast';
+import 'react-phone-number-input/style.css';
+import PhoneInput from 'react-phone-number-input';
+import { BASE_URL, httpStatus, httpStatusCode } from '../../lib/constant';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
+import { Textarea } from '../../components/ui/textarea';
 
 const Contact = () => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [mobile, setMobile] = useState("");
-    const [whatsapp, setWhatsapp] = useState("");
-    const [message, setMessage] = useState("");
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [mobile, setMobile] = useState('');
+    const [whatsapp, setWhatsapp] = useState('');
+    const [message, setMessage] = useState('');
 
     const [loading, setLoading] = useState(false);
 
@@ -39,40 +39,55 @@ const Contact = () => {
         e.preventDefault();
         setLoading(true);
         if (!validateMobileNumber(mobile)) {
-            toast.error("Enter valid mobile number");
+            toast.error('Enter valid mobile number');
             setLoading(false);
 
             return;
         }
 
         if (!validateEmailAddress(email)) {
-            toast.error("Enter valid email address");
+            toast.error('Enter valid email address');
             setLoading(false);
 
             return;
         }
 
-        console.log({ name, email, mobile, whatsapp, message });
-
         try {
-            const res = await axios.post(`${url}/api/handlecontact`, {
-                name,
-                email,
-                mobile,
-                whatsapp,
-                message,
+            const resposne = await fetch(`${BASE_URL}/api/contacts`, {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    mobile,
+                    whatsapp,
+                    message,
+                }),
             });
-            if (res?.data?.success) {
-                setName("");
-                setEmail("");
-                setMobile("");
-                setWhatsapp("");
-                setMessage("");
-                toast.success(res.data.message);
+
+            const {
+                status,
+                statusCode,
+                message: resMEssage,
+            } = await resposne.json();
+
+            if (
+                httpStatusCode.OK !== statusCode &&
+                httpStatus.SUCCESS !== status
+            ) {
+                return toast.error(resMEssage);
             }
+            setName('');
+            setEmail('');
+            setMobile('');
+            setWhatsapp('');
+            setMessage('');
+            toast.success(resMEssage);
         } catch (err) {
             setLoading(false);
-            toast.error(err?.response?.data?.message);
+            toast.error(err.message);
         }
 
         setLoading(false);
@@ -83,30 +98,16 @@ const Contact = () => {
             <SocialIcons />
             <HomeNav />
 
-            {/* <Helmet>
-        <meta charSet="utf-8" />
-        <title>ICDRC: Contact Us </title>
-        <link rel="canonical" href="" />
-        <meta
-          name="description"
-          content="Conatct us for reliable insurance solution and Fast insurance settlements. Contact ICDRC, ICDRC is Your Trusted Insurance Claims and Dispute Resolution Partner!."
-        />
-        <meta
-          name="keywords"
-          content="reliable insurance solutions, Our Success stories, ICDRC, successful claims, Insurance recovery, ICDRC official Claim advocates, Fast insurance settlements, InsuranceSamadhan Alternative"
-        />
-      </Helmet> */}
-
             <div
                 className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"
                 style={{
                     backgroundImage: `url(https://res.cloudinary.com/dl5hosmxb/image/upload/v1690779742/Register_page/bg1_phs9it.webp)`,
-                    height: "500px",
+                    height: '500px',
                 }}
             >
                 <div
                     className="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
-                    style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
                 >
                     <div className="mt-6 md:mt-10 flex h-full items-center justify-start md:ml-12 ml-3">
                         <div className="text-white flex justify-start flex-col">
@@ -141,7 +142,9 @@ const Contact = () => {
                                         ></path>
                                     </svg>
                                 </span>
-                                <span className="relative">Register Complaint</span>
+                                <span className="relative">
+                                    Register Complaint
+                                </span>
                             </Link>
                         </div>
                     </div>
@@ -160,8 +163,9 @@ const Contact = () => {
                 data-aos="fade-up"
                 data-aos-duration="1000"
             >
-                At ICDRC, we're committed to safeguarding what matters most to you,
-                providing reliable insurance solutions for a worry-free future.
+                At ICDRC, we're committed to safeguarding what matters most to
+                you, providing reliable insurance solutions for a worry-free
+                future.
             </p>
 
             {/* Contact Form */}
@@ -179,74 +183,83 @@ const Contact = () => {
                                     >
                                         <div className="sm:flex sm:flex-wrap -mx-3">
                                             <div className="sm:w-1/2 px-3 mb-6">
-                                                <input
+                                                <Input
                                                     type="text"
                                                     placeholder="Full Name"
-                                                    className=" just border-2 rounded px-3  w-full focus:border-orange-500 input"
                                                     value={name}
-                                                    onChange={(e) => setName(e.target.value)}
+                                                    onChange={(e) =>
+                                                        setName(e.target.value)
+                                                    }
                                                     required={true}
-                                                ></input>
+                                                ></Input>
                                             </div>
                                             <div className="sm:w-1/2 px-3 mb-6">
                                                 <PhoneInput
                                                     international
-                                                    countryCallingCodeEditable={false}
+                                                    countryCallingCodeEditable={
+                                                        false
+                                                    }
                                                     placeholder="Enter phone number"
                                                     defaultCountry="IN"
                                                     value={mobile}
                                                     required={true}
                                                     onChange={setMobile}
-                                                    className="border-2 rounded px-3 py-1 w-full focus:border-orange-500 input"
+                                                    className="border py-1.5 rounded px-3  w-full focus:border-orange-500 input"
                                                 />
                                             </div>
                                             <div className="sm:w-1/2 px-3 mb-6">
-                                                <input
+                                                <Input
                                                     type="email"
                                                     placeholder="E-mail address"
-                                                    className="border-2 rounded px-3 py-1 w-full focus:border-orange-500 input"
                                                     value={email}
-                                                    onChange={(e) => setEmail(e.target.value)}
+                                                    onChange={(e) =>
+                                                        setEmail(e.target.value)
+                                                    }
                                                     required={true}
                                                 />
                                             </div>
 
                                             <div className="sm:w-1/2 px-3 mb-6">
-                                                <input
+                                                <Input
                                                     type="mobile"
                                                     name="mobile"
                                                     id="mobile"
                                                     placeholder="Whatspp number"
-                                                    className="border-2 rounded px-3 py-1 w-full focus:border-orange-500 input"
                                                     minLength={10}
                                                     maxLength={10}
                                                     value={whatsapp}
-                                                    onChange={(e) => setWhatsapp(e.target.value)}
+                                                    onChange={(e) =>
+                                                        setWhatsapp(
+                                                            e.target.value,
+                                                        )
+                                                    }
                                                     required={true}
                                                 />
                                             </div>
                                             <div className="sm:w-full px-3">
-                                                <textarea
+                                                <Textarea
                                                     name="message"
                                                     id="message"
                                                     cols="30"
                                                     rows="4"
                                                     placeholder="Your message here"
-                                                    className="border-2 rounded px-3 py-1 w-full focus:border-orange-500 input"
                                                     value={message}
-                                                    onChange={(e) => setMessage(e.target.value)}
+                                                    onChange={(e) =>
+                                                        setMessage(
+                                                            e.target.value,
+                                                        )
+                                                    }
                                                     required={true}
-                                                ></textarea>
+                                                ></Textarea>
                                             </div>
                                         </div>
                                         <div className="mt-4 md:mt-8">
-                                            <button
-                                                className="border-2 border-orange-500 rounded px-6 py-2 text-orange-500 hover:bg-orange-500 hover:text-white transition-colors duration-300"
-                                                type="submit"
-                                            >
-                                                {!loading ? "Send a Message" : "Sending..."}
+                                            <Button type="submit">
+                                                {!loading
+                                                    ? 'Send a Message'
+                                                    : 'Sending...'}
                                                 <i className="fas fa-chevron-right ml-2 text-sm"></i>
-                                            </button>
+                                            </Button>
                                         </div>
                                     </form>
                                 </div>
@@ -261,15 +274,16 @@ const Contact = () => {
                                             HELP
                                         </h5>
                                         <p className="text-gray-700 mb-4">
-                                            Need help or have any query? Don't hesitate, you can
-                                            directly shoot us an{" "}
+                                            Need help or have any query? Don't
+                                            hesitate, you can directly shoot us
+                                            an{' '}
                                             <a
                                                 href="mailto:info@icdrc.in"
                                                 className="text-orange-500 border-b border-transparent hover:border-orange-500 inline-block font-semibold"
                                             >
                                                 email
-                                            </a>{" "}
-                                            or call us at{" "}
+                                            </a>{' '}
+                                            or call us at{' '}
                                             <a
                                                 href="tel:+917070717167"
                                                 className="text-orange-500 font-semibold border-b border-transparent hover:border-orange-500 inline-block"
