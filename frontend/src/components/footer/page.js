@@ -1,14 +1,14 @@
-import React from "react";
-import { BsLinkedin } from "react-icons/bs";
-import { GrInstagram } from "react-icons/gr";
-import { BsYoutube } from "react-icons/bs";
-import { ImLocation2 } from "react-icons/im";
-import Link from "next/link";
-import { FaSquareXTwitter } from "react-icons/fa6";
-import { AiFillFacebook } from "react-icons/ai";
-import Image from "next/image";
-import Separator from "../../components/ui/separator";
-import CaseStatus from "../form/CaseStatus";
+import React from 'react';
+import { BsLinkedin } from 'react-icons/bs';
+import { GrInstagram } from 'react-icons/gr';
+import { BsYoutube } from 'react-icons/bs';
+import { ImLocation2 } from 'react-icons/im';
+import Link from 'next/link';
+import { FaSquareXTwitter } from 'react-icons/fa6';
+import { AiFillFacebook } from 'react-icons/ai';
+import Image from 'next/image';
+import Separator from '../../components/ui/separator';
+import CaseStatus from '../form/CaseStatus';
 
 export default function Footer() {
     return (
@@ -31,10 +31,11 @@ export default function Footer() {
                             />
                         </Link>
                         <p className="md:max-w-xs mt-4 md:text-sm text-gray-600 text-justify">
-                            Your Trusted Insurance Claims and Dispute Resolution Partner!
-                            Looking for expert guidance with insurance claims or dispute
-                            resolution? Partner with us for a seamless experience. Our team of
-                            seasoned professionals is here to support you at every step.
+                            Your Trusted Insurance Claims and Dispute Resolution
+                            Partner! Looking for expert guidance with insurance
+                            claims or dispute resolution? Partner with us for a
+                            seamless experience. Our team of seasoned
+                            professionals is here to support you at every step.
                         </p>
                         <div className="flex mt-8 space-x-6 text-gray-600">
                             <a
@@ -53,10 +54,14 @@ export default function Footer() {
                                 rel="noreferrer"
                             >
                                 <span className="sr-only"> Instagram </span>
-                                <GrInstagram size={20} />{" "}
+                                <GrInstagram size={20} />{' '}
                             </a>
 
-                            <a className="hover:opacity-75" target="_blank" rel="noreferrer">
+                            <a
+                                className="hover:opacity-75"
+                                target="_blank"
+                                rel="noreferrer"
+                            >
                                 <span className="sr-only"> Twitter </span>
                                 <FaSquareXTwitter size={20} />
                             </a>
@@ -67,7 +72,7 @@ export default function Footer() {
                                 rel="noreferrer"
                             >
                                 <span className="sr-only"> Facebook </span>
-                                <AiFillFacebook size={20} />{" "}
+                                <AiFillFacebook size={20} />{' '}
                             </a>
                             <a
                                 className="hover:opacity-75"
@@ -76,7 +81,7 @@ export default function Footer() {
                                 rel="noreferrer"
                             >
                                 <span className="sr-only"> Youtube </span>
-                                <BsYoutube size={20} />{" "}
+                                <BsYoutube size={20} />{' '}
                             </a>
                         </div>
                     </div>
@@ -84,16 +89,28 @@ export default function Footer() {
                         <div>
                             <p className="font-medium">Company</p>
                             <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500 capitalize">
-                                <Link className="hover:opacity-75" href="/about">
-                                    About{" "}
+                                <Link
+                                    className="hover:opacity-75"
+                                    href="/about"
+                                >
+                                    About{' '}
                                 </Link>
-                                <Link className="hover:opacity-75" href="/casestudies">
+                                <Link
+                                    className="hover:opacity-75"
+                                    href="/casestudies"
+                                >
                                     Case Studies
                                 </Link>
-                                <Link className="hover:opacity-75" href="/gallery">
+                                <Link
+                                    className="hover:opacity-75"
+                                    href="/gallery"
+                                >
                                     Gallery
                                 </Link>
-                                <Link className="hover:opacity-75" href="/blogs">
+                                <Link
+                                    className="hover:opacity-75"
+                                    href="/blogs"
+                                >
                                     Blogs
                                 </Link>
                             </nav>
@@ -103,19 +120,29 @@ export default function Footer() {
                             <p className="font-medium">Helpful Links</p>
                             <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500 capitalize">
                                 <a>
-                                    {" "}
-                                    <CaseStatus className={"hover:opacity-75 capitalize"}>
+                                    {' '}
+                                    <CaseStatus
+                                        className={
+                                            'hover:opacity-75 capitalize'
+                                        }
+                                    >
                                         Case status
                                     </CaseStatus>
                                 </a>
 
-                                <a className="hover:opacity-75" href="/admin/login">
+                                <a
+                                    className="hover:opacity-75"
+                                    href="/admin/login"
+                                >
                                     Admin login
                                 </a>
                                 <a className="hover:opacity-75" href="/contact">
-                                    Contact{" "}
+                                    Contact{' '}
                                 </a>
-                                <a className="hover:opacity-75" href="/register">
+                                <a
+                                    className="hover:opacity-75"
+                                    href="/dashboard/register"
+                                >
                                     Register complaint
                                 </a>
                             </nav>
@@ -124,14 +151,17 @@ export default function Footer() {
                         <div className="col-span-2">
                             <p className="font-medium">Address</p>
                             <div className="flex-col space-y-2">
-
                                 <div className="flex-col space-y-1">
                                     <h4>Corporate office:</h4>
                                     <h4 className="flex gap-2">
-                                        <ImLocation2 size={30} className="text-orange-500" />
+                                        <ImLocation2
+                                            size={30}
+                                            className="text-orange-500"
+                                        />
                                         <p className="text-gray-500 text-[15px]">
-                                            6th Floor, Sanatan Building, Opposite CAG Office,
-                                            Deendayal Upadhyay Marg, New Delhi{" "}
+                                            6th Floor, Sanatan Building,
+                                            Opposite CAG Office, Deendayal
+                                            Upadhyay Marg, New Delhi{' '}
                                         </p>
                                     </h4>
                                 </div>
@@ -139,10 +169,14 @@ export default function Footer() {
                                 <div className="flex-col space-y-1">
                                     <h4>Registered office:</h4>
                                     <h4 className="flex gap-2">
-                                        <ImLocation2 size={33} className="text-orange-500" />
+                                        <ImLocation2
+                                            size={33}
+                                            className="text-orange-500"
+                                        />
                                         <p className="text-sm text-gray-500 capitalize">
-                                            A-62, Basement, DDA Shed Industrial Area Phase II Okhla
-                                            Industrial Estate New Delhi - 110020 India
+                                            A-62, Basement, DDA Shed Industrial
+                                            Area Phase II Okhla Industrial
+                                            Estate New Delhi - 110020 India
                                         </p>
                                     </h4>
                                 </div>
@@ -153,7 +187,7 @@ export default function Footer() {
                 <Separator />
                 <div className="flex flex-col py-2 justify-center mt-2 sm:flex-row">
                     <p className="text-sm">
-                        Copyrights Reserved © 2024{" "}
+                        Copyrights Reserved © 2024{' '}
                         <span className="text-orange-600 font-bold text-xl">
                             <a
                                 href="https://www.icdrc.in"
@@ -163,8 +197,9 @@ export default function Footer() {
                             >
                                 ICDRC Services Pvt. Ltd.
                             </a>
-                        </span>{" "}
-                        | All rights reserved | Designed, developed and maintained by{" "}
+                        </span>{' '}
+                        | All rights reserved | Designed, developed and
+                        maintained by{' '}
                         <a
                             href="https://www.webdesys.com"
                             target="_blank"
@@ -178,13 +213,13 @@ export default function Footer() {
                 </div>
                 <div className="flex items-center justify-center mx-auto mt-1 pb-10 space-x-4 sm:mt-0 capitalize">
                     <a className="hover:opacity-75" href="/privacy_policy">
-                        Privacy Policy{" "}
+                        Privacy Policy{' '}
                     </a>
                     <a className="hover:opacity-75" href="/terms_conditions">
-                        Terms &amp; Conditions{" "}
+                        Terms &amp; Conditions{' '}
                     </a>
                     <a className="hover:opacity-75" href="/refund_policy">
-                        Returns Policy{" "}
+                        Returns Policy{' '}
                     </a>
                     <a className="hover:opacity-75 capitalize" href="/partner">
                         Partner with us

@@ -1,14 +1,16 @@
-import React, { Fragment } from "react";
-import Link from "next/link";
-import CaseStatus from "../form/CaseStatus";
+import React, { Fragment } from 'react';
+import Link from 'next/link';
+import { Button } from '../ui/button';
 
 export default function RightMenu() {
     return (
         <Fragment>
-            <CaseStatus />
-            <button className="text-white capitalize bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-md">
-                <Link href="/register">Register complaint</Link>
-            </button>
+            <Button asChild>
+                <Link href="/auth/login">Login</Link>
+            </Button>
+            <Button asChild>
+                <Link href="/dashboard/register">Register complaint</Link>
+            </Button>
         </Fragment>
     );
 }
