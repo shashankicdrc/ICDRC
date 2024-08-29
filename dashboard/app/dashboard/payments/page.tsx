@@ -19,7 +19,7 @@ interface Props {
 export default async function page({ searchParams }: Props) {
     const session = await getServerSession(authOptions)
     const token = session?.user.AccessToken as string;
-    let page = Number;
+    let page = Number(searchParams.page) || 1;
     let perRow = Number(searchParams.perRow || 20);
 
     let filters = "";

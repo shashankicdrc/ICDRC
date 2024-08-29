@@ -25,17 +25,13 @@ const chartConfig = {
     subscriptions: {
         label: "Subscriptions",
     },
-    Basic: {
-        label: "Basic",
+    Organisational: {
+        label: "Organisational",
         color: "hsl(var(--chart-1))",
     },
-    Enterprise: {
-        label: "Enterprise",
+    Individual: {
+        label: "Individual",
         color: "hsl(var(--chart-2))",
-    },
-    Premium: {
-        label: "Premium",
-        color: "hsl(var(--chart-3))",
     },
 } satisfies ChartConfig
 

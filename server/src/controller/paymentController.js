@@ -83,6 +83,7 @@ class PaymentController extends Base {
     #getAdminPaymentHistory = asyncHandler(async (req, res, next) => {
         try {
             let { perRow, page } = req.query;
+
             const { search } = new URL(req.url, `http://${req.headers.host}`);
             const { filters, Sorts } = filterSort(search);
 

@@ -37,11 +37,11 @@ class AnalyticsController extends Base {
         const subscriptions = await subscriptionModel
             .find({})
             .populate({ path: 'planId', select: 'name' });
+        console.log('subscriptions', subscriptions);
 
         const planDataMap = {
-            Basic: 0,
-            Premium: 0,
-            Enterprise: 0,
+            Organisational: 0,
+            Individual: 0,
         };
 
         const addSubscriptionToMap = (subscriptions) => {
@@ -55,6 +55,7 @@ class AnalyticsController extends Base {
         };
 
         addSubscriptionToMap(subscriptions);
+        console.log('map', planDataMap);
 
         // Convert the map to an array of objects for the chart
         const chartData = Object.entries(planDataMap).map(([plan, total]) => ({
