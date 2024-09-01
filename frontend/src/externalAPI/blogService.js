@@ -10,7 +10,7 @@ export const getBlogById = async (id) => {
 
     const { status, statusCode, message, data } = await response.json();
     if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
-        return { error };
+        return { error: message };
     } else {
         return { message, data };
     }
@@ -26,7 +26,7 @@ export const getBlogs = async (url) => {
 
     const { status, statusCode, message, data } = await response.json();
     if (httpStatusCode.OK !== statusCode && httpStatus.SUCCESS !== status) {
-        return { error };
+        return { error: message };
     } else {
         return { message, data };
     }

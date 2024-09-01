@@ -4,28 +4,19 @@ import Footer from '../../../components/footer/page';
 import SocialIcons from '../../../components/SocialIcons/page';
 import Styles from '../../../styles/Blogg.module.css';
 import Image from 'next/image';
-import { getBlogById } from '../../../externalAPI/blogService';
-
-export async function generateMetadata({ params }) {
-    const { error, data } = await getBlogById(params.id);
-    if (error) {
-        throw new Error(error);
-    }
-    return {
-        title: data.name,
-        description: data.description,
-        keywords: data.keywords,
-        openGraph: {
-            images: data.image,
-        },
-    };
-}
+import { BASE_URL, httpStatus, httpStatusCode } from '../../../lib/constant';
 
 export default async function page({ params }) {
     const id = params.id;
-    const { error, data } = await getBlogById(id);
-    if (error) {
-        throw new Error(error);
+    const response = await fetch(`${BASE_URL}/api/case-study/${id}`, {
+        headers: {
+            'Conent-Type': 'application/json',
+        },
+        cache: 'no-store',
+    });
+    const { status, statusCode, message, data } = await response.json();
+    if (statusCode !== httpStatusCode.OK && status !== httpStatus.SUCCESS) {
+        throw new Error(message);
     }
     return (
         <div style={{ overflowX: 'hidden' }}>
@@ -55,7 +46,7 @@ export default async function page({ params }) {
                     width={300}
                     height={200}
                     className="w-full"
-                    alt="Blog Image"
+                    alt="Case Study Image"
                 />
                 <p className="text-sm text-muted-foreground my-2">
                     {data.description}
