@@ -1,0 +1,24 @@
+1. chat link fix (completed on both type)
+2. show caseId in chat (completed)
+3. fix image size (completed)
+4. organisational uk(english) (completed in almost every page.)
+5. notfound page (completed)
+6. Payment Pending (done)
+7. Remove restriction on registering a case if not payed yet. (done)
+8. ChatBot (completed)
+9. Partner (completed)
+10. Contact us (completed)
+11. Media
+12. Testimonial 
+13. Team of experts (completed)
+
+Dashboard Bugs
+14. Pagination is not working in payment history Page (completed)
+15. Forget password 
+16. Check subscription and subscription graphs  (completed)
+17. Extend the character limit in blog title.
+18. show Blogs in frontend   (completed)
+19. Show Case Study in frontend
+20. Show Testimonial in frontend
+21. Complete Media
+22. Remove Unwanted Library from frontend 
