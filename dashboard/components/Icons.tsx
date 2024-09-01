@@ -4,11 +4,13 @@ import {
     CreditCard, Edit, Gift, Handshake, Home, ListFilter, Loader2,
     Mail, MoreHorizontal, MoreVertical, NotebookPen, Pencil, PlusCircle,
     Settings, ShieldQuestion, SquareKanban,
+    Star,
     Trash, User,
     UsersRound, X
 } from "lucide-react";
 
 export const Icons = {
+    testimonial: Star,
     team: UsersRound,
     individual: SquareKanban,
     organisational: ShieldQuestion,

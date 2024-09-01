@@ -8,7 +8,39 @@ import { deleteIndividualCase } from "@/externalAPI/indCaseService";
 import { deleteOrganisationalCase } from "@/externalAPI/orgCaseService";
 import { deletePartners } from "@/externalAPI/partnerService";
 import { addTeams, deleteTeams, updateTeams } from "@/externalAPI/teamService";
+import { addTestimonial, deleteTestimonial, updateTestimonial } from "@/externalAPI/testimonialService";
 import { revalidateTag } from "next/cache";
+
+export const deleteTestimonialAction = async (
+    token: string,
+    value: string[],
+) => {
+    const { message, error } = await deleteTestimonial(token, value);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getTestimonials");
+    return { data: message };
+};
+
+export const updateTestimonialAction = async (token: string, values: any) => {
+    const { message, error } = await updateTestimonial(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getTestimonials");
+    revalidateTag("getTestimonialById");
+    return { data: message };
+};
+
+export const createTestimonialAction = async (token: string, values: any) => {
+    const { message, error } = await addTestimonial(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getTestimonials");
+    return { data: message };
+};
 
 export const addTeamAction = async (token: string, values: any) => {
     const { message, error } = await addTeams(token, values);

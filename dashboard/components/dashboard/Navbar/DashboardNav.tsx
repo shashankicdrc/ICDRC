@@ -224,6 +224,24 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Link
+                        href="/dashboard/testimonials"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname.startsWith("/dashboard/testimonials")
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.testimonial className="h-5 w-5" />
+                        {!isCollapsed && <span>Testimonials</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Testimonials</TooltipContent>}
+            </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
                         href="/dashboard/teams"
                         className={cn(
                             "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",

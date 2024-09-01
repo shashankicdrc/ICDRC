@@ -1,5 +1,14 @@
 import { adminRole } from "@/lib/commonEnum";
 
+
+export interface testimonialType {
+    _id: string;
+    name: string;
+    designation: string;
+    stars: number;
+    review: string;
+}
+
 export interface subscriptionType {
     _id: string,
     userId: string,

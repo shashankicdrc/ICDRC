@@ -22,8 +22,10 @@ import {
     deleteIndCaseAction,
     deleteOrgCaseAction,
     deleteParntersAction,
+    deleteTestimonialAction,
 } from "@/action";
 import { tableType } from "@/types/tableType";
+
 
 
 interface Props {
@@ -44,6 +46,14 @@ const AlertDelete = ({ type, arr }: Props) => {
         let error = "";
 
         switch (type) {
+            case 'testimonials':
+                const deleteTestResponse = await deleteTestimonialAction(token, arr);
+                if (deleteTestResponse.error) {
+                    error = deleteTestResponse.error;
+                } else {
+                    message = deleteTestResponse.data;
+                }
+                break;
             case 'organisational':
                 const organisationalDeleteRes = await deleteOrgCaseAction(token, arr)
                 if (organisationalDeleteRes.error) {

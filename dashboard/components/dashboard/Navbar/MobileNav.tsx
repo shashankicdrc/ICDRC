@@ -111,6 +111,19 @@ export const MobileNav = () => {
                         <Icons.blog className="h-5 w-5" />
                         Blogs
                     </Link>
+                    <Link
+                        href="/dashboard/testimonials"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname.startsWith("/dashboard/testimonials")
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.testimonial className="h-5 w-5" />
+                        Testimonials
+                    </Link>
                 </nav>
             </SheetContent>
         </Sheet>
