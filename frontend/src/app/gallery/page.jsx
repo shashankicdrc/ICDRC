@@ -1,38 +1,25 @@
-"use client";
-import React, { useEffect } from "react";
-import HomeNav from "../../components/Navbar/page";
-import Footer from "../../components/footer/page";
-import SocialIcons from "../../components/SocialIcons/page";
-import Item from "./Item";
-import { useSelector } from "react-redux";
-import Home7Contact from "../../components/HomeComponents/Home7Contact";
+import React from 'react';
+import HomeNav from '../../components/Navbar/page';
+import Footer from '../../components/footer/page';
+import SocialIcons from '../../components/SocialIcons/page';
+import Item from './Item';
 
 const Gallery = () => {
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
-    const media = useSelector((state) => state.media);
-
     return (
         <div>
             <SocialIcons />
             <HomeNav />
 
-            {/* 
-            
-
-            {/* Header Section */}
             <div
                 className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"
                 style={{
                     backgroundImage: `url(https://res.cloudinary.com/dl5hosmxb/image/upload/v1690779742/Register_page/bg1_phs9it.webp)`,
-                    height: "250px",
+                    height: '250px',
                 }}
             >
                 <div
                     className="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
-                    style={{ backgroundColor: "rgba(0, 0, 0, 0.6)" }}
+                    style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
                 >
                     <div className="flex h-full items-center justify-end flex-col">
                         <h2
@@ -68,7 +55,6 @@ const Gallery = () => {
                     )}
                 </div>
             </div>
-            <Home7Contact />
             <Footer />
         </div>
     );

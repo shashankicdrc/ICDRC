@@ -49,6 +49,7 @@
         "country-state-city": "^3.2.1",
         "crypto-js": "^4.2.0",
         "date-fns": "^3.6.0",
+        "embla-carousel-react": "^8.2.0",
         "framer-motion": "^11.0.5",
         "froala-editor": "^4.1.4",
         "jodit-pro-react": "^4.0.6",

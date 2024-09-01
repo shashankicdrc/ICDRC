@@ -10,6 +10,7 @@ import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
 import PricingCard from '../../components/HomeComponents/PricingCard';
+import { ReviewTestimonial } from '../../components/HomeComponents/ReviewTestimonial';
 
 const Home = () => {
     return (
@@ -20,7 +21,9 @@ const Home = () => {
             <Home3 />
             <Home2 />
             <Home5 />
+            <PricingCard />
             <Home4 />
+            <ReviewTestimonial />
             <Testimonial />
             <Home7Contact />
             <Footer />
