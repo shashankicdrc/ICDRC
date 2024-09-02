@@ -349,6 +349,10 @@ class PaymentController extends Base {
         }
 
         const transactionId = nanoid();
+        const baseURl =
+            process.env.NODE_ENV === 'production'
+                ? req.headers.origin
+                : 'http://localhost:7000';
         const payload = {
             userId: req.id,
             email: req.email,
@@ -358,7 +362,7 @@ class PaymentController extends Base {
             merchantTransactionId: transactionId,
             mobileNumber: complaint.mobile,
             merchantUserId: 'MUId-' + req.id,
-            redirectUrl: `http://localhost:7000/api/payments/status/${transactionId}?complaintType=${complaintType}&userId=${req.id}&id=${complaint.id}`,
+            redirectUrl: `${baseURl}/api/payments/status/${transactionId}?complaintType=${complaintType}&userId=${req.id}&id=${complaint.id}`,
             redirectMode: 'POST',
             paymentInstrument: {
                 type: 'PAY_PAGE',
