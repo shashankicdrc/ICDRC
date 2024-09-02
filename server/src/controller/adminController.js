@@ -4,7 +4,6 @@ import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
-import logger from '#utils/logger';
 import { Router } from 'express';
 
 class AdminController extends Base {
@@ -29,10 +28,10 @@ class AdminController extends Base {
 
     #recentAdmins = asyncHandler(async (req, res) => {
         const admins = await adminModel
-            .find({ isDeleted: false, _id: { $ne: req.id } })
+            .find({ isDeleted: false })
             .sort({ createdAt: -1 })
             .limit(5)
-            .select('-password -updatedAt');
+            .select('-password -updatedAt -isDeleted');
 
         return this.response(
             res,
@@ -67,7 +66,9 @@ class AdminController extends Base {
 
     #getAdminById = asyncHandler(async (req, res) => {
         const { id } = req.params;
-        const admin = await adminModel.findById(id).select('-password');
+        const admin = await adminModel
+            .findById(id)
+            .select('-password -isDeleted');
         if (!admin)
             throw new CustomError(
                 'Admin does not exist.',
@@ -120,7 +121,7 @@ class AdminController extends Base {
 
         const updated = await adminModel
             .findByIdAndUpdate(adminId, { role })
-            .select('-password');
+            .select('-password -isDeleted');
         if (!updated) {
             throw new CustomError(
                 'Admin does not exist.',
@@ -137,8 +138,8 @@ class AdminController extends Base {
 
     #getAdmins = asyncHandler(async (req, res) => {
         const admins = await adminModel
-            .find({ _id: { $ne: req.id }, isDeleted: false })
-            .select('-password');
+            .find({ isDeleted: false })
+            .select('-password -isDeleted');
         return this.response(
             res,
             httpStatusCode.OK,

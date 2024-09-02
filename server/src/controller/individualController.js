@@ -73,7 +73,38 @@ class IndividualController extends Base {
             AdminAuthMiddleware,
             this.#adminDeleteComplaints,
         );
+        this.router.put(
+            '/admin/individual/complaints',
+            AdminAuthMiddleware,
+            this.#updateCaseStatus,
+        );
     }
+
+    #updateCaseStatus = asyncHandler(async (req, res) => {
+        const { id, status } = req.body;
+        if (req.role !== 'admin') {
+            throw new CustomError(
+                "You dont' have any right to change the case  status.",
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
+        const updateStatus = await indComplaintModel.findByIdAndUpdate(id, {
+            status,
+        });
+        if (!updateStatus) {
+            throw new CustomError(
+                'Complaint does not exist.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Case status has been updated successfully.',
+        );
+    });
 
     #adminRecentComplaints = asyncHandler(async (req, res) => {
         const complaints = await indComplaintModel
