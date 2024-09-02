@@ -23,7 +23,6 @@ const Home1 = () => {
                     disableOnInteraction: false,
                 }}
                 loop={true}
-                grabCursor={true}
                 centeredSlides={true}
                 className="w-full"
             >

@@ -6,7 +6,7 @@ export default function RightMenu() {
     return (
         <Fragment>
             <Button asChild>
-                <Link href="/auth/login">Login</Link>
+                <Link href="/auth/login">Login/Sign Up</Link>
             </Button>
             <Button asChild>
                 <Link href="/dashboard/register">Register complaint</Link>

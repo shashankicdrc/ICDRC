@@ -1,12 +1,6 @@
 'use client';
 import React, { useEffect } from 'react';
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from '../ui/crousel';
+import { Carousel, CarouselContent, CarouselItem } from '../ui/crousel';
 import { Card, CardContent, CardHeader } from '../ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { cn } from '../../lib/utils';
@@ -14,12 +8,17 @@ import getNameLetter from '../../lib/getNameLetter';
 import { HttpStatusCode } from 'axios';
 import { BASE_URL } from '../../lib/constant';
 import { Star } from 'lucide-react';
+import Autoplay from 'embla-carousel-autoplay';
 
 export const ReviewTestimonial = () => {
     const [api, setApi] = React.useState();
     const [current, setCurrent] = React.useState(0);
     const [count, setCount] = React.useState(0);
     const [data, setData] = React.useState([]);
+
+    const plugin = React.useRef(
+        Autoplay({ delay: 2000, stopOnInteraction: true }),
+    );
 
     useEffect(() => {
         const callTestimonial = async () => {
@@ -31,7 +30,6 @@ export const ReviewTestimonial = () => {
             });
             const result = await response.json();
             if (result.statusCode === HttpStatusCode.Ok) {
-                console.log(result);
                 setData(result.data.testimonials);
             }
         };
@@ -52,19 +50,17 @@ export const ReviewTestimonial = () => {
     }, [api]);
 
     return (
-        <section className="container max-w-screen-2xl my-10">
-            <div className="mx-auto md:w-[70%] py-5 md:text-center">
-                <h4 className="text-4xl font-semibold capitalize">
+        <section className="container max-w-screen-2xl mx-auto my-10 xl:my-20">
+            <div className="mx-5 md:mx-auto md:w-[70%] py-5 text-center">
+                <h4 className="text-3xl md:text-6xl py-2 font-[Roboto] font-bold text-center  px-8">
                     Our Client Testimonials
                 </h4>
             </div>
             <Carousel
-                className="mx-auto md:w-[90%]"
+                className="mx-5 md:mx-auto md:w-[90%]"
                 setApi={setApi}
-                opts={{
-                    align: 'start',
-                    loop: true,
-                }}
+                plugins={[plugin.current]}
+                opts={{ loop: true, align: 'start' }}
             >
                 <CarouselContent className="-ml-1">
                     {data.map((item) => (
@@ -75,24 +71,38 @@ export const ReviewTestimonial = () => {
                             <div className="p-1 h-full">
                                 <Card className="h-full">
                                     <CardHeader className="py-3">
-                                        <div className="flex items-center gap-4">
-                                            <Avatar className="hidden h-12 w-12  sm:flex">
+                                        <div className="flex items-center justify-between  gap-4">
+                                            <div className="flex items-center space-x-2">
+                                                <Avatar className="hidden h-12 w-12  sm:flex">
+                                                    <AvatarImage
+                                                        src="/avatars/01.png"
+                                                        alt="Avatar"
+                                                    />
+                                                    <AvatarFallback>
+                                                        {getNameLetter(
+                                                            item.name,
+                                                        )}
+                                                    </AvatarFallback>
+                                                </Avatar>
+                                                <div className="grid gap-1">
+                                                    <p className="text-sm font-medium leading-none">
+                                                        {item.name}
+                                                    </p>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        {item.designation}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <Avatar className="h-12 w-12">
                                                 <AvatarImage
-                                                    src="/avatars/01.png"
+                                                    src="/google-icon.svg"
                                                     alt="Avatar"
                                                 />
                                                 <AvatarFallback>
                                                     {getNameLetter(item.name)}
                                                 </AvatarFallback>
                                             </Avatar>
-                                            <div className="grid gap-1">
-                                                <p className="text-sm font-medium leading-none">
-                                                    {item.name}
-                                                </p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    {item.designation}
-                                                </p>
-                                            </div>
                                         </div>
                                     </CardHeader>
                                     <CardContent className="space-y-1">
@@ -112,7 +122,7 @@ export const ReviewTestimonial = () => {
                                                 ),
                                             )}
                                         </div>
-                                        <p className="text-muted-foreground text-sm">
+                                        <p className="text-muted-foreground text-sm mt-2">
                                             {item.review}
                                         </p>
                                     </CardContent>
@@ -121,10 +131,6 @@ export const ReviewTestimonial = () => {
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <div className="hidden md:block">
-                    <CarouselPrevious />
-                    <CarouselNext />
-                </div>
                 <div className="md:hidden flex justify-center my-5">
                     {Array.from({ length: count }).map((_, index) => (
                         <button

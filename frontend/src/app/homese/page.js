@@ -21,8 +21,8 @@ const Home = () => {
             <Home3 />
             <Home2 />
             <Home5 />
-            <PricingCard />
             <Home4 />
+            <PricingCard />
             <ReviewTestimonial />
             <Testimonial />
             <Home7Contact />
