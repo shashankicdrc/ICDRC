@@ -7,7 +7,6 @@ import {
     CardTitle,
     CardDescription,
     CardContent,
-    CardFooter,
 } from '../../components/ui/card';
 import {
     Table,
@@ -18,7 +17,6 @@ import {
     TableHeader,
 } from '../../components/ui/table';
 import { Badge } from '../../components/ui/badge';
-import greet from '../../lib/greet';
 import { Button } from '../../components/ui/button';
 import { ArrowUpRight, IndianRupee } from 'lucide-react';
 import { GoProjectRoadmap } from 'react-icons/go';
@@ -30,8 +28,6 @@ import { formatDate } from '../../lib/formateDate';
 export default async function page() {
     const session = await getServerSession(authOptions);
     const token = session.user.AccessToken;
-    const greeting = greet(session.user.name);
-
     const response = await handleResponses(token);
 
     return (
@@ -39,7 +35,7 @@ export default async function page() {
             <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                 <Card className="sm:col-span-2">
                     <CardHeader className="pb-3">
-                        <CardTitle>{greeting}</CardTitle>
+                        <CardTitle>Welcome back, {session.user.name}</CardTitle>
                         <CardDescription className="">
                             Introducing Our Dynamic Dashboard for managing and
                             tracking your case.
@@ -50,7 +46,7 @@ export default async function page() {
                 <Card x-chunk="dashboard-01-chunk-0">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-bold">
-                            Total Individual Case
+                            Total Individual Cases
                         </CardTitle>
                         <GoProjectRoadmap className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>
@@ -72,7 +68,7 @@ export default async function page() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-bold">
-                            Total Orgainzational Case
+                            Total Orgainzational Cases
                         </CardTitle>
                         <ShieldQuestion className="h-4 w-4 text-muted-foreground" />
                     </CardHeader>

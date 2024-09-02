@@ -30,6 +30,7 @@ export function IndividualDataTable({ columns, data }) {
         createdAt: false,
         problemDetails: false,
         policyCompany: false,
+        policyType: false,
         address: false,
         userId: false,
         problem: false,

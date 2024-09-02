@@ -23,7 +23,7 @@ import Link from 'next/link';
 import { DashboardBreadCrumb } from '.././../components/dashboard/Nav/DashboardBreadCrumb';
 
 export default function layout({ children }) {
-    const [isCollapsed, setIsCollapsed] = React.useState(true);
+    const [isCollapsed, setIsCollapsed] = React.useState(false);
     const { data: session } = useSession();
     return (
         <div className="flex min-h-screen w-full flex-col bg-muted/40">

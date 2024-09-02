@@ -11,6 +11,7 @@ import {
 import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 const AsideNavbar = ({ isCollapsed, setIsCollapsed }) => {
     const pathname = usePathname();
@@ -31,7 +32,14 @@ const AsideNavbar = ({ isCollapsed, setIsCollapsed }) => {
                                 isCollapsed ? 'w-fit' : 'w-full',
                             )}
                         >
-                            {!isCollapsed && <span>ICDRC</span>}
+                            {!isCollapsed && (
+                                <Image
+                                    src="/logo.png"
+                                    width={120}
+                                    height={120}
+                                    alt="logo"
+                                />
+                            )}
                             {isCollapsed ? (
                                 <svg
                                     width="24"
