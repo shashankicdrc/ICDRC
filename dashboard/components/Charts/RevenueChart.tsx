@@ -33,11 +33,11 @@ const chartConfig = {
         label: "Visitors",
     },
     individual: {
-        label: "Inddividual",
+        label: "Individual",
         color: "hsl(var(--chart-1))",
     },
     organisational: {
-        label: "Organisational",
+        label: "Organizational",
         color: "hsl(var(--chart-2))",
     },
     subscription: {

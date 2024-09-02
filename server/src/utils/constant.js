@@ -54,5 +54,5 @@ export const httpStatus = {
 
 export const FRONTEND_URL =
     process.env.NODE_ENV === 'production'
-        ? process.env.BACKEND_URL
+        ? process.env.FRONTEND_URL
         : 'http://localhost:3000';

@@ -5,11 +5,42 @@ import { createCaseStudy, deleteCaseStudy, updateCaseStudy } from "@/externalAPI
 import { deleteChatBots } from "@/externalAPI/chatBotService";
 import { deleteContacts } from "@/externalAPI/contactService";
 import { deleteIndividualCase } from "@/externalAPI/indCaseService";
+import { addMedia, deleteMedia, editMedia } from "@/externalAPI/medaiService";
 import { deleteOrganisationalCase } from "@/externalAPI/orgCaseService";
 import { deletePartners } from "@/externalAPI/partnerService";
 import { addTeams, deleteTeams, updateTeams } from "@/externalAPI/teamService";
 import { addTestimonial, deleteTestimonial, updateTestimonial } from "@/externalAPI/testimonialService";
 import { revalidateTag } from "next/cache";
+
+export const deleteMediaAction = async (token: string, values: any) => {
+    const { message, error } = await deleteMedia(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getMedias");
+    return { data: message };
+};
+
+export const updateMediaAction = async (token: string, values: any) => {
+    const { message, error } = await editMedia(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getMedias");
+    return { data: message };
+};
+
+
+
+export const createMediaAction = async (token: string, values: any) => {
+    const { message, error } = await addMedia(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getMedias");
+    return { data: message };
+};
+
 
 export const deleteTestimonialAction = async (
     token: string,

@@ -1,5 +1,13 @@
 import { adminRole } from "@/lib/commonEnum";
 
+export interface mediaType {
+    _id: string;
+    name: string;
+    type: 'image' | 'video',
+    image?: string;
+    video?: string;
+}
+
 
 export interface testimonialType {
     _id: string;

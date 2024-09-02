@@ -20,13 +20,15 @@ import {
 } from "@/components/ui/chart"
 import { getSubscriptionData } from "@/externalAPI/analyticsService"
 import { useSession } from "next-auth/react"
+import { Button } from "../ui/button"
+import Link from "next/link"
 
 const chartConfig = {
     subscriptions: {
         label: "Subscriptions",
     },
     Organisational: {
-        label: "Organisational",
+        label: "Organizational",
         color: "hsl(var(--chart-1))",
     },
     Individual: {
@@ -122,9 +124,9 @@ export default function SubscriptionData() {
                 }
             </CardContent>
             <CardFooter className="flex-col gap-2 text-sm">
-                <div className="leading-none text-muted-foreground">
-                    Showing total subscriptions
-                </div>
+                <Button asChild variant="link">
+                    <Link href="/dashboard/subscriptions">View All Subscriptions</Link>
+                </Button>
             </CardFooter>
         </Card>
     )

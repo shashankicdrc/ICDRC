@@ -5,6 +5,8 @@ import { ChartConfig, ChartContainer, ChartLegend, ChartLegendContent, ChartTool
 import { Pie, Label, PieChart } from 'recharts'
 import { getCompalintChartData } from '@/externalAPI/analyticsService'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { Button } from '../ui/button'
 
 
 const chartConfig = {
@@ -110,6 +112,14 @@ export default function ComplaintChart() {
                         </PieChart>
                     </ChartContainer>
                 }
+                <div className="flex items-center space-x-2">
+                    <Button variant="link" asChild>
+                        <Link href="/dashboard/individual">Individual Case</Link>
+                    </Button>
+                    <Button variant="link" asChild>
+                        <Link href="/dashboard/organisational">Organizational Case</Link>
+                    </Button>
+                </div>
             </CardContent>
         </Card>
     )

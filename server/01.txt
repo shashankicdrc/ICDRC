@@ -18,7 +18,10 @@ Dashboard Bugs
 16. Check subscription and subscription graphs  (completed)
 17. Extend the character limit in blog title.
 18. show Blogs in frontend   (completed)
-19. Show Case Study in frontend
-20. Show Testimonial in frontend
+19. Show Case Study in frontend (completed)
+20. Show Testimonial in frontend (completed)
 21. Complete Media
 22. Remove Unwanted Library from frontend 
+23. isDeletedField is send in reponse?
+
+

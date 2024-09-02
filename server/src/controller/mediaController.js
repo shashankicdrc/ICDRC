@@ -22,7 +22,7 @@ class MediaController extends Base {
 
     #getMediaById = asyncHandler(async (req, res) => {
         const { id } = req.params;
-        const getMediaData = await mediaModel.findById(id);
+        const getMediaData = await mediaModel.findById(id).select('-isDeleted');
         if (!getMediaData) {
             throw new CustomError(
                 'Media does not exist.',
@@ -40,11 +40,11 @@ class MediaController extends Base {
 
     #deleteMedias = asyncHandler(async (req, res) => {
         const { mediaIds } = req.body;
-        const deletedData = await mediaModel.deleteMany({
+        const deletedData = await mediaModel.updateMany({
             _id: { $in: mediaIds },
         });
 
-        if (deletedData.deletedCount !== mediaIds.length) {
+        if (deletedData.modifiedCount !== mediaIds.length) {
             throw new CustomError(
                 'Media data does not exist.',
                 httpStatusCode.BAD_REQUEST,
@@ -63,13 +63,18 @@ class MediaController extends Base {
         const { search } = new URL(req.url, `http://${req.headers.host}`);
         const { filters, Sorts } = filterSort(search);
 
-        const filterQuery = parseFilters(filters);
+        const filterQuery = { ...parseFilters(filters), isDeleted: false };
 
         page = Number(page) || 1;
         perRow = Number(perRow) || 20;
 
         const [media, totalCount] = await Promise.all([
-            mediaModel.find(filterQuery).sort(Sorts).limit(perRow).exec(),
+            mediaModel
+                .find(filterQuery)
+                .sort(Sorts)
+                .limit(perRow)
+                .select('-isDeleted')
+                .exec(),
             mediaModel.countDocuments(filterQuery).exec(),
         ]);
 
@@ -87,11 +92,12 @@ class MediaController extends Base {
     });
 
     #addMedia = asyncHandler(async (req, res) => {
-        let { name, image, video } = req.body;
+        let { name, type, image, video } = req.body;
         await mediaModel.create({
             name,
             image,
             video,
+            type,
         });
 
         return this.response(

@@ -10,6 +10,9 @@ import {
     TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import Image from 'next/image'
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface Props {
     isCollapsed: boolean;
@@ -17,6 +20,7 @@ interface Props {
 }
 
 export const AsideNavbar = ({ isCollapsed, setIsCollapsed }: Props) => {
+    const pathname = usePathname();
     return (
         <aside
             className={cn(
@@ -33,7 +37,7 @@ export const AsideNavbar = ({ isCollapsed, setIsCollapsed }: Props) => {
                                 isCollapsed ? "w-fit" : "w-full",
                             )}
                         >
-                            {!isCollapsed && <span>ICDRC</span>}
+                            {!isCollapsed && <Image src="/logo.png" alt="logo" width={120} height={120} />}
                             {isCollapsed ? (
                                 <Icons.asideOpen
                                     onClick={() => setIsCollapsed(!isCollapsed)}
@@ -53,11 +57,28 @@ export const AsideNavbar = ({ isCollapsed, setIsCollapsed }: Props) => {
                         </TooltipContent>
                     )}
                 </Tooltip>{" "}
-                <ScrollArea className="h-[calc(100vh-3.5rem)] shrink-0 px-0">
+                <ScrollArea className="h-[calc(100vh-7rem)] shrink-0 px-0">
                     <DashboardNav isCollapsed={isCollapsed} />
                 </ScrollArea>
+                <div className={cn("fixed bottom-2", isCollapsed ? 'left-1' : 'left-3')}>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Link
+                                href="/dashboard/settings"
+                                className={cn(
+                                    "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                                    isCollapsed ? "w-fit" : "w-full",
+                                )}
+                            >
+                                <Icons.settings className="h-5 w-5" />
+                                {!isCollapsed && <span>Settings</span>}
+                            </Link>
+                        </TooltipTrigger>
+                        {isCollapsed && <TooltipContent side="right">Settings</TooltipContent>}
+                    </Tooltip>{" "}
+                </div>
             </nav>
-        </aside>
+        </aside >
 
     );
 };

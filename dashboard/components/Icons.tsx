@@ -1,7 +1,7 @@
 import {
     ArrowLeftToLine,
     ArrowRightToLine, ArrowUpDown, BotMessageSquare,
-    CreditCard, Edit, Gift, Handshake, Home, ListFilter, Loader2,
+    CreditCard, Edit, Film, Gift, Handshake, Home, ListFilter, Loader2,
     Mail, MoreHorizontal, MoreVertical, NotebookPen, Pencil, PlusCircle,
     Settings, ShieldQuestion, SquareKanban,
     Star,
@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 
 export const Icons = {
+    media: Film,
     testimonial: Star,
     team: UsersRound,
     individual: SquareKanban,

@@ -351,7 +351,7 @@ class PaymentController extends Base {
         const transactionId = nanoid();
         const baseURl =
             process.env.NODE_ENV === 'production'
-                ? req.headers.origin
+                ? 'https://backendii.icdrc.in'
                 : 'http://localhost:7000';
         const payload = {
             userId: req.id,
