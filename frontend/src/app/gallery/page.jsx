@@ -2,7 +2,6 @@ import React from 'react';
 import HomeNav from '../../components/Navbar/page';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
-import Item from './Item';
 
 const Gallery = () => {
     return (
@@ -38,22 +37,7 @@ const Gallery = () => {
                 data-aos="zoom-in"
                 data-aos-duration="2000"
             >
-                <div className="grid gap-8 mt-5 md:mt-10 mx-4 md:mx-12 lg:grid-cols-3 sm:max-w-sm sm:mx-auto lg:max-w-full">
-                    {media.data?.length > 0 ? (
-                        media.data.map((item) => (
-                            <Item
-                                key={item._id}
-                                image={item.image}
-                                video={item.video}
-                                name={item.name}
-                            />
-                        ))
-                    ) : (
-                        <span className="font-semibold font-[Caveat] text-xl md:text-2xl">
-                            No Media available.
-                        </span>
-                    )}
-                </div>
+                <div className="grid gap-8 mt-5 md:mt-10 mx-4 md:mx-12 lg:grid-cols-3 sm:max-w-sm sm:mx-auto lg:max-w-full"></div>
             </div>
             <Footer />
         </div>
