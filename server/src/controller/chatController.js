@@ -32,7 +32,40 @@ class ChatController extends Base {
             AdminAuthMiddleware,
             this.#recentadminRecentChats,
         );
+        this.router.get('/admin/chats', AdminAuthMiddleware, this.#allChats);
     }
+
+    #allChats = asyncHandler(async (req, res) => {
+        const allChats = await chatModel
+            .aggregate([
+                {
+                    $match: { authorType: 'user' },
+                },
+                {
+                    $sort: { createdAt: -1 },
+                },
+                {
+                    $group: {
+                        _id: '$complaintId',
+                        mostRecentChat: { $first: '$$ROOT' },
+                    },
+                },
+                {
+                    $replaceRoot: { newRoot: '$mostRecentChat' },
+                },
+            ])
+            .exec();
+        const populatedChats = await chatModel.populate(allChats, [
+            { path: 'authorId', select: 'name email' },
+        ]);
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'All chats fetched successfully.',
+            populatedChats,
+        );
+    });
 
     #recentadminRecentChats = asyncHandler(async (req, res) => {
         const recentChats = await chatModel
