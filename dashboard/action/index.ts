@@ -4,13 +4,32 @@ import { createBlog, deleteBlog, updateBlog } from "@/externalAPI/blogSerice";
 import { createCaseStudy, deleteCaseStudy, updateCaseStudy } from "@/externalAPI/caseStudyService";
 import { deleteChatBots } from "@/externalAPI/chatBotService";
 import { deleteContacts } from "@/externalAPI/contactService";
-import { deleteIndividualCase } from "@/externalAPI/indCaseService";
+import { deleteIndividualCase, updateIndCaseStatus } from "@/externalAPI/indCaseService";
 import { addMedia, deleteMedia, editMedia } from "@/externalAPI/medaiService";
-import { deleteOrganisationalCase } from "@/externalAPI/orgCaseService";
+import { deleteOrganisationalCase, updateOrgCaseStatus } from "@/externalAPI/orgCaseService";
 import { deletePartners } from "@/externalAPI/partnerService";
 import { addTeams, deleteTeams, updateTeams } from "@/externalAPI/teamService";
 import { addTestimonial, deleteTestimonial, updateTestimonial } from "@/externalAPI/testimonialService";
 import { revalidateTag } from "next/cache";
+
+export const updateOrgCaseStatusAction = async (token: string, values: any) => {
+    const { message, error } = await updateOrgCaseStatus(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getOrganisationalCase");
+    return { data: message };
+};
+
+export const updateIndCaseStatusAction = async (token: string, values: any) => {
+    const { message, error } = await updateIndCaseStatus(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getIndividualCase");
+    return { data: message };
+};
+
 
 export const deleteMediaAction = async (token: string, values: any) => {
     const { message, error } = await deleteMedia(token, values);
@@ -29,8 +48,6 @@ export const updateMediaAction = async (token: string, values: any) => {
     revalidateTag("getMedias");
     return { data: message };
 };
-
-
 
 export const createMediaAction = async (token: string, values: any) => {
     const { message, error } = await addMedia(token, values);

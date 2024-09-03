@@ -14,6 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { caseType } from "@/types/columnsType";
 import { formatDate } from "@/lib/formatDate";
 import Link from "next/link";
+import CaseStatusForm from "../form/CaseStatusForm";
 
 const CaseColumns: ColumnDef<caseType>[] = [
     {
@@ -130,6 +131,7 @@ const CaseColumns: ColumnDef<caseType>[] = [
                         >
                             Copy Case ID
                         </DropdownMenuItem>
+                        {caseData.paymentStatus === 'Paid' && <CaseStatusForm caseData={caseData} caseType="individual" />}
                         <DropdownMenuItem asChild>
                             <Link href={`/dashboard/chats/${caseData._id}?type=individual`}>Chat</Link>
                         </DropdownMenuItem>
