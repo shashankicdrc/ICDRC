@@ -1,6 +1,6 @@
-"u/home/hayat/Downloads/Reach out to us, Our Process, About us/Complaint Resolution.webpse client";
-import "../../styles/module.home4.css";
-import Image from "next/image";
+'u/home/hayat/Downloads/Reach out to us, Our Process, About us/Complaint Resolution.webpse client';
+import '../../styles/module.home4.css';
+import Image from 'next/image';
 
 const Home4 = () => {
     return (
@@ -17,7 +17,10 @@ const Home4 = () => {
                 data-aos="fade-up"
                 data-aos-duration="1000"
             >
-                At ICDRC, our process is designed to resolve your insurance disputes efficiently through expert arbitration, settlements, and litigation            </p>
+                At ICDRC, our process is designed to resolve your insurance
+                disputes efficiently through expert arbitration, settlements,
+                and litigation{' '}
+            </p>
 
             <div className="container mx-auto overflow-hidden">
                 <div className="row">
@@ -39,12 +42,16 @@ const Home4 = () => {
                                     data-aos="fade-left"
                                     data-aos-duration="1000"
                                 >
-                                    <h4 className="card-head">Reach Out to Us</h4>
+                                    <h4 className="card-head">
+                                        Reach Out to Us
+                                    </h4>
                                     <p className="card-text">
-                                        To initiate the claim process, please get in touch with us
-                                        through our website or helpline. Our dedicated team is fully
-                                        prepared to assist you throughout the process and provide
-                                        the necessary guidance.
+                                        To initiate the claim process, please
+                                        get in touch with us through our website
+                                        or helpline. Our dedicated team is fully
+                                        prepared to assist you throughout the
+                                        process and provide the necessary
+                                        guidance.
                                     </p>
                                 </div>
                             </div>
@@ -64,12 +71,15 @@ const Home4 = () => {
                                     data-aos="fade-right"
                                     data-aos-duration="1000"
                                 >
-                                    <h4 className="card-head">Register a Complaint</h4>
+                                    <h4 className="card-head">
+                                        Register a Complaint
+                                    </h4>
                                     <p className="card-text">
-                                        Begin the resolution process by submitting a concise
-                                        complaint outlining your insurance-related issue. This is
-                                        the first step towards addressing your concerns promptly and
-                                        effectively.
+                                        Begin the resolution process by
+                                        submitting a concise complaint outlining
+                                        your insurance-related issue. This is
+                                        the first step towards addressing your
+                                        concerns promptly and effectively.
                                     </p>
                                 </div>
                             </div>
@@ -91,12 +101,16 @@ const Home4 = () => {
                                     data-aos="fade-left"
                                     data-aos-duration="1000"
                                 >
-                                    <h4 className="card-head">Verify Your Details</h4>
+                                    <h4 className="card-head">
+                                        Verify Your Details
+                                    </h4>
                                     <p className="card-text">
-                                        With a focus on precision, our team meticulously validates
-                                        the information you provide. This careful verification
-                                        enhances the accuracy and efficiency of your claim
-                                        processing, streamlining the entire procedure.
+                                        With a focus on precision, our team
+                                        meticulously validates the information
+                                        you provide. This careful verification
+                                        enhances the accuracy and efficiency of
+                                        your claim processing, streamlining the
+                                        entire procedure.
                                     </p>
                                 </div>
                             </div>
@@ -106,8 +120,7 @@ const Home4 = () => {
                                     <span className="road-map-circle-text flex items-center justify-center">
                                         <Image
                                             src="/images/process/Share.webp"
-                                            //src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785538/Home_page/Home4/4_m8wqfm.svg"
-                                            alt=""
+                                            alt="image"
                                             width={70}
                                             height={70}
                                         />
@@ -118,12 +131,16 @@ const Home4 = () => {
                                     data-aos="fade-right"
                                     data-aos-duration="1000"
                                 >
-                                    <h4 className="card-head">Share Your Documents</h4>
+                                    <h4 className="card-head">
+                                        Share Your Documents
+                                    </h4>
                                     <p className="card-text">
-                                        Safely upload essential insurance documents and KYC details
-                                        within a secure environment. This aids us in gaining a
-                                        comprehensive understanding of your case, allowing for a
-                                        thorough and efficient assessment.
+                                        Safely upload essential insurance
+                                        documents and KYC details within a
+                                        secure environment. This aids us in
+                                        gaining a comprehensive understanding of
+                                        your case, allowing for a thorough and
+                                        efficient assessment.
                                     </p>
                                 </div>
                             </div>
@@ -146,10 +163,13 @@ const Home4 = () => {
                                 >
                                     <h4 className="card-head">Fees Payment</h4>
                                     <p className="card-text">
-                                        Easily make the required processing fee payment through our
-                                        secure payment gateway, ensuring a smooth continuation of
-                                        your claim process. (INR 500 for Individual, INR 5000 for
-                                        Organisation)
+                                        Easily make the required processing fee
+                                        payment through our secure payment
+                                        gateway, ensuring a smooth continuation
+                                        of your claim process. (INR 500 for
+                                        Individual, INR 5000 for Organisation).
+                                        Success fee 10% + GST (Lowest in the
+                                        Industry).{' '}
                                     </p>
                                 </div>
                             </div>
@@ -170,11 +190,15 @@ const Home4 = () => {
                                     data-aos="fade-right"
                                     data-aos-duration="1000"
                                 >
-                                    <h4 className="card-head">Schedule an Appointment</h4>
+                                    <h4 className="card-head">
+                                        Schedule an Appointment
+                                    </h4>
                                     <p className="card-text">
-                                        Leave the appointment scheduling to us. Our experts will
-                                        promptly get in touch with you at your preferred time,
-                                        making it convenient for you to discuss your case details.
+                                        Leave the appointment scheduling to us.
+                                        Our experts will promptly get in touch
+                                        with you at your preferred time, making
+                                        it convenient for you to discuss your
+                                        case details.
                                     </p>
                                 </div>
                             </div>
@@ -195,10 +219,13 @@ const Home4 = () => {
                                     data-aos="fade-left"
                                     data-aos-duration="1000"
                                 >
-                                    <h4 className="card-head">Complaint Resolution</h4>
+                                    <h4 className="card-head">
+                                        Complaint Resolution
+                                    </h4>
                                     <p className="card-text">
-                                        Our dedicated team will work diligently to resolve your
-                                        complaint, ensuring a fair and satisfactory outcome for you.
+                                        Our dedicated team will work diligently
+                                        to resolve your complaint, ensuring a
+                                        fair and satisfactory outcome for you.
                                         Your trust matters to us.
                                     </p>
                                 </div>

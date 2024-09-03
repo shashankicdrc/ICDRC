@@ -2,13 +2,23 @@ import React from 'react';
 import HomeNav from '../../components/Navbar/page';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
+import Image from 'next/image';
+import { getBlogs } from '../../externalAPI/blogService';
+import { BASE_URL } from '../../lib/constant';
+import PaginationComponent from '../../components/PaginationController';
+import PerRowSelect from '../../components/PerRowSelect';
+import { Card, CardTitle, CardContent } from '../../components/ui/card';
 
-const Gallery = () => {
+export default async function page({ searchParams }) {
+    let page = Number(searchParams.page || 1);
+    let perRow = Number(searchParams.perRow || 20);
+
+    const url = `${BASE_URL}/api/media?page=${page}&perRow=${perRow}&sortBy=desc(createdAt)`;
+    const { error, data } = await getBlogs(url);
     return (
         <div>
             <SocialIcons />
             <HomeNav />
-
             <div
                 className="relative overflow-hidden rounded-sm bg-cover bg-no-repeat p-12 text-center"
                 style={{
@@ -20,7 +30,7 @@ const Gallery = () => {
                     className="absolute bottom-0 left-0 right-0 top-0 h-full w-full overflow-hidden bg-fixed"
                     style={{ backgroundColor: 'rgba(0, 0, 0, 0.6)' }}
                 >
-                    <div className="flex h-full items-center justify-end flex-col">
+                    <div className="flex h-full blogs-center justify-end flex-col">
                         <h2
                             className=" mb-4 md:mb-8 capitalize text-white text-3xl text-center md:text-6xl font-semibold"
                             data-aos="fade-up"
@@ -32,16 +42,71 @@ const Gallery = () => {
                 </div>
             </div>
 
-            <div
-                className=" bg-white my-4 mx-4 md:px-3 py-2 md:py-4 rounded-md"
-                data-aos="zoom-in"
-                data-aos-duration="2000"
-            >
-                <div className="grid gap-8 mt-5 md:mt-10 mx-4 md:mx-12 lg:grid-cols-3 sm:max-w-sm sm:mx-auto lg:max-w-full"></div>
+            <div className="">
+                <div
+                    className="grid gap-8 mt-5 md:mt-10 mx-5 md:mx-10 lg:grid-cols-3
+                    sm:max-w-sm sm:mx-auto lg:max-w-full"
+                >
+                    {error && (
+                        <div className="flex blogs-center justify-center">
+                            <p className="text-destructive">{error}</p>
+                        </div>
+                    )}
+                    {!error && data.media.length > 0 ? (
+                        data.media.map((media) => (
+                            <Card key={media._id}>
+                                <CardContent className="px-0 py-0">
+                                    <div className="relative">
+                                        {media.type === 'image' ? (
+                                            <Image
+                                                src={media?.image}
+                                                className="w-full h-56  rounded-t-md"
+                                                width={400}
+                                                height={400}
+                                                alt="Card Image"
+                                            />
+                                        ) : (
+                                            <iframe
+                                                src="https://www.youtube.com/embed/E7wJTI-1dvQ"
+                                                loading="lazy"
+                                                allowFullScreen={true}
+                                                allow="autoplay; encrypted-media"
+                                                className="w-full h-56 border-0 rounded-t-md"
+                                                title="video"
+                                            />
+                                        )}
+                                        <CardTitle className="text-center my-2">
+                                            {media.name}
+                                        </CardTitle>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        ))
+                    ) : (
+                        <div className="md:mx-auto md:w-1/2  col-span-3">
+                            <p className="text-2xl font-bold text-center">
+                                No media found
+                            </p>
+                        </div>
+                    )}
+                </div>
+                <div className="my-5 mx-5 md:mx-10 flex justify-between items-center">
+                    {data.totalCount > 10 && (
+                        <div className="flex space-x-2 justify-center items-center">
+                            <p className="font-bold text-sm">Rows per page</p>
+                            <PerRowSelect />
+                        </div>
+                    )}
+                    {data.totalCount > perRow && (
+                        <div>
+                            <PaginationComponent
+                                totalResults={data.totalCount}
+                            />
+                        </div>
+                    )}{' '}
+                </div>
             </div>
             <Footer />
         </div>
     );
-};
-
-export default Gallery;
+}
