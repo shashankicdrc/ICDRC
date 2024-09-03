@@ -72,6 +72,84 @@ export const MobileNav = () => {
                         Dashboard
                     </Link>
                     <Link
+                        href="/dashboard/individual"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname === "/dashboard/contacts"
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.individual className="h-5 w-5" />
+                        Individual Cases
+                    </Link>
+                    <Link
+                        href="/dashboard/organisational"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname === "/dashboard/organisational"
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.organisational className="h-5 w-5" />
+                        Organizational Cases
+                    </Link>
+                    <Link
+                        href="/dashboard/subscriptions"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname === "/dashboard/subscriptions"
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.subscription className="h-5 w-5" />
+                        subscription
+                    </Link>
+                    <Link
+                        href="/dashboard/payments"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname === "/dashboard/payments"
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.subscription className="h-5 w-5" />
+                        Payments
+                    </Link>
+                    <Link
+                        href="/dashboard/admins"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname === "/dashboard/admins"
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.user className="h-5 w-5" />
+                        Admins
+                    </Link>
+                    <Link
+                        href="/dashboard/chats"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname.startsWith("/dashboard/chats")
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.chat className="h-5 w-5" />
+                        Chats
+                    </Link>
+                    <Link
                         href="/dashboard/contacts"
                         onClick={() => setopen(!open)}
                         className={cn(
@@ -82,21 +160,34 @@ export const MobileNav = () => {
                         )}
                     >
                         <Icons.contact className="h-5 w-5" />
-                        Contacts
+                        Contact Requests
                     </Link>
 
                     <Link
-                        href="/dashboard/admins"
+                        href="/dashboard/partners"
                         onClick={() => setopen(!open)}
                         className={cn(
                             "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
-                            pathname.startsWith("/dashboard/admins")
+                            pathname === "/dashboard/partners"
                                 ? "rounded-xl bg-muted text-foreground"
                                 : null,
                         )}
                     >
-                        <Icons.user className="h-5 w-5" />
-                        Admins
+                        <Icons.partner className="h-5 w-5" />
+                        Partner Requests
+                    </Link>
+                    <Link
+                        href="/dashboard/chatbot"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname === "/dashboard/chatbot"
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.bot className="h-5 w-5" />
+                        ChatBot Requests
                     </Link>
                     <Link
                         href="/dashboard/blogs"
@@ -112,6 +203,32 @@ export const MobileNav = () => {
                         Blogs
                     </Link>
                     <Link
+                        href="/dashboard/case-study"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname.startsWith("/dashboard/case-study")
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.caseStudy className="h-5 w-5" />
+                        Case Study
+                    </Link>
+                    <Link
+                        href="/dashboard/media"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname.startsWith("/dashboard/media")
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.media className="h-5 w-5" />
+                        Media
+                    </Link>
+                    <Link
                         href="/dashboard/testimonials"
                         onClick={() => setopen(!open)}
                         className={cn(
@@ -122,7 +239,20 @@ export const MobileNav = () => {
                         )}
                     >
                         <Icons.testimonial className="h-5 w-5" />
-                        Testimonials
+                        Testimonial
+                    </Link>
+                    <Link
+                        href="/dashboard/teams"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            "mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground",
+                            pathname.startsWith("/dashboard/teams")
+                                ? "rounded-xl bg-muted text-foreground"
+                                : null,
+                        )}
+                    >
+                        <Icons.team className="h-5 w-5" />
+                        Experts
                     </Link>
                 </nav>
             </SheetContent>

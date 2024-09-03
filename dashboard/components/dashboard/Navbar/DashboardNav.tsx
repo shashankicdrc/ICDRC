@@ -38,8 +38,6 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Dashboard</TooltipContent>}
             </Tooltip>{" "}
-
-            <Separator />
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Link
@@ -112,6 +110,7 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Payments</TooltipContent>}
             </Tooltip>
+            <Separator />
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Link
@@ -130,6 +129,25 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Admins</TooltipContent>}
             </Tooltip>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/chats"
+                        className={cn(
+                            "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
+                            pathname.startsWith("/dashboard/chats")
+                                ? " rounded-lg bg-muted text-primary"
+                                : null,
+                            isCollapsed ? "w-fit" : "w-full",
+                        )}
+                    >
+                        <Icons.chat className="h-5 w-5" />
+                        {!isCollapsed && <span>Chats</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && <TooltipContent side="right">Chats</TooltipContent>}
+            </Tooltip>
+
             <Separator />
             <Tooltip>
                 <TooltipTrigger asChild>
@@ -272,10 +290,10 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                         )}
                     >
                         <Icons.team className="h-5 w-5" />
-                        {!isCollapsed && <span>Teams</span>}
+                        {!isCollapsed && <span>Experts</span>}
                     </Link>
                 </TooltipTrigger>
-                {isCollapsed && <TooltipContent side="right">Teams</TooltipContent>}
+                {isCollapsed && <TooltipContent side="right">Experts</TooltipContent>}
             </Tooltip>{" "}
 
         </div>
