@@ -161,7 +161,7 @@ export function AddBlogForm({ action, data }: Props) {
                     name="name"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Name</FormLabel>
+                            <FormLabel>Title</FormLabel>
                             <FormControl>
                                 <Input placeholder="Battle between SQL and NOSQL" {...field} />
                             </FormControl>

@@ -53,9 +53,6 @@ export default function DashboardLayoutNavbar({ children }: Props) {
                             <DropdownMenuItem className="cursor-pointer" asChild>
                                 <Link href="/dashboard/settings">Settings</Link>
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">
-                                Support
-                            </DropdownMenuItem>
                             <LogoutButton />
                             <DropdownMenuSeparator />
                         </DropdownMenuContent>

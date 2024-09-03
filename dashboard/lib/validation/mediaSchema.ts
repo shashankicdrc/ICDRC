@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const mediaSchema = z.object({
-    name: z.string().min(5, { message: "Title must be atleast 5 characters long." }).max(30, { message: "Title should be less than 30 characters." }),
+    name: z.string(),
     type: z.enum(["image", "video"], { message: "Please choose one from type" }),
     image: z.string()
         .optional()

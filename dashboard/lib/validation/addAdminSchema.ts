@@ -17,10 +17,7 @@ export const addAdminSchema = z
             }),
         role: z.nativeEnum(adminRoleEnum, { message: "Role cannot be empty." }),
         name: z
-            .string()
-            .min(4, { message: "Name must be atleast 4 characters long." })
-            .max(50, { message: "Name should be less than 50 characters." }),
-
+            .string(),
         confirmPassword: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {

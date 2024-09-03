@@ -4,8 +4,7 @@ import { z } from "zod";
 export const createBlogSchema = z.object({
     name: z
         .string()
-        .min(10, { message: "Name should be atleast 10 characters." })
-        .max(80, { message: "Name can't be longer than 80 character." }),
+        .max(200, { message: "Title can't be longer than 200 character." }),
     description: z
         .string()
         .min(10, { message: "Description should be atleast 10 characters." })
