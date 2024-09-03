@@ -1,3 +1,4 @@
+import createSlug from '#utils/generateSlug';
 import { Schema, model } from 'mongoose';
 
 const schema = new Schema(
@@ -5,6 +6,10 @@ const schema = new Schema(
         description: {
             type: String,
             required: [true, 'desc is required'],
+        },
+        slug: {
+            type: String,
+            required: [true, 'Slug is required'],
         },
         name: {
             type: String,
@@ -32,6 +37,8 @@ const schema = new Schema(
     },
     { timestamps: true },
 );
+
+schema.index({ slug: 1 });
 
 const blogModel = model('blogs', schema);
 

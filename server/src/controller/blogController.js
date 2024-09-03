@@ -5,6 +5,7 @@ import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
 import { filterSort, parseFilters } from '#utils/filterSort';
+import createSlug from '#utils/generateSlug';
 import pagination from '#utils/pagination';
 import { Router } from 'express';
 
@@ -18,15 +19,17 @@ class BlogController extends Base {
     #initializeRoutes() {
         this.router.post('/blogs', this.#addBlog);
         this.router.get('/blogs', this.#getBlog);
-        this.router.get('/blogs/:id', this.#getBlogById);
+        this.router.get('/blogs/:slug', this.#getBlogBySlug);
         this.router.delete('/blogs', AdminAuthMiddleware, this.#deleteBlogs);
         this.router.put('/blogs', AdminAuthMiddleware, this.#updateBlog);
     }
 
     #updateBlog = asyncHandler(async (req, res) => {
         let { blogId, name, description, image, content, keywords } = req.body;
+        const slug = createSlug(name);
         const updateBlog = await blogModel.findByIdAndUpdate(blogId, {
             name,
+            slug,
             description,
             image,
             content,
@@ -46,10 +49,10 @@ class BlogController extends Base {
         );
     });
 
-    #getBlogById = asyncHandler(async (req, res) => {
-        const { id } = req.params;
+    #getBlogBySlug = asyncHandler(async (req, res) => {
+        const { slug } = req.params;
         const getBlogData = await blogModel.findOne({
-            _id: id,
+            slug,
             isDeleted: false,
         });
         if (!getBlogData) {
@@ -133,9 +136,11 @@ class BlogController extends Base {
 
     #addBlog = asyncHandler(async (req, res) => {
         let { name, description, image, content, keywords } = req.body;
+        const slug = createSlug(name);
         await blogModel.create({
             name,
             image,
+            slug,
             content,
             description,
             keywords,

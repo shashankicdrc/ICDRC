@@ -6,13 +6,31 @@ import Styles from '../../../styles/Blogg.module.css';
 import Image from 'next/image';
 import { BASE_URL, httpStatus, httpStatusCode } from '../../../lib/constant';
 
+export async function generateMetadata({ params }) {
+    const response = await fetch(`${BASE_URL}/api/case-study/${params.id}`, {
+        headers: {
+            'Conent-Type': 'application/json',
+        },
+    });
+    const { data } = await response.json();
+    if (!data) {
+        throw new Error('Case study does not exist.');
+    }
+    return {
+        title: data.name,
+        description: data.description,
+        openGraph: {
+            images: data.image,
+        },
+    };
+}
+
 export default async function page({ params }) {
     const id = params.id;
     const response = await fetch(`${BASE_URL}/api/case-study/${id}`, {
         headers: {
             'Conent-Type': 'application/json',
         },
-        cache: 'no-store',
     });
     const { status, statusCode, message, data } = await response.json();
     if (statusCode !== httpStatusCode.OK && status !== httpStatus.SUCCESS) {
@@ -45,7 +63,7 @@ export default async function page({ params }) {
                     src={data.image}
                     width={300}
                     height={200}
-                    className="w-full"
+                    className="w-full rounded-md"
                     alt="Case Study Image"
                 />
                 <p className="text-sm text-muted-foreground my-2">

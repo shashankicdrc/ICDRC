@@ -14,7 +14,7 @@ export default async function page({ searchParams }) {
     let page = Number(searchParams.page || 1);
     let perRow = Number(searchParams.perRow || 20);
 
-    const url = `${BASE_URL}/api/blogs?page=${page}&perRow=${perRow}`;
+    const url = `${BASE_URL}/api/blogs?page=${page}&perRow=${perRow}&sortBy=desc(createdAt)`;
     const { error, data } = await getBlogs(url);
     return (
         <div>
@@ -62,7 +62,7 @@ export default async function page({ searchParams }) {
                                  bg-white rounded-md shadow-md"
                             >
                                 <Link
-                                    href={`/blogs/${blog._id}`}
+                                    href={`/blogs/${blog.slug}`}
                                     aria-label="Article"
                                 >
                                     <AspectRatio.Root ratio={16 / 9}>
@@ -77,7 +77,7 @@ export default async function page({ searchParams }) {
                                 </Link>
                                 <div className="py-5 px-5">
                                     <Link
-                                        href={`/blogs/${blog._id}`}
+                                        href={`/blogs/${blog.slug}`}
                                         aria-label="Article"
                                     >
                                         <p className="text-xl">{blog.name}</p>

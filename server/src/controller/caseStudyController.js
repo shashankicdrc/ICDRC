@@ -5,6 +5,7 @@ import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
 import { filterSort, parseFilters } from '#utils/filterSort';
+import createSlug from '#utils/generateSlug';
 import pagination from '#utils/pagination';
 import { Router } from 'express';
 
@@ -22,7 +23,7 @@ class CaseStudyController extends Base {
             this.#addCaseStudy,
         );
         this.router.get('/case-study', this.#getCaseStudy);
-        this.router.get('/case-study/:id', this.#getCaseStudyById);
+        this.router.get('/case-study/:slug', this.#getCaseStudyBySlug);
         this.router.delete(
             '/case-study',
             AdminAuthMiddleware,
@@ -37,13 +38,12 @@ class CaseStudyController extends Base {
 
     #updateCaseStudy = asyncHandler(async (req, res) => {
         let { caseStudyId, name, description, image, content } = req.body;
-        if (req.role !== 'admin') {
-            throw new CustomError("You don't have any right to delete.");
-        }
+        const slug = createSlug(name);
         const updateCaseStudy = await caseStudyModel.findByIdAndUpdate(
             caseStudyId,
             {
                 name,
+                slug,
                 description,
                 image,
                 content,
@@ -63,9 +63,12 @@ class CaseStudyController extends Base {
         );
     });
 
-    #getCaseStudyById = asyncHandler(async (req, res) => {
-        const { id } = req.params;
-        const getCaseStudyData = await caseStudyModel.findById(id);
+    #getCaseStudyBySlug = asyncHandler(async (req, res) => {
+        const { slug } = req.params;
+        const getCaseStudyData = await caseStudyModel.findOne({
+            slug,
+            isDeleted: false,
+        });
         if (!getCaseStudyData) {
             throw new CustomError(
                 'Case study does not exist.',
@@ -142,8 +145,10 @@ class CaseStudyController extends Base {
 
     #addCaseStudy = asyncHandler(async (req, res) => {
         let { name, description, image, content } = req.body;
+        const slug = createSlug(name);
         await caseStudyModel.create({
             name,
+            slug,
             image,
             content,
             description,

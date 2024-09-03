@@ -10,11 +10,15 @@ import { getBlogs } from '../../externalAPI/blogService';
 import { BASE_URL } from '../../lib/constant';
 import * as AspectRatio from '@radix-ui/react-aspect-ratio';
 
+export const metadata = {
+    title: 'Case Study',
+};
+
 export default async function page({ searchParams }) {
     let page = Number(searchParams.page || 1);
     let perRow = Number(searchParams.perRow || 20);
 
-    const url = `${BASE_URL}/api/case-study?page=${page}&perRow=${perRow}`;
+    const url = `${BASE_URL}/api/case-study?page=${page}&perRow=${perRow}&sortBy=desc(createdAt)`;
     const { error, data } = await getBlogs(url);
     return (
         <div>
@@ -57,12 +61,12 @@ export default async function page({ searchParams }) {
                     {!error && data.caseStudy.length > 0 ? (
                         data.caseStudy.map((blog) => (
                             <div
-                                key={blog._id}
+                                key={blog.slug}
                                 className="overflow-hidden border
                                  bg-white rounded-md shadow-md"
                             >
                                 <Link
-                                    href={`/casestudies/${blog._id}`}
+                                    href={`/casestudies/${blog.slug}`}
                                     aria-label="Article"
                                 >
                                     <AspectRatio.Root ratio={16 / 9}>
@@ -77,7 +81,7 @@ export default async function page({ searchParams }) {
                                 </Link>
                                 <div className="py-5 px-5">
                                     <Link
-                                        href={`/casestudies/${blog._id}`}
+                                        href={`/casestudies/${blog.slug}`}
                                         aria-label="Article"
                                     >
                                         <p className="text-xl">{blog.name}</p>

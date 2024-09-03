@@ -54,7 +54,7 @@ export default async function page({ params }) {
                     src={data.image}
                     width={300}
                     height={200}
-                    className="w-full"
+                    className="w-full rounded-md"
                     alt="Blog Image"
                 />
                 <p className="text-sm text-muted-foreground my-2">

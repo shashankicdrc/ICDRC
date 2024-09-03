@@ -6,6 +6,10 @@ const schema = new Schema(
             type: String,
             required: [true, 'descriptioon is required'],
         },
+        slug: {
+            type: String,
+            required: [true, 'Slug is required.'],
+        },
         name: {
             type: String,
             required: [true, 'Name is required'],
@@ -26,6 +30,8 @@ const schema = new Schema(
     },
     { timestamps: true },
 );
+
+schema.index({ slug: 1 });
 
 const caseStudyModel = model('case_Study', schema);
 

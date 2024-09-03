@@ -145,6 +145,12 @@ export default function Footer() {
                                 >
                                     Register complaint
                                 </a>
+                                <a
+                                    className="hover:opacity-75"
+                                    href="/auth/login"
+                                >
+                                    User Login
+                                </a>
                             </nav>
                         </div>
 
