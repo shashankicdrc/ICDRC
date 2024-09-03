@@ -7,11 +7,14 @@ import createFilterQuery from "@/lib/createFilter";
 import { Button } from "@/components/ui/button";
 import React from 'react'
 import { getMedia } from '@/externalAPI/medaiService';
-import { Filter } from '@/components/Filter';
 import Link from 'next/link';
 import MediaItem from '@/components/media/MediaItem';
 import { mediaType } from '@/types/columnsType';
 import PerRowSelect from '@/components/perRowSelect';
+import { Filter } from '@/components/Filter';
+import MediaColumnFilters from '@/components/Filter/mediaFilter';
+import Sort from '@/components/Sort';
+import MediaColumnSort from '@/components/Sort/mediaColumnSort';
 
 
 const PaginationComponent = dynamic(
@@ -68,6 +71,8 @@ export default async function page({ searchParams }: Props) {
             </div>
             <div className="flex  items-center justify-between">
                 <div className="flex items-center space-x-2">
+                    <Filter columnFilters={MediaColumnFilters} />
+                    <Sort columnSorts={MediaColumnSort} />
                 </div>
                 <Button asChild>
                     <Link href="/dashboard/media/add">Add Media</Link>

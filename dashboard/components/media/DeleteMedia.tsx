@@ -15,7 +15,7 @@ import { Icons } from "@/components/Icons";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
-import { deleteBlogAction } from "@/action";
+import { deleteBlogAction, deleteMediaAction } from "@/action";
 
 interface Props {
     mediaIds: string[];
@@ -31,7 +31,7 @@ export const AlertDeleteMedia = ({ mediaIds }: Props) => {
     const onClick = async () => {
         try {
             setisLoading((prevState) => !prevState);
-            const { error, message } = await deleteBlogAction(token, mediaIds);
+            const { error, message } = await deleteMediaAction(token, mediaIds);
             setisLoading((prevState) => !prevState);
             if (error) {
                 return toast.error(error);

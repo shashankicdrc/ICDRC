@@ -8,12 +8,15 @@ export const getMediaById = async (token: string, id: string) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
         },
+        next: {
+            tags: ['getMediaById']
+        }
     });
-    const { status, statusCode, message } = await result.json();
+    const { status, statusCode, message, data } = await result.json();
     if (httpStatus.SUCCESS !== status && httpStatusCode.OK !== statusCode) {
         return { error: message };
     } else {
-        return { message };
+        return { message, data };
     }
 
 }

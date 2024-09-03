@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import {
     Card,
-    CardHeader,
+    CardContent,
     CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
@@ -25,15 +25,23 @@ interface MediaItemProps {
 export default function MediaItem({ data }: MediaItemProps) {
     return (
         <Card>
-            <CardHeader className="px-0 py-0">
+            <CardContent className="px-0 py-0">
                 <div className="relative">
-                    <Image
+                    {data.type === 'image' ? <Image
                         src={data?.image as string}
                         className="w-full h-56  rounded-t-md"
                         width={400}
                         height={400}
                         alt="Card Image"
                     />
+                        : <iframe
+                            src='https://www.youtube.com/embed/E7wJTI-1dvQ'
+                            loading='lazy'
+                            allowFullScreen={true}
+                            allow='autoplay; encrypted-media'
+                            className="w-full h-56 border-0 rounded-t-md"
+                            title='video'
+                        />}
                     <div className="absolute top-2 right-2">
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -51,8 +59,8 @@ export default function MediaItem({ data }: MediaItemProps) {
                         </DropdownMenu>
                     </div>
                 </div>
-                <CardTitle className="text-center">{data.name}</CardTitle>
-            </CardHeader>
+                <CardTitle className="text-center my-2">{data.name}</CardTitle>
+            </CardContent>
         </Card>
     );
 }

@@ -37,7 +37,7 @@ export const deleteMediaAction = async (token: string, values: any) => {
         return { error };
     }
     revalidateTag("getMedias");
-    return { data: message };
+    return { message };
 };
 
 export const updateMediaAction = async (token: string, values: any) => {
@@ -46,6 +46,7 @@ export const updateMediaAction = async (token: string, values: any) => {
         return { error };
     }
     revalidateTag("getMedias");
+    revalidateTag("getMediaById");
     return { data: message };
 };
 
