@@ -1,16 +1,19 @@
 import { LoginForm } from '@/components/form/LoginForm'
+import PasswordResetrequest from '@/components/form/PassResetReqForm'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter, CardContent } from '@/components/ui/card'
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog'
+import Image from 'next/image'
 import React, { Suspense } from 'react'
 
 export default function page() {
     return (
         <main className="container flex items-center justify-center min-h-screen">
             <div className="w-full max-w-sm 2xl:max-w-md">
-                <Card>
+                <Image src="/logo.png" width={300} height={300} className="ml-8" alt="Logo" />
+                <Card className="my-2">
                     <CardHeader>
-                        <CardTitle className="text-2xl">Login</CardTitle>
+                        <CardTitle className="text-2xl text-center">Login as Admin</CardTitle>
                         <CardDescription>
                             Enter your email and password below to login to your account.
                         </CardDescription>
@@ -43,6 +46,7 @@ export default function page() {
                                         Please ensure that you have type correct email.
                                     </DialogDescription>
                                 </DialogHeader>
+                                <PasswordResetrequest />
                             </DialogContent>
                         </Dialog>
                     </CardContent>
