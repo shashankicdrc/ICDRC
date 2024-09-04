@@ -129,7 +129,7 @@ const PricingCard = () => {
                             Organizational
                         </h3>
                         <p className="font-light text-gray-500 sm:text-lg">
-                            Relevant for Organisation with multiple cases
+                            Relevant for Organization with multiple cases.
                         </p>
                         <div className="flex justify-center items-baseline my-8">
                             <span className="mr-2 text-5xl font-extrabold">
