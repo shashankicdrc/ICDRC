@@ -18,7 +18,7 @@ const AsideNavbar = ({ isCollapsed, setIsCollapsed }) => {
     return (
         <aside
             className={cn(
-                'fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background md:flex',
+                'fixed inset-y-0 left-0 z-10 hidden  w-14 flex-col border-r bg-background md:flex',
                 isCollapsed ? 'w-14' : 'w-56',
             )}
         >
