@@ -39,13 +39,12 @@ class AnalyticsController extends Base {
 
     #getTotalSubscription = asyncHandler(async (req, res) => {
         const totalSubscription = await subscriptionModel.countDocuments();
-        return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Total Subscription',
-            totalSubscription,
-        );
+        return res.status(httpStatusCode.OK).json({
+            status: httpStatus.SUCCESS,
+            statusCode: httpStatusCode.OK,
+            message: 'Total Subscriptions',
+            data: totalSubscription,
+        });
     });
 
     #getSubscription = asyncHandler(async (req, res) => {

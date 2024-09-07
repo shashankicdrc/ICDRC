@@ -26,13 +26,47 @@ import cloudinaryConfiguration from '#config/cloudinaryConfiguration';
 import analyticsController from '#controller/analyticsController';
 import teamController from '#controller/teamController';
 import textTestimonial from '#controller/textTestimonial';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import hpp from 'hpp';
 
 const startServer = async () => {
     const app = express();
     const port = process.env.PORT || 8080;
+
+    var allowlist = [
+        'http://localhost:3000',
+        'http://localhost:3001',
+        'https://icdrc.in',
+        'https://dashboard.icdrc.in',
+    ];
+    var corsOptionsDelegate = function (req, callback) {
+        var corsOptions;
+        if (allowlist.indexOf(req.header('Origin')) !== -1) {
+            corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+        } else {
+            corsOptions = { origin: false }; // disable CORS for this request
+        }
+        callback(null, corsOptions); // callback expects two parameters: error and options
+    };
+
     app.use(express.json());
-    app.use(cors());
+    app.use(cors(corsOptionsDelegate));
     cloudinaryConfiguration();
+
+    app.disable('x-powered-by');
+
+    const limiter = rateLimit({
+        windowMs: 10 * 60 * 1000,
+        max: 300,
+        message: 'You have exceeded the 300 requests in 10 minute limit!',
+        standardHeaders: true,
+        legacyHeaders: false,
+    });
+
+    app.use(helmet());
+    app.use(hpp());
+    app.use(limiter);
 
     app.get(
         '/',
