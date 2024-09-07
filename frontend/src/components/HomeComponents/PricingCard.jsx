@@ -9,13 +9,13 @@ const PricingCard = () => {
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
                 <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
                     <h2 className="text-3xl md:text-6xl py-2 font-[Roboto] font-bold text-center  px-8">
-                        Our Subscription Pricing Plans
+                        Subscription Plans
                     </h2>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-10">
                     <div className="flex flex-col p-6 relative text-center text-gray-900 bg-white rounded-lg border xl:p-8">
                         <h3 className="mb-4 text-2xl font-semibold">
-                            Individual
+                            For An Individual
                         </h3>
                         <p className="font-light text-gray-500 sm:text-lg">
                             Best option for individual use.
@@ -126,7 +126,7 @@ const PricingCard = () => {
                     </div>
                     <div className="flex flex-col p-6 text-center text-gray-900 bg-white rounded-lg border">
                         <h3 className="mb-4 text-2xl font-semibold">
-                            Organizational
+                            For An Organization
                         </h3>
                         <p className="font-light text-gray-500 sm:text-lg">
                             Relevant for Organization with multiple cases.

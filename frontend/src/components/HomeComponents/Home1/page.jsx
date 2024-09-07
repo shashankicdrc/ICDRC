@@ -162,7 +162,7 @@ const Home1 = () => {
                                     data-aos="fade-up"
                                     data-aos-duration="2000"
                                 >
-                                    Maximizing Outcomes, Minimizing Disputes.{' '}
+                                    Maximizing outcomes, minimizing disputes.{' '}
                                 </h2>
                                 <ComplaintButton />
                             </div>

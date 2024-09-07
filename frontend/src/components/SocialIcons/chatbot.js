@@ -134,6 +134,27 @@ const ChatBot = ({ isheader }) => {
         }
     };
 
+    const handleClickOutside = (event) => {
+        if (
+            chatContainerRef.current &&
+            !chatContainerRef.current.contains(event.target)
+        ) {
+            setIsOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isOpen) {
+            document.addEventListener('click', handleClickOutside);
+        } else {
+            document.removeEventListener('click', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [isOpen]);
+
     return (
         <div ref={chatContainerRef} style={chatBotStyle}>
             {isOpen && (
