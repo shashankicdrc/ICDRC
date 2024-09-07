@@ -31,7 +31,22 @@ class AnalyticsController extends Base {
             AdminAuthMiddleware,
             this.#getSubscription,
         );
+        this.router.get(
+            '/analytics/subscription/total',
+            this.#getTotalSubscription,
+        );
     }
+
+    #getTotalSubscription = asyncHandler(async (req, res) => {
+        const totalSubscription = await subscriptionModel.countDocuments();
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Total Subscription',
+            totalSubscription,
+        );
+    });
 
     #getSubscription = asyncHandler(async (req, res) => {
         const subscriptions = await subscriptionModel

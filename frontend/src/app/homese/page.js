@@ -11,6 +11,7 @@ import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
 import PricingCard from '../../components/HomeComponents/PricingCard';
 import { ReviewTestimonial } from '../../components/HomeComponents/ReviewTestimonial';
+import TotalSubscription from '@/components/HomeComponents/TotalSubscription';
 
 const Home = () => {
     return (
@@ -18,6 +19,7 @@ const Home = () => {
             <SocialIcons />
             <Navbar isWhiteBg={true} />
             <Home1 />
+            <TotalSubscription />
             <Home3 />
             <Home2 />
             <Home5 />
