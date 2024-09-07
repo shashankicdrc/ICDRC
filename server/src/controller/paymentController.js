@@ -10,6 +10,7 @@ import {
     FRONTEND_URL,
     NOREPLYEMAIL,
     NewRegrecipients,
+    PHONE_PAY_URL,
     getPolicyEmail,
     htmlTemplate,
     httpStatus,
@@ -179,22 +180,19 @@ class PaymentController extends Base {
             process.env.SALT_KEY;
         const sha256 = crypto.createHash('sha256').update(string).digest('hex');
         const checksum = sha256 + '###' + keyIndex;
-        const UAT_PAY_API_URL =
-            process.env.NODE_ENV === 'production'
-                ? process.env.PHONEPAY_URL
-                : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
 
-        const response = await fetch(
-            `${UAT_PAY_API_URL}/status/${merchantId}/${transactionId}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-VERIFY': checksum,
-                    'X-MERCHANT-ID': `${merchantId}`,
-                },
+        const payURL = `${PHONE_PAY_URL}/status/${merchantId}/${transactionId}`;
+        logger.info('PHONE_PAY_URL');
+        logger.info(payURL);
+
+        const response = await fetch(payURL, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-VERIFY': checksum,
+                'X-MERCHANT-ID': `${merchantId}`,
             },
-        );
+        });
         const { success, data, message } = await response.json();
 
         const paymentHistoryData = {
@@ -323,6 +321,7 @@ class PaymentController extends Base {
     });
 
     #initiatePayment = asyncHandler(async (req, res) => {
+        logger.info('Payment initiate');
         const { amount, complaintType, id } = req.body;
 
         let complaint;
@@ -377,12 +376,13 @@ class PaymentController extends Base {
         const string = dataBase64 + '/pg/v1/pay' + process.env.SALT_KEY;
         const sha256 = crypto.createHash('sha256').update(string).digest('hex');
         const checksum = sha256 + '###' + process.env.SALT_INDEX;
-        const UAT_PAY_API_URL =
-            process.env.NODE_ENV === 'production'
-                ? process.env.PHONEPAY_URL
-                : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
 
-        const response = await fetch(UAT_PAY_API_URL, {
+        const payURL = `${PHONE_PAY_URL}/pay`;
+
+        logger.info('PHONEPAY_URL');
+        logger.info(payURL);
+
+        const response = await fetch(payURL, {
             method: 'POST',
             headers: {
                 accept: 'application/json',

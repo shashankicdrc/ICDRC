@@ -56,3 +56,8 @@ export const FRONTEND_URL =
     process.env.NODE_ENV === 'production'
         ? process.env.FRONTEND_URL
         : 'http://localhost:3000';
+
+export const PHONE_PAY_URL =
+    process.env.NODE_ENV === 'production'
+        ? 'https://api.phonepe.com/apis/hermes/pg/v1'
+        : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1';

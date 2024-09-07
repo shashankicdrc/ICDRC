@@ -134,7 +134,7 @@ export default function Footer() {
                                 </Link>
                                 <a
                                     className="hover:opacity-75"
-                                    href="/admin/login"
+                                    href="https://dashboard.icdrc.in/auth/login"
                                 >
                                     Admin login
                                 </a>

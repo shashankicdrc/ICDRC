@@ -2,7 +2,12 @@ import planModel from '#models/planModel';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
-import { FRONTEND_URL, httpStatus, httpStatusCode } from '#utils/constant';
+import {
+    FRONTEND_URL,
+    PHONE_PAY_URL,
+    httpStatus,
+    httpStatusCode,
+} from '#utils/constant';
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
 import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
@@ -142,6 +147,8 @@ class SubscriptionController extends Base {
     });
 
     #checkStatus = asyncHandler(async (req, res) => {
+        logger.info('Subscription status initiate');
+
         const { transactionId } = req.params;
         const { planId, userId } = req.query;
 
@@ -159,22 +166,19 @@ class SubscriptionController extends Base {
             process.env.SALT_KEY;
         const sha256 = crypto.createHash('sha256').update(string).digest('hex');
         const checksum = sha256 + '###' + keyIndex;
-        const UAT_PAY_API_URL =
-            process.env.NODE_ENV === 'production'
-                ? process.env.PHONEPAY_URL
-                : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
 
-        const response = await fetch(
-            `${UAT_PAY_API_URL}/status/${merchantId}/${transactionId}`,
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-VERIFY': checksum,
-                    'X-MERCHANT-ID': `${merchantId}`,
-                },
+        const payURL = `${PHONE_PAY_URL}/status/${merchantId}/${transactionId}`;
+        logger.info('PhonePayURL');
+        logger.info(payURL);
+
+        const response = await fetch(`${payURL}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-VERIFY': checksum,
+                'X-MERCHANT-ID': `${merchantId}`,
             },
-        );
+        });
         const { success, data, message } = await response.json();
         if (!success) {
             return res.redirect(`${FRONTEND_URL}/failure?message=${message}`);
@@ -224,6 +228,7 @@ class SubscriptionController extends Base {
     });
 
     #intiateSubscription = asyncHandler(async (req, res) => {
+        logger.info('Subscription payment initiate');
         const { planId } = req.query;
         const isPlan = await planModel.findById(planId);
         if (!isPlan) {
@@ -278,12 +283,12 @@ class SubscriptionController extends Base {
         const string = dataBase64 + '/pg/v1/pay' + process.env.SALT_KEY;
         const sha256 = crypto.createHash('sha256').update(string).digest('hex');
         const checksum = sha256 + '###' + process.env.SALT_INDEX;
-        const UAT_PAY_API_URL =
-            process.env.NODE_ENV === 'production'
-                ? process.env.PHONEPAY_URL
-                : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
 
-        const response = await fetch(UAT_PAY_API_URL, {
+        const payURL = `${PHONE_PAY_URL}/pay`;
+        logger.info('PHONE_PAY_URL');
+        logger.info(payURL);
+
+        const response = await fetch(payURL, {
             method: 'POST',
             headers: {
                 accept: 'application/json',
