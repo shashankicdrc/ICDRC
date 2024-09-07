@@ -53,7 +53,7 @@ export const ReviewTestimonial = () => {
         <section className="container max-w-screen-2xl mx-auto my-10 xl:my-20">
             <div className="mx-5 md:mx-auto md:w-[70%] py-5 text-center">
                 <h4 className="text-3xl md:text-6xl py-2 font-[Roboto] font-bold text-center  px-8">
-                    Our Client Testimonials
+                    Client Testimonials
                 </h4>
             </div>
             <Carousel
