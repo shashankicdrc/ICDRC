@@ -1,35 +1,39 @@
 version: '3.9'
 services:
   client:
-    container_name: nextapp
-    image: nextapp
+    container_name: icdrc_frontend
+    image: app1
     build: ./frontend
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      - server
     env_file:
         - ./frontend/.env
+
+  dashboard:
+    container_name: icdrc_dashboard
+    image: app2
+    build: ./dashboard
+    ports:
+      - "3001:3001"
+    depends_on:
+      - server
+    env_file:
+        - ./dashboard/.env
+
   
   server:
     container_name: new_server
     build: ./server
     restart: always
+    depends_on:
+     - redis
     env_file:
       - ./server/.env
     ports:
       - 7000:7000
     
-  backend:
-    container_name: server_icdrc
-    build: ./backend
-    ports:
-      - "5000:5000"
-    env_file:
-        - ./backend/.env
-    volumes:
-      - ./backend/:/app
-
   redis:
     container_name: redis
     image: redis:alpine
