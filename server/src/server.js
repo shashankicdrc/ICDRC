@@ -92,7 +92,7 @@ const startServer = async () => {
     app.use('/api', adminController);
     app.use('/api', complaintsController);
     app.use('/api', userController);
-    // app.use('/api', planController);
+    app.use('/api', planController);
     app.use('/api', subscriptionController);
     app.use('/api', chatController);
     app.use('/api', analyticsController);
