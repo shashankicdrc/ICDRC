@@ -167,9 +167,9 @@ const Home4 = () => {
                                         payment through our secure payment
                                         gateway, ensuring a smooth continuation
                                         of your claim process. (INR 500 for
-                                        Individual, INR 5000 for Organisation).
-                                        Success fee 10% + GST (Lowest in the
-                                        Industry).{' '}
+                                        Individual, INR 5000 for
+                                        Organisation/Insurance Company). Success
+                                        fee 10% + GST (Lowest in the Industry).{' '}
                                     </p>
                                 </div>
                             </div>

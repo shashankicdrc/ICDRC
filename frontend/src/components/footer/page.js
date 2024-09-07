@@ -97,10 +97,11 @@ export default function Footer() {
                                 </Link>
                                 <Link
                                     className="hover:opacity-75"
-                                    href="/casestudies"
+                                    href="/contact"
                                 >
-                                    Case Studies
+                                    Contact{' '}
                                 </Link>
+
                                 <Link
                                     className="hover:opacity-75"
                                     href="/gallery"
@@ -113,43 +114,41 @@ export default function Footer() {
                                 >
                                     Blogs
                                 </Link>
+                                <Link
+                                    className="hover:opacity-75"
+                                    href="/casestudies"
+                                >
+                                    Case Studies
+                                </Link>
                             </nav>
                         </div>
 
                         <div>
                             <p className="font-medium">Helpful Links</p>
                             <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500 capitalize">
-                                <a>
-                                    {' '}
-                                    <CaseStatus
-                                        className={
-                                            'hover:opacity-75 capitalize'
-                                        }
-                                    >
-                                        Case status
-                                    </CaseStatus>
-                                </a>
-
+                                <Link
+                                    href="/dashboard"
+                                    className="hover:opacity-75"
+                                >
+                                    Dashboard
+                                </Link>
                                 <a
                                     className="hover:opacity-75"
                                     href="/admin/login"
                                 >
                                     Admin login
                                 </a>
-                                <a className="hover:opacity-75" href="/contact">
-                                    Contact{' '}
+                                <a
+                                    className="hover:opacity-75"
+                                    href="/auth/login"
+                                >
+                                    User Login
                                 </a>
                                 <a
                                     className="hover:opacity-75"
                                     href="/dashboard/register"
                                 >
                                     Register complaint
-                                </a>
-                                <a
-                                    className="hover:opacity-75"
-                                    href="/auth/login"
-                                >
-                                    User Login
                                 </a>
                             </nav>
                         </div>

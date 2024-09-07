@@ -168,6 +168,7 @@ class IndividualController extends Base {
                 .sort(Sorts)
                 .skip(skip)
                 .limit(perRow)
+                .select('-isDeleted')
                 .exec(),
             indComplaintModel.countDocuments(filterQuery).exec(),
         ]);
@@ -199,7 +200,9 @@ class IndividualController extends Base {
 
     #getComplaintById = asyncHandler(async (req, res) => {
         const { id } = req.params;
-        const complaints = await indComplaintModel.findById(id);
+        const complaints = await indComplaintModel
+            .findById(id)
+            .select('-isDeleted');
         if (!complaints) {
             throw new CustomError(
                 'complaints does not exist.',
@@ -251,6 +254,7 @@ class IndividualController extends Base {
     #getComplaints = asyncHandler(async (req, res) => {
         const complaints = await indComplaintModel
             .find({ userId: req.id, isDeleted: false })
+            .select('-isDeleted')
             .sort({ createdAt: -1 });
         return this.response(
             res,
