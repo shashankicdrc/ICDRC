@@ -160,7 +160,9 @@ class SubscriptionController extends Base {
         const sha256 = crypto.createHash('sha256').update(string).digest('hex');
         const checksum = sha256 + '###' + keyIndex;
         const UAT_PAY_API_URL =
-            'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1';
+            process.env.NODE_ENV === 'production'
+                ? process.env.PHONEPAY_URL
+                : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
 
         const response = await fetch(
             `${UAT_PAY_API_URL}/status/${merchantId}/${transactionId}`,
@@ -249,6 +251,12 @@ class SubscriptionController extends Base {
         }
 
         const transactionId = nanoid();
+
+        const redirectUrl =
+            process.env.NODE_ENV === 'production'
+                ? `${process.env.BACKEND_URL}/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`
+                : `http://localhost:7000/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`;
+
         const payload = {
             userId: req.id,
             email: req.email,
@@ -257,7 +265,7 @@ class SubscriptionController extends Base {
             merchantId: process.env.MERCHANT_ID,
             merchantTransactionId: transactionId,
             merchantUserId: 'MUId-' + req.id,
-            redirectUrl: `http://localhost:7000/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`,
+            redirectUrl,
             redirectMode: 'POST',
             paymentInstrument: {
                 type: 'PAY_PAGE',
@@ -271,7 +279,9 @@ class SubscriptionController extends Base {
         const sha256 = crypto.createHash('sha256').update(string).digest('hex');
         const checksum = sha256 + '###' + process.env.SALT_INDEX;
         const UAT_PAY_API_URL =
-            'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
+            process.env.NODE_ENV === 'production'
+                ? process.env.PHONEPAY_URL
+                : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
 
         const response = await fetch(UAT_PAY_API_URL, {
             method: 'POST',

@@ -180,7 +180,9 @@ class PaymentController extends Base {
         const sha256 = crypto.createHash('sha256').update(string).digest('hex');
         const checksum = sha256 + '###' + keyIndex;
         const UAT_PAY_API_URL =
-            'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1';
+            process.env.NODE_ENV === 'production'
+                ? process.env.PHONEPAY_URL
+                : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
 
         const response = await fetch(
             `${UAT_PAY_API_URL}/status/${merchantId}/${transactionId}`,
@@ -332,7 +334,7 @@ class PaymentController extends Base {
                 break;
             case 'OrganizationComplaint':
                 complaint = await orgComplaintModel.findById(id);
-                price = 700 * 100;
+                price = 5000 * 100;
                 break;
             default:
                 throw new CustomError(
@@ -351,7 +353,7 @@ class PaymentController extends Base {
         const transactionId = nanoid();
         const baseURl =
             process.env.NODE_ENV === 'production'
-                ? 'https://backendii.icdrc.in'
+                ? process.env.BACKEND_URL
                 : 'http://localhost:7000';
         const payload = {
             userId: req.id,
@@ -376,7 +378,9 @@ class PaymentController extends Base {
         const sha256 = crypto.createHash('sha256').update(string).digest('hex');
         const checksum = sha256 + '###' + process.env.SALT_INDEX;
         const UAT_PAY_API_URL =
-            'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
+            process.env.NODE_ENV === 'production'
+                ? process.env.PHONEPAY_URL
+                : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay';
 
         const response = await fetch(UAT_PAY_API_URL, {
             method: 'POST',
@@ -397,89 +401,6 @@ class PaymentController extends Base {
             httpStatus.SUCCESS,
             message,
             data,
-        );
-
-        const paymentHistoryData = {
-            userId: req.id,
-            transactionId,
-            paymentStatus,
-            amount,
-            complaintType,
-            complaintId: complaint.id,
-            paymentFor,
-            individualId:
-                complaintType === 'IndividualComplaint'
-                    ? complaint.id
-                    : undefined,
-            organizationId:
-                complaintType === 'OrganizationComplaint'
-                    ? complaint.id
-                    : undefined,
-        };
-        const savePaymentHistory =
-            await PaymentHistory.create(paymentHistoryData);
-        if (!savePaymentHistory)
-            throw new CustomError(
-                'Somthing went wrong.please try again.',
-                httpStatusCode.BAD_REQUEST,
-            );
-
-        // send Email to teams
-        const policyEmail = getPolicyEmail(complaint.policyType);
-
-        const caseData = {
-            caseId: complaint.caseId,
-            name:
-                complaintType === 'IndividualComplaint'
-                    ? complaint.name
-                    : complaint.organizationName,
-            email: complaint.email,
-            mobile: complaint.mobile,
-            amount: savePaymentHistory.amount,
-            registration_date: complaint.createdAt.toLocaleString(),
-            insuranceCategory: complaint.policyType,
-            isPay: complaint.paymentStatus,
-            transactionId: savePaymentHistory.transactionId,
-        };
-
-        const templateLinkType =
-            complaintType === 'IndividualComplaint'
-                ? 'individual'
-                : 'organisational';
-
-        const userTemplate = htmlTemplate(
-            process.cwd() +
-                `/src/templates/${templateLinkType}/SuccessPayment.html`,
-            caseData,
-        );
-        const teamTemplate = htmlTemplate(
-            process.cwd() +
-                `/src/templates/${templateLinkType}/SuccessPaymentTeam.html`,
-            caseData,
-        );
-
-        const caseTypeMessage = {
-            from: NOREPLYEMAIL,
-            to: [complaint.email],
-            subject: `Confirmation of Successful Registration and Payment - Case ID: ${complaint.caseId}`,
-            html: userTemplate,
-        };
-        queues.EmailQueue.add('send-mail', caseTypeMessage);
-
-        const teamMessage = {
-            from: NOREPLYEMAIL,
-            to: [...NewRegrecipients, policyEmail],
-            subject: `Successful Registration and Payment Recieved - Case Id: ${complaint.caseId}`,
-            html: teamTemplate,
-        };
-
-        queues.EmailQueue.add('send-mail', teamMessage);
-
-        return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Payment has beeen made successfully.',
         );
     });
 }

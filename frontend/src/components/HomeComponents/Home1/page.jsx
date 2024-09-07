@@ -130,20 +130,17 @@ const Home1 = () => {
                                     data-aos="fade-up"
                                     data-aos-duration="2000"
                                 >
-                                    Certificate Of Recognition-Startup India{' '}
+                                    Maximizing outcomes, minimizing disputes.{' '}
                                 </h2>
                                 <ComplaintButton />
                             </div>
                         </div>
-                        <div
-                            className="w-full md:w-1/2 order-1 md:order-2
-                            flex justify-center md:justify-end mt-14 lg:mt-0 2xl:mt-20 mb-8 md:mb-0"
-                        >
+                        <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end mb-8 md:mb-0">
                             <Image
-                                src="/images/cert2.png"
+                                src="/images/hero/Hero 3.webp"
+                                alt="Slide Image"
                                 width={2000}
                                 height={2000}
-                                alt="Slider Image"
                                 className="w-full h-full"
                                 style={{ maxHeight: '100%' }}
                             />
@@ -162,17 +159,20 @@ const Home1 = () => {
                                     data-aos="fade-up"
                                     data-aos-duration="2000"
                                 >
-                                    Maximizing outcomes, minimizing disputes.{' '}
+                                    Certificate Of Recognition-Startup India{' '}
                                 </h2>
                                 <ComplaintButton />
                             </div>
                         </div>
-                        <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end mb-8 md:mb-0">
+                        <div
+                            className="w-full md:w-1/2 order-1 md:order-2
+                            flex justify-center md:justify-end mt-14 lg:mt-0 2xl:mt-20 mb-8 md:mb-0"
+                        >
                             <Image
-                                src="/images/hero/Hero 3.webp"
-                                alt="Slide Image"
+                                src="/images/cert2.png"
                                 width={2000}
                                 height={2000}
+                                alt="Slider Image"
                                 className="w-full h-full"
                                 style={{ maxHeight: '100%' }}
                             />

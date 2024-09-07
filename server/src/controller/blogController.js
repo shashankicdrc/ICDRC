@@ -150,7 +150,7 @@ class BlogController extends Base {
             res,
             httpStatusCode.OK,
             httpStatus.SUCCESS,
-            'BLog has been added successfully.',
+            'Blog has been added successfully.',
         );
     });
 }
