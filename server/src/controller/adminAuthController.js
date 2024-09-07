@@ -291,12 +291,6 @@ class AdminAuthController extends Base {
                 httpStatusCode.FORBIDDEN,
             );
         }
-        if (role === 'admin') {
-            throw new CustomError(
-                "You can't create Admin as role admin.",
-                httpStatusCode.BAD_REQUEST,
-            );
-        }
 
         const isExist = await this.#adminService.isAdminExistByEmail(email);
         if (isExist) {
