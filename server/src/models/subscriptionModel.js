@@ -25,6 +25,10 @@ const schema = new Schema(
             type: Number,
             required: true,
         },
+        isDeleted: {
+            type: Boolean,
+            default: false,
+        },
         usedComplaints: {
             type: Number,
             default: 0,

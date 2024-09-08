@@ -27,6 +27,7 @@ import Sort from "../Sort";
 import { Filter } from "../Filter";
 import { SubscriptionColumnFilters } from "../Filter/subscriptionFilter";
 import SubscriptionColumnSort from "../Sort/subscriptionSort";
+import Link from "next/link";
 
 
 interface DataTableProps<TData, TValue> {
@@ -62,6 +63,9 @@ export function SubscriptionDataTable<TData, TValue>({
                     <Sort columnSorts={SubscriptionColumnSort} />
                 </div>
                 <div className="flex items-center space-x-2">
+                    <Button asChild>
+                        <Link href="/dashboard/subscriptions/add">Add Subscription</Link>
+                    </Button>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="outline">Columns</Button>

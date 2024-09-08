@@ -20,6 +20,7 @@ export interface testimonialType {
 export interface subscriptionType {
     _id: string,
     userId: string,
+    isDeleted: boolean,
     planId: {
         _id: string,
         name: string,

@@ -63,7 +63,7 @@ export default function SubscriptionData() {
         <Card className="flex flex-col">
             <CardHeader className="items-center pb-0">
                 <CardTitle>Total Subscriptions</CardTitle>
-                <CardDescription>Showing all three plan subscriptions</CardDescription>
+                <CardDescription>Showing both plans subscriptions</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 {error ? <p>{error}</p> :

@@ -8,9 +8,39 @@ import { deleteIndividualCase, updateIndCaseStatus } from "@/externalAPI/indCase
 import { addMedia, deleteMedia, editMedia } from "@/externalAPI/medaiService";
 import { deleteOrganisationalCase, updateOrgCaseStatus } from "@/externalAPI/orgCaseService";
 import { deletePartners } from "@/externalAPI/partnerService";
+import { addSubscriptions, deactivateSubscriptions, extendSubscriptions } from "@/externalAPI/subscriptionService";
 import { addTeams, deleteTeams, updateTeams } from "@/externalAPI/teamService";
 import { addTestimonial, deleteTestimonial, updateTestimonial } from "@/externalAPI/testimonialService";
 import { revalidateTag } from "next/cache";
+
+export const addSubscriptionAction = async (token: string, values: any) => {
+    const { message, error } = await addSubscriptions(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getSubscriptions");
+    return { message };
+};
+
+
+export const deactivateSubscriptionAction = async (token: string, values: any) => {
+    const { message, error } = await deactivateSubscriptions(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getSubscriptions");
+    return { message };
+};
+
+export const extendSubscriptionAction = async (token: string, values: any) => {
+    const { message, error } = await extendSubscriptions(token, values);
+    if (error) {
+        return { error };
+    }
+    revalidateTag("getSubscriptions");
+    return { message };
+};
+
 
 export const updateOrgCaseStatusAction = async (token: string, values: any) => {
     const { message, error } = await updateOrgCaseStatus(token, values);
