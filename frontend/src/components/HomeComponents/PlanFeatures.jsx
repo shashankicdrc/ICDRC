@@ -46,10 +46,7 @@ export const OrganizationalFeature = () => {
                         clipRule="evenodd"
                     ></path>
                 </svg>
-                <span>
-                    Documents guidance for claim arise within subscription
-                    period{' '}
-                </span>
+                <span>Claim support (documentation) : 1 claim </span>
             </li>
             <li className="flex items-center space-x-3">
                 <svg

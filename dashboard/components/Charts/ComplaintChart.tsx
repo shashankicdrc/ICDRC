@@ -70,7 +70,7 @@ export default function ComplaintChart() {
                             <Pie
                                 data={complaintData}
                                 dataKey="total"
-                                nameKey="complaint"
+                                nameKey="days"
                                 innerRadius={60}
                                 strokeWidth={5}
                             >

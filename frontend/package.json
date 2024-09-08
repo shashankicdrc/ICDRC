@@ -57,6 +57,7 @@
         "react-loader-spinner": "^5.3.4",
         "react-phone-number-input": "^3.3.9",
         "react-toastify": "^10.0.4",
+        "recharts": "^2.12.7",
         "sharp": "^0.33.2",
         "swiper": "^11.0.5",
         "tailwind-merge": "^2.5.2"

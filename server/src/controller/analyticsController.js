@@ -1,4 +1,5 @@
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 import indComplaintModel from '#models/indComplaintModel';
 import orgComplaintModel from '#models/orgComplaintModel';
 import PaymentHistory from '#models/paymentHistoryModel';
@@ -6,6 +7,8 @@ import subscriptionModel from '#models/subscriptionModel';
 import { Base } from '#utils/Base';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
+import logger from '#utils/logger';
+import { checkSubscriptionStatus } from '#utils/subscription';
 import { Router } from 'express';
 
 class AnalyticsController extends Base {
@@ -35,7 +38,73 @@ class AnalyticsController extends Base {
             '/analytics/subscription/total',
             this.#getTotalSubscription,
         );
+
+        this.router.get(
+            '/analytics/user/subscription',
+            userAuthMiddleware,
+            this.#getSubscriptionDetails,
+        );
     }
+
+    #getSubscriptionDetails = asyncHandler(async (req, res) => {
+        const subscription = await subscriptionModel
+            .find({ userId: req.id })
+            .populate('planId');
+        let subscriptionData = {
+            remainingDays: 0,
+            usedDays: 0,
+            isActive: false,
+            subscription,
+        };
+
+        if (!subscription.length) {
+            logger.info('hit');
+            return this.response(
+                res,
+                httpStatusCode.OK,
+                httpStatus.SUCCESS,
+                'Subscription Details',
+                subscriptionData,
+            );
+        }
+
+        subscriptionData.isActive =
+            checkSubscriptionStatus(subscription) === 'VALID' ? true : false;
+
+        const currentDate = new Date();
+        const startDate = new Date(subscription[0].startDate);
+        const endDate = new Date(subscription[0].endDate);
+
+        // Calculate used days
+        subscriptionData.usedDays = Math.floor(
+            (currentDate - startDate) / (1000 * 60 * 60 * 24),
+        );
+
+        // Calculate remaining days
+        subscriptionData.remainingDays = Math.floor(
+            (endDate - currentDate) / (1000 * 60 * 60 * 24),
+        );
+
+        subscriptionData.chartData = [
+            {
+                days: 'remaining',
+                total: subscriptionData.remainingDays,
+                fill: `var(--color-remaining)`,
+            },
+            {
+                days: 'used',
+                total: subscriptionData.usedDays,
+                fill: `var(--color-used)`,
+            },
+        ];
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Subscription Details',
+            subscriptionData,
+        );
+    });
 
     #getTotalSubscription = asyncHandler(async (req, res) => {
         const totalSubscription = await subscriptionModel.countDocuments();

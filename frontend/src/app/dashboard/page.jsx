@@ -24,6 +24,7 @@ import Link from 'next/link';
 import { ShieldQuestion } from 'lucide-react';
 import { handleResponses } from '../../externalAPI/userService';
 import { formatDate } from '../../lib/formateDate';
+import SubscriptionChart from '@/components/dashboard/SubscriptionChart';
 
 export default async function page() {
     const session = await getServerSession(authOptions);
@@ -88,8 +89,9 @@ export default async function page() {
                     </CardContent>
                 </Card>
             </div>
-            <div className="">
-                <Card className="xl:col-span-2" x-chunk="dashboard-01-chunk-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                <SubscriptionChart />
+                <Card className="lg:col-span-2">
                     <CardHeader className="flex flex-row items-center">
                         <div className="grid gap-2">
                             <CardTitle>Transactions</CardTitle>
