@@ -156,7 +156,7 @@ const SubscriptionChart = () => {
                 ) : (
                     <div className="my-10">
                         <p className="font-bold text-center">
-                            Subscription In Active
+                            Subscription InActive
                         </p>
                     </div>
                 )}
