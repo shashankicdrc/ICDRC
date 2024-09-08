@@ -23,6 +23,10 @@ export const SubscriptionColumns: ColumnDef<subscriptionType>[] = [
         header: "Plan Name",
     },
     {
+        accessorKey: "userId.email",
+        header: "User"
+    },
+    {
         accessorKey: "complaintLimit",
         header: "Complaint Limit",
     },

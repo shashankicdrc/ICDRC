@@ -103,6 +103,10 @@ const IndividualForm = () => {
                         'Your subscription has expired. You have to pay for case registration.',
                     );
                     break;
+                case SubscriptionStatus.NOT_ACTIVE:
+                    setIsValidSubscription(false);
+                    setsubscriptionMessage('Your subscription is deactivated.');
+                    break;
                 case SubscriptionStatus.LIMIT_EXCEEDED:
                     setIsValidSubscription(false);
                     setsubscriptionMessage(
@@ -115,7 +119,6 @@ const IndividualForm = () => {
                     break;
                 case SubscriptionStatus.DOES_NOT_EXIST:
                     setIsValidSubscription(false);
-                    console.log('Subscription does not exist.');
                     break;
                 default:
                     console.log('Unknown subscription status.');
@@ -374,7 +377,6 @@ const IndividualForm = () => {
                                             setEmail(e.target.value)
                                         }
                                         value={email}
-                                        maxLength={20}
                                         required={true}
                                         type="email"
                                         placeholder="Enter your email"

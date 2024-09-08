@@ -22,7 +22,7 @@ import {
 } from '../../../lib/constant';
 import { Button } from '../../ui/button';
 import { Loader2 } from 'lucide-react';
-import { makeKeys, encryptData, decryptData } from '../../../lib/Encryption';
+// import { makeKeys, encryptData, decryptData } from '../../../lib/Encryption';
 import toast from 'react-hot-toast';
 import { addOrganizationComplaint } from '../../../externalAPI/complaintService';
 import { useSession } from 'next-auth/react';
@@ -106,6 +106,12 @@ const OganisationalForm = () => {
                         'Your subscription has expired. You have to pay for case registration.',
                     );
                     break;
+
+                case SubscriptionStatus.NOT_ACTIVE:
+                    setIsValidSubscription(false);
+                    setsubscriptionMessage('Your subscription is InActive.');
+                    break;
+
                 case SubscriptionStatus.LIMIT_EXCEEDED:
                     setIsValidSubscription(false);
                     setsubscriptionMessage(

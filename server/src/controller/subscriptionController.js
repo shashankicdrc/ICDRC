@@ -225,6 +225,7 @@ class SubscriptionController extends Base {
                         path: 'planId',
                         select: 'name',
                     })
+                    .populate('userId', 'email')
                     .sort(Sorts)
                     .skip(skip)
                     .limit(perRow)

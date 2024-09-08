@@ -69,7 +69,7 @@ class AnalyticsController extends Base {
         }
 
         subscriptionData.isActive =
-            checkSubscriptionStatus(subscription) === 'VALID' ? true : false;
+            checkSubscriptionStatus(subscription[0]) === 'VALID' ? true : false;
 
         const currentDate = new Date();
         const startDate = new Date(subscription[0].startDate);
