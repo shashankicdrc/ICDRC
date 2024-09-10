@@ -120,7 +120,7 @@ const Contact = () => {
                                 <br /> window solution platform
                             </h2>
                             <Link
-                                href="/dashboard/register"
+                                href="/#subscription"
                                 data-aos="fade-up"
                                 data-aos-duration="2000"
                                 className="relative max-w-max ml-4 mt-4 inline-flex items-center px-12 py-3 overflow-hidden text-lg text-orange-500 font-bold border-2 border-orange-500 rounded-full hover:text-white group hover:bg-gray-50"
@@ -142,9 +142,7 @@ const Contact = () => {
                                         ></path>
                                     </svg>
                                 </span>
-                                <span className="relative">
-                                    Register Complaint
-                                </span>
+                                <span className="relative">Subscribe Now</span>
                             </Link>
                         </div>
                     </div>

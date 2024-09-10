@@ -6,7 +6,7 @@ import { IndividualFeature, OrganizationalFeature } from './PlanFeatures';
 const PricingCard = () => {
     const plans = ['66dc3f2cb7e56779f870c7ab', '66dc3f1cb7e56779f870c7a9'];
     return (
-        <section className="bg-background home5-bg">
+        <section className="bg-background home5-bg" id="subscription">
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
                 <div className="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
                     <h2 className="text-3xl md:text-6xl py-2 font-[Roboto] font-bold text-center  px-8">

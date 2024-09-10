@@ -187,7 +187,7 @@ const Home1 = () => {
 const ComplaintButton = () => {
     return (
         <Link
-            href="/dashboard/register"
+            href="#subscription"
             data-aos="fade-up"
             data-aos-duration="2000"
             className="relative max-w-max ml-4 mt-4 inline-flex items-center px-12 py-3 overflow-hidden text-lg font-bold text-orange-500 border-2 border-orange-500 rounded-full hover:text-white group hover:bg-gray-50"
@@ -209,7 +209,7 @@ const ComplaintButton = () => {
                     ></path>
                 </svg>
             </span>
-            <span className="relative">Register Complaint</span>
+            <span className="relative">Subscribe Now</span>
         </Link>
     );
 };

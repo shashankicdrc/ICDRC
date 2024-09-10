@@ -54,12 +54,12 @@ const Home7Contact = () => {
                         data-aos-duration="1000"
                     >
                         <Link
-                            href="/dashboard/register"
+                            href="/#subscription"
                             className="relative mx-auto h-16 w-64 flex justify-center items-center"
                         >
                             <div className="h-16 w-64 bg-orange-500 rounded-xl shadow-2xl cursor-pointer absolute overflow-hidden transform hover:scale-x-110 hover:scale-y-105 hover:bg-blue-500 transition duration-300 ease-out"></div>
                             <div className="text-center text-white font-semibold z-10 pointer-events-none">
-                                Register Complaint
+                                Subscribe Now
                             </div>
                             <span className="absolute flex h-6 w-6 top-0 right-0 transform translate-x-2.5 -translate-y-2.5">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>

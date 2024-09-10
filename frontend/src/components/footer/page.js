@@ -146,9 +146,9 @@ export default function Footer() {
                                 </a>
                                 <a
                                     className="hover:opacity-75"
-                                    href="/dashboard/register"
+                                    href="/#subscription"
                                 >
-                                    Register complaint
+                                    Subscribe Now
                                 </a>
                             </nav>
                         </div>
