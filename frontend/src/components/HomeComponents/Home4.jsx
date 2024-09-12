@@ -1,6 +1,14 @@
 'u/home/hayat/Downloads/Reach out to us, Our Process, About us/Complaint Resolution.webpse client';
+import {
+    CalendarCheck,
+    CreditCard,
+    FilePenLine,
+    FileStack,
+    LogIn,
+    SquareMousePointer,
+    ThumbsUp,
+} from 'lucide-react';
 import '../../styles/module.home4.css';
-import Image from 'next/image';
 
 const Home4 = () => {
     return (
@@ -10,16 +18,16 @@ const Home4 = () => {
                 data-aos="fade-up"
                 data-aos-duration="1000"
             >
-                Our Process
+                Claim Resolution Process at ICDRC
             </h1>
             <p
                 className="text-gray-700 text-center font-medium text-md py-2  tracking-widest mx-auto px-8"
                 data-aos="fade-up"
                 data-aos-duration="1000"
             >
-                At ICDRC, our process is designed to resolve your insurance
-                disputes efficiently through expert arbitration, settlements,
-                and litigation{' '}
+                At ICDRC, we offer an efficient process for resolving insurance
+                disputes through expert arbitration, settlements, and
+                litigation.{' '}
             </p>
 
             <div className="container mx-auto overflow-hidden">
@@ -29,11 +37,11 @@ const Home4 = () => {
                             <div className="road-map-wrapper">
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
-                                        <Image
-                                            src="/images/process/reach.webp"
-                                            alt="reach out"
-                                            width={50}
-                                            height={50}
+                                        <SquareMousePointer
+                                            style={{
+                                                height: '40px',
+                                                width: '110px',
+                                            }}
                                         />
                                     </span>
                                 </div>
@@ -43,15 +51,14 @@ const Home4 = () => {
                                     data-aos-duration="1000"
                                 >
                                     <h4 className="card-head">
-                                        Reach Out to Us
+                                        Choose Your Subscription{' '}
                                     </h4>
                                     <p className="card-text">
-                                        To initiate the claim process, please
-                                        get in touch with us through our website
-                                        or helpline. Our dedicated team is fully
-                                        prepared to assist you throughout the
-                                        process and provide the necessary
-                                        guidance.
+                                        Select the subscription plan that suits
+                                        your needs—whether you are an individual
+                                        or representing an organization. Each
+                                        plan offers tailored support for your
+                                        insurance dispute resolution.{' '}
                                     </p>
                                 </div>
                             </div>
@@ -59,10 +66,11 @@ const Home4 = () => {
                             <div className="road-map-wrapper">
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
-                                        <Image
-                                            src="/images/process/register.webp"
-                                            width={70}
-                                            height={70}
+                                        <LogIn
+                                            style={{
+                                                height: '40px',
+                                                width: '110px',
+                                            }}
                                         />
                                     </span>
                                 </div>
@@ -72,14 +80,13 @@ const Home4 = () => {
                                     data-aos-duration="1000"
                                 >
                                     <h4 className="card-head">
-                                        Register a Complaint
+                                        Create Your Account & Login{' '}
                                     </h4>
                                     <p className="card-text">
-                                        Begin the resolution process by
-                                        submitting a concise complaint outlining
-                                        your insurance-related issue. This is
-                                        the first step towards addressing your
-                                        concerns promptly and effectively.
+                                        Start by creating your account on our
+                                        website and logging in to access our
+                                        services. Our team is ready to assist
+                                        you throughout your journey.{' '}
                                     </p>
                                 </div>
                             </div>
@@ -87,13 +94,12 @@ const Home4 = () => {
                             <div className="road-map-wrapper">
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
-                                        <Image
-                                            src="/images/process/Verify.webp"
-                                            //src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1690785537/Home_page/Home4/3_xiuwm5.svg"
-                                            alt="image"
-                                            width={70}
-                                            height={70}
-                                        />
+                                        <CreditCard
+                                            style={{
+                                                height: '40px',
+                                                width: '110px',
+                                            }}
+                                        />{' '}
                                     </span>
                                 </div>
                                 <div
@@ -102,15 +108,14 @@ const Home4 = () => {
                                     data-aos-duration="1000"
                                 >
                                     <h4 className="card-head">
-                                        Verify Your Details
+                                        Subscription Fee Payment{' '}
                                     </h4>
                                     <p className="card-text">
-                                        With a focus on precision, our team
-                                        meticulously validates the information
-                                        you provide. This careful verification
-                                        enhances the accuracy and efficiency of
-                                        your claim processing, streamlining the
-                                        entire procedure.
+                                        Pay the subscription fee to proceed: Rs.
+                                        199 for individuals and Rs. 1999 for
+                                        organizations. Our affordable fees
+                                        ensure high-quality service without
+                                        breaking the bank.{' '}
                                     </p>
                                 </div>
                             </div>
@@ -118,29 +123,56 @@ const Home4 = () => {
                             <div className="road-map-wrapper">
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
-                                        <Image
-                                            src="/images/process/Share.webp"
-                                            alt="image"
-                                            width={70}
-                                            height={70}
+                                        <FilePenLine
+                                            style={{
+                                                height: '40px',
+                                                width: '110px',
+                                            }}
                                         />
                                     </span>
                                 </div>
                                 <div
                                     className="road-map-card"
                                     data-aos="fade-right"
+                                    data-aos-duration="1000"
+                                >
+                                    <h4 className="card-head">
+                                        Register a Case{' '}
+                                    </h4>
+                                    <p className="card-text">
+                                        Submit your insurance-related case by
+                                        providing a clear description of your
+                                        issue. This is the first step in
+                                        addressing and resolving your concerns
+                                        efficiently.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="road-map-wrapper">
+                                <div className="road-map-circle">
+                                    <span className="road-map-circle-text flex items-center justify-center">
+                                        <FileStack
+                                            style={{
+                                                height: '40px',
+                                                width: '110px',
+                                            }}
+                                        />
+                                    </span>
+                                </div>
+                                <div
+                                    className="road-map-card"
+                                    data-aos="fade-left"
                                     data-aos-duration="1000"
                                 >
                                     <h4 className="card-head">
                                         Share Your Documents
                                     </h4>
                                     <p className="card-text">
-                                        Safely upload essential insurance
-                                        documents and KYC details within a
-                                        secure environment. This aids us in
-                                        gaining a comprehensive understanding of
-                                        your case, allowing for a thorough and
-                                        efficient assessment.
+                                        Upload the necessary insurance documents
+                                        and KYC details securely. This helps us
+                                        fully understand your case and ensures
+                                        an accurate, thorough assessment.{' '}
                                     </p>
                                 </div>
                             </div>
@@ -148,40 +180,11 @@ const Home4 = () => {
                             <div className="road-map-wrapper">
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
-                                        <Image
-                                            src="/images/process/payment.webp"
-                                            alt=""
-                                            width={70}
-                                            height={70}
-                                        />
-                                    </span>
-                                </div>
-                                <div
-                                    className="road-map-card"
-                                    data-aos="fade-left"
-                                    data-aos-duration="1000"
-                                >
-                                    <h4 className="card-head">Fees Payment</h4>
-                                    <p className="card-text">
-                                        Easily make the required processing fee
-                                        payment through our secure payment
-                                        gateway, ensuring a smooth continuation
-                                        of your claim process. (INR 500 for
-                                        Individual, INR 5000 for
-                                        Organisation/Insurance Company). Success
-                                        fee 10% + GST (Lowest in the Industry).{' '}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="road-map-wrapper">
-                                <div className="road-map-circle">
-                                    <span className="road-map-circle-text flex items-center justify-center">
-                                        <Image
-                                            src="/images/process/schedule.webp"
-                                            alt=""
-                                            width={50}
-                                            height={50}
+                                        <CalendarCheck
+                                            style={{
+                                                height: '40px',
+                                                width: '110px',
+                                            }}
                                         />
                                     </span>
                                 </div>
@@ -194,11 +197,11 @@ const Home4 = () => {
                                         Schedule an Appointment
                                     </h4>
                                     <p className="card-text">
-                                        Leave the appointment scheduling to us.
-                                        Our experts will promptly get in touch
-                                        with you at your preferred time, making
-                                        it convenient for you to discuss your
-                                        case details.
+                                        We’ll handle the appointment scheduling
+                                        for you. Our team will contact you at
+                                        your preferred time, making it
+                                        convenient to discuss your case in
+                                        detail.{' '}
                                     </p>
                                 </div>
                             </div>
@@ -206,11 +209,11 @@ const Home4 = () => {
                             <div className="road-map-wrapper">
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
-                                        <Image
-                                            src="/images/process/resolution.webp"
-                                            alt="complaint resolution"
-                                            width={50}
-                                            height={50}
+                                        <ThumbsUp
+                                            style={{
+                                                height: '40px',
+                                                width: '110px',
+                                            }}
                                         />
                                     </span>
                                 </div>
@@ -223,10 +226,12 @@ const Home4 = () => {
                                         Complaint Resolution
                                     </h4>
                                     <p className="card-text">
-                                        Our dedicated team will work diligently
-                                        to resolve your complaint, ensuring a
-                                        fair and satisfactory outcome for you.
-                                        Your trust matters to us.
+                                        Our team will work diligently to resolve
+                                        your complaint, ensuring a fair and
+                                        satisfactory outcome. We charge a
+                                        success fee of 10% + GST, which is the
+                                        lowest in the industry. Your
+                                        satisfaction is our priority.{' '}
                                     </p>
                                 </div>
                             </div>

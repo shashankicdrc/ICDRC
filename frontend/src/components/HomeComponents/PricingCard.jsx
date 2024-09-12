@@ -20,7 +20,7 @@ const PricingCard = () => {
                         </h3>
                         <div className="flex justify-center items-baseline my-8">
                             <span className="mr-2 text-5xl font-extrabold">
-                                ₹99
+                                ₹199
                             </span>
                         </div>
                         <IndividualFeature />
@@ -40,7 +40,7 @@ const PricingCard = () => {
                         </h3>
                         <div className="flex justify-center items-baseline my-8">
                             <span className="mr-2 text-5xl font-extrabold">
-                                ₹399
+                                ₹1999
                             </span>
                         </div>
                         <OrganizationalFeature />

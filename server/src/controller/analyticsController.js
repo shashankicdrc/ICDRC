@@ -179,7 +179,7 @@ class AnalyticsController extends Base {
                 // Determine the type based on the amount
                 if (amount === 500) {
                     type = 'individual';
-                } else if (amount > 500) {
+                } else if (amount === 5000) {
                     type = 'organisational';
                 } else {
                     type = 'subscription';

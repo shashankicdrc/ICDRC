@@ -12,9 +12,9 @@ const planSchema = new Schema({
         default: function () {
             switch (this.name) {
                 case 'Individual':
-                    return 99;
+                    return 199;
                 case 'Organisational':
-                    return 399;
+                    return 1999;
                 default:
                     return 0;
             }
@@ -40,9 +40,9 @@ const planSchema = new Schema({
         default: function () {
             switch (this.name) {
                 case 'Individual':
-                    return 10;
+                    return 5;
                 case 'Organisational':
-                    return 10;
+                    return 5;
                 default:
                     return 0;
             }
