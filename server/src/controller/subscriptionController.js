@@ -103,9 +103,14 @@ class SubscriptionController extends Base {
                     httpStatusCode.FORBIDDEN,
                 );
             }
-            const [plan, user] = await Promise.all([
+            const [plan, user, subscription] = await Promise.all([
                 planModel.findById(planId),
                 usermodel.findById(userId),
+                subscriptionModel
+                    .findOne({
+                        userId: userId,
+                    })
+                    .populate('plans.planId'),
             ]);
 
             if (!plan) {
@@ -119,6 +124,46 @@ class SubscriptionController extends Base {
                 throw new CustomError(
                     'User does not exist.',
                     httpStatusCode.BAD_REQUEST,
+                );
+            }
+
+            if (subscription) {
+                const isSamePlans = subscription.plans
+                    .map((item) => item.planId.name)
+                    .some((item) => item === plan.name);
+
+                if (isSamePlans) {
+                    throw new CustomError(
+                        'User is already subscribed to the same plan.',
+                        httpStatusCode.BAD_REQUEST,
+                    );
+                }
+
+                const updateSubscriptionData = {
+                    planId: plan.id,
+                    complaintLimit: plan.complaintLimit,
+                    usedComplaints: 0,
+                    startDate: new Date(),
+                    endDate: new Date(
+                        Date.now() + plan.durationInDays * 24 * 60 * 60 * 1000,
+                    ),
+                };
+                const updatedData =
+                    await this.#subscriptionService.updateSubscription(
+                        subscription._id,
+                        updateSubscriptionData,
+                    );
+                if (!updatedData) {
+                    throw new CustomError(
+                        'Something went wrong please try again.',
+                        httpStatusCode.BAD_REQUEST,
+                    );
+                }
+                return this.response(
+                    res,
+                    httpStatusCode.OK,
+                    httpStatus.SUCCESS,
+                    'Subcription is added successfully.',
                 );
             }
 
@@ -252,6 +297,8 @@ class SubscriptionController extends Base {
                 },
             );
 
+            console.log(JSON.stringify(subscriptionsPlans));
+
             const transformedData = subscriptionsPlans.map(
                 (subscription, index) => {
                     // Find the individual and organisational plans
@@ -270,26 +317,30 @@ class SubscriptionController extends Base {
                             name: individualPlan?.planId.name || '--',
                             startDate: individualPlan?.startDate || '--',
                             endDate: individualPlan?.endDate || '--',
-                            isDeleted: individualPlan?.isDeleted,
-                            isActive: this.#checkSubscription(
-                                checkSubscriptionStatus(
-                                    subscriptions[index],
-                                    individualPlan.planId._id,
-                                ),
-                            ),
+                            isDeleted: individualPlan?.isDeleted || true,
+                            isActive: !individualPlan
+                                ? false
+                                : this.#checkSubscription(
+                                      checkSubscriptionStatus(
+                                          subscriptions[index],
+                                          individualPlan.planId._id,
+                                      ),
+                                  ),
                         },
                         organisationalSubscription: {
                             _id: organisationalPlan?.planId._id || '--',
                             name: organisationalPlan?.planId.name || '--',
                             startDate: organisationalPlan?.startDate || '--',
                             endDate: organisationalPlan?.endDate || '--',
-                            isDeleted: organisationalPlan?.isDeleted,
-                            isActive: this.#checkSubscription(
-                                checkSubscriptionStatus(
-                                    subscriptions[index],
-                                    organisationalPlan.planId._id,
-                                ),
-                            ),
+                            isDeleted: organisationalPlan?.isDeleted || true,
+                            isActive: !organisationalPlan
+                                ? false
+                                : this.#checkSubscription(
+                                      checkSubscriptionStatus(
+                                          subscriptions[index],
+                                          organisationalPlan.planId._id,
+                                      ),
+                                  ),
                         },
                     };
                 },

@@ -55,12 +55,18 @@ export const SubscriptionColumns: ColumnDef<Subscription>[] = [
     {
         accessorKey: "individualSubscription.startDate",
         header: "Start Date",
-        cell: ({ row }) => formatDate(row.original.individualSubscription.startDate)
+        cell: ({ row }) => {
+            const indSubscription = row.original.individualSubscription;
+            return indSubscription.isActive ? formatDate(indSubscription.startDate) : '--'
+        }
     },
     {
         accessorKey: "individualSubscription.startDate",
         header: "End Date",
-        cell: ({ row }) => formatDate(row.original.individualSubscription.endDate)
+        cell: ({ row }) => {
+            const indSubscription = row.original.individualSubscription;
+            return indSubscription.isActive ? formatDate(indSubscription.endDate) : '--'
+        }
     },
     {
         id: "Organizational Subscription",
@@ -74,12 +80,18 @@ export const SubscriptionColumns: ColumnDef<Subscription>[] = [
     {
         accessorKey: "organisationalSubscription.startDate",
         header: "Start Date",
-        cell: ({ row }) => formatDate(row.original.organisationalSubscription.startDate)
+        cell: ({ row }) => {
+            const orgSubscription = row.original.organisationalSubscription;
+            return orgSubscription.isActive ? formatDate(orgSubscription.startDate) : '--'
+        }
     },
     {
         accessorKey: "organisationalSubscription.endDate",
         header: "End Date",
-        cell: ({ row }) => formatDate(row.original.organisationalSubscription.endDate)
+        cell: ({ row }) => {
+            const orgSubscription = row.original.organisationalSubscription;
+            return orgSubscription.isActive ? formatDate(orgSubscription.endDate) : '--'
+        }
     },
     {
         id: "actions",

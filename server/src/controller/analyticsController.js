@@ -302,9 +302,9 @@ class AnalyticsController extends Base {
                 fill: `var(--color-individual)`,
             },
             {
-                complaint: 'organisational',
+                complaint: 'organizational',
                 total: organizationalComplaints,
-                fill: `var(--color-organisational)`,
+                fill: `var(--color-organizational)`,
             },
         ];
         return this.response(

@@ -17,8 +17,8 @@ const chartConfig = {
         label: "Individual",
         color: "hsl(var(--chart-1))",
     },
-    organisational: {
-        label: "Organisational",
+    organizational: {
+        label: "Organizational",
         color: "hsl(var(--chart-2))",
     },
 } satisfies ChartConfig
@@ -70,7 +70,7 @@ export default function ComplaintChart() {
                             <Pie
                                 data={complaintData}
                                 dataKey="total"
-                                nameKey="days"
+                                nameKey="complaint"
                                 innerRadius={60}
                                 strokeWidth={5}
                             >
