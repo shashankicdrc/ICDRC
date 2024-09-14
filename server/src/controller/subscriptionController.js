@@ -152,7 +152,7 @@ class SubscriptionController extends Base {
     });
 
     #extendSubscription = asyncHandler(async (req, res) => {
-        const { subscriptionId, endDate } = req.body;
+        const { subscriptionId, planId, endDate } = req.body;
         if (req.role !== 'admin') {
             throw new CustomError(
                 "You don't have any right to extend the subscripiton.",
@@ -160,13 +160,20 @@ class SubscriptionController extends Base {
             );
         }
 
-        const updateSubscription = await subscriptionModel.findByIdAndUpdate(
-            subscriptionId,
-            { endDate },
+        const updateSubscription = await subscriptionModel.findOneAndUpdate(
+            {
+                _id: subscriptionId,
+                'plans.planId': planId,
+            },
+            {
+                $set: { 'plans.$.endDate': endDate },
+            },
+            { new: true },
         );
+
         if (!updateSubscription) {
             throw new CustomError(
-                'Subscription does not exist.',
+                'Subscription or plan does not exist.',
                 httpStatusCode.BAD_REQUEST,
             );
         }
@@ -179,7 +186,7 @@ class SubscriptionController extends Base {
     });
 
     #deleteSubscription = asyncHandler(async (req, res) => {
-        const { isDeleted, subscriptionId } = req.body;
+        const { isDeleted, subscriptionId, planId } = req.body;
         if (req.role !== 'admin') {
             throw new CustomError(
                 "You don't have any right to deactivate/delete the subscripiton.",
@@ -187,13 +194,20 @@ class SubscriptionController extends Base {
             );
         }
 
-        const updateSubscription = await subscriptionModel.findByIdAndUpdate(
-            subscriptionId,
-            { isDeleted },
+        const updateSubscription = await subscriptionModel.findOneAndUpdate(
+            {
+                _id: subscriptionId,
+                'plans.planId': planId,
+            },
+            {
+                $set: { 'plans.$.isDeleted': isDeleted },
+            },
+            { new: true },
         );
+
         if (!updateSubscription) {
             throw new CustomError(
-                'Subscription does not exist.',
+                'Subscription or plan does not exist.',
                 httpStatusCode.BAD_REQUEST,
             );
         }
@@ -221,19 +235,67 @@ class SubscriptionController extends Base {
             const [subscriptions, totalCount] = await Promise.all([
                 subscriptionModel
                     .find(filterQuery)
-                    .populate({
-                        path: 'planId',
-                        select: 'name',
-                    })
                     .populate('userId', 'email')
                     .sort(Sorts)
                     .skip(skip)
-                    .limit(perRow)
-                    .exec(),
+                    .limit(perRow),
                 subscriptionModel.countDocuments(filterQuery).exec(),
             ]);
+            const clonedSubscription = subscriptions.map((subscription) =>
+                subscription.toObject(),
+            );
+
+            const subscriptionsPlans = await subscriptionModel.populate(
+                clonedSubscription,
+                {
+                    path: 'plans.planId',
+                },
+            );
+
+            const transformedData = subscriptionsPlans.map(
+                (subscription, index) => {
+                    // Find the individual and organisational plans
+                    const individualPlan = subscription.plans.find(
+                        (plan) => plan.planId.name === 'Individual',
+                    );
+                    const organisationalPlan = subscription.plans.find(
+                        (plan) => plan.planId.name === 'Organisational',
+                    );
+
+                    return {
+                        _id: subscription._id,
+                        userId: subscription.userId.email, // User ID
+                        individualSubscription: {
+                            _id: individualPlan?.planId._id || '--',
+                            name: individualPlan?.planId.name || '--',
+                            startDate: individualPlan?.startDate || '--',
+                            endDate: individualPlan?.endDate || '--',
+                            isDeleted: individualPlan?.isDeleted,
+                            isActive: this.#checkSubscription(
+                                checkSubscriptionStatus(
+                                    subscriptions[index],
+                                    individualPlan.planId._id,
+                                ),
+                            ),
+                        },
+                        organisationalSubscription: {
+                            _id: organisationalPlan?.planId._id || '--',
+                            name: organisationalPlan?.planId.name || '--',
+                            startDate: organisationalPlan?.startDate || '--',
+                            endDate: organisationalPlan?.endDate || '--',
+                            isDeleted: organisationalPlan?.isDeleted,
+                            isActive: this.#checkSubscription(
+                                checkSubscriptionStatus(
+                                    subscriptions[index],
+                                    organisationalPlan.planId._id,
+                                ),
+                            ),
+                        },
+                    };
+                },
+            );
             const data = {
-                subscriptions,
+                subscriptions: transformedData,
                 totalCount,
             };
             return this.response(

@@ -24,9 +24,11 @@ import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/Icons";
 import { deactivateSubscriptionAction } from "@/action";
 import { toast } from "sonner";
+import { Subscription } from "./column";
 
 interface Props {
-    subscription: subscriptionType;
+    subscription: Subscription;
+    type: 'IND' | 'ORG'
 }
 
 const formSchema = z.object({
@@ -35,17 +37,18 @@ const formSchema = z.object({
 
 type formInputType = z.infer<typeof formSchema>;
 
-export const DeactivateSubscriptionForm = ({ subscription }: Props) => {
+export const DeactivateSubscriptionForm = ({ subscription, type }: Props) => {
     const [open, setopen] = React.useState<boolean>(false);
     const { data: session } = useSession();
     const isDisabled = session?.user.role !== "admin";
     const [isLoading, setisLoading] = React.useState<boolean>(false);
     const token = session?.user.AccessToken as string;
+    const isDeleted = type === 'IND' ? subscription.individualSubscription.isDeleted : subscription.organisationalSubscription.isDeleted
 
     const form = useForm<formInputType>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            isDeleted: subscription.isDeleted
+            isDeleted,
         }
     });
 
@@ -53,8 +56,10 @@ export const DeactivateSubscriptionForm = ({ subscription }: Props) => {
         try {
             if (!token) return;
             setisLoading((prevState) => !prevState);
+            const planId = type === "IND" ? subscription.individualSubscription._id : subscription.organisationalSubscription._id;
             const Data = {
                 subscriptionId: subscription._id,
+                planId,
                 ...values,
             };
             const { message, error } = await deactivateSubscriptionAction(token, Data);
@@ -76,9 +81,9 @@ export const DeactivateSubscriptionForm = ({ subscription }: Props) => {
         <Popover open={open} onOpenChange={setopen} >
             <PopoverTrigger
                 disabled={isDisabled}
-                className="py-1.5 text-sm bg-accent rounded-sm flex px-2 cursor-pointer w-full disabled:cursor-not-allowed"
+                className="py-1.5 text-sm hover:bg-accent rounded-sm flex px-2 cursor-pointer w-full disabled:cursor-not-allowed"
             >
-                Deactivate
+                Deactivate {type === 'IND' ? "Individual Subscription" : "Organizational Subscription"}
             </PopoverTrigger>
             < PopoverContent side="left" align="start" >
                 <Form {...form} >
@@ -88,7 +93,7 @@ export const DeactivateSubscriptionForm = ({ subscription }: Props) => {
                             name="isDeleted"
                             render={({ field }) => (
                                 <FormItem className="space-y-3" >
-                                    <FormLabel>Would you like to deactivate the subscription? </FormLabel>
+                                    <FormLabel>Would you like to deactivate the {type === 'IND' ? "Individual" : "Organizational"} subscription? </FormLabel>
                                     <FormControl >
                                         <RadioGroup
                                             onValueChange={(value) => field.onChange(value === "true")}

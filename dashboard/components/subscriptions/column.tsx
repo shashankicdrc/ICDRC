@@ -10,48 +10,76 @@ import {
 import { Button } from "@/components/ui/button";
 import { Icons } from "@/components/Icons";
 import { toast } from "sonner";
-import { subscriptionType } from "@/types/columnsType";
 import { formatDate } from "@/lib/formatDate";
 import Link from "next/link";
 import { DeactivateSubscriptionForm } from "./DeactivateSubscription";
-import { checkSubscriptionStatus, SubscriptionStatus } from "@/lib/checkSubscription";
 import { Badge } from "../ui/badge";
 
-export const SubscriptionColumns: ColumnDef<subscriptionType>[] = [
+
+export type Subscription = {
+    _id: string,
+    userId: string;
+    email: string;
+    individualSubscription: {
+        _id: string,
+        name: string;
+        startDate: string;
+        endDate: string;
+        isDeleted: boolean;
+        isActive: boolean,
+    };
+    organisationalSubscription: {
+        _id: string,
+        name: string;
+        startDate: string;
+        endDate: string;
+        isDeleted: boolean;
+        isActive: boolean,
+    };
+};
+
+export const SubscriptionColumns: ColumnDef<Subscription>[] = [
     {
-        accessorKey: "planId.name",
-        header: "Plan Name",
+        accessorKey: "userId",
+        header: "User ID",
     },
     {
-        accessorKey: "userId.email",
-        header: "User"
-    },
-    {
-        accessorKey: "complaintLimit",
-        header: "Complaint Limit",
-    },
-    {
-        accessorKey: "usedComplaints",
-        header: "Used Complaints",
-    },
-    {
-        accessorKey: "startDate",
-        header: "Start Date",
-        cell: ({ row }) => formatDate(row.original.startDate)
-    },
-    {
-        accessorKey: "endDate",
-        header: "End Date",
-        cell: ({ row }) => formatDate(row.original.endDate)
-    },
-    {
-        id: 'Active',
-        header: "Active",
+        id: "Individual Subscription",
+        header: "Individual Subscription",
         cell: ({ row }) => {
-            const subscriptionStatus = checkSubscriptionStatus(row.original);
-            return subscriptionStatus === SubscriptionStatus.VALID ? <Badge variant="default">Active</Badge> : <Badge variant="outline"
-            >InActive</Badge>
+            const indSubscription = row.original.individualSubscription;
+            return indSubscription.isActive ? <Badge className="text-green-600" variant="outline">Active</Badge>
+                : <Badge variant="outline" className="text-red-600">InActive</Badge>
         }
+    },
+    {
+        accessorKey: "individualSubscription.startDate",
+        header: "Start Date",
+        cell: ({ row }) => formatDate(row.original.individualSubscription.startDate)
+    },
+    {
+        accessorKey: "individualSubscription.startDate",
+        header: "End Date",
+        cell: ({ row }) => formatDate(row.original.individualSubscription.endDate)
+    },
+    {
+        id: "Organizational Subscription",
+        header: "Organizational Subscription",
+        cell: ({ row }) => {
+            const orgSubscription = row.original.organisationalSubscription;
+            return orgSubscription.isActive ? <Badge className="text-green-600" variant="outline">Active</Badge>
+                : <Badge variant="outline" className="text-red-600">InActive</Badge>
+        }
+    },
+    {
+        accessorKey: "organisationalSubscription.startDate",
+        header: "Start Date",
+        cell: ({ row }) => formatDate(row.original.organisationalSubscription.startDate)
+    },
+    {
+        accessorKey: "organisationalSubscription.endDate",
+        header: "End Date",
+        cell: ({ row }) => formatDate(row.original.organisationalSubscription.endDate)
     },
     {
         id: "actions",
@@ -86,12 +114,20 @@ export const SubscriptionColumns: ColumnDef<subscriptionType>[] = [
                     >
                         Copy Subscription Id
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer" asChild>
-                        <Link href={`/dashboard/subscriptions/extend/${subscription._id}`}>
-                            Extend Date
+                    {subscription.individualSubscription._id && <DropdownMenuItem className="cursor-pointer" asChild>
+                        <Link href={`/dashboard/subscriptions/extend/${subscription._id}?planId=${subscription.individualSubscription._id}`}>
+                            Extend Individual Plan  Date
                         </Link>
                     </DropdownMenuItem>
-                    <DeactivateSubscriptionForm subscription={subscription} />
+                    }
+                    {subscription.organisationalSubscription._id && <DropdownMenuItem className="cursor-pointer" asChild>
+                        <Link href={`/dashboard/subscriptions/extend/${subscription._id}?planId=${subscription.organisationalSubscription._id}`}>
+                            Extend Organizational Plan  Date
+                        </Link>
+                    </DropdownMenuItem>
+                    }
+                    {subscription.individualSubscription._id && <DeactivateSubscriptionForm subscription={subscription} type="IND" />}
+                    {subscription.organisationalSubscription._id && <DeactivateSubscriptionForm subscription={subscription} type="ORG" />}
                 </DropdownMenuContent>
             </DropdownMenu>
             );

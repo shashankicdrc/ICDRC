@@ -27,7 +27,7 @@ import { useSession } from "next-auth/react"
 import { Icons } from "../Icons"
 import { toast } from "sonner"
 import { extendSubscriptionAction } from "@/action"
-import { useParams } from "next/navigation"
+import { useParams, useSearchParams } from "next/navigation"
 
 const FormSchema = z.object({
     endDate: z.date({
@@ -41,6 +41,8 @@ export default function ExtendSubscription() {
     const [isLoading, setisLoading] = useState<boolean>(false);
     const token = session?.user.AccessToken as string;
     const params = useParams();
+    const searchParams = useSearchParams();
+    const planId = searchParams.get('planId')
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -48,9 +50,9 @@ export default function ExtendSubscription() {
 
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
         try {
-            if (!token || !params.id) return;
+            if (!token || !params.id || !planId) return;
             setisLoading(prevState => !prevState)
-            const { message, error } = await extendSubscriptionAction(token, { ...values, subscriptionId: params.id })
+            const { message, error } = await extendSubscriptionAction(token, { ...values, planId, subscriptionId: params.id })
             setisLoading(prevState => !prevState)
             if (error) {
                 return toast.error(error);

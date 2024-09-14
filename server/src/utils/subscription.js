@@ -36,7 +36,7 @@ export function checkSubscriptionStatus(subscription, planId) {
         return SubscriptionStatus.LIMIT_EXCEEDED;
     }
 
-    if (subscription.isDeleted) {
+    if (plan.isDeleted) {
         return SubscriptionStatus.NOT_ACTIVE;
     }
 

@@ -192,7 +192,7 @@ class AnalyticsController extends Base {
     #getSubscription = asyncHandler(async (req, res) => {
         const subscriptions = await subscriptionModel
             .find({})
-            .populate({ path: 'planId', select: 'name' });
+            .populate({ path: 'plans.planId', select: 'name' }); // Populate the `planId` inside the `plans` array
 
         const planDataMap = {
             Organisational: 0,
@@ -201,14 +201,18 @@ class AnalyticsController extends Base {
 
         const addSubscriptionToMap = (subscriptions) => {
             subscriptions.forEach((subscription) => {
-                const planType = subscription.planId.name;
+                // Loop through each plan in the `plans` array
+                subscription.plans.forEach((planObj) => {
+                    const planType = planObj.planId.name;
 
-                if (planDataMap[planType] !== undefined) {
-                    planDataMap[planType]++;
-                }
+                    if (planDataMap[planType] !== undefined) {
+                        planDataMap[planType]++;
+                    }
+                });
             });
         };
 
+        // Add subscription data to the map
         addSubscriptionToMap(subscriptions);
 
         // Convert the map to an array of objects for the chart
@@ -218,6 +222,7 @@ class AnalyticsController extends Base {
             fill: `var(--color-${plan})`,
         }));
 
+        // Calculate total subscriptions
         const totalSubscription = chartData.reduce(
             (acc, curr) => acc + curr.total,
             0,
