@@ -297,8 +297,6 @@ class SubscriptionController extends Base {
                 },
             );
 
-            console.log(JSON.stringify(subscriptionsPlans));
-
             const transformedData = subscriptionsPlans.map(
                 (subscription, index) => {
                     // Find the individual and organisational plans

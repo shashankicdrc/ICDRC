@@ -5,7 +5,6 @@ import {
     Card,
     CardContent,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from '../ui/card';
@@ -22,6 +21,7 @@ import toast from 'react-hot-toast';
 import { BASE_URL, httpStatus, httpStatusCode } from '@/lib/constant';
 import { formatDate } from '@/lib/formateDate';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const chartConfig = {
     days: {
@@ -84,72 +84,17 @@ const SubscriptionChart = () => {
                 <CardHeader className="items-center pb-0">
                     <CardTitle>Individual</CardTitle>
                 </CardHeader>
-                <CardContent className="flex items-center justify-center h-full">
+                <CardContent className="flex justify-center h-full">
                     {error.length ? (
                         <p className="my-2 text-center">{error}</p>
                     ) : subscriptionData.individual &&
                       subscriptionData.individual.isActive ? (
                         <div className="">
-                            <ChartContainer
-                                config={chartConfig}
-                                className="mx-auto aspect-square max-h-[250px]"
-                            >
-                                <PieChart>
-                                    <ChartTooltip
-                                        cursor={false}
-                                        content={
-                                            <ChartTooltipContent hideLabel />
-                                        }
-                                    />
-                                    <Pie
-                                        data={
-                                            subscriptionData.individual
-                                                .chartData
-                                        }
-                                        dataKey="total"
-                                        nameKey="days"
-                                        innerRadius={60}
-                                        strokeWidth={5}
-                                    >
-                                        <Label
-                                            content={({ viewBox }) => {
-                                                if (
-                                                    viewBox &&
-                                                    'cx' in viewBox &&
-                                                    'cy' in viewBox
-                                                ) {
-                                                    return (
-                                                        <text
-                                                            x={viewBox.cx}
-                                                            y={viewBox.cy}
-                                                            textAnchor="middle"
-                                                            dominantBaseline="middle"
-                                                        >
-                                                            <tspan
-                                                                x={viewBox.cx}
-                                                                y={viewBox.cy}
-                                                                className="fill-foreground text-xl font-bold"
-                                                            >
-                                                                {subscriptionData
-                                                                    .individual
-                                                                    .isActive
-                                                                    ? 'Active'
-                                                                    : 'In Active'}
-                                                            </tspan>
-                                                        </text>
-                                                    );
-                                                }
-                                            }}
-                                        />
-                                    </Pie>
-                                    <ChartLegend
-                                        content={
-                                            <ChartLegendContent nameKey="days" />
-                                        }
-                                        className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-                                    />
-                                </PieChart>
-                            </ChartContainer>
+                            <ChartComp
+                                chartConfig={chartConfig}
+                                subscriptionData={subscriptionData}
+                                type="Individual"
+                            />
                             <div className="flex flex-col space-y-2 py-2 text-center">
                                 <CardDescription>
                                     Your subscription will be expired on{' '}
@@ -162,10 +107,23 @@ const SubscriptionChart = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="my-10">
-                            <p className="font-bold text-center">
-                                Subscription InActive
-                            </p>
+                        <div className="mt-5 justify-center">
+                            <Image
+                                src="/INACTIVE.webp"
+                                width={200}
+                                height={200}
+                                alt="INACTIVE Image"
+                            />
+                            <CardDescription>
+                                Your subscription is INACTIVE.{' '}
+                            </CardDescription>
+                            <Button
+                                variant="link"
+                                asChild
+                                className="text-center mx-8"
+                            >
+                                <Link href="/#subscription">Subscribe Now</Link>
+                            </Button>
                         </div>
                     )}
                 </CardContent>
@@ -175,72 +133,17 @@ const SubscriptionChart = () => {
                 <CardHeader className="items-center pb-0">
                     <CardTitle>Organizational</CardTitle>
                 </CardHeader>
-                <CardContent className="flex items-center justify-center h-full">
+                <CardContent className="flex  justify-center h-full">
                     {error.length ? (
                         <p className="my-2 text-center">{error}</p>
                     ) : subscriptionData.organisational &&
                       subscriptionData.organisational.isActive ? (
                         <div>
-                            <ChartContainer
-                                config={chartConfig}
-                                className="mx-auto aspect-square max-h-[250px]"
-                            >
-                                <PieChart>
-                                    <ChartTooltip
-                                        cursor={false}
-                                        content={
-                                            <ChartTooltipContent hideLabel />
-                                        }
-                                    />
-                                    <Pie
-                                        data={
-                                            subscriptionData.organisational
-                                                .chartData
-                                        }
-                                        dataKey="total"
-                                        nameKey="days"
-                                        innerRadius={60}
-                                        strokeWidth={5}
-                                    >
-                                        <Label
-                                            content={({ viewBox }) => {
-                                                if (
-                                                    viewBox &&
-                                                    'cx' in viewBox &&
-                                                    'cy' in viewBox
-                                                ) {
-                                                    return (
-                                                        <text
-                                                            x={viewBox.cx}
-                                                            y={viewBox.cy}
-                                                            textAnchor="middle"
-                                                            dominantBaseline="middle"
-                                                        >
-                                                            <tspan
-                                                                x={viewBox.cx}
-                                                                y={viewBox.cy}
-                                                                className="fill-foreground text-xl font-bold"
-                                                            >
-                                                                {subscriptionData
-                                                                    .organisational
-                                                                    .isActive
-                                                                    ? 'Active'
-                                                                    : 'In Active'}
-                                                            </tspan>
-                                                        </text>
-                                                    );
-                                                }
-                                            }}
-                                        />
-                                    </Pie>
-                                    <ChartLegend
-                                        content={
-                                            <ChartLegendContent nameKey="days" />
-                                        }
-                                        className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
-                                    />
-                                </PieChart>
-                            </ChartContainer>
+                            <ChartComp
+                                chartConfig={chartConfig}
+                                subscriptionData={subscriptionData}
+                                type="organisational"
+                            />
                             <div className="flex flex-col space-y-2 py-4 text-center">
                                 <CardDescription>
                                     Your subscription will be expired on{' '}
@@ -253,11 +156,21 @@ const SubscriptionChart = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="my-10">
-                            <p className="font-bold text-center">
-                                Subscription InActive
-                            </p>
-                            <Button variant="link" asChild>
+                        <div className="mt-5 justify-center">
+                            <Image
+                                src="/INACTIVE.webp"
+                                width={200}
+                                height={200}
+                                alt="INACTIVE Image"
+                            />
+                            <CardDescription>
+                                Your subscription is INACTIVE.{' '}
+                            </CardDescription>
+                            <Button
+                                variant="link"
+                                asChild
+                                className="text-center mx-8"
+                            >
                                 <Link href="/#subscription">Subscribe Now</Link>
                             </Button>
                         </div>
@@ -269,3 +182,68 @@ const SubscriptionChart = () => {
 };
 
 export default SubscriptionChart;
+
+const ChartComp = ({ chartConfig, subscriptionData, type }) => {
+    const chartData =
+        type === 'Individual'
+            ? subscriptionData.individual.chartData
+            : subscriptionData.organisational.chartData;
+    return (
+        <ChartContainer
+            config={chartConfig}
+            className="mx-auto aspect-square max-h-[250px]"
+        >
+            <PieChart>
+                <ChartTooltip
+                    cursor={false}
+                    content={<ChartTooltipContent hideLabel />}
+                />
+                <Pie
+                    data={chartData}
+                    dataKey="total"
+                    nameKey="days"
+                    innerRadius={60}
+                    strokeWidth={5}
+                >
+                    <Label
+                        content={({ viewBox }) => {
+                            if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
+                                return (
+                                    <text
+                                        x={viewBox.cx}
+                                        y={viewBox.cy}
+                                        textAnchor="middle"
+                                        dominantBaseline="middle"
+                                    >
+                                        <tspan
+                                            x={viewBox.cx}
+                                            y={viewBox.cy}
+                                            className="fill-foreground text-xl font-bold"
+                                        >
+                                            {type === 'individual'
+                                                ? subscriptionData.individual
+                                                      .isActive
+                                                    ? 'Active'
+                                                    : 'In Active'
+                                                : null}
+                                            {type === 'organisational'
+                                                ? subscriptionData
+                                                      .organisational.isActive
+                                                    ? 'Active'
+                                                    : 'In Active'
+                                                : null}
+                                        </tspan>
+                                    </text>
+                                );
+                            }
+                        }}
+                    />
+                </Pie>
+                <ChartLegend
+                    content={<ChartLegendContent nameKey="days" />}
+                    className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+                />
+            </PieChart>
+        </ChartContainer>
+    );
+};
