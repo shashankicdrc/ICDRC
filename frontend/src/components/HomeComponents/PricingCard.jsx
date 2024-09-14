@@ -4,7 +4,7 @@ import '../../styles/module.home5.css';
 import { IndividualFeature, OrganizationalFeature } from './PlanFeatures';
 
 const PricingCard = () => {
-    const plans = ['66cda284bc65517bc4ee0f00', '66cda28ebc65517bc4ee0f02'];
+    const plans = ['66dc3f2cb7e56779f870c7ab', '66dc3f1cb7e56779f870c7a9'];
     return (
         <section className="bg-background home5-bg" id="subscription">
             <div className="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">

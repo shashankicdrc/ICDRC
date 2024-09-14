@@ -122,7 +122,7 @@ const SubscriptionChart = () => {
                                 asChild
                                 className="text-center mx-8"
                             >
-                                <Link href="/dashboard/subscription?plan=66cda284bc65517bc4ee0f00">
+                                <Link href="/dashboard/subscription?plan=66dc3f2cb7e56779f870c7ab">
                                     Subscribe Now
                                 </Link>
                             </Button>
@@ -173,7 +173,7 @@ const SubscriptionChart = () => {
                                 asChild
                                 className="text-center mx-8"
                             >
-                                <Link href="/dashboard/subscription?plan=66cda28ebc65517bc4ee0f02">
+                                <Link href="/dashboard/subscription?plan=66dc3f1cb7e56779f870c7a9">
                                     Subscribe Now
                                 </Link>
                             </Button>
