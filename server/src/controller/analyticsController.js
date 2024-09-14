@@ -47,18 +47,26 @@ class AnalyticsController extends Base {
     }
 
     #getSubscriptionDetails = asyncHandler(async (req, res) => {
-        const subscription = await subscriptionModel
-            .find({ userId: req.id })
-            .populate('planId');
-        let subscriptionData = {
-            remainingDays: 0,
-            usedDays: 0,
-            isActive: false,
-            subscription,
-        };
+        const subscription = await subscriptionModel.findOne({
+            userId: req.id,
+        });
 
-        if (!subscription.length) {
-            logger.info('hit');
+        if (!subscription) {
+            // If no subscription found, return default data
+            const subscriptionData = {
+                individual: {
+                    remainingDays: 0,
+                    usedDays: 0,
+                    isActive: false,
+                    data: null,
+                },
+                organisational: {
+                    remainingDays: 0,
+                    usedDays: 0,
+                    isActive: false,
+                    data: null,
+                },
+            };
             return this.response(
                 res,
                 httpStatusCode.OK,
@@ -68,35 +76,100 @@ class AnalyticsController extends Base {
             );
         }
 
-        subscriptionData.isActive =
-            checkSubscriptionStatus(subscription[0]) === 'VALID' ? true : false;
+        // Clone the subscription document
+        const clonedSubscription = subscription.toObject();
+
+        // Populate the `planId` in each plan
+        const subscriptionPlans = await subscriptionModel.populate(
+            clonedSubscription,
+            { path: 'plans.planId' },
+        );
+
+        let subscriptionData = {
+            individual: {
+                remainingDays: 0,
+                usedDays: 0,
+                isActive: false,
+                data: null,
+                chartData: null,
+            },
+            organisational: {
+                remainingDays: 0,
+                usedDays: 0,
+                isActive: false,
+                data: null,
+                chartData: null,
+            },
+        };
 
         const currentDate = new Date();
-        const startDate = new Date(subscription[0].startDate);
-        const endDate = new Date(subscription[0].endDate);
 
-        // Calculate used days
-        subscriptionData.usedDays = Math.floor(
-            (currentDate - startDate) / (1000 * 60 * 60 * 24),
-        );
+        // Loop through the plans and calculate data for individual and organizational plans
+        subscriptionPlans.plans.forEach((planObj) => {
+            const plan = planObj.planId;
 
-        // Calculate remaining days
-        subscriptionData.remainingDays = Math.floor(
-            (endDate - currentDate) / (1000 * 60 * 60 * 24),
-        );
+            if (plan.name === 'Individual') {
+                subscriptionData.individual.isActive =
+                    checkSubscriptionStatus(subscription, plan._id) === 'VALID';
 
-        subscriptionData.chartData = [
+                const startDate = new Date(planObj.startDate);
+                const endDate = new Date(planObj.endDate);
+
+                // Calculate used and remaining days for the individual plan
+                subscriptionData.individual.usedDays = Math.floor(
+                    (currentDate - startDate) / (1000 * 60 * 60 * 24),
+                );
+                subscriptionData.individual.remainingDays = Math.floor(
+                    (endDate - currentDate) / (1000 * 60 * 60 * 24),
+                );
+
+                subscriptionData.individual.data = planObj;
+            }
+
+            if (plan.name === 'Organisational') {
+                subscriptionData.organisational.isActive =
+                    checkSubscriptionStatus(subscription, plan._id) === 'VALID';
+
+                const startDate = new Date(planObj.startDate);
+                const endDate = new Date(planObj.endDate);
+
+                // Calculate used and remaining days for the organizational plan
+                subscriptionData.organisational.usedDays = Math.floor(
+                    (currentDate - startDate) / (1000 * 60 * 60 * 24),
+                );
+                subscriptionData.organisational.remainingDays = Math.floor(
+                    (endDate - currentDate) / (1000 * 60 * 60 * 24),
+                );
+                subscriptionData.organisational.data = planObj;
+            }
+        });
+
+        subscriptionData.individual.chartData = [
             {
                 days: 'remaining',
-                total: subscriptionData.remainingDays,
+                total: subscriptionData.individual.remainingDays,
                 fill: `var(--color-remaining)`,
             },
             {
                 days: 'used',
-                total: subscriptionData.usedDays,
+                total: subscriptionData.individual.usedDays,
                 fill: `var(--color-used)`,
             },
         ];
+
+        subscriptionData.organisational.chartData = [
+            {
+                days: 'remaining',
+                total: subscriptionData.organisational.remainingDays,
+                fill: `var(--color-remaining)`,
+            },
+            {
+                days: 'used',
+                total: subscriptionData.organisational.usedDays,
+                fill: `var(--color-used)`,
+            },
+        ];
+
         return this.response(
             res,
             httpStatusCode.OK,

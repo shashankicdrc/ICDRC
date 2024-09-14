@@ -276,6 +276,7 @@ class OrgainsationalController extends Base {
             subscriptionId,
         } = req.body;
 
+        let isOrganisationalPlanExist;
         let addData = {
             name,
             mobile,
@@ -297,16 +298,32 @@ class OrgainsationalController extends Base {
                 await this.#subscriptionService.getSubscriptionById(
                     subscriptionId,
                 );
-            logger.info(subscription);
-            const plan = await subscription.populate('planId');
-            logger.info(plan);
-            if (plan.planId.name !== 'Organisational') {
+            // Clone the document
+            const clonedSubscription = subscription.toObject();
+
+            // Populate on the clone, not the original
+            const subscriptionPlans = await subscriptionModel.populate(
+                clonedSubscription,
+                { path: 'plans.planId' },
+            );
+
+            const plans = subscriptionPlans.plans.map((plan) => plan.planId);
+
+            isOrganisationalPlanExist = plans.filter(
+                (plan) => plan.name === 'Organisational',
+            );
+
+            if (!isOrganisationalPlanExist.length) {
                 throw new CustomError(
                     'Your subscription does not support organisational complaints. Please upgrade the subscription.',
                     httpStatusCode.BAD_REQUEST,
                 );
             }
-            const subscriptionStatus = checkSubscriptionStatus(subscription);
+
+            const subscriptionStatus = checkSubscriptionStatus(
+                subscription,
+                isOrganisationalPlanExist[0]._id,
+            );
             this.#checkSubscription(subscriptionStatus);
             addData.paymentStatus = 'Paid';
         }
@@ -323,10 +340,13 @@ class OrgainsationalController extends Base {
         if (isSubscribed) {
             logger.info('subscription Updated');
             const updateSubscriptionLimit =
-                await subscriptionModel.findByIdAndUpdate(
-                    subscriptionId,
-                    { $inc: { usedComplaints: 1 } },
-                    { new: true },
+                await subscriptionModel.findOneAndUpdate(
+                    {
+                        _id: subscriptionId,
+                        'plans.planId': isOrganisationalPlanExist[0]._id,
+                    }, // Match subscription and specific plan
+                    { $inc: { 'plans.$.usedComplaints': 1 } }, // Increment the `usedComplaints` for the matched plan
+                    { new: true }, // Return the updated document
                 );
 
             if (!updateSubscriptionLimit) {

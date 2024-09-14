@@ -22,7 +22,6 @@ import {
 } from '../../../lib/constant';
 import { Button } from '../../ui/button';
 import { Loader2 } from 'lucide-react';
-// import { makeKeys, encryptData, decryptData } from '../../../lib/Encryption';
 import toast from 'react-hot-toast';
 import { addIndividualComplaint } from '../../../externalAPI/complaintService';
 import { getUserSubscription } from '../../../externalAPI/subscriptionService';
@@ -95,7 +94,8 @@ const IndividualForm = () => {
             if (!token) return;
             const { data } = await getUserSubscription(token);
             setsubscriptionData(data);
-            const subscriptionStatus = checkSubscriptionStatus(data);
+            const planType = 'Individual';
+            const subscriptionStatus = checkSubscriptionStatus(data, planType);
             switch (subscriptionStatus) {
                 case SubscriptionStatus.EXPIRED:
                     setIsValidSubscription(false);
@@ -119,6 +119,9 @@ const IndividualForm = () => {
                     break;
                 case SubscriptionStatus.DOES_NOT_EXIST:
                     setIsValidSubscription(false);
+                    setsubscriptionMessage(
+                        'Subscription does not exist. You have to pay for case registration.',
+                    );
                     break;
                 default:
                     console.log('Unknown subscription status.');
@@ -129,59 +132,6 @@ const IndividualForm = () => {
 
     const states = State.getStatesOfCountry('IN');
 
-    // useEffect(() => {
-    //     let db;
-    //
-    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-    //
-    //     dbRequest.onupgradeneeded = function (e) {
-    //         console.log('upgrading...');
-    //         db = e.target.result;
-    //
-    //         db.onerror = (e) => {
-    //             console.error('error happend', db.error);
-    //         };
-    //
-    //         db.createObjectStore('individual', {
-    //             keyPath: 'id',
-    //         });
-    //     };
-    //
-    //     dbRequest.onerror = () => {
-    //         console.log(`Error while loading`, dbRequest.error);
-    //     };
-    //
-    //     dbRequest.onsuccess = () => {
-    //         db = dbRequest.result;
-    //
-    //         const objectStore = db
-    //             .transaction('individual', 'readonly')
-    //             .objectStore('individual');
-    //         const request = objectStore.get(1);
-    //
-    //         request.onsuccess = async (e) => {
-    //             const result = request.result;
-    //             if (result) {
-    //                 const keys = result.keys;
-    //                 const encryptData = result.data;
-    //                 const decryptedData = await decryptData(encryptData, keys);
-    //                 const decryptedJSON = new TextDecoder().decode(
-    //                     decryptedData,
-    //                 );
-    //                 const decryptedObject = JSON.parse(decryptedJSON);
-    //                 setCaseData(decryptedObject);
-    //             }
-    //         };
-    //
-    //         request.onerror = (e) => {
-    //             console.error(
-    //                 'Error fetching data from IndexedDB:',
-    //                 e.target.error,
-    //             );
-    //         };
-    //     };
-    // }, []);
-
     useEffect(() => {
         if (state?.length > 1) {
             let data = states.find((s) => s.name === state);
@@ -189,21 +139,6 @@ const IndividualForm = () => {
             setCity('');
         }
     }, [state]);
-
-    // const updateDb = (data) => {
-    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-    //
-    //     dbRequest.onsuccess = (event) => {
-    //         const db = event.target.result;
-    //         const trx = db.transaction(['individual'], 'readwrite');
-    //         const store = trx.objectStore('individual');
-    //         store.put(data);
-    //     };
-    //
-    //     dbRequest.onerror = () => {
-    //         console.error('Error opening IndexedDB:', dbRequest.error);
-    //     };
-    // };
 
     const initiateCasePayment = async (data) => {
         const plainObject = {
@@ -267,21 +202,6 @@ const IndividualForm = () => {
             toast.error(error.message);
         }
     };
-
-    // const deleteObjectStore = () => {
-    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-    //
-    //     dbRequest.onsuccess = (event) => {
-    //         const db = event.target.result;
-    //         const trx = db.transaction(['individual'], 'readwrite');
-    //         const store = trx.objectStore('individual');
-    //         store.delete(1);
-    //     };
-    //
-    //     dbRequest.onerror = () => {
-    //         console.error('Error opening IndexedDB:', dbRequest.error);
-    //     };
-    // };
 
     const makePayment = async (e) => {
         e.preventDefault();
@@ -561,7 +481,7 @@ const IndividualForm = () => {
                                             value={city}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select a state" />
+                                                <SelectValue placeholder="Select a city" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {cityData.map((city) => (

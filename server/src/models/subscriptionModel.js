@@ -8,30 +8,34 @@ const schema = new Schema(
             required: true,
             unique: true,
         },
-        planId: {
-            type: Schema.Types.ObjectId,
-            ref: 'plan',
-            required: true,
-        },
-        startDate: {
-            type: Date,
-            default: Date.now,
-        },
-        endDate: {
-            type: Date,
-            required: true,
-        },
-        complaintLimit: {
-            type: Number,
-            required: true,
-        },
+        plans: [
+            {
+                planId: {
+                    type: Schema.Types.ObjectId,
+                    ref: 'plan',
+                    required: true,
+                },
+                startDate: {
+                    type: Date,
+                    default: Date.now,
+                },
+                endDate: {
+                    type: Date,
+                    required: true,
+                },
+                complaintLimit: {
+                    type: Number,
+                    required: true,
+                },
+                usedComplaints: {
+                    type: Number,
+                    default: 0,
+                },
+            },
+        ],
         isDeleted: {
             type: Boolean,
             default: false,
-        },
-        usedComplaints: {
-            type: Number,
-            default: 0,
         },
     },
     { timestamps: true },

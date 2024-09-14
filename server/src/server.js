@@ -29,6 +29,7 @@ import textTestimonial from '#controller/textTestimonial';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import hpp from 'hpp';
+import subscriptionModel from '#models/subscriptionModel';
 
 const startServer = async () => {
     const app = express();
@@ -100,6 +101,50 @@ const startServer = async () => {
     app.use('/api', textTestimonial);
 
     app.use(ErrorMiddleware);
+
+    async function migratePlans() {
+        try {
+            // Get all the user plans
+            const usersWithPlans = await subscriptionModel.find({});
+
+            // Iterate through each user and modify the data
+            for (let userPlan of usersWithPlans) {
+                // Create the new `plans` array from the existing fields
+                const newPlansArray = [
+                    {
+                        planId: userPlan.planId,
+                        startDate: userPlan.startDate,
+                        endDate: userPlan.endDate,
+                        complaintLimit: userPlan.complaintLimit,
+                        usedComplaints: userPlan.usedComplaints || 0, // Use default if missing
+                    },
+                ];
+
+                console.log(newPlansArray);
+
+                // Update the user plan with the new `plans` array and remove old fields
+                await subscriptionModel.updateOne(
+                    { _id: userPlan._id },
+                    {
+                        $set: {
+                            plans: newPlansArray,
+                        },
+                        $unset: {
+                            planId: '', // Remove old fields
+                            startDate: '',
+                            endDate: '',
+                            complaintLimit: '',
+                            usedComplaints: '',
+                        },
+                    },
+                );
+            }
+
+            console.log('Migration completed successfully!');
+        } catch (error) {
+            console.error('Error during migration:', error);
+        }
+    }
 
     const isConnected = await connectDb();
     if (isConnected) {

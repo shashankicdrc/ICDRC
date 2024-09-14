@@ -98,7 +98,8 @@ const OganisationalForm = () => {
             if (!token) return;
             const { data } = await getUserSubscription(token);
             setsubscriptionData(data);
-            const subscriptionStatus = checkSubscriptionStatus(data);
+            const planType = 'Organisational';
+            const subscriptionStatus = checkSubscriptionStatus(data, planType);
             switch (subscriptionStatus) {
                 case SubscriptionStatus.EXPIRED:
                     setIsValidSubscription(false);
@@ -124,6 +125,9 @@ const OganisationalForm = () => {
                     break;
                 case SubscriptionStatus.DOES_NOT_EXIST:
                     setIsValidSubscription(false);
+                    setsubscriptionMessage(
+                        'Subscription does not exist. You have to pay for case registration.',
+                    );
                     console.log('Subscription does not exist.');
                     break;
                 default:
@@ -132,77 +136,6 @@ const OganisationalForm = () => {
         };
         subscriptions();
     }, [session]);
-
-    // useEffect(() => {
-    //     let db;
-    //
-    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-    //
-    //     dbRequest.onupgradeneeded = function (e) {
-    //         console.log('upgrading...');
-    //         db = e.target.result;
-    //
-    //         db.onerror = (e) => {
-    //             console.error('error happend', db.error);
-    //         };
-    //
-    //         // Create an objectStore for this database
-    //         db.createObjectStore('organisational', {
-    //             keyPath: 'id',
-    //         });
-    //     };
-    //
-    //     dbRequest.onerror = (event) => {
-    //         console.log(`Error while loading`, dbRequest.error);
-    //     };
-    //
-    //     dbRequest.onsuccess = (e) => {
-    //         console.log('sucessfully open');
-    //         db = dbRequest.result;
-    //
-    //         const objectStore = db
-    //             .transaction('organisational', 'readonly')
-    //             .objectStore('organisational');
-    //         const request = objectStore.get(1);
-    //
-    //         request.onsuccess = async (e) => {
-    //             console.log('success');
-    //             const result = request.result;
-    //             if (result) {
-    //                 const keys = result.keys;
-    //                 const encryptData = result.data;
-    //                 const decryptedData = await decryptData(encryptData, keys);
-    //                 const decryptedJSON = new TextDecoder().decode(
-    //                     decryptedData,
-    //                 );
-    //                 const decryptedObject = JSON.parse(decryptedJSON);
-    //                 setCaseData([decryptedObject]);
-    //             }
-    //         };
-    //
-    //         request.onerror = (e) => {
-    //             console.error(
-    //                 'Error fetching data from IndexedDB:',
-    //                 e.target.error,
-    //             );
-    //         };
-    //     };
-    // }, []);
-
-    // const updateDb = (data) => {
-    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-    //
-    //     dbRequest.onsuccess = (event) => {
-    //         const db = event.target.result;
-    //         const trx = db.transaction(['organisational'], 'readwrite');
-    //         const store = trx.objectStore('organisational');
-    //         store.put(data);
-    //     };
-    //
-    //     dbRequest.onerror = () => {
-    //         console.error('Error opening IndexedDB:', dbRequest.error);
-    //     };
-    // };
 
     useEffect(() => {
         if (state?.length > 1) {
@@ -275,21 +208,6 @@ const OganisationalForm = () => {
             toast.error(error.message);
         }
     };
-
-    // const deleteObjectStore = () => {
-    //     const dbRequest = indexedDB.open('ICDRCDatabase', 1);
-    //
-    //     dbRequest.onsuccess = (event) => {
-    //         const db = event.target.result;
-    //         const trx = db.transaction(['organisational'], 'readwrite');
-    //         const store = trx.objectStore('organisational');
-    //         store.delete(1);
-    //     };
-    //
-    //     dbRequest.onerror = () => {
-    //         console.error('Error opening IndexedDB:', dbRequest.error);
-    //     };
-    // };
 
     const makePayment = async (e) => {
         e.preventDefault();
@@ -583,7 +501,7 @@ const OganisationalForm = () => {
                                             value={city}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder="Select a state" />
+                                                <SelectValue placeholder="Select a city" />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 {cityData.map((city) => (
@@ -667,7 +585,7 @@ const OganisationalForm = () => {
                 </div>
                 <div>
                     {subscriptionData && !isValidSubscription && (
-                        <p className="pb-2 font-semibold">
+                        <p className="pb-2 font-semibold w-full">
                             Note: {subscriptionMessage}
                         </p>
                     )}

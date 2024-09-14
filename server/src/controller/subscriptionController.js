@@ -23,7 +23,7 @@ import { filterSort, parseFilters } from '#utils/filterSort';
 import pagination from '#utils/pagination';
 import subscriptionModel from '#models/subscriptionModel';
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
-import mongoose, { MongooseError } from 'mongoose';
+import mongoose from 'mongoose';
 import usermodel from '#models/userModel';
 
 class SubscriptionController extends Base {
@@ -272,8 +272,9 @@ class SubscriptionController extends Base {
                 return false;
             case SubscriptionStatus.LIMIT_EXCEEDED:
                 return false;
+            case SubscriptionStatus.NOT_ACTIVE:
+                return false;
             case SubscriptionStatus.VALID:
-                console.log('checkSubscription', true);
                 return true;
         }
     }
@@ -392,12 +393,23 @@ class SubscriptionController extends Base {
             await this.#subscriptionService.getUserSubscription(req.id);
         logger.info(isUserSubscription);
 
-        const subscriptionStatus = checkSubscriptionStatus(isUserSubscription);
+        const subscriptionStatus = checkSubscriptionStatus(
+            isUserSubscription,
+            isPlan.id,
+        );
+
+        if (subscriptionStatus === SubscriptionStatus.NOT_ACTIVE) {
+            throw new CustomError(
+                'Your subscription is blocked. Please contact the team.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
 
         const isValidSubscription = this.#checkSubscription(subscriptionStatus);
+
         if (
             isValidSubscription &&
-            isUserSubscription.planId.toString() === planId
+            this.#subscriptionService.checkSamePlan(isUserSubscription, planId)
         ) {
             throw new CustomError(
                 'You have already an active subscription with same plan.',

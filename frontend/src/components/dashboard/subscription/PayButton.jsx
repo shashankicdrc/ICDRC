@@ -19,7 +19,11 @@ export default function PayButton({ plan, subscription }) {
 
     useEffect(() => {
         if (!subscription) return;
-        const subscriptionStatus = checkSubscriptionStatus(subscription);
+        const planType = plan.name;
+        const subscriptionStatus = checkSubscriptionStatus(
+            subscription,
+            planType,
+        );
         switch (subscriptionStatus) {
             case SubscriptionStatus.EXPIRED:
                 setsubscriptionMessage(
@@ -28,11 +32,12 @@ export default function PayButton({ plan, subscription }) {
                 break;
             case SubscriptionStatus.VALID:
                 setsubscriptionMessage(
-                    'You already have a subscription. Would you like to upgrade it? Once you upgrade it, you can not enjoy the benefits of your existing plan.',
+                    'You have already  a subscription with same plan.',
                 );
-                if (plan._id === subscription.planId) {
-                    setisSamePlan(true);
-                }
+                const plans = subscription.plans
+                    .map((item) => item.planId)
+                    .some((item) => item._id === plan._id);
+                setisSamePlan(plans);
                 break;
             default:
                 console.log('Unknown subscription status.');
@@ -70,7 +75,7 @@ export default function PayButton({ plan, subscription }) {
             )}
             {isSamePlan && (
                 <p className="py-2 text-sm text-muted-foreground">
-                    You already subscribed for this plan.
+                    You have already subscribed for this plan.
                 </p>
             )}
             <Button
