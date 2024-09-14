@@ -42,6 +42,15 @@ const SubscriptionColumnSort: ColumnSort[] = [
             { label: "Descending", value: "desc" },
         ],
     },
+    {
+        accessorKey: "createdAt",
+        header: "Date",
+        operators: [
+            { label: "Ascending", value: "asc" },
+            { label: "Descending", value: "desc" },
+        ],
+    },
+
 ];
 
 export default SubscriptionColumnSort;
