@@ -224,7 +224,7 @@ const ChartComp = ({ chartConfig, subscriptionData, type }) => {
                                             y={viewBox.cy}
                                             className="fill-foreground text-xl font-bold"
                                         >
-                                            {type === 'individual'
+                                            {type === 'Individual'
                                                 ? subscriptionData.individual
                                                       .isActive
                                                     ? 'Active'
