@@ -18,7 +18,7 @@ export default function RightMenu() {
                 </Button>
             )}
             <Button asChild>
-                <Link href="/#subscription">Subscribe Now</Link>
+                <Link href="/dashboard/register">Register Complaints</Link>
             </Button>
         </Fragment>
     );
