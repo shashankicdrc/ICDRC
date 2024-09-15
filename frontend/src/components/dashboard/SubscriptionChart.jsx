@@ -37,7 +37,7 @@ const chartConfig = {
     },
 };
 
-const SubscriptionChart = () => {
+const SubscriptionChart = ({ type }) => {
     const [error, seterror] = React.useState('');
     const [subscriptionData, setSubscriptionData] = React.useState({});
     const { data: session, status } = useSession();
@@ -45,7 +45,7 @@ const SubscriptionChart = () => {
     const [indRenew, setindRenew] = React.useState(false);
     const [orgRenew, setorgRenew] = React.useState(false);
 
-    const checkSubscriptionRenew = (subscriptionData, type) => {
+    const checkSubscriptionRenew = (subscriptionData) => {
         let endDate;
         const currentDate = new Date();
 
@@ -84,8 +84,7 @@ const SubscriptionChart = () => {
                 ) {
                     return seterror(message);
                 }
-                checkSubscriptionRenew(data, 'Individual');
-                checkSubscriptionRenew(data, 'Organisational');
+                checkSubscriptionRenew(data);
                 setSubscriptionData(data);
             } catch (error) {
                 seterror(error.message);
@@ -101,132 +100,129 @@ const SubscriptionChart = () => {
         return <p>Loading...</p>;
     }
 
-    return (
-        <div className="grid grid-rows-2 gap-5">
-            <Card>
-                <CardHeader className="items-center pb-0">
-                    <CardTitle>Individual</CardTitle>
-                </CardHeader>
-                <CardContent className="flex justify-center h-full">
-                    {error.length ? (
-                        <p className="my-2 text-center">{error}</p>
-                    ) : subscriptionData.individual &&
-                      subscriptionData.individual.isActive ? (
-                        <div className="">
-                            <ChartComp
-                                chartConfig={chartConfig}
-                                subscriptionData={subscriptionData}
-                                type="Individual"
-                            />
-                            <div className="flex flex-col space-y-2 py-2 text-center">
-                                <CardDescription>
-                                    Your subscription will be expired on{' '}
-                                    {formatDate(
-                                        subscriptionData.individual.data
-                                            .endDate,
-                                    )}
-                                    .
-                                </CardDescription>
-                                {indRenew && (
-                                    <Button
-                                        variant="link"
-                                        asChild
-                                        className="text-center mx-8"
-                                    >
-                                        <Link href="/dashboard/subscription/renew?plan=66dc3f2cb7e56779f870c7ab">
-                                            Renew Now
-                                        </Link>
-                                    </Button>
-                                )}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="mt-5 justify-center">
-                            <Image
-                                src="/INACTIVE.webp"
-                                width={200}
-                                height={200}
-                                alt="INACTIVE Image"
-                            />
+    return type === 'Individual' ? (
+        <Card>
+            <CardHeader className="items-center pb-0">
+                <CardTitle>Individual</CardTitle>
+            </CardHeader>
+            <CardContent className="flex justify-center my-5 h-full">
+                {error.length ? (
+                    <p className="my-2 text-center">{error}</p>
+                ) : subscriptionData.individual &&
+                  subscriptionData.individual.isActive ? (
+                    <div className="">
+                        <ChartComp
+                            chartConfig={chartConfig}
+                            subscriptionData={subscriptionData}
+                            type="Individual"
+                        />
+                        <div className="flex flex-col space-y-2 py-2 text-center">
                             <CardDescription>
-                                Your subscription is INACTIVE.{' '}
-                            </CardDescription>
-                            <Button
-                                variant="link"
-                                asChild
-                                className="text-center mx-8"
-                            >
-                                <Link href="/dashboard/subscription?plan=66dc3f2cb7e56779f870c7ab">
-                                    Subscribe Now
-                                </Link>
-                            </Button>
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader className="items-center pb-0">
-                    <CardTitle>Organizational</CardTitle>
-                </CardHeader>
-                <CardContent className="flex  justify-center h-full">
-                    {error.length ? (
-                        <p className="my-2 text-center">{error}</p>
-                    ) : subscriptionData.organisational &&
-                      subscriptionData.organisational.isActive ? (
-                        <div>
-                            <ChartComp
-                                chartConfig={chartConfig}
-                                subscriptionData={subscriptionData}
-                                type="organisational"
-                            />
-                            <div className="flex flex-col space-y-2 py-4 text-center">
-                                <CardDescription>
-                                    Your subscription will be expired on{' '}
-                                    {formatDate(
-                                        subscriptionData.organisational.data
-                                            .endDate,
-                                    )}
-                                    .
-                                </CardDescription>
-                                {orgRenew && (
-                                    <Button
-                                        variant="link"
-                                        asChild
-                                        className="text-center mx-8 my-0"
-                                    >
-                                        <Link href="/dashboard/subscription/renew?plan=66dc3f1cb7e56779f870c7a9">
-                                            Renew Now
-                                        </Link>
-                                    </Button>
+                                Your subscription will be expired on{' '}
+                                {formatDate(
+                                    subscriptionData.individual.data.endDate,
                                 )}
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="mt-5 justify-center">
-                            <Image
-                                src="/INACTIVE.webp"
-                                width={200}
-                                height={200}
-                                alt="INACTIVE Image"
-                            />
-                            <CardDescription>
-                                Your subscription is INACTIVE.{' '}
+                                .
                             </CardDescription>
-                            <Button
-                                variant="link"
-                                asChild
-                                className="text-center mx-8"
-                            >
-                                <Link href="/dashboard/subscription?plan=66dc3f1cb7e56779f870c7a9">
-                                    Subscribe Now
-                                </Link>
-                            </Button>
+                            {indRenew && (
+                                <Button
+                                    variant="link"
+                                    asChild
+                                    className="text-center mx-8"
+                                >
+                                    <Link href="/dashboard/subscription/renew?plan=66dc3f2cb7e56779f870c7ab">
+                                        Renew Now
+                                    </Link>
+                                </Button>
+                            )}
                         </div>
-                    )}
-                </CardContent>
-            </Card>
-        </div>
+                    </div>
+                ) : (
+                    <div className="mt-5 justify-center">
+                        <Image
+                            src="/INACTIVE.webp"
+                            width={200}
+                            height={200}
+                            alt="INACTIVE Image"
+                        />
+                        <CardDescription>
+                            Your subscription is INACTIVE.{' '}
+                        </CardDescription>
+                        <Button
+                            variant="link"
+                            asChild
+                            className="text-center mx-8"
+                        >
+                            <Link href="/dashboard/subscription?plan=66dc3f2cb7e56779f870c7ab">
+                                Subscribe Now
+                            </Link>
+                        </Button>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
+    ) : (
+        <Card>
+            <CardHeader className="items-center pb-0">
+                <CardTitle>Organizational</CardTitle>
+            </CardHeader>
+            <CardContent className="flex  justify-center my-5 h-full">
+                {error.length ? (
+                    <p className="my-2 text-center">{error}</p>
+                ) : subscriptionData.organisational &&
+                  subscriptionData.organisational.isActive ? (
+                    <div>
+                        <ChartComp
+                            chartConfig={chartConfig}
+                            subscriptionData={subscriptionData}
+                            type="organisational"
+                        />
+                        <div className="flex flex-col space-y-2 py-4 text-center">
+                            <CardDescription>
+                                Your subscription will be expired on{' '}
+                                {formatDate(
+                                    subscriptionData.organisational.data
+                                        .endDate,
+                                )}
+                                .
+                            </CardDescription>
+                            {orgRenew && (
+                                <Button
+                                    variant="link"
+                                    asChild
+                                    className="text-center mx-8 my-0"
+                                >
+                                    <Link href="/dashboard/subscription/renew?plan=66dc3f1cb7e56779f870c7a9">
+                                        Renew Now
+                                    </Link>
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    <div className="mt-5 justify-center">
+                        <Image
+                            src="/INACTIVE.webp"
+                            width={200}
+                            height={200}
+                            alt="INACTIVE Image"
+                        />
+                        <CardDescription>
+                            Your subscription is INACTIVE.{' '}
+                        </CardDescription>
+                        <Button
+                            variant="link"
+                            asChild
+                            className="text-center mx-8"
+                        >
+                            <Link href="/dashboard/subscription?plan=66dc3f1cb7e56779f870c7a9">
+                                Subscribe Now
+                            </Link>
+                        </Button>
+                    </div>
+                )}
+            </CardContent>
+        </Card>
     );
 };
 

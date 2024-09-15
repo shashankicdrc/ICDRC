@@ -8,28 +8,24 @@ import {
     CardDescription,
     CardContent,
 } from '../../components/ui/card';
-import {
-    Table,
-    TableRow,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-} from '../../components/ui/table';
-import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
-import { ArrowUpRight, IndianRupee } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { GoProjectRoadmap } from 'react-icons/go';
 import Link from 'next/link';
 import { ShieldQuestion } from 'lucide-react';
 import { handleResponses } from '../../externalAPI/userService';
-import { formatDate } from '../../lib/formateDate';
 import SubscriptionChart from '@/components/dashboard/SubscriptionChart';
+import RecentMessages from '@/components/dashboard/chat/RecentMessage';
+import RecentTransactions from '@/components/dashboard/RecentTransactions';
+import { getRecentChats } from '@/externalAPI/chatService';
 
 export default async function page() {
     const session = await getServerSession(authOptions);
     const token = session.user.AccessToken;
-    const response = await handleResponses(token);
+    const [response, chats] = await Promise.all([
+        handleResponses(token),
+        getRecentChats(token),
+    ]);
 
     return (
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -89,88 +85,15 @@ export default async function page() {
                     </CardContent>
                 </Card>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <SubscriptionChart />
-                <Card className="lg:col-span-2">
-                    <CardHeader className="flex flex-row items-center">
-                        <div className="grid gap-2">
-                            <CardTitle>Transactions</CardTitle>
-                            <CardDescription>
-                                Recent transactions by you.
-                            </CardDescription>
-                        </div>
-                        <Button asChild size="sm" className="ml-auto gap-1">
-                            <Link href="/dashboard/payment/history">
-                                View All
-                                <ArrowUpRight className="h-4 w-4" />
-                            </Link>
-                        </Button>
-                    </CardHeader>
-                    <CardContent>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Transaction ID</TableHead>
-                                    <TableHead>Amount</TableHead>
-                                    <TableHead>Payment Status</TableHead>
-                                    <TableHead>Payment For</TableHead>
-                                    <TableHead>Date</TableHead>{' '}
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {response.recentPayments.length ? (
-                                    response.recentPayments.map((payment) => (
-                                        <TableRow key={payment._id}>
-                                            <TableCell>
-                                                <div className="font-medium">
-                                                    {payment.transactionId}
-                                                </div>
-                                            </TableCell>
-                                            <TableCell>
-                                                <p className="flex items-center">
-                                                    <IndianRupee className="h-4 w-4" />
-                                                    {payment.amount}
-                                                </p>
-                                            </TableCell>
-                                            <TableCell>
-                                                {payment.paymentStatus ===
-                                                'Success' ? (
-                                                    <Badge
-                                                        variant="outline"
-                                                        className="text-green-700"
-                                                    >
-                                                        {payment.paymentStatus}
-                                                    </Badge>
-                                                ) : (
-                                                    <Badge variant="destructive">
-                                                        {payment.paymentStatus}
-                                                    </Badge>
-                                                )}
-                                            </TableCell>
-                                            <TableCell>
-                                                {payment.paymentFor}
-                                            </TableCell>
-                                            <TableCell>
-                                                {formatDate(
-                                                    payment.paymentDate,
-                                                )}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))
-                                ) : (
-                                    <TableRow>
-                                        <TableCell
-                                            className="text-center h-24"
-                                            colSpan={5}
-                                        >
-                                            Transaction not found
-                                        </TableCell>
-                                    </TableRow>
-                                )}{' '}
-                            </TableBody>
-                        </Table>
-                    </CardContent>
-                </Card>
+            <div className="grid grid-rows-2 gap-5">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <SubscriptionChart type="Individual" />
+                    <RecentTransactions response={response} />
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <SubscriptionChart type="organisational" />
+                    <RecentMessages chats={chats} />
+                </div>
             </div>
         </main>
     );

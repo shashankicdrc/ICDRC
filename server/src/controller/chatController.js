@@ -15,6 +15,7 @@ import { isValidObjectId } from 'mongoose';
 import complaintMedia from '#models/complaintMediaModel';
 import { v2 as cloudinary } from 'cloudinary';
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 
 class ChatController extends Base {
     constructor() {
@@ -33,7 +34,38 @@ class ChatController extends Base {
             this.#recentadminRecentChats,
         );
         this.router.get('/admin/chats', AdminAuthMiddleware, this.#allChats);
+        this.router.get('/chats', userAuthMiddleware, this.#userChats);
     }
+
+    #userChats = asyncHandler(async (req, res) => {
+        const allChats = await chatModel
+            .find({ authorType: 'admins' })
+            .sort({ createdAt: -1 })
+            .populate({
+                path: 'complaintId',
+                select: 'userId caseId',
+            })
+            .exec();
+
+        const userSpecificChats = allChats.filter(
+            (chat) =>
+                chat.complaintId &&
+                chat.complaintId.userId.toString() === req.id,
+        );
+
+        const populatedChats = await chatModel.populate(
+            userSpecificChats.slice(0, 5),
+            [{ path: 'authorId', select: 'name email' }],
+        );
+
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'All chats fetched successfully.',
+            populatedChats,
+        );
+    });
 
     #allChats = asyncHandler(async (req, res) => {
         const allChats = await chatModel
@@ -42,7 +74,7 @@ class ChatController extends Base {
                     $match: { authorType: 'user' },
                 },
                 {
-                    $sort: { createdAt: -1 },
+                    $sort: { complaintId: 1, createdAt: -1 },
                 },
                 {
                     $group: {
@@ -51,7 +83,19 @@ class ChatController extends Base {
                     },
                 },
                 {
-                    $replaceRoot: { newRoot: '$mostRecentChat' },
+                    $sort: { 'mostRecentChat.createdAt': -1 },
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        complaintId: '$mostRecentChat.complaintId',
+                        authorId: '$mostRecentChat.authorId',
+                        authorType: '$mostRecentChat.authorType',
+                        text: '$mostRecentChat.text',
+                        createdAt: '$mostRecentChat.createdAt',
+                        attachment: '$mostRecentChat.attachment',
+                        complaintType: '$mostRecentChat.complaintType',
+                    },
                 },
             ])
             .exec();
@@ -74,7 +118,7 @@ class ChatController extends Base {
                     $match: { authorType: 'user' },
                 },
                 {
-                    $sort: { createdAt: -1 },
+                    $sort: { complaintId: 1, createdAt: -1 },
                 },
                 {
                     $group: {
@@ -83,21 +127,35 @@ class ChatController extends Base {
                     },
                 },
                 {
-                    $replaceRoot: { newRoot: '$mostRecentChat' },
+                    $sort: { 'mostRecentChat.createdAt': -1 },
                 },
                 {
                     $limit: 5,
                 },
+                {
+                    $project: {
+                        _id: 1,
+                        complaintId: '$mostRecentChat.complaintId',
+                        authorId: '$mostRecentChat.authorId',
+                        authorType: '$mostRecentChat.authorType',
+                        text: '$mostRecentChat.text',
+                        createdAt: '$mostRecentChat.createdAt',
+                        attachment: '$mostRecentChat.attachment',
+                        complaintType: '$mostRecentChat.complaintType',
+                    },
+                },
             ])
             .exec();
+
         const populatedChats = await chatModel.populate(recentChats, [
             { path: 'authorId', select: 'name email' },
         ]);
+
         return this.response(
             res,
             httpStatusCode.OK,
             httpStatus.SUCCESS,
-            'Fetched recent chats successfully.',
+            'Most recent chats fetched successfully.',
             populatedChats,
         );
     });

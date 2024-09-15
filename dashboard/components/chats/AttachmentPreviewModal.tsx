@@ -58,7 +58,7 @@ export default function AttachmentpreviewModal({
             'complaintType',
             searchParams.get('type') === 'individual'
                 ? 'IndividualComplaint'
-                : 'OrganizationalComplaint',
+                : 'OrganizationComplaint',
         );
         formData.set('complaintId', params.id as string);
         formData.set('authorType', 'admins');

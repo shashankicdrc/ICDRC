@@ -93,7 +93,7 @@ export default function Chat({ chatData }: Props) {
                 complaintType:
                     searchParams.get('type') === 'individual'
                         ? 'IndividualComplaint'
-                        : 'OrganizationalComplaint',
+                        : 'OrganizationComplaint',
                 complaintId: params.id,
             };
             const { data, error } = await addMessage(chatData);

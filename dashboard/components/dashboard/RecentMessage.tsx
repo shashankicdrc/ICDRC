@@ -28,6 +28,7 @@ export default async function RecentMessages() {
         </div>
 
     }
+
     return (
         <Card className="my-5">
             <CardHeader>
@@ -48,7 +49,7 @@ export default async function RecentMessages() {
                         </div>
                         <Button className="ml-auto" variant="outline" asChild>
                             <Link
-                                href={`/dashboard/chats/${item.complaintId}?type=${item.complaintType === 'OrganizationalComplaint' ? 'organizational' : 'individual'}`}>
+                                href={`/dashboard/chats/${item.complaintId}?type=${item.complaintType === 'OrganizationComplaint' ? 'organizational' : 'individual'}`}>
                                 view
                             </Link>
                         </Button>

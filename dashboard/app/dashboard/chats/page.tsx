@@ -39,7 +39,7 @@ export default async function page() {
                             </div>
                             <Button className="ml-auto" variant="outline" asChild>
                                 <Link
-                                    href={`/dashboard/chats/${item.complaintId}?type=${item.complaintType === 'OrganizationalComplaint' ? 'organizational' : 'individual'}`}>
+                                    href={`/dashboard/chats/${item.complaintId}?type=${item.complaintType === 'OrganizationComplaint' ? 'organizational' : 'individual'}`}>
                                     view
                                 </Link>
                             </Button>
