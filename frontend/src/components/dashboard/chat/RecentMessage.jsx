@@ -19,31 +19,45 @@ export default async function RecentMessages({ chats }) {
                 <CardTitle>Recent Message</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-8">
-                {data.map((item) => (
-                    <div className="flex items-center gap-4" key={item._id}>
-                        <Avatar className="hidden h-9 w-9 sm:flex">
-                            <AvatarImage src="/avatars/01.png" alt="Avatar" />
-                            <AvatarFallback className="uppercase">
-                                {getNameLetter(item.authorId.name)}
-                            </AvatarFallback>
-                        </Avatar>
-                        <div className="grid gap-1">
-                            <p className="text-sm font-medium leading-none">
-                                {item.authorId.name}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                                New {item.attachment ? 'Attachment' : 'Message'}
-                            </p>
-                        </div>
-                        <Button className="ml-auto" variant="outline" asChild>
-                            <Link
-                                href={`/dashboard/chat/${item.complaintId._id}?type=${item.complaintType === 'OrganizationComplaint' ? 'organizational' : 'individual'}&caseId=${item.complaintId.caseId}`}
+                {data.length > 0 ? (
+                    data.map((item) => (
+                        <div className="flex items-center gap-4" key={item._id}>
+                            <Avatar className="hidden h-9 w-9 sm:flex">
+                                <AvatarImage
+                                    src="/avatars/01.png"
+                                    alt="Avatar"
+                                />
+                                <AvatarFallback className="uppercase">
+                                    {getNameLetter(item.authorId.name)}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div className="grid gap-1">
+                                <p className="text-sm font-medium leading-none">
+                                    {item.authorId.name}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                    New{' '}
+                                    {item.attachment ? 'Attachment' : 'Message'}
+                                </p>
+                            </div>
+                            <Button
+                                className="ml-auto"
+                                variant="outline"
+                                asChild
                             >
-                                view
-                            </Link>
-                        </Button>
+                                <Link
+                                    href={`/dashboard/chat/${item.complaintId._id}?type=${item.complaintType === 'OrganizationComplaint' ? 'organizational' : 'individual'}&caseId=${item.complaintId.caseId}`}
+                                >
+                                    view
+                                </Link>
+                            </Button>
+                        </div>
+                    ))
+                ) : (
+                    <div className="flex items-center justify-center">
+                        <p>No Message Found</p>
                     </div>
-                ))}
+                )}
             </CardContent>
         </Card>
     );

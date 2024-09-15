@@ -11,7 +11,7 @@ import { Router } from 'express';
 import busboy from 'busboy';
 import { EventEmitter } from 'node:events';
 import logger from '#utils/logger';
-import { isValidObjectId } from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import complaintMedia from '#models/complaintMediaModel';
 import { v2 as cloudinary } from 'cloudinary';
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
@@ -47,22 +47,37 @@ class ChatController extends Base {
             })
             .exec();
 
+        // Filter chats to only those that belong to the logged-in user
         const userSpecificChats = allChats.filter(
             (chat) =>
                 chat.complaintId &&
-                chat.complaintId.userId.toString() === req.id,
+                chat.complaintId.userId.toString() === req.id.toString(),
         );
 
-        const populatedChats = await chatModel.populate(
-            userSpecificChats.slice(0, 5),
-            [{ path: 'authorId', select: 'name email' }],
-        );
+        // Use a Map to keep track of the most recent chat per complaintId
+        const recentChatsMap = new Map();
+
+        // Iterate through the user-specific chats to select the most recent for each complaintId
+        userSpecificChats.forEach((chat) => {
+            const complaintId = chat.complaintId._id.toString();
+            if (!recentChatsMap.has(complaintId)) {
+                recentChatsMap.set(complaintId, chat);
+            }
+        });
+
+        // Convert the Map values (which contains the most recent chats) to an array and limit to 5
+        const recentChats = Array.from(recentChatsMap.values()).slice(0, 5);
+
+        // Populate author details (e.g., name and email) for the recent chats
+        const populatedChats = await chatModel.populate(recentChats, [
+            { path: 'authorId', select: 'name email' },
+        ]);
 
         return this.response(
             res,
             httpStatusCode.OK,
             httpStatus.SUCCESS,
-            'All chats fetched successfully.',
+            'Most recent chats fetched successfully.',
             populatedChats,
         );
     });

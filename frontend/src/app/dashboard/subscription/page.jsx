@@ -3,7 +3,7 @@ import {
     getPlanById,
     getUserSubscription,
 } from '../../../externalAPI/subscriptionService';
-import RenewButton from '../../../components/dashboard/subscription/RenewButton';
+import PayButton from '../../../components/dashboard/subscription/PayButton';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../lib/authOptions';
 import {
@@ -45,7 +45,7 @@ export default async function page({ searchParams }) {
                     ) : (
                         <OrganizationalFeature />
                     )}
-                    <RenewButton plan={data} subscription={subscription.data} />
+                    <PayButton plan={data} subscription={subscription.data} />
                 </div>
             </section>
         </main>

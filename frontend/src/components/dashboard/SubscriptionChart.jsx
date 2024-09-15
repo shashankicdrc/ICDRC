@@ -84,7 +84,11 @@ const SubscriptionChart = ({ type }) => {
                 ) {
                     return seterror(message);
                 }
-                checkSubscriptionRenew(data);
+                if (type === 'Individual' && data.individual.data) {
+                    checkSubscriptionRenew(data);
+                } else if (data.organisational.data) {
+                    checkSubscriptionRenew(data);
+                }
                 setSubscriptionData(data);
             } catch (error) {
                 seterror(error.message);
