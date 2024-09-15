@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Subscription Alert</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                padding: 20px;
+                margin: 0;
+                background-color: #f4f4f4;
+            }
+            .container {
+                max-width: 600px;
+                background-color: #fff;
+                margin: 40px auto;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+            h2 {
+                color: #333;
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            p {
+                color: #555;
+                font-size: 16px;
+                line-height: 1.6;
+            }
+            .details {
+                margin-top: 20px;
+            }
+            .details table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .details table th,
+            .details table td {
+                border: 1px solid #ddd;
+                padding: 10px;
+                text-align: left;
+            }
+            .details table th {
+                background-color: #f8f8f8;
+            }
+            .footer {
+                margin-top: 30px;
+                font-size: 12px;
+                color: #999;
+                <!-- text-align: center; -->
+            }
+            .btn {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #28a745;
+                color: white;
+                text-decoration: none;
+                border-radius: 4px;
+                margin-top: 20px;
+            }
+            .btn:hover {
+                background-color: #218838;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h2>Subscription Expiry Reminder</h2>
+            <p>Dear <%= name %>,</p>
+
+            <p>
+                We hope this email finds you well. We would like to remind you
+                that your subscription to the
+                <strong><%= planName %></strong> plan is nearing its expiration.
+            </p>
+
+            <div class="details">
+                <table>
+                    <tr>
+                        <th>Subscription ID</th>
+                        <td><%= subscriptionId %></td>
+                    </tr>
+                    <tr>
+                        <th>End Date</th>
+                        <td><%= endDate %></td>
+                    </tr>
+                    <tr>
+                        <th>Days Left</th>
+                        <td><%= daysLeft %></td>
+                    </tr>
+                </table>
+            </div>
+
+            <p>
+                To avoid any disruption in your service, please make sure to
+                renew your subscription before the expiry date.
+            </p>
+
+            <a href="<%= renewLink %>" class="btn">Renew Subscription</a>
+            <p>
+                Please note that this email is sent from a no-reply address (<a
+                    href="mailto:no_reply@icdrc.in"
+                    >no_reply@icdrc.in</a
+                >) and is intended solely for notification purposes. If you have
+                any inquiries or need further assistance, please contact us
+                directly at <a href="mailto:info@icdrc.in">info@icdrc.in</a>.
+            </p>
+            <div class="footer">
+                <p>Thank you for being a valued customer.</p>
+                <p>Best regards,<br />The ICDRC Team</p>
+            </div>
+        </div>
+    </body>
+</html>

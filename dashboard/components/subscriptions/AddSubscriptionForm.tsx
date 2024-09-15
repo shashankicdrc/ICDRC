@@ -66,7 +66,7 @@ export default function AddSubscriptionForm({ plan }: Props) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        setisLoading(prevState => !prevState)
         if (!userData || !selectedPlan) {
             return toast.error("Please select a user and a plan.");
         }
@@ -77,6 +77,7 @@ export default function AddSubscriptionForm({ plan }: Props) {
                 planId: selectedPlan
             }
             const { message, error } = await addSubscriptionAction(token, values)
+            setisLoading(prevState => !prevState)
             if (error) {
                 return toast.error(error);
             }

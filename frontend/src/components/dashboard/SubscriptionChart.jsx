@@ -42,6 +42,27 @@ const SubscriptionChart = () => {
     const [subscriptionData, setSubscriptionData] = React.useState({});
     const { data: session, status } = useSession();
     const token = session?.user.AccessToken;
+    const [indRenew, setindRenew] = React.useState(false);
+    const [orgRenew, setorgRenew] = React.useState(false);
+
+    const checkSubscriptionRenew = (subscriptionData, type) => {
+        let endDate;
+        const currentDate = new Date();
+
+        if (type === 'Individual') {
+            endDate = new Date(subscriptionData.individual.data.endDate);
+            const daysLeft = Math.floor(
+                (endDate - currentDate) / (1000 * 60 * 60 * 24),
+            );
+            return daysLeft <= 15 ? setindRenew(true) : setindRenew(false);
+        }
+
+        endDate = new Date(subscriptionData.organisational.data.endDate);
+        const daysLeft = Math.floor(
+            (endDate - currentDate) / (1000 * 60 * 60 * 24),
+        );
+        return daysLeft <= 15 ? setorgRenew(true) : setorgRenew(false);
+    };
 
     React.useEffect(() => {
         const getSubscriptionData = async () => {
@@ -63,6 +84,8 @@ const SubscriptionChart = () => {
                 ) {
                     return seterror(message);
                 }
+                checkSubscriptionRenew(data, 'Individual');
+                checkSubscriptionRenew(data, 'Organisational');
                 setSubscriptionData(data);
             } catch (error) {
                 seterror(error.message);
@@ -104,6 +127,17 @@ const SubscriptionChart = () => {
                                     )}
                                     .
                                 </CardDescription>
+                                {indRenew && (
+                                    <Button
+                                        variant="link"
+                                        asChild
+                                        className="text-center mx-8"
+                                    >
+                                        <Link href="/dashboard/subscription/renew?plan=66dc3f2cb7e56779f870c7ab">
+                                            Renew Now
+                                        </Link>
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     ) : (
@@ -155,6 +189,17 @@ const SubscriptionChart = () => {
                                     )}
                                     .
                                 </CardDescription>
+                                {orgRenew && (
+                                    <Button
+                                        variant="link"
+                                        asChild
+                                        className="text-center mx-8 my-0"
+                                    >
+                                        <Link href="/dashboard/subscription/renew?plan=66dc3f1cb7e56779f870c7a9">
+                                            Renew Now
+                                        </Link>
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     ) : (

@@ -1,15 +1,15 @@
-import React from 'react';
-import {
-    getPlanById,
-    getUserSubscription,
-} from '../../../externalAPI/subscriptionService';
-import RenewButton from '../../../components/dashboard/subscription/RenewButton';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../../lib/authOptions';
+import RenewButton from '@/components/dashboard/subscription/RenewButton';
 import {
     IndividualFeature,
     OrganizationalFeature,
 } from '@/components/HomeComponents/PlanFeatures';
+import {
+    getPlanById,
+    getUserSubscription,
+} from '@/externalAPI/subscriptionService';
+import { authOptions } from '@/lib/authOptions';
+import { getServerSession } from 'next-auth';
+import React from 'react';
 
 export default async function page({ searchParams }) {
     const session = await getServerSession(authOptions);
@@ -23,14 +23,16 @@ export default async function page({ searchParams }) {
             </div>
         );
     }
+
     const token = session.user.AccessToken;
     const subscription = await getUserSubscription(token);
+
     return (
         <main className="p-4 sm:px-6 sm:py-0 md:gap-8">
             <section className="my-5 md:my-10">
                 <div className="flex flex-col p-6 mx-auto max-w-lg text-center text-gray-900 bg-white rounded-lg border xl:p-8">
                     <h3 className="text-2xl capitalize font-semibold">
-                        For an{' '}
+                        Renew For an{' '}
                         {data.name === 'Individual'
                             ? 'Individual'
                             : 'Organization'}
