@@ -54,6 +54,7 @@ const SubscriptionChart = ({ type }) => {
             const daysLeft = Math.floor(
                 (endDate - currentDate) / (1000 * 60 * 60 * 24),
             );
+            console.log('daysleft', daysLeft);
             return daysLeft <= 15 ? setindRenew(true) : setindRenew(false);
         }
 
@@ -122,7 +123,7 @@ const SubscriptionChart = ({ type }) => {
                         />
                         <div className="flex flex-col space-y-2 py-2 text-center">
                             <CardDescription>
-                                Your subscription will be expired on{' '}
+                                Your subscription will expire on{' '}
                                 {formatDate(
                                     subscriptionData.individual.data.endDate,
                                 )}
@@ -183,7 +184,7 @@ const SubscriptionChart = ({ type }) => {
                         />
                         <div className="flex flex-col space-y-2 py-4 text-center">
                             <CardDescription>
-                                Your subscription will be expired on{' '}
+                                Your subscription will expire on{' '}
                                 {formatDate(
                                     subscriptionData.organisational.data
                                         .endDate,

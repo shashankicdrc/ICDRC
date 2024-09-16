@@ -241,8 +241,8 @@ const OganisationalForm = () => {
                     <ModalCloseButton />
                     <ModalBody pb={6}>
                         Your case has been registered sucessfully and an email
-                        has been send regarding the case. For further processing
-                        your case plase make the payment.
+                        has been sent regarding the case. For further processing
+                        your case please make the payment.
                     </ModalBody>
                     <ModalFooter className="space-x-3">
                         <Button
@@ -284,7 +284,7 @@ const OganisationalForm = () => {
                         <CardContent className="w-full">
                             <div className="grid gap-4">
                                 <div className="space-y-1">
-                                    <Label>Orgaisation Name</Label>
+                                    <Label>Organization Name</Label>
                                     <Input
                                         value={organizationName}
                                         onChange={(e) =>
@@ -293,7 +293,7 @@ const OganisationalForm = () => {
                                         required
                                         type="text"
                                         maxLength={50}
-                                        placeholder="Enter your organisation name"
+                                        placeholder="Enter your organization name"
                                     />
                                 </div>
 

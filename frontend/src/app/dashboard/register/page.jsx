@@ -20,7 +20,7 @@ export default function page() {
                 <TabsList>
                     <TabsTrigger value="individual">Individual</TabsTrigger>
                     <TabsTrigger value="organisational">
-                        Organisational
+                        Organizational
                     </TabsTrigger>
                 </TabsList>
                 <TabsContent value="individual" className="w-full">
