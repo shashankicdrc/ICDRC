@@ -114,10 +114,10 @@ export default function ComplaintChart() {
                 }
                 <div className="flex items-center space-x-2">
                     <Button variant="link" asChild>
-                        <Link href="/dashboard/individual">Individual Case</Link>
+                        <Link href="/dashboard/individual">Individual Cases</Link>
                     </Button>
                     <Button variant="link" asChild>
-                        <Link href="/dashboard/organisational">Organizational Case</Link>
+                        <Link href="/dashboard/organisational">Organizational Cases</Link>
                     </Button>
                 </div>
             </CardContent>

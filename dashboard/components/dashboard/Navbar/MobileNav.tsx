@@ -108,7 +108,7 @@ export const MobileNav = () => {
                         )}
                     >
                         <Icons.subscription className="h-5 w-5" />
-                        subscription
+                        Subscription
                     </Link>
                     <Link
                         href="/dashboard/payments"
