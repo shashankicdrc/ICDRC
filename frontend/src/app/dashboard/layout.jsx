@@ -21,6 +21,7 @@ import {
 } from '../../components/ui/dropdown';
 import Link from 'next/link';
 import { DashboardBreadCrumb } from '.././../components/dashboard/Nav/DashboardBreadCrumb';
+import CheckSubscriptionActive from '@/components/dashboard/Nav/Subscription';
 
 export default function layout({ children }) {
     const [isCollapsed, setIsCollapsed] = React.useState(false);
@@ -40,34 +41,48 @@ export default function layout({ children }) {
                 <header className="sticky top-0 z-30 flex justify-between h-14 items-center gap-4 border-b bg-background px-4 md:static md:h-auto md:border-0 md:bg-transparent md:px-6">
                     <MobileNavbar />
                     <DashboardBreadCrumb />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <div className="flex items-center space-x-2">
-                                <h4 className="font-bold">
-                                    {session?.user.name}
-                                </h4>
-                                <Avatar className="cursor-pointer">
-                                    <AvatarImage src={session?.user.image} />
-                                    <AvatarFallback className="uppercase">
-                                        {session?.user.name
-                                            ? getNameLetter(session?.user.name)
-                                            : 'DS'}
-                                    </AvatarFallback>
-                                </Avatar>
-                            </div>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                className="cursor-pointer"
-                                asChild
-                            >
-                                <Link href="/dashboard/settings">Settings</Link>
-                            </DropdownMenuItem>
-                            <LogoutButton />
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="flex items-center space-x-4">
+                        <div className="hidden md:flex md:items-center md:space-x-2">
+                            <CheckSubscriptionActive type="Individual" />
+                            <CheckSubscriptionActive type="Organisational" />
+                        </div>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <div className="flex items-center space-x-2">
+                                    <h4 className="font-bold">
+                                        {session?.user.name}
+                                    </h4>
+                                    <Avatar className="cursor-pointer">
+                                        <AvatarImage
+                                            src={session?.user.image}
+                                        />
+                                        <AvatarFallback className="uppercase">
+                                            {session?.user.name
+                                                ? getNameLetter(
+                                                      session?.user.name,
+                                                  )
+                                                : 'DS'}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </div>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuLabel>
+                                    My Account
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                    className="cursor-pointer"
+                                    asChild
+                                >
+                                    <Link href="/dashboard/settings">
+                                        Settings
+                                    </Link>
+                                </DropdownMenuItem>
+                                <LogoutButton />
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </header>
                 {children}
             </div>
