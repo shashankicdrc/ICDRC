@@ -32,11 +32,9 @@ export default async function page() {
             <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
                 <Card className="sm:col-span-2">
                     <CardHeader className="pb-3">
-                        <CardTitle>Welcome back, {session.user.name}</CardTitle>
+                        <CardTitle>Welcome, {session.user.name}!</CardTitle>
                         <CardDescription className="">
-                            Introducing Our Dynamic Dashboard for managing and
-                            tracking your case.
-                        </CardDescription>
+                           We’re glad to have you back. Here's a quick overview of your latest activities and updates. Let’s continue building great things together! If you need assistance, feel free to reach out to us.                        </CardDescription>
                     </CardHeader>
                 </Card>
 

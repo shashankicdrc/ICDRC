@@ -51,12 +51,12 @@ const DashboardNav = ({ isCollapsed }) => {
                         )}
                     >
                         <CiEdit className="h-5 w-5" />
-                        {!isCollapsed && <span>Register Complaints</span>}
+                        {!isCollapsed && <span>Register a Complaint</span>}
                     </Link>
                 </TooltipTrigger>
                 {isCollapsed && (
                     <TooltipContent side="right">
-                        Registers Complaints
+                        Register a Complaint
                     </TooltipContent>
                 )}
             </Tooltip>
@@ -74,12 +74,12 @@ const DashboardNav = ({ isCollapsed }) => {
                         )}
                     >
                         <GoProjectRoadmap className="h-5 w-5" />
-                        {!isCollapsed && <span>Individual Case</span>}
+                        {!isCollapsed && <span>Individual Cases</span>}
                     </Link>
                 </TooltipTrigger>
                 {isCollapsed && (
                     <TooltipContent side="right">
-                        Individual Complaints
+                        Individual Cases
                     </TooltipContent>
                 )}
             </Tooltip>
@@ -97,12 +97,12 @@ const DashboardNav = ({ isCollapsed }) => {
                         )}
                     >
                         <ShieldQuestion className="h-5 w-5" />
-                        {!isCollapsed && <span>Organizational Case</span>}
+                        {!isCollapsed && <span>Organizational Cases</span>}
                     </Link>
                 </TooltipTrigger>
                 {isCollapsed && (
                     <TooltipContent side="right">
-                        Organisational Complaints
+                        Organisational Cases
                     </TooltipContent>
                 )}
             </Tooltip>

@@ -34,7 +34,7 @@ export default function layout({ children }) {
             <div
                 className={cn(
                     'flex flex-col md:py-4',
-                    isCollapsed ? 'md:pl-[3.5rem]' : 'md:pl-[14rem]',
+                    isCollapsed ? 'md:pl-[3.5rem]' : 'md:pl-[15rem]',
                 )}
             >
                 <header className="sticky top-0 z-30 flex justify-between h-14 items-center gap-4 border-b bg-background px-4 md:static md:h-auto md:border-0 md:bg-transparent md:px-6">

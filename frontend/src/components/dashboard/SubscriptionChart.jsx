@@ -28,12 +28,12 @@ const chartConfig = {
         label: 'Days',
     },
     remaining: {
-        label: 'Remaining',
-        color: 'hsl(var(--chart-1))',
+        label: 'Days Left',
+        color: 'hsl(var(--chart-2))',
     },
     used: {
-        label: 'Used',
-        color: 'hsl(var(--chart-2))',
+        label: 'Days Used',
+        color: 'hsl(var(--chart-1))',
     },
 };
 
@@ -108,7 +108,7 @@ const SubscriptionChart = ({ type }) => {
     return type === 'Individual' ? (
         <Card>
             <CardHeader className="items-center pb-0">
-                <CardTitle>Individual</CardTitle>
+                <CardTitle>Individual Subscription</CardTitle>
             </CardHeader>
             <CardContent className="flex justify-center my-5 h-full">
                 {error.length ? (
@@ -169,7 +169,9 @@ const SubscriptionChart = ({ type }) => {
     ) : (
         <Card>
             <CardHeader className="items-center pb-0">
-                <CardTitle>Organizational</CardTitle>
+                <CardTitle className="text-center">
+                    Organizational Subscription
+                </CardTitle>
             </CardHeader>
             <CardContent className="flex  justify-center my-5 h-full">
                 {error.length ? (
@@ -290,8 +292,13 @@ const ChartComp = ({ chartConfig, subscriptionData, type }) => {
                     />
                 </Pie>
                 <ChartLegend
-                    content={<ChartLegendContent nameKey="days" />}
-                    className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+                    content={
+                        <ChartLegendContent
+                            nameKey="days"
+                            className="justify-between"
+                        />
+                    }
+                    className="-translate-y-2 gap-2 [&>*]:basis-[35%] [&>*]:justify-center"
                 />
             </PieChart>
         </ChartContainer>
