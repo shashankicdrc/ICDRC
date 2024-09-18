@@ -3,8 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '../../../lib/utils';
-import { CiEdit, CiHome } from 'react-icons/ci';
-import { GoProjectRoadmap } from 'react-icons/go';
+import { CiHome } from 'react-icons/ci';
 import {
     Tooltip,
     TooltipProvider,
@@ -12,7 +11,7 @@ import {
     TooltipContent,
 } from '../../ui/tooltip';
 import { MdPayment } from 'react-icons/md';
-import { ShieldQuestion } from 'lucide-react';
+import { NotebookPen, PackageSearch, UserSearch } from 'lucide-react';
 
 const DashboardNav = ({ isCollapsed }) => {
     const pathname = usePathname();
@@ -50,7 +49,7 @@ const DashboardNav = ({ isCollapsed }) => {
                             isCollapsed ? 'w-fit' : 'w-full',
                         )}
                     >
-                        <CiEdit className="h-5 w-5" />
+                        <NotebookPen className="h-5 w-5" />
                         {!isCollapsed && <span>Register a Complaint</span>}
                     </Link>
                 </TooltipTrigger>
@@ -73,7 +72,7 @@ const DashboardNav = ({ isCollapsed }) => {
                             isCollapsed ? 'w-fit' : 'w-full',
                         )}
                     >
-                        <GoProjectRoadmap className="h-5 w-5" />
+                        <UserSearch className="h-5 w-5" />
                         {!isCollapsed && <span>Individual Cases</span>}
                     </Link>
                 </TooltipTrigger>
@@ -96,7 +95,7 @@ const DashboardNav = ({ isCollapsed }) => {
                             isCollapsed ? 'w-fit' : 'w-full',
                         )}
                     >
-                        <ShieldQuestion className="h-5 w-5" />
+                        <PackageSearch className="h-5 w-5" />
                         {!isCollapsed && <span>Organizational Cases</span>}
                     </Link>
                 </TooltipTrigger>

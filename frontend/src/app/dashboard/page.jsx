@@ -9,10 +9,8 @@ import {
     CardContent,
 } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { ArrowUpRight } from 'lucide-react';
-import { GoProjectRoadmap } from 'react-icons/go';
+import { ArrowUpRight, PackageSearch, UserSearch } from 'lucide-react';
 import Link from 'next/link';
-import { ShieldQuestion } from 'lucide-react';
 import { handleResponses } from '../../externalAPI/userService';
 import SubscriptionChart from '@/components/dashboard/SubscriptionChart';
 import RecentMessages from '@/components/dashboard/chat/RecentMessage';
@@ -34,7 +32,11 @@ export default async function page() {
                     <CardHeader className="pb-3">
                         <CardTitle>Welcome, {session.user.name}!</CardTitle>
                         <CardDescription className="">
-                           We’re glad to have you back. Here's a quick overview of your latest activities and updates. Let’s continue building great things together! If you need assistance, feel free to reach out to us.                        </CardDescription>
+                            We’re glad to have you back. Here's a quick overview
+                            of your latest activities and updates. Let’s
+                            continue building great things together! If you need
+                            assistance, feel free to reach out to us.{' '}
+                        </CardDescription>
                     </CardHeader>
                 </Card>
 
@@ -43,7 +45,7 @@ export default async function page() {
                         <CardTitle className="text-sm font-bold">
                             Total Individual Cases
                         </CardTitle>
-                        <GoProjectRoadmap className="h-4 w-4 text-muted-foreground" />
+                        <UserSearch className="h-5 w-5 text-muted-foreground" />
                     </CardHeader>
                     <CardContent className="space-y-2">
                         <div className="text-2xl font-bold">
@@ -65,7 +67,7 @@ export default async function page() {
                         <CardTitle className="text-sm font-bold">
                             Total Organizational Cases
                         </CardTitle>
-                        <ShieldQuestion className="h-4 w-4 text-muted-foreground" />
+                        <PackageSearch className="h-5 w-5 text-muted-foreground" />
                     </CardHeader>
                     <CardContent className="space-y-2">
                         <div className="text-2xl font-bold">

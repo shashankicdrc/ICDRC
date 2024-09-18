@@ -5,10 +5,9 @@ import { Button } from '../../ui/button';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '../../../lib/utils';
-import { CiEdit, CiHome } from 'react-icons/ci';
+import { CiHome } from 'react-icons/ci';
 import { MdPayment } from 'react-icons/md';
-import { Settings, ShieldQuestion } from 'lucide-react';
-import { GoProjectRoadmap } from 'react-icons/go';
+import { NotebookPen, PackageSearch, Settings, UserSearch } from 'lucide-react';
 
 const MobileNav = () => {
     const [open, setopen] = React.useState(false);
@@ -83,7 +82,7 @@ const MobileNav = () => {
                                 : null,
                         )}
                     >
-                        <CiEdit className="h-5 w-5" />
+                        <NotebookPen className="h-5 w-5" />
                         Register Complaints
                     </Link>
                     <Link
@@ -96,7 +95,7 @@ const MobileNav = () => {
                                 : null,
                         )}
                     >
-                        <GoProjectRoadmap className="h-5 w-5" />
+                        <UserSearch className="h-5 w-5" />
                         Individual Case
                     </Link>
                     <Link
@@ -109,7 +108,7 @@ const MobileNav = () => {
                                 : null,
                         )}
                     >
-                        <ShieldQuestion className="h-5 w-5" />
+                        <PackageSearch className="h-5 w-5" />
                         Organizational Case{' '}
                     </Link>
                     <Link

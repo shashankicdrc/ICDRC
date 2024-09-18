@@ -16,7 +16,7 @@ export default async function RecentMessages({ chats }) {
     return (
         <Card className="lg:col-span-2">
             <CardHeader>
-                <CardTitle>Recent Message</CardTitle>
+                <CardTitle>Recent Messages</CardTitle>
             </CardHeader>
             <CardContent className="grid gap-8">
                 {data.length > 0 ? (
