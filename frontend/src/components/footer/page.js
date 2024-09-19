@@ -49,7 +49,7 @@ export default function Footer() {
                             </a>
                             <a
                                 className="hover:opacity-75"
-                                href="https://www.instagram.com/icdrc2024"
+                                href="https://www.instagram.com/icdrcsolutons"
                                 target="_blank"
                                 rel="noreferrer"
                             >

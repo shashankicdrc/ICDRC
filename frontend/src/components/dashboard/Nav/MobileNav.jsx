@@ -83,7 +83,7 @@ const MobileNav = () => {
                         )}
                     >
                         <NotebookPen className="h-5 w-5" />
-                        Register Complaints
+                        Register a Complaint
                     </Link>
                     <Link
                         href="/dashboard/complaints/individual"

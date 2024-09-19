@@ -1,27 +1,27 @@
-"use client";
-import React, { useState } from "react";
-import Chatbot from "./chatbot";
-import { AiFillFacebook } from "react-icons/ai";
-import { BsInstagram } from "react-icons/bs";
-import { BsLinkedin } from "react-icons/bs";
-import { ImCross } from "react-icons/im";
-import { FaSquareXTwitter } from "react-icons/fa6";
-import { FaWhatsapp } from "react-icons/fa";
-import { CiMail } from "react-icons/ci";
-import { useEffect } from "react";
-import { url } from "../../app/api";
-import axios from "axios";
-import { IoShareSocialSharp } from "react-icons/io5";
-import { MdContactPhone } from "react-icons/md";
+'use client';
+import React, { useState } from 'react';
+import Chatbot from './chatbot';
+import { AiFillFacebook } from 'react-icons/ai';
+import { BsInstagram } from 'react-icons/bs';
+import { BsLinkedin } from 'react-icons/bs';
+import { ImCross } from 'react-icons/im';
+import { FaSquareXTwitter } from 'react-icons/fa6';
+import { FaWhatsapp } from 'react-icons/fa';
+import { CiMail } from 'react-icons/ci';
+import { useEffect } from 'react';
+import { url } from '../../app/api';
+import axios from 'axios';
+import { IoShareSocialSharp } from 'react-icons/io5';
+import { MdContactPhone } from 'react-icons/md';
 
 const SocialIcons = () => {
     const [show, setShow] = useState(false);
     const [show2, setShow2] = useState(false);
     const [showbot, setShowBot] = useState(false);
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [mobile, setMobile] = useState("");
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [mobile, setMobile] = useState('');
 
     useEffect(() => {
         const submit = async () => {
@@ -41,9 +41,9 @@ const SocialIcons = () => {
                     console.log(err);
                 }
 
-                setName("");
-                setEmail("");
-                setMobile("");
+                setName('');
+                setEmail('');
+                setMobile('');
             }
         };
         submit();
@@ -77,7 +77,8 @@ const SocialIcons = () => {
                     className="main_icon rounded-full h-12 w-12 bg-white cursor-pointer fixed bottom-20
                     md:bottom-20 right-4  flex justify-center items-center border-2
                     border-orange-600 hover:bg-orange-600 transition-all 300 ease-in-out
-                    text-orange-600 hover:text-white"                >
+                    text-orange-600 hover:text-white"
+                >
                     <MdContactPhone className=" text-xl font-semibold md:text-2xl" />
                 </div>
             )}
@@ -130,7 +131,7 @@ const SocialIcons = () => {
                         <FaSquareXTwitter className="text-xl md:text-2xl" />
                     </a>
                     <a
-                        href="https://www.instagram.com/icdrc2024"
+                        href="https://www.instagram.com/icdrcsolutons/"
                         target="_blank"
                         rel="noreferrer"
                         className="main_icon bg-pink-600 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-pink-600 hover:bg-white hover:text-pink-600"
@@ -179,4 +180,3 @@ const SocialIcons = () => {
 };
 
 export default SocialIcons;
-

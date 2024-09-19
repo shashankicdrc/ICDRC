@@ -197,7 +197,7 @@ const ChatBot = ({ isheader }) => {
                                     us, kindly click on the below
                                 </p>
                                 <Link
-                                    href="/register"
+                                    href="/dashboard/register"
                                     className="b relative mx-auto h-16 w-64 flex justify-center items-center"
                                 >
                                     <div className="i h-16 w-64 bg-orange-500 items-center rounded-xl shadow-2xl cursor-pointer absolute overflow-hidden transform hover:scale-x-110 hover:scale-y-105 hover:bg-blue-500 transition duration-300 ease-out"></div>
