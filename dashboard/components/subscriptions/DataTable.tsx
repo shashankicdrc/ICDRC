@@ -41,8 +41,11 @@ export function SubscriptionDataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({
-            complaintId: false
-
+            complaintId: false,
+            indStartDate: false,
+            indEndDate: false,
+            orgEndDate: false,
+            orgStartDate: false,
         });
 
     const table = useReactTable({

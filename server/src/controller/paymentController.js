@@ -69,9 +69,8 @@ class PaymentController extends Base {
         const paymentHistory = await PaymentHistory.find({})
             .sort({ paymentDate: -1 })
             .limit(5)
-            .select(
-                'transactionId paymentDate amount paymentStatus paymentFor',
-            );
+            .select('transactionId paymentDate amount paymentStatus paymentFor')
+            .populate('userId', 'name email');
         return this.response(
             res,
             httpStatusCode.OK,
@@ -97,6 +96,10 @@ class PaymentController extends Base {
 
             const [payments, totalCount] = await Promise.all([
                 PaymentHistory.find(filterQuery)
+                    .populate({
+                        path: 'userId',
+                        select: 'email name',
+                    })
                     .sort(Sorts)
                     .skip(skip)
                     .limit(perRow)

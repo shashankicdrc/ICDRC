@@ -34,7 +34,7 @@ export default async function page() {
                             <div className="grid gap-1">
                                 <p className="text-sm font-medium leading-none capitalize">{item.authorId.name}</p>
                                 <p className="text-sm text-muted-foreground">
-                                    New {item.attachment ? 'Attachment' : 'Message'}
+                                    {item.complaintId.caseId}
                                 </p>
                             </div>
                             <Button className="ml-auto" variant="outline" asChild>

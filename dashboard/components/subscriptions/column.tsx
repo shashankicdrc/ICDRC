@@ -18,7 +18,7 @@ import { Badge } from "../ui/badge";
 
 export type Subscription = {
     _id: string,
-    userId: string;
+    name: string;
     email: string;
     individualSubscription: {
         _id: string,
@@ -40,8 +40,12 @@ export type Subscription = {
 
 export const SubscriptionColumns: ColumnDef<Subscription>[] = [
     {
-        accessorKey: "userId",
-        header: "User ID",
+        accessorKey: "name",
+        header: "Name",
+    },
+    {
+        accessorKey: "email",
+        header: "Email",
     },
     {
         id: "Individual Subscription",
@@ -53,16 +57,18 @@ export const SubscriptionColumns: ColumnDef<Subscription>[] = [
         }
     },
     {
+        id: 'indStartDate',
         accessorKey: "individualSubscription.startDate",
-        header: "Start Date",
+        header: "Individual Start Date",
         cell: ({ row }) => {
             const indSubscription = row.original.individualSubscription;
             return indSubscription.isActive ? formatDate(indSubscription.startDate) : '--'
         }
     },
     {
-        accessorKey: "individualSubscription.startDate",
-        header: "End Date",
+        id: 'indEndDate',
+        accessorKey: "individualSubscription.endDate",
+        header: "Individual End Date",
         cell: ({ row }) => {
             const indSubscription = row.original.individualSubscription;
             return indSubscription.isActive ? formatDate(indSubscription.endDate) : '--'
@@ -78,16 +84,18 @@ export const SubscriptionColumns: ColumnDef<Subscription>[] = [
         }
     },
     {
+        id: "orgStartDate",
         accessorKey: "organisationalSubscription.startDate",
-        header: "Start Date",
+        header: "Organizational Start Date",
         cell: ({ row }) => {
             const orgSubscription = row.original.organisationalSubscription;
             return orgSubscription.isActive ? formatDate(orgSubscription.startDate) : '--'
         }
     },
     {
+        id: "orgEndDate",
         accessorKey: "organisationalSubscription.endDate",
-        header: "End Date",
+        header: "Organizational End Date",
         cell: ({ row }) => {
             const orgSubscription = row.original.organisationalSubscription;
             return orgSubscription.isActive ? formatDate(orgSubscription.endDate) : '--'

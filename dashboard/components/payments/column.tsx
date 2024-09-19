@@ -21,6 +21,15 @@ export const PaymentColumns: ColumnDef<paymentType>[] = [
         header: "Transaction Id",
     },
     {
+        accessorKey: "userId.name",
+        header: "Name",
+    },
+    {
+        accessorKey: "userId.email",
+        header: "Email",
+    },
+
+    {
         accessorKey: "paymentDate",
         header: "Date",
         cell: ({ row }) => formatDate(row.original.paymentDate)

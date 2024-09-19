@@ -51,7 +51,7 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                         )}
                     >
                         <Icons.individual className="h-5 w-5" />
-                        {!isCollapsed && <span>Individual Case</span>}
+                        {!isCollapsed && <span>Individual Cases</span>}
                     </Link>
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Individual Complaints</TooltipContent>}
@@ -69,7 +69,7 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                         )}
                     >
                         <Icons.organisational className="h-5 w-5" />
-                        {!isCollapsed && <span>Organizational Case</span>}
+                        {!isCollapsed && <span>Organizational Cases</span>}
                     </Link>
                 </TooltipTrigger>
                 {isCollapsed && <TooltipContent side="right">Organizational Complaints</TooltipContent>}
@@ -142,10 +142,10 @@ export const DashboardNav = ({ isCollapsed }: Props) => {
                         )}
                     >
                         <Icons.chat className="h-5 w-5" />
-                        {!isCollapsed && <span>Chats</span>}
+                        {!isCollapsed && <span>Messages</span>}
                     </Link>
                 </TooltipTrigger>
-                {isCollapsed && <TooltipContent side="right">Chats</TooltipContent>}
+                {isCollapsed && <TooltipContent side="right">Messages</TooltipContent>}
             </Tooltip>
 
             <Separator />

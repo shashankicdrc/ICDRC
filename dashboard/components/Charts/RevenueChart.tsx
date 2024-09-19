@@ -33,11 +33,11 @@ const chartConfig = {
         label: "Revenue",
     },
     individual: {
-        label: "Individual Case Registrations",
+        label: "Individual Cases",
         color: "hsl(var(--chart-1))",
     },
     organisational: {
-        label: "Organizational Case Registrations",
+        label: "Organizational Cases",
         color: "hsl(var(--chart-2))",
     },
     subscription: {
@@ -49,58 +49,6 @@ const chartConfig = {
 interface Props {
     chartData: any
 }
-
-// const chartData = [
-//     {
-//         date: "2024-08-13",
-//         individual: 5000,
-//         organisational: 24000,
-//         subscription: 3000
-//     },
-//     {
-//         date: "2024-08-14",
-//         individual: 7000,
-//         organisational: 26000,
-//         subscription: 5000
-//     },
-//     {
-//         date: "2024-08-15",
-//         individual: 10000,
-//         organisational: 22000,
-//         subscription: 4000
-//     },
-//     {
-//         date: "2024-08-16",
-//         individual: 12000,
-//         organisational: 20000,
-//         subscription: 4500
-//     },
-//     {
-//         date: "2024-08-17",
-//         individual: 15000,
-//         organisational: 18000,
-//         subscription: 6000
-//     },
-//     {
-//         date: "2024-08-18",
-//         individual: 16000,
-//         organisational: 15000,
-//         subscription: 7000
-//     },
-//     {
-//         date: "2024-08-19",
-//         individual: 18000,
-//         organisational: 14000,
-//         subscription: 8000
-//     },
-//     {
-//         date: "2024-08-20",
-//         individual: 33000,
-//         organisational: 3000,
-//         subscription: 9000
-//     }
-//
-// ];
 
 export function RevenueChart({ chartData }: Props) {
     const [timeRange, setTimeRange] = React.useState<string>('10')

@@ -39,7 +39,11 @@ export type complaintType = 'OrganizationComplaint' | "IndividualComplaint"
 
 export type paymentType = {
     _id: string,
-    userId: string,
+    userId: {
+        _id: string,
+        name: string,
+        email: string
+    },
     transactionId: string,
     paymentFor: PaymentFor,
     amount: number,

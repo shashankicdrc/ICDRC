@@ -32,7 +32,13 @@ export default async function RecentMessages() {
     return (
         <Card className="my-5">
             <CardHeader>
-                <CardTitle>Recent Message</CardTitle>
+                <div className="flex items-center justify-between">
+                    <CardTitle>Recent Message</CardTitle>
+                    <Button asChild variant="link">
+                        <Link href="/dashboard/chats">View All</Link>
+                    </Button>
+                </div>
+
             </CardHeader>
             <CardContent className="grid gap-8">
                 {data.map((item: chatType) => (
@@ -44,7 +50,7 @@ export default async function RecentMessages() {
                         <div className="grid gap-1">
                             <p className="text-sm font-medium leading-none">{item.authorId.name}</p>
                             <p className="text-sm text-muted-foreground">
-                                New {item.attachment ? 'Attachment' : 'Message'}
+                                {item.complaintId.caseId}
                             </p>
                         </div>
                         <Button className="ml-auto" variant="outline" asChild>

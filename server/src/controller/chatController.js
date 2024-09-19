@@ -116,6 +116,7 @@ class ChatController extends Base {
             .exec();
         const populatedChats = await chatModel.populate(allChats, [
             { path: 'authorId', select: 'name email' },
+            { path: 'complaintId', select: 'caseId' },
         ]);
         return this.response(
             res,
@@ -164,6 +165,7 @@ class ChatController extends Base {
 
         const populatedChats = await chatModel.populate(recentChats, [
             { path: 'authorId', select: 'name email' },
+            { path: 'complaintId', select: 'caseId' },
         ]);
 
         return this.response(

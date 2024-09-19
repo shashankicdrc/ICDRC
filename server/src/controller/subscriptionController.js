@@ -277,10 +277,12 @@ class SubscriptionController extends Base {
 
             const skip = pagination(page, perRow);
 
+            console.log(filterQuery);
+
             const [subscriptions, totalCount] = await Promise.all([
                 subscriptionModel
                     .find(filterQuery)
-                    .populate('userId', 'email')
+                    .populate('userId', 'email name')
                     .sort(Sorts)
                     .skip(skip)
                     .limit(perRow),
@@ -309,7 +311,8 @@ class SubscriptionController extends Base {
 
                     return {
                         _id: subscription._id,
-                        userId: subscription.userId.email, // User ID
+                        email: subscription.userId.email,
+                        name: subscription.userId.name,
                         individualSubscription: {
                             _id: individualPlan?.planId._id || '--',
                             name: individualPlan?.planId.name || '--',

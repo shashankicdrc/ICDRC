@@ -28,6 +28,7 @@ export default async function RecentTransactions() {
             <p className="text-center">{error}</p>
         </div>
     }
+
     return (
         <Card className="col-span-2">
             <CardHeader className="flex-row justify-between items-center py-2">
@@ -43,6 +44,8 @@ export default async function RecentTransactions() {
                     <TableHeader className="bg-accent">
                         <TableRow>
                             <TableHead>Transaction Id</TableHead>
+                            <TableHead>Name</TableHead>
+                            <TableHead>Email</TableHead>
                             <TableHead>Date</TableHead>
                             <TableHead>Amount</TableHead>
                             <TableHead>Status</TableHead>
@@ -55,6 +58,13 @@ export default async function RecentTransactions() {
                                 <TableCell>
                                     {item.transactionId}
                                 </TableCell>
+                                <TableCell>
+                                    {item.userId.name}
+                                </TableCell>
+                                <TableCell>
+                                    {item.userId.email}
+                                </TableCell>
+
                                 <TableCell>{formatDate(item.paymentDate)}</TableCell>
                                 <TableCell>{item.amount}</TableCell>
                                 <TableCell>
