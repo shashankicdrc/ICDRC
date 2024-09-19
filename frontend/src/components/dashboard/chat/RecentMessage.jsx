@@ -36,8 +36,7 @@ export default async function RecentMessages({ chats }) {
                                     {item.authorId.name}
                                 </p>
                                 <p className="text-sm text-muted-foreground">
-                                    New{' '}
-                                    {item.attachment ? 'Attachment' : 'Message'}
+                                    {item.complaintId.caseId}
                                 </p>
                             </div>
                             <Button

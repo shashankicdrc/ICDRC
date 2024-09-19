@@ -23,7 +23,7 @@ export default function Footer() {
                             className="inline-flex items-center"
                         >
                             <Image
-                                src="https://res.cloudinary.com/dl5hosmxb/image/upload/v1692866749/Logo/Copy_of_ICDRC_912_273_px_rwkrry.png"
+                                src="/logo.png"
                                 alt="logo"
                                 className="md:cursor-pointer h-24"
                                 width={300}
@@ -126,29 +126,26 @@ export default function Footer() {
                         <div>
                             <p className="font-medium">Helpful Links</p>
                             <nav className="flex flex-col mt-4 space-y-2 text-sm text-gray-500 capitalize">
-                                <Link
-                                    href="/dashboard"
+                                <Link href="/dashboard/register">
+                                    Register A Case
+                                </Link>
+                                <a
                                     className="hover:opacity-75"
+                                    href="/#subscription"
                                 >
-                                    Dashboard
+                                    Subscribe Now
+                                </a>
+                                <Link
+                                    className="hover:opacity-75"
+                                    href="/auth/login"
+                                >
+                                    User Login
                                 </Link>
                                 <a
                                     className="hover:opacity-75"
                                     href="https://dashboard.icdrc.in/auth/login"
                                 >
                                     Admin login
-                                </a>
-                                <a
-                                    className="hover:opacity-75"
-                                    href="/auth/login"
-                                >
-                                    User Login
-                                </a>
-                                <a
-                                    className="hover:opacity-75"
-                                    href="/#subscription"
-                                >
-                                    Subscribe Now
                                 </a>
                             </nav>
                         </div>

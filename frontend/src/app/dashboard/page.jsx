@@ -18,6 +18,10 @@ import RecentTransactions from '@/components/dashboard/RecentTransactions';
 import { getRecentChats } from '@/externalAPI/chatService';
 import CheckSubscription from '@/components/dashboard/CheckSubscription';
 
+export const metadata = {
+    title: 'ICDRC - Dashboard',
+};
+
 export default async function page() {
     const session = await getServerSession(authOptions);
     const token = session.user.AccessToken;

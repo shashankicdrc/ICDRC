@@ -1,6 +1,12 @@
 'use client';
 import { Fragment, useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '../../ui/card';
 import { Label } from '../../ui/label';
 import {
     Select,
@@ -21,7 +27,7 @@ import {
     problemOptions,
 } from '../../../lib/constant';
 import { Button } from '../../ui/button';
-import { Loader2 } from 'lucide-react';
+import { ChartColumnBigIcon, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { addIndividualComplaint } from '../../../externalAPI/complaintService';
 import { getUserSubscription } from '../../../externalAPI/subscriptionService';
@@ -39,6 +45,7 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
+    Checkbox,
 } from '@chakra-ui/react';
 import { initiatePayment } from '../../../externalAPI/paymentService';
 import { useRouter } from 'next/navigation';
@@ -80,6 +87,7 @@ const IndividualForm = () => {
     const [isValidSubscription, setIsValidSubscription] = useState(false);
     const [caseData, setCaseData] = useState({});
     const router = useRouter();
+    const [isChecked, setisChecked] = useState(false);
 
     const plans = ['66dc3f2cb7e56779f870c7ab', '66dc3f1cb7e56779f870c7a9'];
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -99,6 +107,7 @@ const IndividualForm = () => {
         setProblemDetails('');
         setOtherPolicyCompany(null);
         setOtherProblem('');
+        setisChecked(false);
     };
 
     useEffect(() => {
@@ -172,6 +181,11 @@ const IndividualForm = () => {
             setLoading((prevState) => !prevState);
             if (!isValidPhoneNumber(mobile)) {
                 toast.error('Enter a valid mobile number');
+                setLoading((prevState) => !prevState);
+                return;
+            }
+            if (!isChecked) {
+                toast.error('Kindly check the box to accept and proceed');
                 setLoading((prevState) => !prevState);
                 return;
             }
@@ -607,6 +621,35 @@ const IndividualForm = () => {
                                         />
                                     </div>
                                 )}
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Complaint Resolution</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <CardDescription>
+                                Our team is committed to addressing your
+                                complaint with diligence, ensuring a fair and
+                                satisfactory resolution. For non-subscribed
+                                users, we charge a success fee of 12% + GST,
+                                while subscribed users enjoy a reduced fee of
+                                10% + GST — among the most competitive an lowest
+                                rates in the industry. Your satisfaction remains
+                                our top priority.
+                            </CardDescription>
+                            <div className="my-2 flex items-center">
+                                <Checkbox
+                                    colorScheme="orange"
+                                    size="sm"
+                                    value={isChecked}
+                                    onChange={(e) =>
+                                        setisChecked(e.target.checked)
+                                    }
+                                >
+                                    Check the box to accept and proceed
+                                </Checkbox>
                             </div>
                         </CardContent>
                     </Card>

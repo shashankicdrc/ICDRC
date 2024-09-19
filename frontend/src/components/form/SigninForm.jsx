@@ -31,7 +31,7 @@ const SigninForm = () => {
                 return;
             }
             reset();
-            toast.success('You are successfully signin.');
+            toast.success('You have successfully logged in.');
             if (searchParams.has('url')) {
                 location.href = decodeURIComponent(searchParams.get('url'));
             } else {
