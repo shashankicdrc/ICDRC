@@ -33,7 +33,7 @@ export default async function RecentMessages() {
         <Card className="my-5">
             <CardHeader>
                 <div className="flex items-center justify-between">
-                    <CardTitle>Recent Message</CardTitle>
+                    <CardTitle>Recent Messages</CardTitle>
                     <Button asChild variant="link">
                         <Link href="/dashboard/chats">View All</Link>
                     </Button>
@@ -55,7 +55,7 @@ export default async function RecentMessages() {
                         </div>
                         <Button className="ml-auto" variant="outline" asChild>
                             <Link
-                                href={`/dashboard/chats/${item.complaintId}?type=${item.complaintType === 'OrganizationComplaint' ? 'organizational' : 'individual'}`}>
+                                href={`/dashboard/chats/${item.complaintId._id}?type=${item.complaintType === 'OrganizationComplaint' ? 'organizational' : 'individual'}`}>
                                 view
                             </Link>
                         </Button>

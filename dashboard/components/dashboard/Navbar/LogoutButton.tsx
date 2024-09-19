@@ -11,7 +11,7 @@ export default function LogoutButton() {
             redirect: true,
             callbackUrl: "/auth/login",
         });
-        toast.info("You are logout successfully.", {
+        toast.info("You have successfully logged out.", {
             action: {
                 label: "Undo",
                 onClick: () => console.log("undo"),

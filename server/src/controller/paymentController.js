@@ -24,6 +24,7 @@ import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import { filterSort, parseFilters } from '#utils/filterSort';
 import pagination from '#utils/pagination';
 import mongoose from 'mongoose';
+import usermodel from '#models/userModel';
 
 class PaymentController extends Base {
     constructor() {
@@ -93,6 +94,54 @@ class PaymentController extends Base {
             perRow = Number(perRow) || 20;
 
             const skip = pagination(page, perRow);
+            let email;
+            if (filterQuery.email) {
+                for (let key in filterQuery.email) {
+                    email = filterQuery.email[key];
+                }
+                const userExist = await usermodel.findOne({
+                    email: filterQuery.email,
+                });
+                if (!userExist) {
+                    const data = {
+                        payments: [],
+                        totalCount: 0,
+                    };
+                    return this.response(
+                        res,
+                        httpStatusCode.OK,
+                        httpStatus.SUCCESS,
+                        'Payment History data has been fetched Successfully.',
+                        data,
+                    );
+                }
+                const [payments, totalCount] = await Promise.all([
+                    PaymentHistory.find({ userId: userExist._id })
+                        .populate({
+                            path: 'userId',
+                            select: 'email name',
+                        })
+                        .sort(Sorts)
+                        .skip(skip)
+                        .limit(perRow)
+                        .exec(),
+                    PaymentHistory.countDocuments({
+                        userId: userExist._id,
+                    }).exec(),
+                ]);
+
+                const data = {
+                    payments,
+                    totalCount,
+                };
+                return this.response(
+                    res,
+                    httpStatusCode.OK,
+                    httpStatus.SUCCESS,
+                    'Payment History data has been fetched Successfully.',
+                    data,
+                );
+            }
 
             const [payments, totalCount] = await Promise.all([
                 PaymentHistory.find(filterQuery)

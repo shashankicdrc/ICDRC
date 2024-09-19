@@ -264,6 +264,54 @@ class SubscriptionController extends Base {
         );
     });
 
+    #transformedData(subscriptionsPlans, subscriptions) {
+        return subscriptionsPlans.map((subscription, index) => {
+            // Find the individual and organisational plans
+            const individualPlan = subscription.plans.find(
+                (plan) => plan.planId.name === 'Individual',
+            );
+            const organisationalPlan = subscription.plans.find(
+                (plan) => plan.planId.name === 'Organisational',
+            );
+
+            return {
+                _id: subscription._id,
+                email: subscription.userId.email,
+                name: subscription.userId.name,
+                individualSubscription: {
+                    _id: individualPlan?.planId._id || '--',
+                    name: individualPlan?.planId.name || '--',
+                    startDate: individualPlan?.startDate || '--',
+                    endDate: individualPlan?.endDate || '--',
+                    isDeleted: individualPlan?.isDeleted || true,
+                    isActive: !individualPlan
+                        ? false
+                        : this.#checkSubscription(
+                              checkSubscriptionStatus(
+                                  subscriptions[index],
+                                  individualPlan.planId._id,
+                              ),
+                          ),
+                },
+                organisationalSubscription: {
+                    _id: organisationalPlan?.planId._id || '--',
+                    name: organisationalPlan?.planId.name || '--',
+                    startDate: organisationalPlan?.startDate || '--',
+                    endDate: organisationalPlan?.endDate || '--',
+                    isDeleted: organisationalPlan?.isDeleted || true,
+                    isActive: !organisationalPlan
+                        ? false
+                        : this.#checkSubscription(
+                              checkSubscriptionStatus(
+                                  subscriptions[index],
+                                  organisationalPlan.planId._id,
+                              ),
+                          ),
+                },
+            };
+        });
+    }
+
     #adminSubscription = asyncHandler(async (req, res, next) => {
         try {
             let { perRow, page } = req.query;
@@ -276,8 +324,67 @@ class SubscriptionController extends Base {
             perRow = Number(perRow) || 20;
 
             const skip = pagination(page, perRow);
+            let email;
 
-            console.log(filterQuery);
+            if (filterQuery.email) {
+                for (let key in filterQuery.email) {
+                    email = filterQuery.email[key];
+                }
+                const userExist = await usermodel.findOne({
+                    email: filterQuery.email,
+                });
+                if (!userExist) {
+                    const data = {
+                        payments: [],
+                        totalCount: 0,
+                    };
+                    return this.response(
+                        res,
+                        httpStatusCode.OK,
+                        httpStatus.SUCCESS,
+                        'Subscription data has been fetched Successfully.',
+                        data,
+                    );
+                }
+                const [subscriptions, totalCount] = await Promise.all([
+                    subscriptionModel
+                        .find({ userId: userExist._id })
+                        .populate('userId', 'email name')
+                        .sort(Sorts)
+                        .skip(skip)
+                        .limit(perRow),
+                    subscriptionModel
+                        .countDocuments({ userId: userExist._id })
+                        .exec(),
+                ]);
+
+                const clonedSubscription = subscriptions.map((subscription) =>
+                    subscription.toObject(),
+                );
+
+                const subscriptionsPlans = await subscriptionModel.populate(
+                    clonedSubscription,
+                    {
+                        path: 'plans.planId',
+                    },
+                );
+
+                const data = {
+                    subscriptions: this.#transformedData(
+                        subscriptionsPlans,
+                        subscriptions,
+                    ),
+                    totalCount,
+                };
+
+                return this.response(
+                    res,
+                    httpStatusCode.OK,
+                    httpStatus.SUCCESS,
+                    'Subscription data has been fetched Successfully.',
+                    data,
+                );
+            }
 
             const [subscriptions, totalCount] = await Promise.all([
                 subscriptionModel
@@ -299,55 +406,11 @@ class SubscriptionController extends Base {
                 },
             );
 
-            const transformedData = subscriptionsPlans.map(
-                (subscription, index) => {
-                    // Find the individual and organisational plans
-                    const individualPlan = subscription.plans.find(
-                        (plan) => plan.planId.name === 'Individual',
-                    );
-                    const organisationalPlan = subscription.plans.find(
-                        (plan) => plan.planId.name === 'Organisational',
-                    );
-
-                    return {
-                        _id: subscription._id,
-                        email: subscription.userId.email,
-                        name: subscription.userId.name,
-                        individualSubscription: {
-                            _id: individualPlan?.planId._id || '--',
-                            name: individualPlan?.planId.name || '--',
-                            startDate: individualPlan?.startDate || '--',
-                            endDate: individualPlan?.endDate || '--',
-                            isDeleted: individualPlan?.isDeleted || true,
-                            isActive: !individualPlan
-                                ? false
-                                : this.#checkSubscription(
-                                      checkSubscriptionStatus(
-                                          subscriptions[index],
-                                          individualPlan.planId._id,
-                                      ),
-                                  ),
-                        },
-                        organisationalSubscription: {
-                            _id: organisationalPlan?.planId._id || '--',
-                            name: organisationalPlan?.planId.name || '--',
-                            startDate: organisationalPlan?.startDate || '--',
-                            endDate: organisationalPlan?.endDate || '--',
-                            isDeleted: organisationalPlan?.isDeleted || true,
-                            isActive: !organisationalPlan
-                                ? false
-                                : this.#checkSubscription(
-                                      checkSubscriptionStatus(
-                                          subscriptions[index],
-                                          organisationalPlan.planId._id,
-                                      ),
-                                  ),
-                        },
-                    };
-                },
-            );
             const data = {
-                subscriptions: transformedData,
+                subscriptions: this.#transformedData(
+                    subscriptionsPlans,
+                    subscriptions,
+                ),
                 totalCount,
             };
             return this.response(

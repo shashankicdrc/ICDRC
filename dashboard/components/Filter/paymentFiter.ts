@@ -2,15 +2,6 @@ import { ColumnFilter } from "@/types/columnFilter";
 
 export const PaymentColumnFilters: ColumnFilter[] = [
     {
-        accessorKey: "_id",
-        header: "Payment Id",
-        operators: [
-            { label: "is", value: "eq" },
-        ],
-        inputType: "text",
-    },
-
-    {
         accessorKey: "transactionId",
         header: "Transaction ID",
         operators: [
@@ -20,10 +11,10 @@ export const PaymentColumnFilters: ColumnFilter[] = [
         inputType: "text",
     },
     {
-        accessorKey: "userId",
-        header: "User ID",
+        accessorKey: "email",
+        header: "Email",
         operators: [
-            { label: "is", value: "eq" },
+            { label: "contains", value: "regex" },
         ],
         inputType: "text",
     },

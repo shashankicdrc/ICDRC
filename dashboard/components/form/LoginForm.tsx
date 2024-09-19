@@ -55,7 +55,7 @@ export const LoginForm = () => {
                 setisLoading(false);
             } else {
                 setisLoading(false);
-                toast.success("You are successfully signin", {
+                toast.success("You have successfully logged in.", {
                     action: {
                         label: "Undo",
                         onClick: () => console.log("Undo"),

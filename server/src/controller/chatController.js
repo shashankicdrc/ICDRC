@@ -83,6 +83,117 @@ class ChatController extends Base {
     });
 
     #allChats = asyncHandler(async (req, res) => {
+        const page = parseInt(req.query.page) || 1; // Current page, default to 1 if not provided
+        const limit = parseInt(req.query.perRow) || 10;
+        const caseId = req.query.caseId;
+
+        if (caseId && caseId.length) {
+            let complaintIds = [];
+
+            const indComplaints = await indComplaintModel.find({
+                caseId: { $regex: new RegExp(caseId, 'i') },
+            });
+
+            const orgComplaints = await orgComplaintModel.find({
+                caseId: { $regex: new RegExp(caseId, 'i') },
+            });
+
+            indComplaints.forEach((complaint) =>
+                complaintIds.push(complaint._id),
+            );
+            orgComplaints.forEach((complaint) =>
+                complaintIds.push(complaint._id),
+            );
+
+            if (complaintIds.length === 0) {
+                return this.response(
+                    res,
+                    httpStatusCode.OK,
+                    httpStatus.SUCCESS,
+                    'All chats fetched successfully.',
+                    {
+                        totalCount: 0,
+                        chats: [],
+                    },
+                );
+            }
+
+            const allChats = await chatModel
+                .aggregate([
+                    {
+                        $match: {
+                            complaintId: { $in: complaintIds },
+                        },
+                    },
+                    {
+                        $sort: { complaintId: 1, createdAt: -1 },
+                    },
+                    {
+                        $group: {
+                            _id: '$complaintId',
+                            mostRecentChat: { $first: '$$ROOT' },
+                        },
+                    },
+                    {
+                        $sort: { 'mostRecentChat.createdAt': -1 },
+                    },
+                    {
+                        $project: {
+                            _id: 1,
+                            complaintId: '$mostRecentChat.complaintId',
+                            authorId: '$mostRecentChat.authorId',
+                            authorType: '$mostRecentChat.authorType',
+                            text: '$mostRecentChat.text',
+                            createdAt: '$mostRecentChat.createdAt',
+                            attachment: '$mostRecentChat.attachment',
+                            complaintType: '$mostRecentChat.complaintType',
+                        },
+                    },
+                    {
+                        $skip: (page - 1) * limit,
+                    },
+                    {
+                        $limit: limit,
+                    },
+                ])
+                .exec();
+
+            const populatedChats = await chatModel.populate(allChats, [
+                { path: 'authorId', select: 'name email' },
+                { path: 'complaintId', select: 'caseId' },
+            ]);
+
+            return this.response(
+                res,
+                httpStatusCode.OK,
+                httpStatus.SUCCESS,
+                'All chats fetched successfully.',
+                {
+                    totalCount: populatedChats.length,
+                    chats: populatedChats,
+                },
+            );
+        }
+
+        const totalChats = await chatModel
+            .aggregate([
+                {
+                    $match: { authorType: 'user' },
+                },
+                {
+                    $group: {
+                        _id: '$complaintId',
+                    },
+                },
+                {
+                    $count: 'totalCount', // This will give the total number of grouped chats (by complaintId)
+                },
+            ])
+            .exec();
+
+        const totalCount = totalChats.length > 0 ? totalChats[0].totalCount : 0;
+
+        // Now, get the paginated chats
         const allChats = await chatModel
             .aggregate([
                 {
@@ -112,18 +223,29 @@ class ChatController extends Base {
                         complaintType: '$mostRecentChat.complaintType',
                     },
                 },
+                {
+                    $skip: (page - 1) * limit, // Skip previous pages
+                },
+                {
+                    $limit: limit, // Limit to 'limit' number of results
+                },
             ])
             .exec();
+
         const populatedChats = await chatModel.populate(allChats, [
             { path: 'authorId', select: 'name email' },
             { path: 'complaintId', select: 'caseId' },
         ]);
+
         return this.response(
             res,
             httpStatusCode.OK,
             httpStatus.SUCCESS,
             'All chats fetched successfully.',
-            populatedChats,
+            {
+                totalCount, // Send the total number of chats
+                chats: populatedChats, // Send the paginated results
+            },
         );
     });
 

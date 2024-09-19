@@ -53,7 +53,7 @@ export const SubscriptionColumns: ColumnDef<Subscription>[] = [
         cell: ({ row }) => {
             const indSubscription = row.original.individualSubscription;
             return indSubscription.isActive ? <Badge className="text-green-600" variant="outline">Active</Badge>
-                : <Badge variant="outline" className="text-red-600">InActive</Badge>
+                : <Badge variant="outline" className="text-red-600">Inactive</Badge>
         }
     },
     {
@@ -80,7 +80,7 @@ export const SubscriptionColumns: ColumnDef<Subscription>[] = [
         cell: ({ row }) => {
             const orgSubscription = row.original.organisationalSubscription;
             return orgSubscription.isActive ? <Badge className="text-green-600" variant="outline">Active</Badge>
-                : <Badge variant="outline" className="text-red-600">InActive</Badge>
+                : <Badge variant="outline" className="text-red-600">Inactive</Badge>
         }
     },
     {

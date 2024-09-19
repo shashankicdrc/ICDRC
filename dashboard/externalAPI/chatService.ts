@@ -1,8 +1,8 @@
 import { httpStatusCode } from "@/lib/commonEnum";
 import { BASE_URL } from "@/lib/constant";
 
-export const getAllChats = async (token: string) => {
-    const response = await fetch(`${BASE_URL}/api/admin/chats`, {
+export const getAllChats = async (token: string, url: string) => {
+    const response = await fetch(url, {
         headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`

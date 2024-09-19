@@ -250,7 +250,11 @@ export const Filter = ({ columnFilters }: Props) => {
                                     </SelectTrigger>
                                     <SelectContent>
                                         {columnFilters.find(col => col.accessorKey === filter.column)?.values?.map((value, index) => (
-                                            <SelectItem key={index} value={value}>{value}</SelectItem>
+                                            <SelectItem key={index} value={value}>
+                                                {value === 'IndividualComplaint' ? "Individual Complaint" : null}
+                                                {value === 'OrganizationComplaint' ? "Organizational Complaint" : null}
+                                                {!["IndividualComplaint", "OrganizationComplaint"].includes(value) && value}
+                                            </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>

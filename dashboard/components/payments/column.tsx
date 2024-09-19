@@ -64,7 +64,7 @@ export const PaymentColumns: ColumnDef<paymentType>[] = [
     {
         accessorKey: "complaintType",
         header: "Complaint Type",
-        cell: ({ row }) => row.original.complaintType ?? 'N/A'
+        cell: ({ row }) => row.original.complaintType === 'IndividualComplaint' ? 'Individual Complaint' : 'Organizational Complaint' ?? 'N/A'
     },
     {
         accessorKey: "complaintId",
