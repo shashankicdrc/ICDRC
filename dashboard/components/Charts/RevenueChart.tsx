@@ -30,18 +30,18 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 
 const chartConfig = {
     complaints: {
-        label: "Visitors",
+        label: "Revenue",
     },
     individual: {
-        label: "Individual",
+        label: "Individual Case Registrations",
         color: "hsl(var(--chart-1))",
     },
     organisational: {
-        label: "Organizational",
+        label: "Organizational Case Registrations",
         color: "hsl(var(--chart-2))",
     },
     subscription: {
-        label: "Subscription",
+        label: "Subscriptions",
         color: 'hsl(var(--chart-3))'
     }
 } satisfies ChartConfig

@@ -120,7 +120,7 @@ export const MobileNav = () => {
                                 : null,
                         )}
                     >
-                        <Icons.subscription className="h-5 w-5" />
+                        <Icons.payment className="h-5 w-5" />
                         Payments
                     </Link>
                     <Link

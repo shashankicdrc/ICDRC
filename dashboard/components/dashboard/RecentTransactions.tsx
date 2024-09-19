@@ -46,7 +46,7 @@ export default async function RecentTransactions() {
                             <TableHead>Date</TableHead>
                             <TableHead>Amount</TableHead>
                             <TableHead>Status</TableHead>
-                            <TableHead>PaymentFor</TableHead>
+                            <TableHead>Purpose</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>

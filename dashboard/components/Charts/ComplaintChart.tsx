@@ -107,12 +107,12 @@ export default function ComplaintChart() {
                             </Pie>
                             <ChartLegend
                                 content={<ChartLegendContent nameKey="complaint" />}
-                                className="-translate-y-2 flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
+                                className="-translate-y-2 items-center justify-center flex-wrap gap-2 [&>*]:basis-1/4 [&>*]:justify-center"
                             />
                         </PieChart>
                     </ChartContainer>
                 }
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center justify-center space-x-2">
                     <Button variant="link" asChild>
                         <Link href="/dashboard/individual">Individual Cases</Link>
                     </Button>

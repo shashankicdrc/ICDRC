@@ -33,7 +33,7 @@ export default async function RecentOrgComplaint() {
     return (
         <Card className="my-5">
             <CardHeader className="flex-row justify-between items-center">
-                <CardTitle>Recent Organisation Complaints</CardTitle>
+                <CardTitle>Recent Organizational Complaints</CardTitle>
                 <Button variant='link' asChild>
                     <Link href="/dashboard/organisational">
                         View All
