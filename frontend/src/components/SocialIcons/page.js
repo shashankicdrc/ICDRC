@@ -131,7 +131,7 @@ const SocialIcons = () => {
                         <FaSquareXTwitter className="text-xl md:text-2xl" />
                     </a>
                     <a
-                        href="https://www.instagram.com/icdrcsolutons/"
+                        href="https://www.instagram.com/icdrcsolutions"
                         target="_blank"
                         rel="noreferrer"
                         className="main_icon bg-pink-600 h-12 w-12 cursor-pointer rounded-full flex justify-center items-center text-white  border-2 border-pink-600 hover:bg-white hover:text-pink-600"
