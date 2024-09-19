@@ -49,9 +49,6 @@ export default function layout({ children }) {
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <div className="flex items-center space-x-2">
-                                    <h4 className="font-bold">
-                                        {session?.user.name}
-                                    </h4>
                                     <Avatar className="cursor-pointer">
                                         <AvatarImage
                                             src={session?.user.image}

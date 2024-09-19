@@ -22,7 +22,6 @@ import {
 } from '../../../lib/constant';
 import { Button } from '../../ui/button';
 import { Loader2 } from 'lucide-react';
-// import { makeKeys, encryptData, decryptData } from '../../../lib/Encryption';
 import toast from 'react-hot-toast';
 import { addOrganizationComplaint } from '../../../externalAPI/complaintService';
 import { useSession } from 'next-auth/react';
@@ -43,6 +42,16 @@ import {
 import { initiatePayment } from '../../../externalAPI/paymentService';
 import { useRouter } from 'next/navigation';
 import { getUserSubscription } from '../../../externalAPI/subscriptionService';
+import {
+    Dialog,
+    DialogClose,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogContent,
+} from '@/components/ui/dialog';
+import Link from 'next/link';
 
 const OganisationalForm = () => {
     const [organizationName, setorganizationName] = useState('');
@@ -75,6 +84,8 @@ const OganisationalForm = () => {
     const router = useRouter();
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isSubscriptModalOpen, setisSubscriptModalOpen] = useState(false);
+    const plans = ['66dc3f2cb7e56779f870c7ab', '66dc3f1cb7e56779f870c7a9'];
 
     const clearForm = () => {
         setorganizationName('');
@@ -135,7 +146,11 @@ const OganisationalForm = () => {
             }
         };
         subscriptions();
-    }, [session]);
+    }, [session, token]);
+
+    useEffect(() => {
+        setisSubscriptModalOpen(!isValidSubscription);
+    }, [isValidSubscription]);
 
     useEffect(() => {
         if (state?.length > 1) {
@@ -230,6 +245,40 @@ const OganisationalForm = () => {
 
     return (
         <Fragment>
+            {isSubscriptModalOpen && (
+                <Dialog
+                    open={isSubscriptModalOpen}
+                    onOpenChange={setisSubscriptModalOpen}
+                >
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>
+                                Your Organizational Subscription is INACTIVE.
+                            </DialogTitle>
+                            <DialogDescription>
+                                Do you want to proceed with a single case
+                                registration with fee Rs. 5000 or want to unlock
+                                best benefits by subscribing to our best offer
+                                with fee Rs. 1999?{' '}
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button asChild>
+                                <Link
+                                    href={`/dashboard/subscription?plan=${plans[1]}`}
+                                >
+                                    Subscribe Now
+                                </Link>
+                            </Button>
+                            <DialogClose asChild variant="secondary">
+                                <Button type="button">
+                                    Continue Registration
+                                </Button>
+                            </DialogClose>{' '}
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
             <Modal
                 closeOnOverlayClick={false}
                 isOpen={isOpen}

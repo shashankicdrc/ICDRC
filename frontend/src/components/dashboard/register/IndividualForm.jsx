@@ -42,6 +42,16 @@ import {
 } from '@chakra-ui/react';
 import { initiatePayment } from '../../../externalAPI/paymentService';
 import { useRouter } from 'next/navigation';
+import {
+    Dialog,
+    DialogClose,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogContent,
+} from '@/components/ui/dialog';
+import Link from 'next/link';
 
 const IndividualForm = () => {
     const [name, setName] = useState('');
@@ -71,7 +81,9 @@ const IndividualForm = () => {
     const [caseData, setCaseData] = useState({});
     const router = useRouter();
 
+    const plans = ['66dc3f2cb7e56779f870c7ab', '66dc3f1cb7e56779f870c7a9'];
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isSubscriptModalOpen, setisSubscriptModalOpen] = useState(false);
 
     const clearForm = () => {
         setName('');
@@ -128,7 +140,11 @@ const IndividualForm = () => {
             }
         };
         subscriptions();
-    }, [session]);
+    }, [session, token]);
+
+    useEffect(() => {
+        setisSubscriptModalOpen(!isValidSubscription);
+    }, [isValidSubscription]);
 
     const states = State.getStatesOfCountry('IN');
 
@@ -224,6 +240,38 @@ const IndividualForm = () => {
 
     return (
         <Fragment>
+            {isSubscriptModalOpen && (
+                <Dialog
+                    open={isSubscriptModalOpen}
+                    onOpenChange={setisSubscriptModalOpen}
+                >
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>
+                                Your Individual Subscription is INACTIVE.
+                            </DialogTitle>
+                            <DialogDescription>
+                                Do you want to proceed with a single case
+                                registration with fee Rs. 500 or want to unlock
+                                best benefits by subscribing to our best offer
+                                with fee Rs. 199?{' '}
+                            </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                            <Button asChild>
+                                <Link
+                                    href={`/dashboard/subscription?plan=${plans[0]}`}
+                                >
+                                    Subscribe Now
+                                </Link>
+                            </Button>
+                            <DialogClose asChild variant="secondary">
+                                <Button type="button">Close</Button>
+                            </DialogClose>{' '}
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
             <Modal
                 closeOnOverlayClick={false}
                 isOpen={isOpen}
