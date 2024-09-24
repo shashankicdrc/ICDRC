@@ -56,7 +56,7 @@ const SocialIcons = () => {
                 className="main_icon rounded-full h-12 w-12 group 
                 border-2 border-orange-600 cursor-pointer fixed bottom-36
                 md:bottom-36 right-4 bg-white hover:bg-orange-600 
-                flex justify-center items-center hover:text-white
+                flex justify-center items-center 
                ransform transition-transform duration-300 ease-in-out
                shadow-lg hover:shadow-xl"
             >

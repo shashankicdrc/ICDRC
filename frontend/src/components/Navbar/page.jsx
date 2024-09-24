@@ -1,18 +1,21 @@
-"use client";
-import React, { useCallback, useEffect, useState } from "react";
-import Link from "next/link";
-import "../../styles/module.navbar.css";
-import HomeNavLinks from "./HomeNavLinks";
-import { IoMdMenu } from "react-icons/io";
-import dynamic from "next/dynamic";
-import RightMenu from "./RightMenu";
-import Image from 'next/image'
-import ChatBot from "../SocialIcons/chatbot";
+'use client';
+import React, { useCallback, useEffect, useState } from 'react';
+import Link from 'next/link';
+import '../../styles/module.navbar.css';
+import HomeNavLinks from './HomeNavLinks';
+import { IoMdMenu } from 'react-icons/io';
+import dynamic from 'next/dynamic';
+import RightMenu from './RightMenu';
+import Image from 'next/image';
+import ChatBot from '../SocialIcons/chatbot';
+import { useSession } from 'next-auth/react';
+import { Button } from '../ui/button';
 
-const MobileSideModal = dynamic(() => import("./MobileNavbarModal"));
+const MobileSideModal = dynamic(() => import('./MobileNavbarModal'));
 
 const HomeNav = ({ isWhiteBg }) => {
     const [open, setOpen] = useState(false);
+    const { status } = useSession();
 
     const [scrollable, setscrollable] = useState(false);
     const changeBackground = () => {
@@ -28,33 +31,77 @@ const HomeNav = ({ isWhiteBg }) => {
     useEffect(() => {
         changeBackground();
         // adding the event when scroll change background
-        window.addEventListener("scroll", changeBackground);
+        window.addEventListener('scroll', changeBackground);
     });
 
     return (
         <header className="fixed top-0 w-full z-50">
-            <div className="bg-[#222222] h-12 flex w-full
+            <div
+                className="bg-[#222222] h-12 flex w-full
                 text-white md:flex items-center  
                 justify-between
-                px-5 md:px-10">
+                px-5 md:px-10"
+            >
                 <div className="flex items-center space-x-3 text-sm">
-                    <a href="mailto:info@icdrc.in" className="flex items-center space-x-1">
-                        <Image src='/images/9.webp' width={30} height={30} alt="mail" />
+                    <a
+                        href="mailto:info@icdrc.in"
+                        className="flex items-center space-x-1"
+                    >
+                        <Image
+                            src="/images/9.webp"
+                            width={30}
+                            height={30}
+                            alt="mail"
+                        />
                         <span className="hidden md:block">info@icdrc.in</span>
                     </a>
-                    <a href="tel:+917070717167" className="flex items-center space-x-1">
-                        <Image src='/images/8.webp' width={30} height={30} alt="telephone" />
+                    <a
+                        href="tel:+917070717167"
+                        className="flex items-center space-x-1"
+                    >
+                        <Image
+                            src="/images/8.webp"
+                            width={30}
+                            height={30}
+                            alt="telephone"
+                        />
                         <span className="hidden md:block">+91-7070717167</span>
                     </a>
-                    <a href="https://wa.me/917070717167" className="flex items-center space-x-1">
-                        <Image src='/images/10.webp' width={30} height={30} alt="Whatsapp" />
+                    <a
+                        href="https://wa.me/917070717167"
+                        className="flex items-center space-x-1"
+                    >
+                        <Image
+                            src="/images/10.webp"
+                            width={30}
+                            height={30}
+                            alt="Whatsapp"
+                        />
                         <span className="hidden md:block">+91-7070717167</span>
                     </a>
                 </div>
-                <div className="z-40">
-                    <ChatBot isheader={true} />
+                <div className="flex items-center space-x-2">
+                    {status !== 'authenticated' ? (
+                        <Button
+                            aschild
+                            variant="link"
+                            className="underline text-white hover:text-primary"
+                        >
+                            <Link href="/auth/login">Login/Sign Up</Link>
+                        </Button>
+                    ) : (
+                        <Button
+                            aschild
+                            variant="link"
+                            className="underline text-white hover:text-primary"
+                        >
+                            <Link href="/dashboard">Dashboard</Link>
+                        </Button>
+                    )}
+                    <div className="z-40">
+                        <ChatBot isheader={true} />
+                    </div>
                 </div>
-
             </div>
             <nav
                 className={`${scrollable || isWhiteBg ? 'bg-white shadow-md' : ''}
@@ -84,8 +131,11 @@ const HomeNav = ({ isWhiteBg }) => {
                         <li>
                             <Link
                                 href="/"
-                                className={`${scrollable || isWhiteBg ? 'text-black' : 'text-white'
-                                    } py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
+                                className={`${
+                                    scrollable || isWhiteBg
+                                        ? 'text-black'
+                                        : 'text-white'
+                                } py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
                             >
                                 Home
                             </Link>
@@ -93,8 +143,11 @@ const HomeNav = ({ isWhiteBg }) => {
                         <li>
                             <Link
                                 href="/about"
-                                className={`${scrollable || isWhiteBg ? 'text-black' : 'text-white'
-                                    } py-7 px-3 capitalize inline-block font-semibold orange-link hover:text-orange-500`}
+                                className={`${
+                                    scrollable || isWhiteBg
+                                        ? 'text-black'
+                                        : 'text-white'
+                                } py-7 px-3 capitalize inline-block font-semibold orange-link hover:text-orange-500`}
                             >
                                 About us
                             </Link>
@@ -103,8 +156,11 @@ const HomeNav = ({ isWhiteBg }) => {
                         <li>
                             <Link
                                 href="/partner"
-                                className={`${scrollable || isWhiteBg ? 'text-black' : 'text-white'
-                                    } capitalize py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
+                                className={`${
+                                    scrollable || isWhiteBg
+                                        ? 'text-black'
+                                        : 'text-white'
+                                } capitalize py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
                             >
                                 Partner with us
                             </Link>
@@ -112,8 +168,11 @@ const HomeNav = ({ isWhiteBg }) => {
                         <li>
                             <Link
                                 href="/contact"
-                                className={`${scrollable || isWhiteBg ? 'text-black' : 'text-white'
-                                    } capitalize py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
+                                className={`${
+                                    scrollable || isWhiteBg
+                                        ? 'text-black'
+                                        : 'text-white'
+                                } capitalize py-7 px-3 inline-block font-semibold orange-link hover:text-orange-500`}
                             >
                                 Contact us
                             </Link>
@@ -122,10 +181,13 @@ const HomeNav = ({ isWhiteBg }) => {
                     <div className="hidden md:flex md:item-center md:space-x-2">
                         <RightMenu />
                     </div>
-                    <MobileSideModal isOpen={open} toggleModal={toggleMobileModal} />
+                    <MobileSideModal
+                        isOpen={open}
+                        toggleModal={toggleMobileModal}
+                    />
                 </div>
             </nav>
-        </header >
+        </header>
     );
 };
 

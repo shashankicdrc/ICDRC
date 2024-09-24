@@ -4,7 +4,9 @@ import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import {
     FRONTEND_URL,
+    NOREPLYEMAIL,
     PHONE_PAY_URL,
+    htmlTemplate,
     httpStatus,
     httpStatusCode,
 } from '#utils/constant';
@@ -25,6 +27,7 @@ import subscriptionModel from '#models/subscriptionModel';
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import mongoose from 'mongoose';
 import usermodel from '#models/userModel';
+import { queues } from '#queues/queue';
 
 class SubscriptionController extends Base {
     #subscriptionService;
@@ -480,10 +483,19 @@ class SubscriptionController extends Base {
         const { transactionId } = req.params;
         const { planId, userId } = req.query;
 
-        const plan = await planModel.findById(planId);
+        const [plan, user] = await Promise.all([
+            planModel.findById(planId),
+            usermodel.findById(userId).select('-password'),
+        ]);
         if (!plan) {
             return res.redirect(
                 `${FRONTEND_URL}/failure?message=Plan does not exist.`,
+            );
+        }
+
+        if (!user) {
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=User does not exist.`,
             );
         }
 
@@ -510,6 +522,16 @@ class SubscriptionController extends Base {
         const { success, data, message } = await response.json();
         if (!success) {
             return res.redirect(`${FRONTEND_URL}/failure?message=${message}`);
+        }
+
+        const isAlreadyProcessed = await PaymentHistory.findOne({
+            transactionId: data.transactionId,
+        });
+
+        if (isAlreadyProcessed) {
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Your payment is already processed.`,
+            );
         }
         let subscriptionData;
 
@@ -548,7 +570,31 @@ class SubscriptionController extends Base {
             subscriptionId: subscriptionData.id,
         };
 
-        await PaymentHistory.create(paymentHistoryData);
+        const paymentHistory = await PaymentHistory.create(paymentHistoryData);
+
+        const subscriptionPlan = subscriptionData.plans.find(
+            (plan) => plan.planId.toString() === planId,
+        );
+        const emailData = {
+            userName: user.name,
+            planName:
+                plan.name !== 'Individual' ? 'Organization' : 'Individual',
+            startDate: subscriptionPlan.startDate.toLocaleDateString(),
+            endDate: subscriptionPlan.endDate.toLocaleDateString(),
+            amount: data.amount / 100,
+            transactionId: paymentHistory.transactionId,
+        };
+        const templateLink = '/src/templates/subscription/Subscription.html';
+
+        const html = htmlTemplate(process.cwd() + templateLink, emailData);
+        const NewMessage = {
+            from: NOREPLYEMAIL,
+            to: [user.email],
+            subject: `Subscription Confirmation - ${emailData.planName}`,
+            html,
+        };
+
+        queues.EmailQueue.add('send-email', NewMessage);
 
         return res.redirect(
             `${FRONTEND_URL}/success?amount=${data.amount}&transactionId=${data.transactionId}`,
@@ -568,7 +614,6 @@ class SubscriptionController extends Base {
 
         const isUserSubscription =
             await this.#subscriptionService.getUserSubscription(req.id);
-        logger.info(isUserSubscription);
 
         const subscriptionStatus = checkSubscriptionStatus(
             isUserSubscription,

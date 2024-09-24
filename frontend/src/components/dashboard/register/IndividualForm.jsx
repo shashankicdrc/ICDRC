@@ -630,14 +630,14 @@ const IndividualForm = () => {
                         </CardHeader>
                         <CardContent>
                             <CardDescription>
-                                Our team is committed to addressing your
-                                complaint with diligence, ensuring a fair and
-                                satisfactory resolution. For non-subscribed
-                                users, we charge a success fee of 12% + GST,
-                                while subscribed users enjoy a reduced fee of
-                                10% + GST — among the most competitive an lowest
-                                rates in the industry. Your satisfaction remains
-                                our top priority.
+                                Our team is dedicated to handle your concerns
+                                with the utmost care, working diligently to
+                                provide a fair and satisfactory resolution. For
+                                non-subscribed users, we apply a success fee of
+                                12% plus GST. Subscribed users benefit from a
+                                reduced rate of 10% plus GST—among the most
+                                competitive rates in the market. Ensuring your
+                                satisfaction is our highest priority.{' '}
                             </CardDescription>
                             <div className="my-2 flex items-center">
                                 <Checkbox
@@ -648,7 +648,7 @@ const IndividualForm = () => {
                                         setisChecked(e.target.checked)
                                     }
                                 >
-                                    Check the box to accept and proceed
+                                    Please check the box to accept and proceed.{' '}
                                 </Checkbox>
                             </div>
                         </CardContent>

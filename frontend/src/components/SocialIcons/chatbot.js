@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { BASE_URL } from '../../lib/constant';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { Button } from '../ui/button';
 
 const ChatBot = ({ isheader }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -39,6 +40,7 @@ const ChatBot = ({ isheader }) => {
 
     const handleSendMessage = (step, message) => {
         if (!step) return;
+
         if (step !== 1) {
             const newMessage = {
                 text: message,
@@ -46,18 +48,27 @@ const ChatBot = ({ isheader }) => {
             };
             setMessages((prevMessages) => [...prevMessages, newMessage]);
         }
+
         const value = valueAttrChange();
         const userMessage = {
             text: value,
             type: 'user',
         };
         setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+        // Move to the next step if applicable
         if (step <= 4) {
             if (step === 4) {
                 postFormData();
             }
             setStep((prevState) => prevState + 1);
         }
+
+        // Clear the input field by resetting the state
+        if (step === 1) setName('');
+        else if (step === 2) setEmail('');
+        else if (step === 3) setMobile('');
+        else if (step === 4) setIssue('');
     };
 
     const postFormData = async () => {
@@ -74,7 +85,6 @@ const ChatBot = ({ isheader }) => {
                     issue,
                 }),
             });
-            setIssue(' ');
         } catch (error) {
             toast.error(error.message);
             console.error('Error posting data:', error);
@@ -103,7 +113,6 @@ const ChatBot = ({ isheader }) => {
         width: '500px',
         height: '400px',
         borderRadius: '8px',
-        backgroundColor: 'white',
         boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
         position: 'fixed',
         bottom: '60px',
@@ -115,10 +124,11 @@ const ChatBot = ({ isheader }) => {
     };
 
     const changeHandler = (e) => {
-        if (step === 1) setName(e.target.value);
-        else if (step === 2) setEmail(e.target.value);
-        else if (step === 3) setMobile(e.target.value);
-        else if (step === 4) setIssue(e.target.value);
+        const value = e.target.value;
+        if (step === 1) setName(value);
+        else if (step === 2) setEmail(value);
+        else if (step === 3) setMobile(value);
+        else if (step === 4) setIssue(value);
     };
 
     const valueAttrChange = () => {
@@ -131,6 +141,8 @@ const ChatBot = ({ isheader }) => {
                 return mobile;
             case 4:
                 return issue;
+            default:
+                return '';
         }
     };
 
@@ -156,11 +168,15 @@ const ChatBot = ({ isheader }) => {
     }, [isOpen]);
 
     return (
-        <div ref={chatContainerRef} style={chatBotStyle}>
+        <div
+            ref={chatContainerRef}
+            style={chatBotStyle}
+            className={isheader ? 'text-foreground' : ''}
+        >
             {isOpen && (
                 <div
                     style={chatBoxStyle}
-                    className="mr-12 max-w-[290px] md:max-w-[340px] overflow-hidden"
+                    className="mr-12 bg-muted max-w-[290px] md:max-w-[340px] overflow-hidden"
                 >
                     <div className="bg-orange-500 w-full h-16 rounded-md text-white  flex items-center">
                         <PiFinnTheHuman className="text-4xl m-2 border text-orange-500 bg-white rounded-full p-2 " />
@@ -177,7 +193,7 @@ const ChatBot = ({ isheader }) => {
                     <section className="px-5 pt-5 pb-20 overflow-y-auto">
                         {messages.map((message, index) => (
                             <div
-                                className={`flex bg-orange-500 max-w-60 text-white items-center rounded-md mb-5 px-5 min-h-10 ${
+                                className={`flex  max-w-60  border bg-background py-1 items-center rounded-md mb-5 px-5 min-h-10 ${
                                     message.type !== 'bot' ? 'ml-auto' : ''
                                 } `}
                                 key={index}
@@ -186,29 +202,29 @@ const ChatBot = ({ isheader }) => {
                             </div>
                         ))}
                         {step !== 1 ? (
-                            <div className="text-white  bg-orange-500 py-2 px-2 rounded-md mr-20">
+                            <div className="py-2 px-2 rounded-md mr-20 border bg-background">
                                 {getPromptMessage()}
                             </div>
                         ) : null}
                         {step === 5 ? (
-                            <div className="space-y-2 my-2">
-                                <p className="text-white  bg-orange-500 py-2 px-2 rounded-md mr-20">
+                            <div className="space-y-2 my-2 ">
+                                <p className="py-2 px-2  mr-20 border rounded-md bg-background">
                                     Meanwhile, to register your complaint with
-                                    us, kindly click on the below
+                                    us, kindly click on the link below
                                 </p>
-                                <Link
-                                    href="/dashboard/register"
-                                    className="b relative mx-auto h-16 w-64 flex justify-center items-center"
-                                >
-                                    <div className="i h-16 w-64 bg-orange-500 items-center rounded-xl shadow-2xl cursor-pointer absolute overflow-hidden transform hover:scale-x-110 hover:scale-y-105 hover:bg-blue-500 transition duration-300 ease-out"></div>
-                                    <div className="text-center text-white font-semibold z-10 pointer-events-none">
-                                        Register your Complaint
-                                    </div>
-                                    <span className="absolute flex h-6 w-6 top-0 right-0 transform translate-x-2.5 -translate-y-2.5">
-                                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
-                                        <span className="absolute inline-flex rounded-full h-6 w-6 bg-blue-500"></span>
-                                    </span>
-                                </Link>
+                                <Button aschild>
+                                    <Link href="/dashboard/register">
+                                        Register Your Complaint
+                                    </Link>
+                                </Button>
+                                <div className="border px-2 py-1 bg-background rounded-md w-fit">
+                                    Or
+                                </div>
+                                <Button aschild>
+                                    <Link href="/#subscription">
+                                        Subscribe Now
+                                    </Link>
+                                </Button>
                             </div>
                         ) : null}
                         <div ref={lastMessageRef}></div>
@@ -252,7 +268,7 @@ const ChatBot = ({ isheader }) => {
                 className={`flex items-center`}
             >
                 <span
-                    className={`${isheader ? 'mr-2' : null} hidden md:block text-sm`}
+                    className={`${isheader ? 'mr-2 text-white' : null} hidden md:block text-sm`}
                 >
                     {isheader ? 'Chat With Assistant' : ''}
                 </span>
