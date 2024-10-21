@@ -78,25 +78,29 @@ export default function PayButton({ plan, subscription }) {
                     You have already subscribed for this plan.
                 </p>
             )}
-            <Button
-                disabled={isLoading || isSamePlan}
-                onClick={initiatePayment}
-            >
-                {isLoading ? (
-                    <Fragment>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Please wait...
-                    </Fragment>
-                ) : (
-                    <Fragment>
-                        Pay{' '}
-                        <p className="ml-2 font-extrabold flex items-center">
-                            <IndianRupee className="h-4 w-4" />{' '}
-                            <span className="text-xl">{plan.price}</span>
-                        </p>
-                    </Fragment>
-                )}
-            </Button>
+            {isSamePlan ? (
+                <Button>Subscribed</Button>
+            ) : (
+                <Button
+                    disabled={isLoading || isSamePlan}
+                    onClick={initiatePayment}
+                >
+                    {isLoading ? (
+                        <Fragment>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Please wait...
+                        </Fragment>
+                    ) : (
+                        <Fragment>
+                            Pay{' '}
+                            <p className="ml-2 font-extrabold flex items-center">
+                                <IndianRupee className="h-4 w-4" />{' '}
+                                <span className="text-xl">{plan.price}</span>
+                            </p>
+                        </Fragment>
+                    )}
+                </Button>
+            )}
         </Fragment>
     );
 }

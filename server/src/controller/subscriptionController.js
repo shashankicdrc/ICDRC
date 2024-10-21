@@ -478,127 +478,164 @@ class SubscriptionController extends Base {
     });
 
     #checkStatus = asyncHandler(async (req, res) => {
-        logger.info('Subscription status initiate');
+        try {
+            logger.info('Subscription status initiate');
 
-        const { transactionId } = req.params;
-        const { planId, userId } = req.query;
+            const { transactionId } = req.params;
+            const { planId, userId } = req.query;
 
-        const [plan, user] = await Promise.all([
-            planModel.findById(planId),
-            usermodel.findById(userId).select('-password'),
-        ]);
-        if (!plan) {
-            return res.redirect(
-                `${FRONTEND_URL}/failure?message=Plan does not exist.`,
-            );
-        }
+            if (!transactionId) {
+                return res.redirect(
+                    `${FRONTEND_URL}/failure?message=Please provide transactionId.`,
+                );
+            }
 
-        if (!user) {
-            return res.redirect(
-                `${FRONTEND_URL}/failure?message=User does not exist.`,
-            );
-        }
+            if (!planId || !userId) {
+                return res.redirect(
+                    `${FRONTEND_URL}/failure?message=Please provide planId and userId.`,
+                );
+            }
 
-        const merchantId = process.env.MERCHANT_ID;
-        const keyIndex = process.env.SALT_INDEX;
-        const string =
-            `/pg/v1/status/${merchantId}/${transactionId}` +
-            process.env.SALT_KEY;
-        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
-        const checksum = sha256 + '###' + keyIndex;
+            logger.info(req.params);
+            logger.info('Query');
+            logger.info(req.query);
 
-        const payURL = `${PHONE_PAY_URL}/status/${merchantId}/${transactionId}`;
-        logger.info('PhonePayURL');
-        logger.info(payURL);
+            const [plan, user] = await Promise.all([
+                planModel.findById(planId),
+                usermodel.findById(userId).select('-password'),
+            ]);
+            if (!plan) {
+                return res.redirect(
+                    `${FRONTEND_URL}/failure?message=Plan does not exist.`,
+                );
+            }
 
-        const response = await fetch(`${payURL}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-VERIFY': checksum,
-                'X-MERCHANT-ID': `${merchantId}`,
-            },
-        });
-        const { success, data, message } = await response.json();
-        if (!success) {
-            return res.redirect(`${FRONTEND_URL}/failure?message=${message}`);
-        }
+            if (!user) {
+                return res.redirect(
+                    `${FRONTEND_URL}/failure?message=User does not exist.`,
+                );
+            }
 
-        const isAlreadyProcessed = await PaymentHistory.findOne({
-            transactionId: data.transactionId,
-        });
+            const merchantId = process.env.MERCHANT_ID;
+            const keyIndex = process.env.SALT_INDEX;
+            const string =
+                `/pg/v1/status/${merchantId}/${transactionId}` +
+                process.env.SALT_KEY;
+            const sha256 = crypto
+                .createHash('sha256')
+                .update(string)
+                .digest('hex');
+            const checksum = sha256 + '###' + keyIndex;
 
-        if (isAlreadyProcessed) {
-            return res.redirect(
-                `${FRONTEND_URL}/failure?message=Your payment is already processed.`,
-            );
-        }
-        let subscriptionData;
+            const payURL = `${PHONE_PAY_URL}/status/${merchantId}/${transactionId}`;
+            logger.info('PhonePayURL');
+            logger.info(payURL);
 
-        const isUserSubscription =
-            await this.#subscriptionService.getUserSubscription(userId);
+            const response = await fetch(`${payURL}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-VERIFY': checksum,
+                    'X-MERCHANT-ID': `${merchantId}`,
+                },
+            });
+            const { success, data, message } = await response.json();
+            logger.info('Get Response from phone pay');
+            logger.info(success);
+            logger.info(data);
+            logger.info(message);
 
-        if (isUserSubscription) {
-            const updateSubscriptionData = {
-                planId: plan.id,
-                complaintLimit: plan.complaintLimit,
-                usedComplaints: 0,
-                startDate: new Date(),
-                endDate: new Date(
-                    Date.now() + plan.durationInDays * 24 * 60 * 60 * 1000,
-                ),
+            if (!success || !data || data.responseCode !== 'SUCCESS') {
+                return res.redirect(
+                    `${FRONTEND_URL}/failure?message=${message}`,
+                );
+            }
+
+            const isAlreadyProcessed = await PaymentHistory.findOne({
+                transactionId: data.transactionId,
+            });
+
+            if (isAlreadyProcessed) {
+                return res.redirect(
+                    `${FRONTEND_URL}/failure?message=Your payment is already processed.`,
+                );
+            }
+            let subscriptionData;
+
+            const isUserSubscription =
+                await this.#subscriptionService.getUserSubscription(userId);
+
+            if (isUserSubscription) {
+                const updateSubscriptionData = {
+                    planId: plan.id,
+                    complaintLimit: plan.complaintLimit,
+                    usedComplaints: 0,
+                    startDate: new Date(),
+                    endDate: new Date(
+                        Date.now() + plan.durationInDays * 24 * 60 * 60 * 1000,
+                    ),
+                };
+                subscriptionData =
+                    await this.#subscriptionService.updateSubscription(
+                        isUserSubscription._id,
+                        updateSubscriptionData,
+                    );
+            } else {
+                subscriptionData =
+                    await this.#subscriptionService.createSubscription(
+                        planId,
+                        userId,
+                    );
+            }
+
+            const paymentHistoryData = {
+                userId,
+                amount: data.amount / 100,
+                transactionId: data.transactionId,
+                paymentFor: 'Subscription',
+                paymentStatus: 'Success',
+                subscriptionId: subscriptionData.id,
             };
-            subscriptionData =
-                await this.#subscriptionService.updateSubscription(
-                    isUserSubscription._id,
-                    updateSubscriptionData,
-                );
-        } else {
-            subscriptionData =
-                await this.#subscriptionService.createSubscription(
-                    planId,
-                    userId,
-                );
+
+            logger.info('paymentHistory Data');
+            logger.info(paymentHistoryData);
+
+            const paymentHistory =
+                await PaymentHistory.create(paymentHistoryData);
+
+            const subscriptionPlan = subscriptionData.plans.find(
+                (plan) => plan.planId.toString() === planId,
+            );
+            const emailData = {
+                userName: user.name,
+                planName:
+                    plan.name !== 'Individual' ? 'Organization' : 'Individual',
+                startDate: subscriptionPlan.startDate.toLocaleDateString(),
+                endDate: subscriptionPlan.endDate.toLocaleDateString(),
+                amount: data.amount / 100,
+                transactionId: paymentHistory.transactionId,
+            };
+            const templateLink =
+                '/src/templates/subscription/Subscription.html';
+
+            const html = htmlTemplate(process.cwd() + templateLink, emailData);
+            const NewMessage = {
+                from: NOREPLYEMAIL,
+                to: [user.email],
+                subject: `Subscription Confirmation - ${emailData.planName}`,
+                html,
+            };
+
+            queues.EmailQueue.add('send-email', NewMessage);
+
+            return res.redirect(
+                `${FRONTEND_URL}/success?amount=${data.amount}&transactionId=${data.transactionId}`,
+            );
+        } catch (error) {
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=$${error.message}`,
+            );
         }
-
-        const paymentHistoryData = {
-            userId,
-            amount: data.amount / 100,
-            transactionId: data.transactionId,
-            paymentFor: 'Subscription',
-            paymentStatus: 'Success',
-            subscriptionId: subscriptionData.id,
-        };
-
-        const paymentHistory = await PaymentHistory.create(paymentHistoryData);
-
-        const subscriptionPlan = subscriptionData.plans.find(
-            (plan) => plan.planId.toString() === planId,
-        );
-        const emailData = {
-            userName: user.name,
-            planName:
-                plan.name !== 'Individual' ? 'Organization' : 'Individual',
-            startDate: subscriptionPlan.startDate.toLocaleDateString(),
-            endDate: subscriptionPlan.endDate.toLocaleDateString(),
-            amount: data.amount / 100,
-            transactionId: paymentHistory.transactionId,
-        };
-        const templateLink = '/src/templates/subscription/Subscription.html';
-
-        const html = htmlTemplate(process.cwd() + templateLink, emailData);
-        const NewMessage = {
-            from: NOREPLYEMAIL,
-            to: [user.email],
-            subject: `Subscription Confirmation - ${emailData.planName}`,
-            html,
-        };
-
-        queues.EmailQueue.add('send-email', NewMessage);
-
-        return res.redirect(
-            `${FRONTEND_URL}/success?amount=${data.amount}&transactionId=${data.transactionId}`,
-        );
     });
 
     #intiateSubscription = asyncHandler(async (req, res) => {
@@ -661,12 +698,15 @@ class SubscriptionController extends Base {
             },
         };
 
+        console.log(payload);
+
         const dataPayload = JSON.stringify(payload);
         const dataBase64 = Buffer.from(dataPayload).toString('base64');
 
         const string = dataBase64 + '/pg/v1/pay' + process.env.SALT_KEY;
         const sha256 = crypto.createHash('sha256').update(string).digest('hex');
         const checksum = sha256 + '###' + process.env.SALT_INDEX;
+        console.log(string, '\n', checksum);
 
         const payURL = `${PHONE_PAY_URL}/pay`;
         logger.info('PHONE_PAY_URL');
@@ -682,6 +722,9 @@ class SubscriptionController extends Base {
             body: JSON.stringify({ request: dataBase64 }),
         });
         const { data, success, message } = await response.json();
+        logger.info(data);
+        logger.info(success);
+        logger.info(message);
         if (!success) {
             throw new CustomError(message, httpStatusCode.BAD_REQUEST);
         }
