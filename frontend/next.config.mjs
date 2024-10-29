@@ -21,6 +21,19 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
+    async headers() {
+        return [
+            {
+                source: '/(.*)', // Applies to all routes
+                headers: [
+                    {
+                        key: 'Referrer-Policy',
+                        value: 'strict-origin-when-cross-origin', // Sets the referrer policy
+                    },
+                ],
+            },
+        ];
+    },
 };
 
 export default nextConfig;

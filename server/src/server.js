@@ -41,6 +41,7 @@ const startServer = async () => {
         'http://localhost:3000',
         'http://localhost:3001',
         'https://icdrc.in',
+        'https://www.icdrc.in',
         'https://dashboard.icdrc.in',
     ];
     var corsOptionsDelegate = function (req, callback) {
