@@ -22,12 +22,12 @@ const getPublicKeySecret = () => {
 
 
 const getAccessToken = async (payload) => {
-    const secret = getPrivateKeySecret();
+    const secret = process.env.JWT_SECRET;
     const token = jwt.sign(payload, secret, options);
     return token;
 };
 const getRefreshToken = async (paylod) => {
-    const secret = getPrivateKeySecret();
+    const secret = process.env.JWT_SECRET;
     const token = jwt.sign(paylod, secret, {
         ...options,
         expiresIn: "30d",
@@ -36,7 +36,7 @@ const getRefreshToken = async (paylod) => {
 };
 
 const verifyToken = async (token, option) => {
-    const secret = getPublicKeySecret();
+    const secret = process.env.JWT_SECRET;
     const isVerified = jwt.verify(token, secret, option);
     return isVerified;
 };
