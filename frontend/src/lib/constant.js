@@ -1,7 +1,7 @@
 export const BASE_URL =
     process.env.NODE_ENV !== 'production'
         ? 'http://localhost:7000'
-        : 'https://backendii.icdrc.in';
+        : 'https://api.icdrc.in';
 
 export const httpStatusCode = {
     UNPROCESSABLE_ENTITY: 422,

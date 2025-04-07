@@ -56,6 +56,7 @@ const startServer = async () => {
 
     app.use(express.json());
     app.use(cors(corsOptionsDelegate));
+    app.set('trust proxy', 1);
     cloudinaryConfiguration();
 
     app.disable('x-powered-by');
