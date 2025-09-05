@@ -14,6 +14,7 @@ export default function ResetPasswordform() {
     const searchParams = useSearchParams();
     const email = searchParams.get('email');
     const router = useRouter();
+    const [passwordFocused, setPasswordFocused] = useState(false);
 
     const {
         formState: { errors },
@@ -28,6 +29,39 @@ export default function ResetPasswordform() {
             code: '',
         },
     });
+
+    const passwordValue = watch('password');
+
+    // Password validation rules
+    const passwordRules = [
+        {
+            id: 1,
+            text: 'At least 8 characters',
+            meets: passwordValue?.length >= 8,
+        },
+        {
+            id: 2,
+            text: 'Contains at least one uppercase letter',
+            meets: /[A-Z]/.test(passwordValue),
+        },
+        {
+            id: 3,
+            text: 'Contains at least one lowercase letter',
+            meets: /[a-z]/.test(passwordValue),
+        },
+        {
+            id: 4,
+            text: 'Contains at least one number',
+            meets: /[0-9]/.test(passwordValue),
+        },
+        {
+            id: 5,
+            text: 'Contains at least one special character',
+            meets: /[!@#$%^&*(),.?":{}|<>]/.test(passwordValue),
+        },
+    ];
+
+    const allRulesMet = passwordRules.every((rule) => rule.meets);
 
     const onSubmit = async (values) => {
         if (!email) return;
@@ -79,8 +113,56 @@ export default function ResetPasswordform() {
                             message:
                                 'Password must be at least 8 characters long',
                         },
+                        validate: {
+                            hasUpperCase: (value) =>
+                                /[A-Z]/.test(value) ||
+                                'Password must contain at least one uppercase letter',
+                            hasLowerCase: (value) =>
+                                /[a-z]/.test(value) ||
+                                'Password must contain at least one lowercase letter',
+                            hasNumber: (value) =>
+                                /[0-9]/.test(value) ||
+                                'Password must contain at least one number',
+                            hasSpecialChar: (value) =>
+                                /[!@#$%^&*(),.?":{}|<>]/.test(value) ||
+                                'Password must contain at least one special character',
+                        },
                     })}
+                    onFocus={() => setPasswordFocused(true)}
+                    onBlur={() => setPasswordFocused(false)}
                 />
+                {/* Password Rules Display */}
+                {passwordFocused && (
+                    <div className="mt-4 p-3">
+                        <p className="text-sm font-medium mb-2">
+                            Password must contain:
+                        </p>
+                        <ul className="space-y-1">
+                            {passwordRules.map((rule) => (
+                                <li
+                                    key={rule.id}
+                                    className="flex items-center text-sm"
+                                >
+                                    <span
+                                        className={`inline-block text-center w-5 h-5 mr-2 rounded-full ${rule.meets ? 'bg-green-500 text-white' : 'bg-gray-300'}`}
+                                    >
+                                        {rule.meets ? '✓' : ''}
+                                    </span>
+                                    <span
+                                        className={
+                                            rule.meets
+                                                ? 'text-green-700'
+                                                : 'text-gray-600'
+                                        }
+                                    >
+                                        {rule.text}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
+
                 {errors.password && (
                     <p className="text-destructive text-sm">
                         {errors.password.message}
