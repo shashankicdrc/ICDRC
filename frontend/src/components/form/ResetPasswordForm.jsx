@@ -7,7 +7,7 @@ import { Button } from '../../components/ui/button';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { resetPassword } from '../../externalAPI/userService';
 import toast from 'react-hot-toast';
-import { Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 
 export default function ResetPasswordform() {
     const [isLoading, setisLoading] = useState(false);
@@ -15,6 +15,8 @@ export default function ResetPasswordform() {
     const email = searchParams.get('email');
     const router = useRouter();
     const [passwordFocused, setPasswordFocused] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setshowConfirmPassword] = useState(false);
 
     const {
         formState: { errors },
@@ -104,33 +106,50 @@ export default function ResetPasswordform() {
             </div>
             <div className="space-y-2">
                 <Label>New password</Label>
-                <Input
-                    placeholder="Enter your new password"
-                    {...register('password', {
-                        required: 'Password is required',
-                        minLength: {
-                            value: 8,
-                            message:
-                                'Password must be at least 8 characters long',
-                        },
-                        validate: {
-                            hasUpperCase: (value) =>
-                                /[A-Z]/.test(value) ||
-                                'Password must contain at least one uppercase letter',
-                            hasLowerCase: (value) =>
-                                /[a-z]/.test(value) ||
-                                'Password must contain at least one lowercase letter',
-                            hasNumber: (value) =>
-                                /[0-9]/.test(value) ||
-                                'Password must contain at least one number',
-                            hasSpecialChar: (value) =>
-                                /[!@#$%^&*(),.?":{}|<>]/.test(value) ||
-                                'Password must contain at least one special character',
-                        },
-                    })}
-                    onFocus={() => setPasswordFocused(true)}
-                    onBlur={() => setPasswordFocused(false)}
-                />
+                <div className="relative">
+                    <Input
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="Enter your new password"
+                        {...register('password', {
+                            required: 'Password is required',
+                            minLength: {
+                                value: 8,
+                                message:
+                                    'Password must be at least 8 characters long',
+                            },
+                            validate: {
+                                hasUpperCase: (value) =>
+                                    /[A-Z]/.test(value) ||
+                                    'Password must contain at least one uppercase letter',
+                                hasLowerCase: (value) =>
+                                    /[a-z]/.test(value) ||
+                                    'Password must contain at least one lowercase letter',
+                                hasNumber: (value) =>
+                                    /[0-9]/.test(value) ||
+                                    'Password must contain at least one number',
+                                hasSpecialChar: (value) =>
+                                    /[!@#$%^&*(),.?":{}|<>]/.test(value) ||
+                                    'Password must contain at least one special character',
+                            },
+                        })}
+                        onFocus={() => setPasswordFocused(true)}
+                        onBlur={() => setPasswordFocused(false)}
+                    />
+                    <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={
+                            showPassword ? 'Hide password' : 'Show password'
+                        }
+                    >
+                        {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                        ) : (
+                            <Eye className="h-4 w-4" />
+                        )}
+                    </button>
+                </div>
                 {/* Password Rules Display */}
                 {passwordFocused && (
                     <div className="mt-4 p-3">
@@ -171,15 +190,37 @@ export default function ResetPasswordform() {
             </div>
             <div className="space-y-2">
                 <Label>Confirm password</Label>
-                <Input
-                    placeholder="Re-enter your password"
-                    {...register('confirmPassword', {
-                        required: 'Please confirm your password',
-                        validate: (value) =>
-                            value === watch('password') ||
-                            'Passwords do not match',
-                    })}
-                />
+                <div className="relative">
+                    <Input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        placeholder="Re-enter your password"
+                        {...register('confirmPassword', {
+                            required: 'Please confirm your password',
+                            validate: (value) =>
+                                value === watch('password') ||
+                                'Passwords do not match',
+                        })}
+                    />
+
+                    <button
+                        type="button"
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                        onClick={() =>
+                            setshowConfirmPassword(!showConfirmPassword)
+                        }
+                        aria-label={
+                            showConfirmPassword
+                                ? 'Hide password'
+                                : 'Show password'
+                        }
+                    >
+                        {showConfirmPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                        ) : (
+                            <Eye className="h-4 w-4" />
+                        )}
+                    </button>
+                </div>
                 {errors.confirmPassword && (
                     <p className="text-destructive text-sm">
                         {errors.confirmPassword.message}
