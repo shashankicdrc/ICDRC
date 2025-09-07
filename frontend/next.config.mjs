@@ -7,6 +7,7 @@
 // const withImage=require('next-images')
 // module.exports = withImage()
 const nextConfig = {
+    output: 'standalone',
     images: {
         remotePatterns: [
             {

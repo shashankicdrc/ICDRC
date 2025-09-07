@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -61,23 +61,23 @@ CMD ["node", "server.js"]
 
 
 
-# # Use the official Node.js image as the base  
+# # Use the official Node.js image as the base
 # FROM node:latest
 #
-# # Set the working directory inside the container  
-# WORKDIR /app  
+# # Set the working directory inside the container
+# WORKDIR /app
 #
-# # Copy package.json and package-lock.json to the container  
-# COPY package*.json ./  
+# # Copy package.json and package-lock.json to the container
+# COPY package*.json ./
 #
-# # Install dependencies  
-# RUN npm ci  
+# # Install dependencies
+# RUN npm ci
 #
-# # Copy the app source code to the container  
-# COPY . .  
+# # Copy the app source code to the container
+# COPY . .
 #
-# # Expose the port the app will run on  
-# EXPOSE 3000  
+# # Expose the port the app will run on
+# EXPOSE 3000
 #
-# # Start the app  
-# CMD ["npm","run","dev"]  
+# # Start the app
+# CMD ["npm","run","dev"]
