@@ -65,10 +65,10 @@ const ChatBot = ({ isheader }) => {
         }
 
         // Clear the input field by resetting the state
-        if (step === 1) setName('');
-        else if (step === 2) setEmail('');
-        else if (step === 3) setMobile('');
-        else if (step === 4) setIssue('');
+        // if (step === 1) setName('');
+        // else if (step === 2) setEmail('');
+        // else if (step === 3) setMobile('');
+        // else if (step === 4) setIssue('');
     };
 
     const postFormData = async () => {
