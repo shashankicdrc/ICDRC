@@ -1,6 +1,7 @@
 export const BASE_URL =
     process.env.NODE_ENV !== 'production'
-        ? 'http://localhost:7000'
+        // ? 'http://localhost:7000'
+        ? 'http://localhost:8080'
         : 'https://api.icdrc.in';
 
 export const httpStatusCode = {

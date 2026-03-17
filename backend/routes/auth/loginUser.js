@@ -7,7 +7,9 @@ const generateToken = require('../../utils/generateToken')
 
 
 router.post('/', asyncError(async (req, res) => {
-    const { emailId, password } = req.body;
+    // Support both the legacy 'emailId' and new NextAuth 'email' body format
+    const emailId = req.body.emailId || req.body.email;
+    const { password } = req.body;
 
     if (!emailId || !password) return res.status(400).json({ success: false, message: "Please enter all fields." });
 
@@ -30,7 +32,11 @@ router.post('/', asyncError(async (req, res) => {
     res.status(200).json({
         success: true,
         message: `Welcome back, ${user.name}`,
-        token 
+        token, // legacy support
+        data: {
+            AccessToken: token,
+            RefreshToken: token // mock refresh token for compatibility
+        }
     })
 }))
 
