@@ -10,6 +10,9 @@ services:
       - server
     env_file:
         - ./frontend/.env
+    environment:
+      - NEXTAUTH_URL=http://77.37.45.141:3100
+      - NEXTAUTH_SECRET=hMVQySmVjbrzps89s+Ro4SGGSmKpjF8Ox5XI7VAs2J0=
 
   dashboard:
     container_name: icdrc_dashboard
