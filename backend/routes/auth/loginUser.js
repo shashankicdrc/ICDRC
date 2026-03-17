@@ -34,6 +34,9 @@ router.post('/', asyncError(async (req, res) => {
         message: `Welcome back, ${user.name}`,
         token, // legacy support
         data: {
+            id: user._id, // Required by NextAuth CredentialsProvider
+            email: user.emailId, // Good practice to include
+            name: user.name, // Good practice to include
             AccessToken: token,
             RefreshToken: token // mock refresh token for compatibility
         }
