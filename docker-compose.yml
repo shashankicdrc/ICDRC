@@ -1,3 +1,4 @@
+version: '3.9'
 services:
   client:
     container_name: icdrc_frontend
@@ -6,12 +7,11 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
-    restart: always
+      - server
     env_file:
-      - ./frontend/.env
+        - ./frontend/.env
     environment:
-      - NEXTAUTH_URL=http://77.37.45.141:3000
+      - NEXTAUTH_URL=http://77.37.45.141:3100
       - NEXTAUTH_SECRET=hMVQySmVjbrzps89s+Ro4SGGSmKpjF8Ox5XI7VAs2J0=
 
   dashboard:
@@ -21,25 +21,26 @@ services:
     ports:
       - "3001:3001"
     depends_on:
-      - backend
-    restart: always
+      - server
     env_file:
-      - ./dashboard/.env
+        - ./dashboard/.env
 
-  backend:
-    container_name: icdrc_backend
-    build: ./backend
+  
+  server:
+    container_name: new_server
+    build: ./server
     restart: always
     depends_on:
-      - redis
+     - redis
     env_file:
-      - ./backend/.env
+      - ./server/.env
     ports:
-      - "7000:7000"
-
+      - 7000:7000
+    
   redis:
     container_name: redis
     image: redis:alpine
     restart: always
     ports:
-      - "6379:6379"
+      - 6379:6379
+
