@@ -402,10 +402,7 @@ class PaymentController extends Base {
         }
 
         const transactionId = nanoid();
-        const baseURl =
-            process.env.NODE_ENV === 'production'
-                ? process.env.BACKEND_URL
-                : 'http://localhost:7000';
+        const baseURl = process.env.BACKEND_URL || 'http://localhost:7000';
         const payload = {
             userId: req.id,
             email: req.email,

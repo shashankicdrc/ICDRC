@@ -678,10 +678,8 @@ class SubscriptionController extends Base {
 
         const transactionId = nanoid();
 
-        const redirectUrl =
-            process.env.NODE_ENV === 'production'
-                ? `${process.env.BACKEND_URL}/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`
-                : `http://localhost:7000/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`;
+        const backendUrl = process.env.BACKEND_URL || 'http://localhost:7000';
+        const redirectUrl = `${backendUrl}/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`;
 
         const payload = {
             userId: req.id,

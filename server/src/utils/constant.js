@@ -53,9 +53,7 @@ export const httpStatus = {
 };
 
 export const FRONTEND_URL =
-    process.env.NODE_ENV === 'production'
-        ? process.env.FRONTEND_URL
-        : 'http://localhost:3000';
+    process.env.FRONTEND_URL || 'http://localhost:3000';
 
 export const PHONE_PAY_URL =
     process.env.NODE_ENV === 'production'
