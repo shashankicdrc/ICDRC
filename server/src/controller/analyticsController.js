@@ -1,5 +1,5 @@
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
 import indComplaintModel from '#models/indComplaintModel';
 import orgComplaintModel from '#models/orgComplaintModel';
 import PaymentHistory from '#models/paymentHistoryModel';

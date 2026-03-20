@@ -32,6 +32,7 @@ import hpp from 'hpp';
 import cron from 'node-cron';
 import { checkSubscriptions } from '#utils/checkSubscription';
 import renewSubscriptionController from '#controller/renewSubscriptionController';
+import mediationCaseController from '#controller/mediationCaseController';
 
 const startServer = async () => {
     const app = express();
@@ -106,6 +107,7 @@ const startServer = async () => {
     app.use('/api', teamController);
     app.use('/api', textTestimonial);
     app.use('/api', renewSubscriptionController);
+    app.use('/api', mediationCaseController);
 
     // Schedule a cron job to run every day at midnight
     cron.schedule('0 0 * * *', () => {
