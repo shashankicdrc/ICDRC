@@ -8,4 +8,4 @@ RUN npm ci
 
 EXPOSE 7000
 
-CMD ["npx", "nodemon", "--legacy-watch", "--env-file=.env", "src/index.js"]
+CMD ["npx", "nodemon", "--legacy-watch", "src/index.js"]
