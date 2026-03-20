@@ -2,7 +2,7 @@ import logger from '#utils/logger';
 import fs from 'fs';
 import ejs from 'ejs';
 
-export const NOREPLYEMAIL = 'no_reply@icdrc.in';
+export const NOREPLYEMAIL = process.env.NOREPLYEMAIL || 'no_reply@icdrc.in';
 
 export const policyTypeToEmail = {
     'Life Insurance': 'lifeinsurance@icdrc.in',

@@ -12,7 +12,7 @@ import {
 } from '#utils/constant';
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
 import crypto from 'crypto';
 import SubscriptionService from '#services/subscriptionService';
 import PaymentHistory from '#models/paymentHistoryModel';
