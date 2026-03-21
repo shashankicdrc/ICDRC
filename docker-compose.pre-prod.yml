@@ -1,95 +1,47 @@
 name: icdrc-pre-prod
 
-# Intended to run from /var/www/icdrc-pre-prod on 77.37.45.141.
-#
-# This pre-prod stack uses the managed MongoDB URI defined in server/.env.
-# Redis stays containerized, but MongoDB is not started locally.
-# No legacy backend container is started; leftover legacy frontend URLs are
-# pointed at the main server until those pages are migrated.
-#
-# Note: this is still a bind-mounted/server-hosted stack for now. If you want a
-# true staging-style immutable image deployment next, we should add dedicated
-# pre-prod Dockerfiles or build args and drop the live source mounts.
 services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.pre-prod
     env_file:
-      - ./frontend/.env
-    environment:
-      NODE_ENV: development
-      WATCHPACK_POLLING: "true"
-      CHOKIDAR_USEPOLLING: "true"
-      NEXTAUTH_URL: http://77.37.45.141:3000
-      NEXT_PUBLIC_BACKEND_URL: http://77.37.45.141:7000
-      INTERNAL_BACKEND_URL: http://server:7000
-      NEXT_PUBLIC_LEGACY_BACKEND_URL: http://77.37.45.141:7000
-      INTERNAL_LEGACY_BACKEND_URL: http://server:7000
-      NEXT_PUBLIC_FRONTEND_URL: http://77.37.45.141:3000
+      - ./frontend/.env.pre-prod
     depends_on:
       - server
     ports:
       - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - frontend_node_modules:/app/node_modules
-      - frontend_next:/app/.next
 
   dashboard:
     build:
       context: ./dashboard
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.pre-prod
     env_file:
-      - ./dashboard/.env
-    environment:
-      NODE_ENV: development
-      WATCHPACK_POLLING: "true"
-      CHOKIDAR_USEPOLLING: "true"
-      NEXTAUTH_URL: http://77.37.45.141:3001
-      NEXT_PUBLIC_BACKEND_URL: http://77.37.45.141:7000
-      INTERNAL_BACKEND_URL: http://server:7000
+      - ./dashboard/.env.pre-prod
     depends_on:
       - server
     ports:
       - "3001:3001"
-    volumes:
-      - ./dashboard:/app
-      - dashboard_node_modules:/app/node_modules
-      - dashboard_next:/app/.next
 
   server:
     build:
       context: ./server
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile.pre-prod
     env_file:
-      - ./server/.env
-    environment:
-      NODE_ENV: development
-      PORT: 7000
-      FRONTEND_URL: http://77.37.45.141:3000
-      BACKEND_URL: http://77.37.45.141:7000
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      - ./server/.env.pre-prod
     depends_on:
       redis:
         condition: service_started
     ports:
       - "7000:7000"
-    volumes:
-      - ./server:/app
-      - server_node_modules:/app/node_modules
 
   redis:
     image: redis:7-alpine
     command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
     volumes:
-      - redis_data:/data
+      - redis_data_pre_prod:/data
 
 volumes:
-  frontend_node_modules:
-  frontend_next:
-  dashboard_node_modules:
-  dashboard_next:
-  server_node_modules:
-  redis_data:
+  redis_data_pre_prod:
