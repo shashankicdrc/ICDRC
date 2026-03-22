@@ -1,13 +1,9 @@
 const browserBaseUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://77.37.45.141:7000';
+    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:7000';
 const internalBaseUrl = process.env.INTERNAL_BACKEND_URL || browserBaseUrl;
-const developmentBaseUrl =
-    typeof window === 'undefined' ? internalBaseUrl : browserBaseUrl;
 
 export const BASE_URL =
-    process.env.NODE_ENV !== 'production'
-        ? developmentBaseUrl
-        : process.env.NEXT_PUBLIC_BACKEND_URL || 'https://api.icdrc.in';
+    typeof window === 'undefined' ? internalBaseUrl : browserBaseUrl;
 
 export const httpStatusCode = {
     UNPROCESSABLE_ENTITY: 422,
