@@ -1,0 +1,47 @@
+name: icdrc-pre-prod
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.pre-prod
+    env_file:
+      - ./frontend/.env.pre-prod
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"
+
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile.pre-prod
+    env_file:
+      - ./dashboard/.env.pre-prod
+    depends_on:
+      - server
+    ports:
+      - "3001:3001"
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.pre-prod
+    env_file:
+      - ./server/.env.pre-prod
+    depends_on:
+      redis:
+        condition: service_started
+    ports:
+      - "7000:7000"
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data_pre_prod:/data
+
+volumes:
+  redis_data_pre_prod:
