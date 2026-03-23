@@ -33,6 +33,7 @@ import cron from 'node-cron';
 import { checkSubscriptions } from '#utils/checkSubscription';
 import renewSubscriptionController from '#controller/renewSubscriptionController';
 import mediationCaseController from '#controller/mediationCaseController';
+import mediationPaymentController from '#controller/mediationPaymentController';
 
 const startServer = async () => {
     const app = express();
@@ -108,6 +109,7 @@ const startServer = async () => {
     app.use('/api', textTestimonial);
     app.use('/api', renewSubscriptionController);
     app.use('/api', mediationCaseController);
+    app.use('/api', mediationPaymentController);
 
     // Schedule a cron job to run every day at midnight
     cron.schedule('0 0 * * *', () => {
