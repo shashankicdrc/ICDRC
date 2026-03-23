@@ -13,7 +13,7 @@ class PlanController extends Base {
     }
 
     #initializeRoutes() {
-        // this.router.post('/plans', this.#addPlan);
+        this.router.post('/plans', this.#addPlan);
         this.router.get('/plans', this.#getPlans);
         this.router.get('/plans/:id', this.#particularPlan);
     }
