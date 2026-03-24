@@ -47,6 +47,8 @@ const startServer = async () => {
         'https://icdrc.in',
         'https://www.icdrc.in',
         'https://dashboard.icdrc.in',
+        'https://dev.icdrc.in',
+        'https://dev-api.icdrc.in',
     ];
     var corsOptionsDelegate = function (req, callback) {
         var corsOptions;
