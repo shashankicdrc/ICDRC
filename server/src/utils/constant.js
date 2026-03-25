@@ -57,10 +57,6 @@ export const FRONTEND_URL =
 
 export const PHONE_PAY_URL =
     process.env.NODE_ENV === 'production'
-        ? 'https://api.phonepe.com/apis/pg/checkout/v2'
-        : 'https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2';
+        ? 'https://api.phonepe.com/apis/hermes/pg/v1'
+        : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1';
 
-export const PHONE_PAY_AUTH_URL =
-    process.env.NODE_ENV === 'production'
-        ? 'https://api.phonepe.com/apis/pg/checkout/v2/auth/token'
-        : 'https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2/auth/token';
