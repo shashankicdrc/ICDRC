@@ -93,6 +93,9 @@ jobs:
             set -e
             cd ${{ secrets.PREPROD_DEPLOY_PATH }}
 
+            # Mark directory as safe (owner mismatch fix)
+            git config --global --add safe.directory ${{ secrets.PREPROD_DEPLOY_PATH }}
+
             # Pull latest code
             git fetch origin dev
             git checkout dev
