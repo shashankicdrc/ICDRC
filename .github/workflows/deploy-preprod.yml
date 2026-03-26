@@ -85,10 +85,19 @@ jobs:
       # ─── Deploy on pre-prod server via SSH ───
       - name: Deploy to pre-prod server
         uses: appleboy/ssh-action@v1
+        env:
+          NEXT_PUBLIC_BACKEND_URL: ${{ secrets.PREPROD_NEXT_PUBLIC_BACKEND_URL }}
+          NEXT_PUBLIC_FRONTEND_URL: ${{ secrets.PREPROD_NEXT_PUBLIC_FRONTEND_URL }}
+          NEXT_PUBLIC_MERCHANT_ID: ${{ secrets.PREPROD_MERCHANT_ID }}
+          NEXT_PUBLIC_SALT_KEY: ${{ secrets.PREPROD_SALT_KEY }}
+          NEXTAUTH_SECRET: ${{ secrets.PREPROD_NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.PREPROD_NEXTAUTH_URL }}
+          DASHBOARD_URL: ${{ secrets.PREPROD_DASHBOARD_URL }}
         with:
           host: ${{ secrets.PREPROD_SSH_HOST }}
           username: ${{ secrets.PREPROD_SSH_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
+          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL
           script: |
             set -e
             cd ${{ secrets.PREPROD_DEPLOY_PATH }}
@@ -100,6 +109,25 @@ jobs:
             git fetch origin mediation/backends
             git checkout mediation/backends || git checkout -b mediation/backends origin/mediation/backends
             git reset --hard origin/mediation/backends
+
+            # Write env files on server (these are gitignored)
+            cat > ./frontend/.env.pre-prod << EOF
+            NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+            NEXT_PUBLIC_FRONTEND_URL=$NEXT_PUBLIC_FRONTEND_URL
+            NEXT_PUBLIC_MERCHANT_ID=$NEXT_PUBLIC_MERCHANT_ID
+            NEXT_PUBLIC_SALT_KEY=$NEXT_PUBLIC_SALT_KEY
+            NEXT_PUBLIC_SALT_INDEX=1
+            NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+            NEXTAUTH_URL=$NEXTAUTH_URL
+            INTERNAL_BACKEND_URL=http://server:7000
+            EOF
+
+            cat > ./dashboard/.env.pre-prod << EOF
+            NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+            NEXTAUTH_URL=$DASHBOARD_URL
+            NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+            INTERNAL_BACKEND_URL=http://server:7000
+            EOF
 
             # Rebuild and restart containers
             docker compose -f docker-compose.pre-prod.yml down
