@@ -97,9 +97,9 @@ jobs:
             git config --global --add safe.directory ${{ secrets.PREPROD_DEPLOY_PATH }}
 
             # Pull latest code
-            git fetch origin dev
-            git checkout dev
-            git reset --hard origin/dev
+            git fetch origin mediation/backends
+            git checkout mediation/backends || git checkout -b mediation/backends origin/mediation/backends
+            git reset --hard origin/mediation/backends
 
             # Rebuild and restart containers
             docker compose -f docker-compose.pre-prod.yml down
