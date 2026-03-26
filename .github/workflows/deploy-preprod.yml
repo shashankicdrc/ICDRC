@@ -93,11 +93,20 @@ jobs:
           NEXTAUTH_SECRET: ${{ secrets.PREPROD_NEXTAUTH_SECRET }}
           NEXTAUTH_URL: ${{ secrets.PREPROD_NEXTAUTH_URL }}
           DASHBOARD_URL: ${{ secrets.PREPROD_DASHBOARD_URL }}
+          MONGO_URL: ${{ secrets.PREPROD_MONGO_URL }}
+          JWT_SECRET: ${{ secrets.PREPROD_JWT_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.PREPROD_GOOGLE_CLIENT_ID }}
+          CLOUD_NAME: ${{ secrets.PREPROD_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.PREPROD_CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.PREPROD_CLOUDINARY_API_SECRET }}
+          MAIL_PASSWORD: ${{ secrets.PREPROD_MAIL_PASSWORD }}
+          SERVER_FRONTEND_URL: ${{ secrets.PREPROD_FRONTEND_URL }}
+          SERVER_BACKEND_URL: ${{ secrets.PREPROD_BACKEND_URL }}
         with:
           host: ${{ secrets.PREPROD_SSH_HOST }}
           username: ${{ secrets.PREPROD_SSH_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
-          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL
+          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL,MONGO_URL,JWT_SECRET,GOOGLE_CLIENT_ID,CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,MAIL_PASSWORD,SERVER_FRONTEND_URL,SERVER_BACKEND_URL
           script: |
             set -e
             cd ${{ secrets.PREPROD_DEPLOY_PATH }}
@@ -127,6 +136,25 @@ jobs:
             NEXTAUTH_URL=$DASHBOARD_URL
             NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
             INTERNAL_BACKEND_URL=http://server:7000
+            EOF
+
+            cat > ./server/.env.pre-prod << EOF
+            NODE_ENV=production
+            PORT=7000
+            MONGO_URL=$MONGO_URL
+            JWT_SECRET=$JWT_SECRET
+            GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+            CLOUD_NAME=$CLOUD_NAME
+            API_KEY=$CLOUDINARY_API_KEY
+            API_SECRET=$CLOUDINARY_API_SECRET
+            MAIL_PASSWORD=$MAIL_PASSWORD
+            MERCHANT_ID=$NEXT_PUBLIC_MERCHANT_ID
+            SALT_INDEX=1
+            SALT_KEY=$NEXT_PUBLIC_SALT_KEY
+            FRONTEND_URL=$SERVER_FRONTEND_URL
+            BACKEND_URL=$SERVER_BACKEND_URL
+            REDIS_HOST=redis
+            REDIS_PORT=6379
             EOF
 
             # Rebuild and restart containers
