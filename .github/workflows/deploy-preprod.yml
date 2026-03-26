@@ -2,7 +2,7 @@ name: Deploy to Pre-prod
 
 on:
   push:
-    branches: [dev]
+    branches: [mediation/backends]
 
 env:
   REGISTRY: ghcr.io
