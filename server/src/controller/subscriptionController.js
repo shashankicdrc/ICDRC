@@ -12,7 +12,7 @@ import {
 } from '#utils/constant';
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
 import crypto from 'crypto';
 import SubscriptionService from '#services/subscriptionService';
 import PaymentHistory from '#models/paymentHistoryModel';
@@ -678,10 +678,8 @@ class SubscriptionController extends Base {
 
         const transactionId = nanoid();
 
-        const redirectUrl =
-            process.env.NODE_ENV === 'production'
-                ? `${process.env.BACKEND_URL}/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`
-                : `http://localhost:7000/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`;
+        const backendUrl = process.env.BACKEND_URL || 'http://localhost:7000';
+        const redirectUrl = `${backendUrl}/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`;
 
         const payload = {
             userId: req.id,

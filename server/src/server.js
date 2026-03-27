@@ -32,6 +32,8 @@ import hpp from 'hpp';
 import cron from 'node-cron';
 import { checkSubscriptions } from '#utils/checkSubscription';
 import renewSubscriptionController from '#controller/renewSubscriptionController';
+import mediationCaseController from '#controller/mediationCaseController';
+import mediationPaymentController from '#controller/mediationPaymentController';
 
 const startServer = async () => {
     const app = express();
@@ -40,9 +42,13 @@ const startServer = async () => {
     var allowlist = [
         'http://localhost:3000',
         'http://localhost:3001',
+        'http://77.37.45.141:3000',
+        'http://77.37.45.141:3001',
         'https://icdrc.in',
         'https://www.icdrc.in',
         'https://dashboard.icdrc.in',
+        'https://dev.icdrc.in',
+        'https://dev-api.icdrc.in',
     ];
     var corsOptionsDelegate = function (req, callback) {
         var corsOptions;
@@ -104,6 +110,8 @@ const startServer = async () => {
     app.use('/api', teamController);
     app.use('/api', textTestimonial);
     app.use('/api', renewSubscriptionController);
+    app.use('/api', mediationCaseController);
+    app.use('/api', mediationPaymentController);
 
     // Schedule a cron job to run every day at midnight
     cron.schedule('0 0 * * *', () => {
