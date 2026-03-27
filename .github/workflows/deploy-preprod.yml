@@ -2,7 +2,7 @@ name: Deploy to Pre-prod
 
 on:
   push:
-    branches: [mediation/backends]
+    branches: [dev]
 
 env:
   REGISTRY: ghcr.io
@@ -115,9 +115,9 @@ jobs:
             git config --global --add safe.directory ${{ secrets.PREPROD_DEPLOY_PATH }}
 
             # Pull latest code
-            git fetch origin mediation/backends
-            git checkout mediation/backends || git checkout -b mediation/backends origin/mediation/backends
-            git reset --hard origin/mediation/backends
+            git fetch origin dev
+            git checkout dev || git checkout -b dev origin/dev
+            git reset --hard origin/dev
 
             # Write env files on server (these are gitignored)
             cat > ./frontend/.env.pre-prod << EOF
