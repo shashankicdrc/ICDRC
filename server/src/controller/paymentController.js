@@ -60,7 +60,7 @@ class PaymentController extends Base {
             userAuthMiddleware,
             this.#userRecentPaymentHistory,
         );
-        this.router.post(
+        this.router.get(
             '/payments/status/:transactionId',
             this.#paymentStatus,
         );
@@ -413,7 +413,7 @@ class PaymentController extends Base {
             mobileNumber: complaint.mobile,
             merchantUserId: 'MUId-' + req.id,
             redirectUrl: `${baseURl}/api/payments/status/${transactionId}?complaintType=${complaintType}&userId=${req.id}&id=${complaint.id}`,
-            redirectMode: 'POST',
+           redirectMode: 'REDIRECT',
             paymentInstrument: {
                 type: 'PAY_PAGE',
             },
