@@ -306,7 +306,16 @@ class UserController extends Base {
                 'Invalid email/password',
                 httpStatusCode.BAD_REQUEST,
             );
+<<<<<<< HEAD
 
+        if (!isUserExist.password) {
+            throw new CustomError(
+                'Password login is not enabled for this account. Please use Google sign-in.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
+=======
         if (!password) {
             throw new CustomError(
                 'Password is required.',
@@ -319,7 +328,7 @@ class UserController extends Base {
                 httpStatusCode.BAD_REQUEST,
             );
         }
-
+>>>>>>> 09ab28e (Added mediation backend)
         const isValidPassword = await bcrypt.compare(
             password,
             isUserExist.password,

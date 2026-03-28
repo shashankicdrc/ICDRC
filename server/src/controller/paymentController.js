@@ -437,6 +437,7 @@ class PaymentController extends Base {
         const payload = {
             merchantOrderId: orderId,
             amount: price,
+<<<<<<< HEAD
             expireAfter: 1200,
             paymentFlow: {
                 type: 'PG_CHECKOUT',
@@ -453,7 +454,16 @@ class PaymentController extends Base {
                         { type: 'CARD', cardTypes: ['DEBIT_CARD', 'CREDIT_CARD'] },
                     ],
                 },
-
+=======
+            merchantId: process.env.MERCHANT_ID,
+            merchantTransactionId: transactionId,
+            mobileNumber: complaint.mobile,
+            merchantUserId: 'MUId-' + req.id,
+            redirectUrl: `${baseURl}/api/payments/status/${transactionId}?complaintType=${complaintType}&userId=${req.id}&id=${complaint.id}`,
+           redirectMode: 'REDIRECT',
+            paymentInstrument: {
+                type: 'PAY_PAGE',
+>>>>>>> 33a3098 (your commit message)
             },
         };
 
