@@ -114,9 +114,13 @@ const startServer = async () => {
     app.use('/api', mediationPaymentController);
 
     // Schedule a cron job to run every day at midnight
-    cron.schedule('0 0 * * *', () => {
-        console.log('Checking subscriptions to send reminder emails...');
-        checkSubscriptions();
+    cron.schedule('0 0 * * *', async () => {
+        logger.info('Checking subscriptions to send reminder emails...');
+        try {
+            await checkSubscriptions();
+        } catch (error) {
+            logger.error(`[cron] checkSubscriptions failed: ${error.message}`);
+        }
     });
 
     app.use(ErrorMiddleware);
