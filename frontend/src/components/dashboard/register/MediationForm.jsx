@@ -26,7 +26,7 @@ import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { getUserSubscription } from "../../../externalAPI/subscriptionService";
 import { checkSubscriptionStatus, SubscriptionStatus } from "../../../lib/subscription";
-// import { addMediationCase } from "../../../externalAPI/mediationService"; // create this
+import { addMediationCase } from "../../../externalAPI/mediationService";
 
 const MediationForm = () => {
 
@@ -110,9 +110,14 @@ const MediationForm = () => {
 
       console.log(mediationData);
 
-      // const { error, message, data } = await addMediationCase(token, mediationData);
+      const { error, message, data } = await addMediationCase(token, mediationData);
 
-      toast.success("Mediation case submitted successfully");
+      if (error) {
+        setLoading(false);
+        return toast.error(error);
+      }
+
+      toast.success(message || "Mediation case submitted successfully");
       setLoading(false);
 
       if (!isValidSubscription) {
