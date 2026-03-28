@@ -279,6 +279,14 @@ class UserController extends Base {
                 'Invalid email/password',
                 httpStatusCode.BAD_REQUEST,
             );
+
+        if (!isUserExist.password) {
+            throw new CustomError(
+                'Password login is not enabled for this account. Please use Google sign-in.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
         const isValidPassword = await bcrypt.compare(
             password,
             isUserExist.password,
@@ -328,7 +336,7 @@ class UserController extends Base {
             providerId,
         };
 
-        if (provider === 'credential') {
+        if (password) {
             const hashedPassword = await bcrypt.hash(password, 10);
             userData = {
                 ...userData,
