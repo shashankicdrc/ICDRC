@@ -5,6 +5,8 @@ import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
 import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
+import pagination from '#utils/pagination';
 import express from 'express';
 import busboy from 'busboy';
 import { v2 as cloudinary } from 'cloudinary';
@@ -28,6 +30,16 @@ class MediationCaseController extends Base {
             '/mediation/cases',
             userAuthMiddleware,
             this.#createCaseFromFrontend,
+        );
+        this.router.get(
+            '/admin/mediation/cases',
+            AdminAuthMiddleware,
+            this.#adminListMediationCases,
+        );
+        this.router.get(
+            '/admin/mediation/cases/:id',
+            AdminAuthMiddleware,
+            this.#adminGetMediationCaseById,
         );
     }
 
@@ -83,6 +95,58 @@ class MediationCaseController extends Base {
             req.pipe(bb);
         });
     }
+
+    #adminListMediationCases = asyncHandler(async (req, res) => {
+        let { perRow, page, paymentStatus } = req.query;
+        page = Number(page) || 1;
+        perRow = Number(perRow) || 20;
+        const skip = pagination(page, perRow);
+        const filter = {};
+        if (paymentStatus === 'Paid') {
+            filter.paymentStatus = 'Paid';
+        } else if (paymentStatus === 'Pending') {
+            filter.$or = [
+                { paymentStatus: 'Pending' },
+                { paymentStatus: { $exists: false } },
+            ];
+        }
+        const [cases, totalCount] = await Promise.all([
+            MediationCase.find(filter)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(perRow)
+                .populate('userId', 'name email profilePic')
+                .lean(),
+            MediationCase.countDocuments(filter),
+        ]);
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Mediation cases fetched successfully.',
+            { cases, totalCount, page, perRow },
+        );
+    });
+
+    #adminGetMediationCaseById = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const mediationCase = await MediationCase.findById(id)
+            .populate('userId', 'name email profilePic')
+            .lean();
+        if (!mediationCase) {
+            throw new CustomError(
+                'Mediation case not found.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Mediation case fetched successfully.',
+            mediationCase,
+        );
+    });
 
     #createCaseFromFrontend = asyncHandler(async (req, res) => {
         const contentType = req.headers['content-type'] || '';
@@ -162,7 +226,11 @@ class MediationCaseController extends Base {
                 httpStatusCode.OK,
                 httpStatus.SUCCESS,
                 'Mediation case submitted successfully.',
-                { caseId: mediationCase.id, status: mediationCase.status },
+                {
+                    caseId: mediationCase.id,
+                    status: mediationCase.status,
+                    paymentStatus: mediationCase.paymentStatus,
+                },
             );
         }
 
@@ -241,7 +309,11 @@ class MediationCaseController extends Base {
             httpStatusCode.OK,
             httpStatus.SUCCESS,
             'Mediation case submitted successfully.',
-            { caseId: mediationCase.id, status: mediationCase.status },
+            {
+                caseId: mediationCase.id,
+                status: mediationCase.status,
+                paymentStatus: mediationCase.paymentStatus,
+            },
         );
     });
 }

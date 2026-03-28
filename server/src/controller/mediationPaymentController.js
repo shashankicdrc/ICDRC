@@ -157,11 +157,9 @@ class MediationPaymentController extends Base {
             return res.redirect(`${FRONTEND_URL}/failure?message=${message}`);
         }
 
-        // Update Case Status
-        await mediationCaseModel.findByIdAndUpdate(
-            complaint.id,
-            { status: 'Paid' } 
-        );
+        await mediationCaseModel.findByIdAndUpdate(complaint.id, {
+            paymentStatus: 'Paid',
+        });
 
         return res.redirect(
             `${FRONTEND_URL}/success?amount=${data.amount / 100}&transactionId=${data.transactionId}`

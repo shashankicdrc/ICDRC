@@ -9,7 +9,7 @@ const mediationPaymentHistorySchema = new Schema(
         },
         mediationId: {
             type: Schema.Types.ObjectId,
-            ref: 'mediation_case', // Aapke mediation model ka jo bhi exact naam ho
+            ref: 'MediationCase',
             required: true,
         },
         amount: {
