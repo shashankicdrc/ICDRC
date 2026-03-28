@@ -64,7 +64,6 @@
         "tailwind-merge": "^2.5.2"
     },
     "devDependencies": {
-        "@next/swc-win32-x64-msvc": "^16.2.1",
         "autoprefixer": "^10.4.17",
         "eslint": "^9.9.0",
         "eslint-config-prettier": "^9.1.0",
