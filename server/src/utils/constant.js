@@ -2,7 +2,7 @@ import logger from '#utils/logger';
 import fs from 'fs';
 import ejs from 'ejs';
 
-export const NOREPLYEMAIL = 'no_reply@icdrc.in';
+export const NOREPLYEMAIL = process.env.NOREPLYEMAIL || 'no_reply@icdrc.in';
 
 export const policyTypeToEmail = {
     'Life Insurance': 'lifeinsurance@icdrc.in',
@@ -53,11 +53,10 @@ export const httpStatus = {
 };
 
 export const FRONTEND_URL =
-    process.env.NODE_ENV === 'production'
-        ? process.env.FRONTEND_URL
-        : 'http://localhost:3000';
+    process.env.FRONTEND_URL || 'http://localhost:3000';
 
 export const PHONE_PAY_URL =
     process.env.NODE_ENV === 'production'
         ? 'https://api.phonepe.com/apis/hermes/pg/v1'
         : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1';
+
