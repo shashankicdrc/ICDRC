@@ -244,7 +244,7 @@ const IndividualForm = () => {
                 toast.error(error);
                 return;
             }
-            router.push(data.instrumentResponse.redirectInfo.url);
+            router.push(data.redirectUrl);
         } catch (error) {
             console.error('Error while making payment:', error);
             setpaymentLoading((prevState) => !prevState);
