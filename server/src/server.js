@@ -35,6 +35,7 @@ import renewSubscriptionController from '#controller/renewSubscriptionController
 import mediationCaseController from '#controller/mediationCaseController';
 import mediationPaymentController from '#controller/mediationPaymentController';
 import { assignMediator } from './controller/mediationAssignEmail.js';
+import { scheduleSession } from './controller/scheduleController.js';
 
 const startServer = async () => {
     const app = express();
@@ -43,11 +44,13 @@ const startServer = async () => {
     var allowlist = [
         'http://localhost:3000',
         'http://localhost:3001',
+        'https://dev-api.icdrc.in',
         'http://77.37.45.141:3000',
         'http://77.37.45.141:3001',
         'https://icdrc.in',
         'https://www.icdrc.in',
         'https://dashboard.icdrc.in',
+        'https://dev.icdrc.in',
     ];
     var corsOptionsDelegate = function (req, callback) {
         var corsOptions;
@@ -112,11 +115,16 @@ const startServer = async () => {
     app.use('/api', mediationCaseController);
     app.use('/api', mediationPaymentController);
     app.use('/api/cases/:caseId/assign-mediator', assignMediator);
+    app.put('/api/cases/:caseId/schedule', scheduleSession);
 
     // Schedule a cron job to run every day at midnight
-    cron.schedule('0 0 * * *', () => {
-        console.log('Checking subscriptions to send reminder emails...');
-        checkSubscriptions();
+    cron.schedule('0 0 * * *', async () => {
+        logger.info('Checking subscriptions to send reminder emails...');
+        try {
+            await checkSubscriptions();
+        } catch (error) {
+            logger.error(`[cron] checkSubscriptions failed: ${error.message}`);
+        }
     });
 
     app.use(ErrorMiddleware);

@@ -11,6 +11,7 @@ import {
     NOREPLYEMAIL,
     NewRegrecipients,
     PHONE_PAY_URL,
+    PHONE_PAY_AUTH_URL,
     getPolicyEmail,
     htmlTemplate,
     httpStatus,
@@ -18,7 +19,7 @@ import {
 } from '#utils/constant';
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
-import crypto from 'crypto';
+// crypto removed — v2 uses OAuth Bearer auth
 import logger from '#utils/logger';
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import { filterSort, parseFilters } from '#utils/filterSort';
@@ -225,24 +226,31 @@ class PaymentController extends Base {
             );
         }
 
-        const merchantId = process.env.MERCHANT_ID;
-        const keyIndex = process.env.SALT_INDEX;
-        const string =
-            `/pg/v1/status/${merchantId}/${transactionId}` +
-            process.env.SALT_KEY;
-        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
-        const checksum = sha256 + '###' + keyIndex;
+        // v2 API — get OAuth Bearer token
+        const authRes = await fetch(PHONE_PAY_AUTH_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                client_id: process.env.MERCHANT_ID,
+                client_secret: process.env.SALT_KEY,
+                grant_type: 'client_credentials',
+                client_version: '1',
+            }),
+        });
+        const authData = await authRes.json();
+        if (!authData.access_token) {
+            return res.redirect(`${FRONTEND_URL}/failure?message=Payment auth failed.`);
+        }
+        const accessToken = authData.access_token;
 
-        const payURL = `${PHONE_PAY_URL}/status/${merchantId}/${transactionId}`;
-        logger.info('PHONE_PAY_URL');
-        logger.info(payURL);
+        const payURL = `${PHONE_PAY_URL}/order/${transactionId}/status`;
+        logger.info('PHONE_PAY_URL v2 status: ' + payURL);
 
         const response = await fetch(payURL, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-VERIFY': checksum,
-                'X-MERCHANT-ID': `${merchantId}`,
+                'Authorization': `O-Bearer ${accessToken}`,
             },
         });
         const { success, data, message } = await response.json();
@@ -373,8 +381,8 @@ class PaymentController extends Base {
     });
 
     #initiatePayment = asyncHandler(async (req, res) => {
-        logger.info('Payment initiate');
-        const { amount, complaintType, id } = req.body;
+        logger.info('Payment initiate v2');
+        const { complaintType, id } = req.body;
 
         let complaint;
         let price;
@@ -401,12 +409,33 @@ class PaymentController extends Base {
             );
         }
 
-        const transactionId = nanoid();
+        // Step 1: Get OAuth Bearer token (v2)
+        const authRes = await fetch(PHONE_PAY_AUTH_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+                client_id: process.env.MERCHANT_ID,
+                client_version: process.env.SALT_INDEX,
+                client_secret: process.env.SALT_KEY,
+                grant_type: 'client_credentials',
+            }),
+        });
+        const authData = await authRes.json();
+        logger.info('PhonePe auth: ' + JSON.stringify(authData));
+        if (!authData.access_token) {
+            throw new CustomError(
+                authData.message || 'Failed to authenticate with PhonePe.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+        const accessToken = authData.access_token;
+
+        // Step 2: Build v2 PG_CHECKOUT payload
+        const orderId = nanoid().replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 63);
         const baseURl = process.env.BACKEND_URL || 'http://localhost:7000';
+
         const payload = {
-            userId: req.id,
-            email: req.email,
-            name: req.name,
+            merchantOrderId: orderId,
             amount: price,
             merchantId: process.env.MERCHANT_ID,
             merchantTransactionId: transactionId,
@@ -419,37 +448,33 @@ class PaymentController extends Base {
             },
         };
 
-        const dataPayload = JSON.stringify(payload);
-        const dataBase64 = Buffer.from(dataPayload).toString('base64');
-
-        const string = dataBase64 + '/pg/v1/pay' + process.env.SALT_KEY;
-        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
-        const checksum = sha256 + '###' + process.env.SALT_INDEX;
-
         const payURL = `${PHONE_PAY_URL}/pay`;
-
-        logger.info('PHONEPAY_URL');
-        logger.info(payURL);
+        logger.info('PHONEPAY_URL v2: ' + payURL);
 
         const response = await fetch(payURL, {
             method: 'POST',
             headers: {
-                accept: 'application/json',
                 'Content-Type': 'application/json',
-                'X-VERIFY': checksum,
+                'Authorization': `O-Bearer ${accessToken}`,
             },
-            body: JSON.stringify({ request: dataBase64 }),
+            body: JSON.stringify(payload),
         });
-        const { data, success, message } = await response.json();
-        if (!success) {
-            throw new CustomError(message, httpStatusCode.BAD_REQUEST);
+        const responseData = await response.json();
+        logger.info('PhonePe v2 response: ' + JSON.stringify(responseData));
+
+        if (!response.ok || !responseData.redirectUrl) {
+            throw new CustomError(
+                responseData.message || 'Payment initiation failed.',
+                httpStatusCode.BAD_REQUEST,
+            );
         }
+
         return this.response(
             res,
             httpStatusCode.OK,
             httpStatus.SUCCESS,
-            message,
-            data,
+            'Payment initiated',
+            { redirectUrl: responseData.redirectUrl, orderId: responseData.orderId },
         );
     });
 }

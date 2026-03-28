@@ -25,12 +25,10 @@ const mediationCaseSchema = new Schema(
             type: String,
             required: [true, 'Email is required'],
         },
-
         opponentName: {
             type: String,
             required: [true, 'Opposite party name is required'],
         },
-
         description: {
             type: String,
             required: [true, 'Description of dispute is required'],
@@ -42,7 +40,6 @@ const mediationCaseSchema = new Schema(
         amount: {
             type: Number,
         },
-
         timeline: {
             type: String,
         },
@@ -57,6 +54,26 @@ const mediationCaseSchema = new Schema(
             type: String, // e.g. refund / compensation / payment plan / replacement / other
         },
         files: [evidenceSchema], // list of uploaded documents (URLs)
+
+        // ==========================================
+        // 🔥 NAYI FIELDS (SESSION SCHEDULING KE LIYE) 🔥
+        // ==========================================
+        sessionMode: {
+            type: String,
+            enum: ['Online', 'Offline'],
+            // Yahan default nahi denge kyunki user ko select karna hai
+        },
+        sessionDate: {
+            type: String, // Hum String mein "YYYY-MM-DD" store karenge
+        },
+        sessionTime: {
+            type: String, // Hum String mein "HH:MM" (e.g., "14:30") store karenge
+        },
+        googleMeetLink: {
+            type: String, // Jab link ban jayega toh yahan save hoga
+            default: null,
+        },
+        // ==========================================
 
         // Frontend subscription gating fields
         isSubscribed: {

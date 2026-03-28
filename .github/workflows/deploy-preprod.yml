@@ -1,0 +1,176 @@
+name: Deploy to Pre-prod
+
+on:
+  push:
+    branches: [dev]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/icdrc
+
+jobs:
+  deploy-preprod:
+    name: Build & Deploy Pre-prod
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # ─── Login to GitHub Container Registry ───
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # ─── Build & push server image ───
+      - name: Build & push server
+        uses: docker/build-push-action@v5
+        with:
+          context: ./server
+          file: ./server/Dockerfile.pre-prod
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-server:preprod
+            ${{ env.IMAGE_PREFIX }}-server:preprod-${{ github.sha }}
+
+      # ─── Build & push frontend image ───
+      - name: Copy frontend env for build
+        run: |
+          cat > ./frontend/.env.pre-prod << 'EOF'
+          NEXT_PUBLIC_BACKEND_URL=${{ secrets.PREPROD_NEXT_PUBLIC_BACKEND_URL }}
+          NEXT_PUBLIC_FRONTEND_URL=${{ secrets.PREPROD_NEXT_PUBLIC_FRONTEND_URL }}
+          NEXT_PUBLIC_MERCHANT_ID=${{ secrets.PREPROD_MERCHANT_ID }}
+          NEXT_PUBLIC_SALT_KEY=${{ secrets.PREPROD_SALT_KEY }}
+          NEXT_PUBLIC_SALT_INDEX=1
+          NEXTAUTH_SECRET=${{ secrets.PREPROD_NEXTAUTH_SECRET }}
+          NEXTAUTH_URL=${{ secrets.PREPROD_NEXTAUTH_URL }}
+          INTERNAL_BACKEND_URL=http://server:7000
+          GOOGLE_CLIENT_ID=${{ secrets.PREPROD_GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.PREPROD_GOOGLE_CLIENT_SECRET }}
+          EOF
+
+      - name: Build & push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile.pre-prod
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-frontend:preprod
+            ${{ env.IMAGE_PREFIX }}-frontend:preprod-${{ github.sha }}
+
+      # ─── Build & push dashboard image ───
+      - name: Copy dashboard env for build
+        run: |
+          cat > ./dashboard/.env.pre-prod << 'EOF'
+          NEXTAUTH_SECRET=${{ secrets.PREPROD_NEXTAUTH_SECRET }}
+          NEXTAUTH_URL=${{ secrets.PREPROD_DASHBOARD_URL }}
+          NEXT_PUBLIC_BACKEND_URL=${{ secrets.PREPROD_NEXT_PUBLIC_BACKEND_URL }}
+          INTERNAL_BACKEND_URL=http://server:7000
+          EOF
+
+      - name: Build & push dashboard
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dashboard
+          file: ./dashboard/Dockerfile.pre-prod
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-dashboard:preprod
+            ${{ env.IMAGE_PREFIX }}-dashboard:preprod-${{ github.sha }}
+
+      # ─── Deploy on pre-prod server via SSH ───
+      - name: Deploy to pre-prod server
+        uses: appleboy/ssh-action@v1
+        env:
+          NEXT_PUBLIC_BACKEND_URL: ${{ secrets.PREPROD_NEXT_PUBLIC_BACKEND_URL }}
+          NEXT_PUBLIC_FRONTEND_URL: ${{ secrets.PREPROD_NEXT_PUBLIC_FRONTEND_URL }}
+          NEXT_PUBLIC_MERCHANT_ID: ${{ secrets.PREPROD_MERCHANT_ID }}
+          NEXT_PUBLIC_SALT_KEY: ${{ secrets.PREPROD_SALT_KEY }}
+          NEXTAUTH_SECRET: ${{ secrets.PREPROD_NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.PREPROD_NEXTAUTH_URL }}
+          DASHBOARD_URL: ${{ secrets.PREPROD_DASHBOARD_URL }}
+          MONGO_URL: ${{ secrets.PREPROD_MONGO_URL }}
+          JWT_SECRET: ${{ secrets.PREPROD_JWT_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.PREPROD_GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.PREPROD_GOOGLE_CLIENT_SECRET }}
+          CLOUD_NAME: ${{ secrets.PREPROD_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.PREPROD_CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.PREPROD_CLOUDINARY_API_SECRET }}
+          MAIL_PASSWORD: ${{ secrets.PREPROD_MAIL_PASSWORD }}
+          SERVER_FRONTEND_URL: ${{ secrets.PREPROD_FRONTEND_URL }}
+          SERVER_BACKEND_URL: ${{ secrets.PREPROD_BACKEND_URL }}
+        with:
+          host: ${{ secrets.PREPROD_SSH_HOST }}
+          username: ${{ secrets.PREPROD_SSH_USER }}
+          key: ${{ secrets.PREPROD_SSH_KEY }}
+          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL,MONGO_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,MAIL_PASSWORD,SERVER_FRONTEND_URL,SERVER_BACKEND_URL
+          script: |
+            set -e
+            cd ${{ secrets.PREPROD_DEPLOY_PATH }}
+
+            # Mark directory as safe (owner mismatch fix)
+            git config --global --add safe.directory ${{ secrets.PREPROD_DEPLOY_PATH }}
+
+            # Pull latest code
+            git fetch origin dev
+            git checkout dev || git checkout -b dev origin/dev
+            git reset --hard origin/dev
+
+            # Write env files on server (these are gitignored)
+            cat > ./frontend/.env.pre-prod << EOF
+            NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+            NEXT_PUBLIC_FRONTEND_URL=$NEXT_PUBLIC_FRONTEND_URL
+            NEXT_PUBLIC_MERCHANT_ID=$NEXT_PUBLIC_MERCHANT_ID
+            NEXT_PUBLIC_SALT_KEY=$NEXT_PUBLIC_SALT_KEY
+            NEXT_PUBLIC_SALT_INDEX=1
+            NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+            NEXTAUTH_URL=$NEXTAUTH_URL
+            INTERNAL_BACKEND_URL=http://server:7000
+            GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+            GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+            EOF
+
+            cat > ./dashboard/.env.pre-prod << EOF
+            NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+            NEXTAUTH_URL=$DASHBOARD_URL
+            NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+            INTERNAL_BACKEND_URL=http://server:7000
+            EOF
+
+            cat > ./server/.env.pre-prod << EOF
+            NODE_ENV=production
+            PORT=7000
+            MONGO_URL=$MONGO_URL
+            JWT_SECRET=$JWT_SECRET
+            GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+            CLOUD_NAME=$CLOUD_NAME
+            API_KEY=$CLOUDINARY_API_KEY
+            API_SECRET=$CLOUDINARY_API_SECRET
+            MAIL_PASSWORD=$MAIL_PASSWORD
+            MERCHANT_ID=$NEXT_PUBLIC_MERCHANT_ID
+            SALT_INDEX=1
+            SALT_KEY=$NEXT_PUBLIC_SALT_KEY
+            FRONTEND_URL=$SERVER_FRONTEND_URL
+            BACKEND_URL=$SERVER_BACKEND_URL
+            REDIS_HOST=redis
+            REDIS_PORT=6379
+            EOF
+
+            # Rebuild and restart containers
+            docker compose -f docker-compose.pre-prod.yml down
+            docker compose -f docker-compose.pre-prod.yml up -d --build
+
+            # Wait and health check
+            echo "Waiting 15s for services to start..."
+            sleep 15
+            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:7000 || echo "000")
+            echo "Server health check: HTTP $HTTP_CODE"
+            if [ "$HTTP_CODE" = "000" ]; then
+              echo "WARNING: Server not responding yet, check logs with: docker compose -f docker-compose.pre-prod.yml logs server"
+            fi
