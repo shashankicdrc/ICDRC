@@ -35,6 +35,7 @@ import renewSubscriptionController from '#controller/renewSubscriptionController
 import mediationCaseController from '#controller/mediationCaseController';
 import mediationPaymentController from '#controller/mediationPaymentController';
 import { assignMediator } from './controller/mediationAssignEmail.js';
+import { scheduleSession } from './controller/scheduleController.js';
 
 const startServer = async () => {
     const app = express();
@@ -114,6 +115,7 @@ const startServer = async () => {
     app.use('/api', mediationCaseController);
     app.use('/api', mediationPaymentController);
     app.use('/api/cases/:caseId/assign-mediator', assignMediator);
+    app.put('/api/cases/:caseId/schedule', scheduleSession);
 
     // Schedule a cron job to run every day at midnight
     cron.schedule('0 0 * * *', async () => {
