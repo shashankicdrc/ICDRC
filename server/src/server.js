@@ -36,13 +36,13 @@ import mediationCaseController from '#controller/mediationCaseController';
 
 const startServer = async () => {
     const app = express();
-    const port = process.env.PORT || 8080;
+    const port = process.env.PORT || 5000;
 
     var allowlist = [
         'http://localhost:3000',
         'http://localhost:3001',
-        'http://77.37.45.141:3000',
-        'http://77.37.45.141:3001',
+      //  'http://77.37.45.141:3000',
+       // 'http://77.37.45.141:3001',
         'https://icdrc.in',
         'https://www.icdrc.in',
         'https://dashboard.icdrc.in',

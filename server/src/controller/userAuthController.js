@@ -303,7 +303,7 @@ class UserController extends Base {
 
         if (!isUserExist)
             throw new CustomError(
-                'Invalid email/password',
+                'Invalid email/password',~
                 httpStatusCode.BAD_REQUEST,
             );
         if (!password) {
