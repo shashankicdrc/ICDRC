@@ -19,16 +19,9 @@ import {
     SelectItem,
 } from '../../ui/select';
 import { Button } from '../../ui/button';
-import { Loader2 } from 'lucide-react';
+import { Loader2, File, X, UploadCloud } from 'lucide-react';
 import {
     Checkbox,
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalCloseButton,
     useDisclosure,
 } from '@chakra-ui/react';
 import { useSession } from 'next-auth/react';
@@ -44,6 +37,9 @@ import {
     getUserMediationCases,
 } from '../../../externalAPI/mediationService';
 import MediationPayment from '../mediation/MediationPayment';
+import MediationCaseList from '../mediation/MediationCaseList';
+import ReviewModal from '../mediation/ReviewModal';
+
 
 const MediationForm = () => {
     const { data: session } = useSession();
@@ -78,16 +74,13 @@ const MediationForm = () => {
     const [isChecked, setIsChecked] = useState(false);
     const [pendingCase, setPendingCase] = useState(null); // To store the submitted case if payment is needed
     const [showPayment, setShowPayment] = useState(false); // To toggle between form and payment view
+    const [allCases, setAllCases] = useState([]); // Store all cases for history
+
 
     const {
         isOpen: isReviewOpen,
         onOpen: onReviewOpen,
         onClose: onReviewClose,
-    } = useDisclosure();
-    const {
-        isOpen: isPaymentOpen,
-        onOpen: onPaymentOpen,
-        onClose: onPaymentClose,
     } = useDisclosure();
 
     useEffect(() => {
@@ -111,13 +104,12 @@ const MediationForm = () => {
                 const { data, error } = await getUserMediationCases(token);
                 if (data && data.length > 0) {
                     // Find the most recent pending case that isn't subscribed
-                    const pending = data.find(
-                        (c) => c.paymentStatus === 'Pending',
-                    );
+                    const pending = data.find((c) => c.status === 'Submitted' && c.paymentStatus === 'Pending');
                     if (pending) {
                         setPendingCase(pending);
                         setShowPayment(true);
                     }
+                    setAllCases(data); // Store all cases for the summary list
                 }
             } catch (err) {
                 console.error('Error checking pending case:', err);
@@ -135,7 +127,12 @@ const MediationForm = () => {
     }, [session]);
 
     const handleFileChange = (e) => {
-        setFiles([...e.target.files]);
+        const selectedFiles = Array.from(e.target.files);
+        setFiles((prev) => [...prev, ...selectedFiles]);
+    };
+
+    const removeFile = (index) => {
+        setFiles((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleReviewSubmit = () => {
@@ -167,8 +164,6 @@ const MediationForm = () => {
                 subscriptionId: subscriptionData?._id ?? null,
             };
 
-            console.log(mediationData);
-
             const { error, message, data } = await addMediationCase(
                 token,
                 mediationData,
@@ -183,6 +178,7 @@ const MediationForm = () => {
             setLoading(false);
 
             setPendingCase(data); // Set the returned case data
+            setAllCases((prev) => [data, ...prev]); // Add the new case to the history list
             setShowPayment(true); // Always toggle to payment view for case fee
         } catch (err) {
             setLoading(false);
@@ -197,130 +193,32 @@ const MediationForm = () => {
                     caseData={pendingCase}
                     isSubscribed={isValidSubscription}
                 />
+                <MediationCaseList cases={allCases} />
             </div>
         );
     }
 
     return (
         <Fragment>
-            {/* Review Modal */}
-            <Modal isOpen={isReviewOpen} onClose={onReviewClose} size="xl">
-                <ModalOverlay backdropFilter="blur(5px)" bg="blackAlpha.300" />
-                <ModalContent className="dark:bg-[#0f172a] border dark:border-slate-800 rounded-2xl">
-                    <ModalHeader className="border-b dark:border-slate-800 font-bold text-xl">
-                        Review Your Submission
-                    </ModalHeader>
-                    <ModalCloseButton className="mt-2" />
-                    <ModalBody className="py-6 max-h-[70vh] overflow-y-auto">
-                        <div className="space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div className="space-y-1">
-                                    <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                        Full Name
-                                    </p>
-                                    <p className="font-medium">{fullName}</p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                        Email
-                                    </p>
-                                    <p className="font-medium">{email}</p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                        Opponent Name
-                                    </p>
-                                    <p className="font-medium">
-                                        {opponentName}
-                                    </p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                        Dispute Category
-                                    </p>
-                                    <p className="font-medium">{category}</p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                        Dispute Amount
-                                    </p>
-                                    <p className="font-medium">
-                                        ₹{amount || 'N/A'}
-                                    </p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                        Jurisdiction
-                                    </p>
-                                    <p className="font-medium">
-                                        {jurisdiction}
-                                    </p>
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                        Language
-                                    </p>
-                                    <p className="font-medium">
-                                        {language || 'Not Specified'}
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="space-y-1">
-                                <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                    Timeline of Events
-                                </p>
-                                <p className="text-sm bg-muted/30 p-3 rounded-lg">
-                                    {timeline || 'N/A'}
-                                </p>
-                            </div>
-                            <div className="space-y-1">
-                                <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                    Description
-                                </p>
-                                <p className="text-sm bg-muted/50 p-3 rounded-lg">
-                                    {description}
-                                </p>
-                            </div>
-                            <div className="space-y-1">
-                                <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                    Desired Resolution
-                                </p>
-                                <p className="font-medium">{resolution}</p>
-                            </div>
-                            {files.length > 0 && (
-                                <div className="space-y-1">
-                                    <p className="text-xs text-muted-foreground uppercase font-semibold">
-                                        Files Attached
-                                    </p>
-                                    <p className="text-sm">
-                                        {files.length} document(s)
-                                    </p>
-                                </div>
-                            )}
-                        </div>
-                    </ModalBody>
-                    <ModalFooter className="flex gap-3 pt-4 border-t dark:border-slate-800">
-                        <Button
-                            variant="outline"
-                            onClick={onReviewClose}
-                            className="px-6 rounded-full hover:bg-muted transition-colors"
-                        >
-                            Edit Details
-                        </Button>
-                        <Button
-                            onClick={onConfirmSubmission}
-                            className="px-8 bg-orange-600 hover:bg-orange-700 text-white rounded-full transition-all shadow-lg hover:shadow-orange-500/20"
-                            disabled={loading}
-                        >
-                            {loading ? (
-                                <Loader2 className="animate-spin mr-2" />
-                            ) : (
-                                'Confirm & Submit'
-                            )}
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
+            <ReviewModal
+                isOpen={isReviewOpen}
+                onClose={onReviewClose}
+                formData={{
+                    fullName,
+                    email,
+                    opponentName,
+                    description,
+                    category,
+                    amount,
+                    timeline,
+                    jurisdiction,
+                    language,
+                    files,
+                    resolution
+                }}
+                onConfirm={onConfirmSubmission}
+                loading={loading}
+            />
 
             <form
                 className="grid gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500"
@@ -450,12 +348,55 @@ const MediationForm = () => {
                             PDFs
                         </CardDescription>
                     </CardHeader>
-                    <CardContent>
-                        <Input
-                            type="file"
-                            multiple
-                            onChange={handleFileChange}
-                        />
+                    <CardContent className="space-y-4">
+                        <div className="relative group border-2 border-dashed border-muted-foreground/20 rounded-xl p-8 transition-all hover:bg-muted/50 hover:border-orange-500/30 flex flex-col items-center justify-center gap-3">
+                            <Input
+                                type="file"
+                                multiple
+                                onChange={handleFileChange}
+                                className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                            />
+                            <div className="p-3 bg-orange-500/10 rounded-full group-hover:scale-110 transition-transform">
+                                <UploadCloud className="w-8 h-8 text-orange-600" />
+                            </div>
+                            <div className="text-center">
+                                <p className="font-semibold text-lg">Click to Upload</p>
+                                <p className="text-sm text-muted-foreground">or drag and drop multiple files here</p>
+                            </div>
+                            <div className="text-xs bg-muted border rounded-full px-4 py-1.5 font-medium text-muted-foreground">
+                                Supported: PDF, Images, Word documents
+                            </div>
+                        </div>
+
+                        {files.length > 0 && (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                {files.map((file, index) => (
+                                    <div
+                                        key={index}
+                                        className="group relative flex items-center gap-3 p-3 bg-card border rounded-xl hover:border-orange-500/50 transition-all shadow-sm"
+                                    >
+                                        <div className="p-2 bg-blue-500/10 rounded-lg">
+                                            <File className="w-5 h-5 text-blue-500" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium truncate pr-6">
+                                                {file.name}
+                                            </p>
+                                            <p className="text-xs text-muted-foreground uppercase">
+                                                {(file.size / 1024).toFixed(0)} KB
+                                            </p>
+                                        </div>
+                                        <button
+                                            type="button"
+                                            onClick={() => removeFile(index)}
+                                            className="absolute top-2 right-2 p-1 text-muted-foreground hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                        >
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </CardContent>
                 </Card>
 
