@@ -21,10 +21,7 @@ const MediationPayment = ({ caseData, isSubscribed }) => {
         setPaymentLoading(true);
         try {
             const paymentData = {
-                id: caseData._id,
-                complaintType: 'MediationCase',
-                amount: 500,
-                userId: caseData.userId,
+                mediationId: caseData.caseId || caseData._id,
             };
 
             const { error, data } = await initiatePayment(token, paymentData);
@@ -50,12 +47,12 @@ const MediationPayment = ({ caseData, isSubscribed }) => {
     const isPending = caseData?.paymentStatus === 'Pending';
 
     return (
-        <Card className="max-w-md mx-auto border-none shadow-lg dark:bg-[#1e293b]">
+        <Card className="max-w-md mx-auto border-none shadow-lg ">
             <CardHeader className="text-center pb-2">
                 <div className="flex justify-center mb-4">
                     {isPending ? (
-                        <div className="p-3 bg-blue-100 dark:bg-blue-900/40 rounded-full">
-                            <CreditCard className="w-8 h-8 text-blue-600 dark:text-blue-400" />
+                        <div className="p-3 bg-orange-50 dark:bg-orange-500/10 rounded-full">
+                            <CreditCard className="w-8 h-8 text-orange-500 dark:text-orange-400" />
                         </div>
                     ) : (
                         <div className="p-3 bg-green-100 dark:bg-green-900/40 rounded-full">
@@ -83,11 +80,10 @@ const MediationPayment = ({ caseData, isSubscribed }) => {
                                 registration, please complete the processing fee
                                 payment.
                             </p>
-                            <div className="text-3xl font-bold py-4">Pay now</div>
                         </div>
 
                         <Button
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white h-12 text-lg font-semibold rounded-xl transition-all shadow-lg shadow-blue-500/10"
+                            className="w-full bg-orange-400 hover:bg-orange-500 text-white h-12 text-lg font-semibold rounded-xl transition-all shadow-lg shadow-orange-500/10"
                             onClick={handleMakePayment}
                             disabled={paymentLoading}
                         >
