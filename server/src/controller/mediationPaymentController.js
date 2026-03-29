@@ -1,22 +1,19 @@
 import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
 import MediationPaymentHistory from '#models/mediationPaymentHistoryModel';
-import mediationCaseModel from '#models/mediationCaseModel'; 
-import { queues } from '#queues/queue';
+import mediationCaseModel from '#models/mediationCaseModel';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
 import {
     FRONTEND_URL,
-    NOREPLYEMAIL,
-    NewRegrecipients,
     PHONE_PAY_URL,
-    htmlTemplate,
     httpStatus,
     httpStatusCode,
 } from '#utils/constant';
+import { requestPhonePeAccessToken } from '#utils/phonePeOAuth';
 import { Router } from 'express';
-import crypto from 'crypto';
 import logger from '#utils/logger';
+import { nanoid } from 'nanoid';
 
 class MediationPaymentController extends Base {
     constructor() {
@@ -41,130 +38,184 @@ class MediationPaymentController extends Base {
     #calculateFee(amountValue) {
         const amount = Number(amountValue);
         if (isNaN(amount) || amount === 0) return 5000;
-        if (amount <= 500000) return 5000;          // Up to 5L -> 5k
+        if (amount <= 500000) return 5;          // Up to 5L -> 5k
         if (amount <= 5000000) return 10000;        // 5L to 50L -> 10k
         if (amount <= 10000000) return 15000;       // 50L to 1Cr -> 15k
         return 25000;                               // Above 1Cr -> 25k
     }
 
     #initiateMediationPayment = asyncHandler(async (req, res) => {
-        logger.info('Mediation Payment initiate');
+        logger.info('Mediation Payment initiate v2');
         const { mediationId } = req.body;
 
         const complaint = await mediationCaseModel.findById(mediationId);
         if (!complaint) {
-            throw new CustomError('Mediation case not found.', httpStatusCode.BAD_REQUEST);
+            throw new CustomError(
+                'Mediation case not found.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+        if (String(complaint.userId) !== String(req.id)) {
+            throw new CustomError(
+                'Not allowed for this mediation case.',
+                httpStatusCode.FORBIDDEN,
+            );
         }
 
         if (!complaint.amount) {
-             throw new CustomError('Claim amount is missing in this case.', httpStatusCode.BAD_REQUEST);
+            throw new CustomError(
+                'Claim amount is missing in this case.',
+                httpStatusCode.BAD_REQUEST,
+            );
         }
 
         const basePrice = this.#calculateFee(complaint.amount);
-        const price = basePrice * 100; 
+        const price = basePrice * 100;
 
-        // 1. Safe Transaction ID 
-        const transactionId = "T" + Date.now(); 
+        const accessToken = await requestPhonePeAccessToken(
+            process.env.SALT_INDEX,
+        );
 
-        // 👉 2. LIVE URL TO BYPASS PHONEPE UAT BLOCK
-        const baseURl = 'https://api.icdrc.in';
-        const redirectUrl = `${baseURl}/api/mediation-payment/status/${transactionId}?userId=${req.id}&mediationId=${complaint.id}`;
-        
-        // 3. Strict Payload
+        const orderId = nanoid()
+            .replace(/[^a-zA-Z0-9_-]/g, '')
+            .slice(0, 63);
+        const baseURl = process.env.BACKEND_URL || 'http://localhost:8080';
+
         const payload = {
-            merchantId: process.env.MERCHANT_ID,
-            merchantTransactionId: transactionId,
-            merchantUserId: 'MUID' + req.id.toString().substring(0, 10),
+            merchantOrderId: orderId,
             amount: price,
-            redirectUrl: redirectUrl,
-            redirectMode: 'POST',
-            callbackUrl: redirectUrl,
-            mobileNumber: '9999999999',
-            paymentInstrument: { type: 'PAY_PAGE' },
+            expireAfter: 1200,
+            paymentFlow: {
+                type: 'PG_CHECKOUT',
+                message: 'Payment for ICDRC Mediation',
+                merchantUrls: {
+                    redirectUrl: `${baseURl}/api/mediation-payment/status/${orderId}?userId=${req.id}&mediationId=${complaint.id}`,
+                },
+                paymentModeConfig: {
+                    enabledPaymentModes: [
+                        { type: 'UPI_QR' },
+                        { type: 'UPI_INTENT' },
+                        { type: 'UPI_COLLECT' },
+                        { type: 'NET_BANKING' },
+                        {
+                            type: 'CARD',
+                            cardTypes: ['DEBIT_CARD', 'CREDIT_CARD'],
+                        },
+                    ],
+                },
+            },
         };
 
-        const dataPayload = JSON.stringify(payload);
-        const dataBase64 = Buffer.from(dataPayload).toString('base64');
-
-        const string = dataBase64 + '/pg/v1/pay' + process.env.SALT_KEY;
-        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
-        const checksum = sha256 + '###' + process.env.SALT_INDEX;
-
         const payURL = `${PHONE_PAY_URL}/pay`;
-
         const response = await fetch(payURL, {
             method: 'POST',
             headers: {
-                accept: 'application/json',
                 'Content-Type': 'application/json',
-                'X-VERIFY': checksum,
+                Authorization: `O-Bearer ${accessToken}`,
             },
-            body: JSON.stringify({ request: dataBase64 }),
+            body: JSON.stringify(payload),
         });
-        
-        const { data, success, message } = await response.json();
-        
-        if (!success) {
-            throw new CustomError(message, httpStatusCode.BAD_REQUEST);
+
+        const raw = await response.text();
+        let responseData;
+        try {
+            responseData = JSON.parse(raw);
+        } catch {
+            throw new CustomError(
+                `PhonePe returned a non-JSON response: ${raw.slice(0, 240)}`,
+                httpStatusCode.BAD_REQUEST,
+            );
         }
-        
-        return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS, message, data);
+        logger.info('PhonePe v2 mediation pay: ' + JSON.stringify(responseData));
+
+        if (!response.ok || !responseData.redirectUrl) {
+            throw new CustomError(
+                responseData.message || 'Payment initiation failed.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
+        return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS, 'Payment initiated', {
+            redirectUrl: responseData.redirectUrl,
+            orderId: responseData.orderId,
+        });
     });
 
     #mediationPaymentStatus = asyncHandler(async (req, res) => {
         logger.info('Mediation Payment status hit');
-        const { transactionId } = req.params;
+        const { transactionId: orderId } = req.params;
         const { userId, mediationId } = req.query;
 
         const complaint = await mediationCaseModel.findById(mediationId);
         if (!complaint) {
-            return res.redirect(`${FRONTEND_URL}/failure?message=Mediation case not found.`);
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Mediation case not found.`,
+            );
+        }
+        if (String(complaint.userId) !== String(userId)) {
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Invalid payment session.`,
+            );
         }
 
-        const merchantId = process.env.MERCHANT_ID;
-        const keyIndex = process.env.SALT_INDEX;
-        const string = `/pg/v1/status/${merchantId}/${transactionId}` + process.env.SALT_KEY;
-        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
-        const checksum = sha256 + '###' + keyIndex;
+        let accessToken;
+        try {
+            accessToken = await requestPhonePeAccessToken('1');
+        } catch {
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Payment%20auth%20failed.`,
+            );
+        }
 
-        const payURL = `${PHONE_PAY_URL}/status/${merchantId}/${transactionId}`;
-
+        const payURL = `${PHONE_PAY_URL}/order/${orderId}/status`;
         const response = await fetch(payURL, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-VERIFY': checksum,
-                'X-MERCHANT-ID': `${merchantId}`,
+                Authorization: `O-Bearer ${accessToken}`,
             },
         });
-        
-        const { success, data, message } = await response.json();
 
-        // Save in DB
+        const raw = await response.text();
+        let body;
+        try {
+            body = JSON.parse(raw);
+        } catch {
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Invalid response from payment provider.`,
+            );
+        }
+
+        const { success, data, message } = body;
+        const amountPaise = data?.amount ?? 0;
+        const txnId = data?.transactionId ?? orderId;
+
         const savePaymentHistory = await MediationPaymentHistory.create({
             userId,
             mediationId: complaint.id,
-            amount: data.amount / 100,
-            transactionId: data.transactionId,
+            amount: amountPaise / 100,
+            transactionId: txnId,
             paymentStatus: success ? 'Success' : 'Failed',
         });
 
         if (!savePaymentHistory) {
-            return res.redirect(`${FRONTEND_URL}/failure?message=Something went wrong. Please try again.`);
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Something went wrong. Please try again.`,
+            );
         }
 
         if (!success) {
-            return res.redirect(`${FRONTEND_URL}/failure?message=${message}`);
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=${encodeURIComponent(message || 'Payment failed.')}`,
+            );
         }
 
-        // Update Case Status
-        await mediationCaseModel.findByIdAndUpdate(
-            complaint.id,
-            { status: 'Paid' } 
-        );
+        await mediationCaseModel.findByIdAndUpdate(complaint.id, {
+            status: 'Paid',
+        });
 
         return res.redirect(
-            `${FRONTEND_URL}/success?amount=${data.amount / 100}&transactionId=${data.transactionId}`
+            `${FRONTEND_URL}/success?amount=${amountPaise / 100}&transactionId=${txnId}`,
         );
     });
 }

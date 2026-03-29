@@ -22,6 +22,16 @@ class MediationCaseController extends Base {
     }
 
     #initializeRoutes() {
+        this.router.get(
+            '/mediation/cases',
+            userAuthMiddleware,
+            this.#listCasesForUser,
+        );
+        this.router.get(
+            '/mediation/cases/:id',
+            userAuthMiddleware,
+            this.#getCaseByIdForUser,
+        );
         // Frontend (dashboard) single-submit endpoint (auth)
         // Accepts payload shape from frontend MediationForm.jsx
         this.router.post(
@@ -30,6 +40,43 @@ class MediationCaseController extends Base {
             this.#createCaseFromFrontend,
         );
     }
+
+    #listCasesForUser = asyncHandler(async (req, res) => {
+        const cases = await MediationCase.find({ userId: req.id }).sort({
+            createdAt: -1,
+        });
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Mediation cases fetched successfully.',
+            cases,
+        );
+    });
+
+    #getCaseByIdForUser = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const mediationCase = await MediationCase.findById(id);
+        if (!mediationCase) {
+            throw new CustomError(
+                'Mediation case not found.',
+                httpStatusCode.NOT_FOUND,
+            );
+        }
+        if (String(mediationCase.userId) !== String(req.id)) {
+            throw new CustomError(
+                "You don't have permission to access this case.",
+                httpStatusCode.UNAUTHORIZED,
+            );
+        }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Mediation case fetched successfully.',
+            mediationCase,
+        );
+    });
 
     async #parseMultipartAndUpload(req) {
         return await new Promise((resolve, reject) => {

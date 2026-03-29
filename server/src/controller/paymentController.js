@@ -11,12 +11,12 @@ import {
     NOREPLYEMAIL,
     NewRegrecipients,
     PHONE_PAY_URL,
-    PHONE_PAY_AUTH_URL,
     getPolicyEmail,
     htmlTemplate,
     httpStatus,
     httpStatusCode,
 } from '#utils/constant';
+import { requestPhonePeAccessToken } from '#utils/phonePeOAuth';
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
 // crypto removed — v2 uses OAuth Bearer auth
@@ -226,22 +226,14 @@ class PaymentController extends Base {
             );
         }
 
-        // v2 API — get OAuth Bearer token
-        const authRes = await fetch(PHONE_PAY_AUTH_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                client_id: process.env.MERCHANT_ID,
-                client_secret: process.env.SALT_KEY,
-                grant_type: 'client_credentials',
-                client_version: '1',
-            }),
-        });
-        const authData = await authRes.json();
-        if (!authData.access_token) {
-            return res.redirect(`${FRONTEND_URL}/failure?message=Payment auth failed.`);
+        let accessToken;
+        try {
+            accessToken = await requestPhonePeAccessToken('1');
+        } catch {
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Payment auth failed.`,
+            );
         }
-        const accessToken = authData.access_token;
 
         const payURL = `${PHONE_PAY_URL}/order/${transactionId}/status`;
         logger.info('PHONE_PAY_URL v2 status: ' + payURL);
@@ -409,28 +401,12 @@ class PaymentController extends Base {
             );
         }
 
-        // Step 1: Get OAuth Bearer token (v2)
-        const authRes = await fetch(PHONE_PAY_AUTH_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                client_id: process.env.MERCHANT_ID,
-                client_version: process.env.SALT_INDEX,
-                client_secret: process.env.SALT_KEY,
-                grant_type: 'client_credentials',
-            }),
-        });
-        const authData = await authRes.json();
-        logger.info('PhonePe auth: ' + JSON.stringify(authData));
-        if (!authData.access_token) {
-            throw new CustomError(
-                authData.message || 'Failed to authenticate with PhonePe.',
-                httpStatusCode.BAD_REQUEST,
-            );
-        }
-        const accessToken = authData.access_token;
+        const accessToken = await requestPhonePeAccessToken(
+            process.env.SALT_INDEX,
+        );
+        logger.info('PhonePe OAuth token obtained for pay');
 
-        // Step 2: Build v2 PG_CHECKOUT payload
+        // Build v2 PG_CHECKOUT payload
         const orderId = nanoid().replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 63);
         const baseURl = process.env.BACKEND_URL || 'http://localhost:7000';
 

@@ -74,6 +74,7 @@ const mediationCaseSchema = new Schema(
             enum: [
                 'Draft',
                 'Submitted',
+                'Paid',
                 'Under Review',
                 'Mediator Assigned',
                 'Respondent Invited',
