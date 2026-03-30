@@ -87,6 +87,17 @@ const mediationCaseSchema = new Schema(
             ],
             default: 'Draft',
         },
+        paymentStatus: {
+            type: String,
+            enum: ['Pending', 'Success', 'Failed'],
+            default: 'Pending',
+        },
+        paymentTransactionId: {
+            type: String,
+        },
+        paidAt: {
+            type: Date,
+        },
     },
     { timestamps: true },
 );

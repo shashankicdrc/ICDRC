@@ -28,7 +28,7 @@ class MediationPaymentController extends Base {
             userAuthMiddleware,
             this.#initiateMediationPayment
         );
-        this.router.post(
+        this.router.get(
             '/mediation-payment/status/:transactionId',
             this.#mediationPaymentStatus
         );
@@ -38,7 +38,7 @@ class MediationPaymentController extends Base {
     #calculateFee(amountValue) {
         const amount = Number(amountValue);
         if (isNaN(amount) || amount === 0) return 5000;
-        if (amount <= 500000) return 5;          // Up to 5L -> 5k
+        if (amount <= 500000) return 5000;          // Up to 5L -> 5k
         if (amount <= 5000000) return 10000;        // 5L to 50L -> 10k
         if (amount <= 10000000) return 15000;       // 50L to 1Cr -> 15k
         return 25000;                               // Above 1Cr -> 25k
@@ -135,6 +135,26 @@ class MediationPaymentController extends Base {
             );
         }
 
+        await mediationCaseModel.findByIdAndUpdate(complaint.id, {
+            paymentStatus: 'Pending',
+            // Persist the merchant order id so status can be resolved later
+            // even if the redirect query params are missing.
+            paymentTransactionId: orderId,
+        });
+
+        // Store an orderId -> mediation mapping so the status callback can resolve
+        // the mediation case even if query params are missing.
+        await MediationPaymentHistory.findOneAndUpdate(
+            { transactionId: orderId },
+            {
+                userId: req.id,
+                mediationId: complaint.id,
+                amount: price / 100,
+                paymentStatus: 'Pending',
+            },
+            { upsert: true, new: true, setDefaultsOnInsert: true },
+        );
+
         return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS, 'Payment initiated', {
             redirectUrl: responseData.redirectUrl,
             orderId: responseData.orderId,
@@ -146,13 +166,29 @@ class MediationPaymentController extends Base {
         const { transactionId: orderId } = req.params;
         const { userId, mediationId } = req.query;
 
-        const complaint = await mediationCaseModel.findById(mediationId);
+        // Prefer explicit query params, otherwise resolve via stored mapping.
+        let resolvedUserId = userId;
+        let resolvedMediationId = mediationId;
+
+        if (!resolvedMediationId) {
+            const mapping = await MediationPaymentHistory.findOne({
+                transactionId: orderId,
+            }).select('userId mediationId');
+            if (mapping) {
+                resolvedUserId = resolvedUserId || String(mapping.userId);
+                resolvedMediationId = String(mapping.mediationId);
+            }
+        }
+
+        const complaint = resolvedMediationId
+            ? await mediationCaseModel.findById(resolvedMediationId)
+            : await mediationCaseModel.findOne({ paymentTransactionId: orderId });
         if (!complaint) {
             return res.redirect(
                 `${FRONTEND_URL}/failure?message=Mediation case not found.`,
             );
         }
-        if (String(complaint.userId) !== String(userId)) {
+        if (resolvedUserId && String(complaint.userId) !== String(resolvedUserId)) {
             return res.redirect(
                 `${FRONTEND_URL}/failure?message=Invalid payment session.`,
             );
@@ -190,21 +226,22 @@ class MediationPaymentController extends Base {
         const amountPaise = data?.amount ?? 0;
         const txnId = data?.transactionId ?? orderId;
 
-        const savePaymentHistory = await MediationPaymentHistory.create({
-            userId,
-            mediationId: complaint.id,
-            amount: amountPaise / 100,
-            transactionId: txnId,
-            paymentStatus: success ? 'Success' : 'Failed',
-        });
-
-        if (!savePaymentHistory) {
-            return res.redirect(
-                `${FRONTEND_URL}/failure?message=Something went wrong. Please try again.`,
-            );
-        }
+        await MediationPaymentHistory.findOneAndUpdate(
+            { transactionId: orderId },
+            {
+                userId: resolvedUserId || complaint.userId,
+                mediationId: complaint.id,
+                amount: amountPaise / 100,
+                paymentStatus: success ? 'Success' : 'Failed',
+            },
+            { upsert: true, new: true, setDefaultsOnInsert: true },
+        );
 
         if (!success) {
+            await mediationCaseModel.findByIdAndUpdate(complaint.id, {
+                paymentStatus: 'Failed',
+                paymentTransactionId: txnId,
+            });
             return res.redirect(
                 `${FRONTEND_URL}/failure?message=${encodeURIComponent(message || 'Payment failed.')}`,
             );
@@ -212,6 +249,9 @@ class MediationPaymentController extends Base {
 
         await mediationCaseModel.findByIdAndUpdate(complaint.id, {
             status: 'Paid',
+            paymentStatus: 'Success',
+            paymentTransactionId: txnId,
+            paidAt: new Date(),
         });
 
         return res.redirect(
