@@ -58,22 +58,25 @@ const mediationCaseSchema = new Schema(
         // ==========================================
         // 🔥 NAYI FIELDS (SESSION SCHEDULING KE LIYE) 🔥
         // ==========================================
+        // 🔥 SESSION SCHEDULING FIELDS 🔥
         sessionMode: {
             type: String,
             enum: ['Online', 'Offline'],
-            // Yahan default nahi denge kyunki user ko select karna hai
         },
         sessionDate: {
-            type: String, // Hum String mein "YYYY-MM-DD" store karenge
+            type: String, 
         },
-        sessionTime: {
-            type: String, // Hum String mein "HH:MM" (e.g., "14:30") store karenge
+        sessionStartTime: { // Naya: Start Time
+            type: String, 
+        },
+        sessionEndTime: {   // Naya: End Time
+            type: String, 
         },
         googleMeetLink: {
-            type: String, // Jab link ban jayega toh yahan save hoga
+            type: String, 
             default: null,
         },
-        // ==========================================
+        // Status enum mein 'Session Requested' bhi add kar lena agar nahi hai
 
         // Frontend subscription gating fields
         isSubscribed: {
