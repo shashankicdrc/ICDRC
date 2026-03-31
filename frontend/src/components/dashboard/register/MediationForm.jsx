@@ -103,13 +103,14 @@ const MediationForm = () => {
             try {
                 const { data, error } = await getUserMediationCases(token);
                 if (data && data.length > 0) {
-                    // Find the most recent pending case that isn't subscribed
-                    const pending = data.find((c) => c.status === 'Submitted' && c.paymentStatus === 'Pending');
-                    if (pending) {
-                        setPendingCase(pending);
+                    setAllCases(data); // Store all cases for the summary list
+                    
+                    // Find the most recent active case that isn't closed
+                    const activeCase = data.find((c) => c.status !== 'Closed');
+                    if (activeCase) {
+                        setPendingCase(activeCase);
                         setShowPayment(true);
                     }
-                    setAllCases(data); // Store all cases for the summary list
                 }
             } catch (err) {
                 console.error('Error checking pending case:', err);
@@ -186,13 +187,17 @@ const MediationForm = () => {
         }
     };
 
-    if (showPayment && pendingCase) {
+    if (showPayment && pendingCase && pendingCase.status !== 'Closed') {
+        const needsPayment = pendingCase.paymentStatus === 'Pending' || pendingCase.paymentStatus === 'Failed';
+        
         return (
             <div className="max-w-xl mx-auto py-10 px-4">
-                <MediationPayment
-                    caseData={pendingCase}
-                    isSubscribed={isValidSubscription}
-                />
+                {needsPayment && (
+                    <MediationPayment
+                        caseData={pendingCase}
+                        isSubscribed={isValidSubscription}
+                    />
+                )}
                 <MediationCaseList cases={allCases} />
             </div>
         );
