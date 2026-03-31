@@ -1,7 +1,7 @@
 import orgComplaintModel from '#models/orgComplaintModel';
 import { Base } from '#utils/Base';
 import { Router } from 'express';
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 import OrgComplaintService from '#services/orgComplaintService';
 import asyncHandler from '#utils/asyncHandler';
 import {

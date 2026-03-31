@@ -125,11 +125,6 @@ export const authOptions = {
                     return token;
                 }
 
-                if (typeof RefreshAccessToken === 'undefined') {
-                    // Avoid crashing on Dev server if RefreshAccessToken isn't defined or imported.
-                    return token;
-                }
-
                 const refreshTokenData = await RefreshAccessToken(
                     token.AccessToken,
                     token.RefreshToken,

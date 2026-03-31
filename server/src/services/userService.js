@@ -31,15 +31,12 @@ class UserService {
         return isDeleted ? { deleted: true } : { deleted: false };
     }
     async addPasswordToken(data) {
-        const addToken = await userTokenModel.create({
-            type: data?.type ?? 'password_reset',
-            ...data,
-        });
+        const addToken = await userTokenModel.create(data);
         return addToken ?? undefined;
     }
 
-    async isPasswordTokenExist(userId, type = 'password_reset') {
-        const isToken = await userTokenModel.findOne({ userId, type });
+    async isPasswordTokenExist(userId) {
+        const isToken = await userTokenModel.findOne({ userId });
         return isToken ?? undefined;
     }
 

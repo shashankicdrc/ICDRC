@@ -4,8 +4,6 @@ import { httpStatus, httpStatusCode } from '@/lib/commonEnum'
 import { BASE_URL } from '@/lib/constant'
 import React from 'react'
 
-export const dynamic = 'force-dynamic'
-
 export default async function page() {
     const response = await fetch(`${BASE_URL}/api/plans`)
     const { data, message, statusCode, status } = await response.json();

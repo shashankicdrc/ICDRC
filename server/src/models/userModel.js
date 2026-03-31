@@ -11,10 +11,6 @@ const schema = new Schema(
             type: String,
             required: [true, 'name is required'],
         },
-        isEmailVerified: {
-            type: Boolean,
-            default: false,
-        },
         provider: {
             type: String,
             enum: ['credential', 'google', 'facebook'],

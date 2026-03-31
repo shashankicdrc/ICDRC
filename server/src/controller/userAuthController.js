@@ -17,7 +17,7 @@ import {
     options,
     verifyToken,
 } from '#utils/jwt';
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
 import generateCode from '#utils/generateCode';
 import { queues } from '#queues/queue';
 import isValidDateTime from '#utils/validateTime';
@@ -157,54 +157,29 @@ class UserController extends Base {
             isUserExist.id,
         );
 
-        const passwordTokenData = isTokenExist
-            ? (() => {
-                  // If the existing token is expired, replace it with a fresh one.
-                  if (!isValidDateTime(isTokenExist.expireTime, 15)) {
-                      return {
-                          code: generateCode(),
-                          expireTime: new Date(Date.now() + 15 * 60 * 1000),
-                          userId: isUserExist.id,
-                          __replaceExisting: true,
-                          __existingTokenId: isTokenExist.id,
-                      };
-                  }
+        if (isTokenExist) {
+            const message = `Reset password link has been already sent to your email ${isUserExist.email}.`;
+            return this.response(
+                res,
+                httpStatusCode.OK,
+                httpStatus.SUCCESS,
+                message,
+            );
+        }
 
-                  // Otherwise reuse the existing still-valid token and resend.
-                  return {
-                      code: isTokenExist.code,
-                      expireTime: isTokenExist.expireTime,
-                      userId: isUserExist.id,
-                      __replaceExisting: false,
-                      __existingTokenId: isTokenExist.id,
-                  };
-              })()
-            : {
-                  code: generateCode(),
-                  expireTime: new Date(Date.now() + 15 * 60 * 1000),
-                  userId: isUserExist.id,
-                  __replaceExisting: false,
-                  __existingTokenId: null,
-              };
+        const passwordTokenData = {
+            code: generateCode(),
+            expireTime: new Date(Date.now() + 15 * 60 * 1000),
+            userId: isUserExist.id,
+        };
 
-        if (!isTokenExist || passwordTokenData.__replaceExisting) {
-            if (passwordTokenData.__replaceExisting && passwordTokenData.__existingTokenId) {
-                await this.#userService.deletePasswordToken(
-                    passwordTokenData.__existingTokenId,
-                );
-            }
-
-            const passwordToken = await this.#userService.addPasswordToken({
-                code: passwordTokenData.code,
-                expireTime: passwordTokenData.expireTime,
-                userId: passwordTokenData.userId,
-            });
-            if (!passwordToken) {
-                throw new CustomError(
-                    'Something went wrong, please try agin.',
-                    httpStatusCode.BAD_REQUEST,
-                );
-            }
+        const passwordToken =
+            await this.#userService.addPasswordToken(passwordTokenData);
+        if (!passwordToken) {
+            throw new CustomError(
+                'Something went wrong, please try agin.',
+                httpStatusCode.BAD_REQUEST,
+            );
         }
 
         const link =
@@ -225,10 +200,8 @@ class UserController extends Base {
             html,
         };
 
-        await queues.EmailQueue.add('send-email', NewMessage);
-        const msg = isTokenExist
-            ? `Reset password link has been re-sent to your ${isUserExist.email} email.`
-            : `Reset password link has been send to your ${isUserExist.email} email.`;
+        queues.EmailQueue.add('send-email', NewMessage);
+        const msg = `Reset password link has been send to your ${isUserExist.email} email.`;
         return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS, msg);
     });
 
@@ -306,18 +279,6 @@ class UserController extends Base {
                 'Invalid email/password',
                 httpStatusCode.BAD_REQUEST,
             );
-        if (!password) {
-            throw new CustomError(
-                'Password is required.',
-                httpStatusCode.BAD_REQUEST,
-            );
-        }
-        if (!isUserExist.password) {
-            throw new CustomError(
-                'This account does not have a password set. Please use the reset password flow to set a password, or sign in with your social provider.',
-                httpStatusCode.BAD_REQUEST,
-            );
-        }
         const isValidPassword = await bcrypt.compare(
             password,
             isUserExist.password,
@@ -367,7 +328,7 @@ class UserController extends Base {
             providerId,
         };
 
-        if (password) {
+        if (provider === 'credential') {
             const hashedPassword = await bcrypt.hash(password, 10);
             userData = {
                 ...userData,

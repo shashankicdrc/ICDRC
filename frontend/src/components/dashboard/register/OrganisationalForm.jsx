@@ -250,7 +250,7 @@ const OganisationalForm = () => {
                 toast.error(error);
                 return;
             }
-            router.push(data.redirectUrl);
+            router.push(data.instrumentResponse.redirectInfo.url);
         } catch (error) {
             console.error('Error while making payment:', error);
             setpaymentLoading((prevState) => !prevState);

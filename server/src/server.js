@@ -32,10 +32,7 @@ import hpp from 'hpp';
 import cron from 'node-cron';
 import { checkSubscriptions } from '#utils/checkSubscription';
 import renewSubscriptionController from '#controller/renewSubscriptionController';
-import mediationCaseController from '#controller/mediationCaseController';
-import mediationPaymentController from '#controller/mediationPaymentController';
-import { assignMediator } from './controller/mediationAssignEmail.js';
-import { requestSession, acceptSession } from './controller/scheduleController.js';
+
 const startServer = async () => {
     const app = express();
     const port = process.env.PORT || 8080;
@@ -43,13 +40,9 @@ const startServer = async () => {
     var allowlist = [
         'http://localhost:3000',
         'http://localhost:3001',
-        'https://dev-api.icdrc.in',
-        'http://77.37.45.141:3000',
-        'http://77.37.45.141:3001',
         'https://icdrc.in',
         'https://www.icdrc.in',
         'https://dashboard.icdrc.in',
-        'https://dev.icdrc.in',
     ];
     var corsOptionsDelegate = function (req, callback) {
         var corsOptions;
@@ -111,23 +104,11 @@ const startServer = async () => {
     app.use('/api', teamController);
     app.use('/api', textTestimonial);
     app.use('/api', renewSubscriptionController);
-    app.use('/api', mediationCaseController);
-    app.use('/api', mediationPaymentController);
-    
-   app.use('/api/cases/:caseId/assign-mediator', assignMediator); // Yeh same rahega
-
-    // Naye routes:
-    app.put('/api/cases/:caseId/request-session', requestSession); // User ke liye
-    app.put('/api/cases/:caseId/accept-session', acceptSession);   // Admin ke liye
 
     // Schedule a cron job to run every day at midnight
-    cron.schedule('0 0 * * *', async () => {
-        logger.info('Checking subscriptions to send reminder emails...');
-        try {
-            await checkSubscriptions();
-        } catch (error) {
-            logger.error(`[cron] checkSubscriptions failed: ${error.message}`);
-        }
+    cron.schedule('0 0 * * *', () => {
+        console.log('Checking subscriptions to send reminder emails...');
+        checkSubscriptions();
     });
 
     app.use(ErrorMiddleware);

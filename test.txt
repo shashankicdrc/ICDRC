@@ -6,7 +6,3 @@ bakcend
 yhib
 jjkk
 jj
-
-
-Adding the dev branch
-adding the feature/mediation branch
