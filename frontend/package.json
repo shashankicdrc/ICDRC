@@ -41,10 +41,11 @@
         "date-fns": "^3.6.0",
         "embla-carousel-autoplay": "^8.2.0",
         "embla-carousel-react": "^8.2.0",
+        "framer-motion": "^12.38.0",
         "jodit-react": "^4.0.9",
         "jsonwebtoken": "^9.0.2",
         "lucide-react": "^0.427.0",
-        "next": "^14.2.3",
+        "next": "^14.2.35",
         "next-auth": "^4.24.7",
         "next-images": "^1.8.5",
         "react": "^18.2.0",
@@ -63,6 +64,7 @@
         "tailwind-merge": "^2.5.2"
     },
     "devDependencies": {
+        "@next/swc-win32-x64-msvc": "^16.2.1",
         "autoprefixer": "^10.4.17",
         "eslint": "^9.9.0",
         "eslint-config-prettier": "^9.1.0",

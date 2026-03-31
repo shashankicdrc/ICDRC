@@ -10,7 +10,7 @@ import {
     httpStatusCode,
 } from '#utils/constant';
 import { nanoid } from 'nanoid';
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
 import crypto from 'crypto';
 import logger from '#utils/logger';
 import PaymentHistory from '#models/paymentHistoryModel';
@@ -142,10 +142,8 @@ class RenewSubscriptionController extends Base {
         }
         const transactionId = nanoid();
 
-        const redirectUrl =
-            process.env.NODE_ENV === 'production'
-                ? `${process.env.BACKEND_URL}/api/subscription/renew/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`
-                : `http://localhost:7000/api/subscription/renew/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`;
+        const backendUrl = process.env.BACKEND_URL || 'http://localhost:7000';
+        const redirectUrl = `${backendUrl}/api/subscription/renew/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`;
 
         const payload = {
             userId: req.id,

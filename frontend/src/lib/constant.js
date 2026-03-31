@@ -1,7 +1,9 @@
+const browserBaseUrl =
+    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+const internalBaseUrl = process.env.INTERNAL_BACKEND_URL || browserBaseUrl;
+
 export const BASE_URL =
-    process.env.NODE_ENV !== 'production'
-        ? 'http://localhost:7000'
-        : 'https://api.icdrc.in';
+    typeof window === 'undefined' ? internalBaseUrl : browserBaseUrl;
 
 export const httpStatusCode = {
     UNPROCESSABLE_ENTITY: 422,
