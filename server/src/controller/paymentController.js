@@ -61,7 +61,7 @@ class PaymentController extends Base {
             userAuthMiddleware,
             this.#userRecentPaymentHistory,
         );
-        this.router.post(
+        this.router.get(
             '/payments/status/:transactionId',
             this.#paymentStatus,
         );

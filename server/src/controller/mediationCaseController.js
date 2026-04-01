@@ -57,11 +57,6 @@ class MediationCaseController extends Base {
             AdminAuthMiddleware,
             this.#adminGetMediationCaseById,
         );
-        this.router.put(
-            '/admin/mediation/cases/:id/payment-status',
-            AdminAuthMiddleware,
-            this.#adminUpdatePaymentStatus,
-        );
     }
 
     #listCasesForUser = asyncHandler(async (req, res) => {
@@ -161,47 +156,6 @@ class MediationCaseController extends Base {
             httpStatus.SUCCESS,
             'Mediation case fetched successfully.',
             mediationCase,
-        );
-    });
-
-    #adminUpdatePaymentStatus = asyncHandler(async (req, res) => {
-        const { id } = req.params;
-        const { paymentStatus } = req.body;
-
-        const normalized = paymentStatus ? String(paymentStatus).trim() : '';
-        const allowed = ['Pending', 'Success', 'Failed'];
-        if (!allowed.includes(normalized)) {
-            throw new CustomError(
-                `Invalid paymentStatus. Allowed: ${allowed.join(', ')}`,
-                httpStatusCode.BAD_REQUEST,
-            );
-        }
-
-        const patch = { paymentStatus: normalized };
-        if (normalized === 'Success') {
-            patch.status = 'Paid';
-            patch.paidAt = new Date();
-        } else if (normalized === 'Pending') {
-            patch.paidAt = undefined;
-        }
-
-        const updated = await MediationCase.findByIdAndUpdate(id, patch, {
-            new: true,
-        }).lean();
-
-        if (!updated) {
-            throw new CustomError(
-                'Mediation case not found.',
-                httpStatusCode.NOT_FOUND,
-            );
-        }
-
-        return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Payment status updated successfully.',
-            updated,
         );
     });
 
