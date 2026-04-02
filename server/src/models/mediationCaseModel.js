@@ -58,6 +58,25 @@ const mediationCaseSchema = new Schema(
         },
         files: [evidenceSchema], // list of uploaded documents (URLs)
 
+        // new for google meet
+        sessionMode: {
+            type: String,
+            enum: ['Online', 'Offline'],
+        },
+        sessionDate: {
+            type: String, 
+        },
+        sessionStartTime: { // Naya: Start Time
+            type: String, 
+        },
+        sessionEndTime: {   // Naya: End Time
+            type: String, 
+        },
+        googleMeetLink: {
+            type: String, 
+            default: null,
+        },
+
         // Frontend subscription gating fields
         isSubscribed: {
             type: Boolean,

@@ -468,7 +468,12 @@ class MediationCaseController extends Base {
                     httpStatusCode.OK,
                     httpStatus.SUCCESS,
                     'Mediation case updated successfully.',
-                    { caseId: updated.id, status: updated.status },
+                    {
+                        caseId: updated.id,
+                        status: updated.status,
+                        paymentStatus: updated.paymentStatus,
+                    },
+                    
                 );
             }
 
@@ -495,12 +500,16 @@ class MediationCaseController extends Base {
             });
 
             return this.response(
-                res,
-                httpStatusCode.OK,
-                httpStatus.SUCCESS,
-                'Mediation case submitted successfully.',
-                { caseId: mediationCase.id, status: mediationCase.status },
-            );
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Mediation case submitted successfully.',
+            {
+                caseId: mediationCase.id,
+                status: mediationCase.status,
+                paymentStatus: mediationCase.paymentStatus,
+    },
+);
         }
 
         const {
@@ -580,7 +589,11 @@ class MediationCaseController extends Base {
                 httpStatusCode.OK,
                 httpStatus.SUCCESS,
                 'Mediation case updated successfully.',
-                { caseId: updated.id, status: updated.status },
+                {
+    caseId: updated.id,
+    status: updated.status,
+    paymentStatus: updated.paymentStatus,
+},
             );
         }
 
@@ -607,12 +620,16 @@ class MediationCaseController extends Base {
         });
 
         return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Mediation case submitted successfully.',
-            { caseId: mediationCase.id, status: mediationCase.status },
-        );
+        res,
+        httpStatusCode.OK,
+        httpStatus.SUCCESS,
+        'Mediation case submitted successfully.',
+    {
+        caseId: mediationCase.id,
+        status: mediationCase.status,
+        paymentStatus: mediationCase.paymentStatus,
+    },
+);
     });
 }
 
