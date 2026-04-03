@@ -10,6 +10,7 @@ import pagination from '#utils/pagination';
 import express from 'express';
 import busboy from 'busboy';
 import { v2 as cloudinary } from 'cloudinary';
+import { queues } from '#queues/queue';
 
 const { Router } = express;
 
@@ -56,6 +57,16 @@ class MediationCaseController extends Base {
             '/admin/mediation/cases/:id',
             AdminAuthMiddleware,
             this.#adminGetMediationCaseById,
+        );
+        this.router.put(
+            '/admin/mediation/cases/:id/accept',
+            AdminAuthMiddleware,
+            this.#acceptCase,
+        );
+        this.router.put(
+            '/admin/mediation/cases/:id/close',
+            AdminAuthMiddleware,
+            this.#closeCase,
         );
     }
 
@@ -156,6 +167,77 @@ class MediationCaseController extends Base {
             httpStatus.SUCCESS,
             'Mediation case fetched successfully.',
             mediationCase,
+        );
+    });
+
+    #acceptCase = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const mediationCase = await MediationCase.findById(id);
+        if (!mediationCase) {
+            throw new CustomError(
+                'Mediation case not found.',
+                httpStatusCode.NOT_FOUND,
+            );
+        }
+
+        if (mediationCase.status !== 'Submitted') {
+            throw new CustomError(
+                'Case must be in Submitted status to be accepted.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
+        if (mediationCase.paymentStatus !== 'Paid' && mediationCase.paymentStatus !== 'Success') {
+            throw new CustomError(
+                'Case payment must be successful before accepting.',
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+
+        const updatedCase = await MediationCase.findByIdAndUpdate(
+            id,
+            { status: 'Accepted' },
+            { new: true },
+        );
+
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Case accepted successfully.',
+            updatedCase,
+        );
+    });
+
+    #closeCase = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const mediationCase = await MediationCase.findById(id);
+
+        if (!mediationCase) {
+            throw new CustomError('Mediation case not found.', httpStatusCode.NOT_FOUND);
+        }
+
+        if (mediationCase.status === 'Closed') {
+            throw new CustomError('Mediation case is already closed.', httpStatusCode.BAD_REQUEST);
+        }
+
+        // Optionally you can restrict allowed statuses to close
+        // if (![ 'Settled', 'Not Settled', 'In Mediation', 'Mediator Assigned' ].includes(mediationCase.status)) {
+        //     throw new CustomError('Case cannot be closed from current status.', httpStatusCode.BAD_REQUEST);
+        // }
+
+        const updatedCase = await MediationCase.findByIdAndUpdate(
+            id,
+            { status: 'Closed' },
+            { new: true },
+        );
+
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Case closed successfully.',
+            updatedCase,
         );
     });
 

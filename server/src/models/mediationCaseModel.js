@@ -93,8 +93,8 @@ const mediationCaseSchema = new Schema(
             enum: [
                 'Draft',
                 'Submitted',
-                'Paid',
-                'Under Review',
+                'Accepted',
+                'Session Requested',
                 'Mediator Assigned',
                 'Respondent Invited',
                 'Mode Selection Pending',
@@ -108,7 +108,7 @@ const mediationCaseSchema = new Schema(
         },
         paymentStatus: {
             type: String,
-            enum: ['Pending', 'Success', 'Failed'],
+            enum: ['Pending', 'Paid', 'Success', 'Failed'],
             default: 'Pending',
         },
         paymentTransactionId: {
