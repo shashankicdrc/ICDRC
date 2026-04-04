@@ -1,6 +1,6 @@
 
 const browserBaseUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || "http://77.37.45.141:7000";
+    process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8080";
 const internalBaseUrl = process.env.INTERNAL_BACKEND_URL || browserBaseUrl;
 const developmentBaseUrl =
     typeof window === "undefined" ? internalBaseUrl : browserBaseUrl;
