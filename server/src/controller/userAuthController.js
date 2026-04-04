@@ -367,7 +367,7 @@ class UserController extends Base {
             providerId,
         };
 
-        if (provider === 'credential') {
+        if (password) {
             const hashedPassword = await bcrypt.hash(password, 10);
             userData = {
                 ...userData,

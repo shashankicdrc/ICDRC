@@ -13,6 +13,8 @@ import partnerController from '#controller/partnerController';
 import paymentController from '#controller/paymentController';
 import userAuthController from '#controller/userAuthController';
 import ErrorMiddleware from '#middlewares/ErroMiddleware';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
 import logger from '#utils/logger';
@@ -31,10 +33,13 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import cron from 'node-cron';
 import { checkSubscriptions } from '#utils/checkSubscription';
+import CustomError from '#utils/CustomError';
+import MediationCase from '#models/mediationCaseModel';
 import renewSubscriptionController from '#controller/renewSubscriptionController';
 import mediationCaseController from '#controller/mediationCaseController';
 import mediationPaymentController from '#controller/mediationPaymentController';
-
+import { assignMediator } from './controller/mediationAssignEmail.js';
+import { requestSession, caseAccept } from './controller/scheduleController.js';
 const startServer = async () => {
     const app = express();
     const port = process.env.PORT || 8080;
@@ -42,13 +47,13 @@ const startServer = async () => {
     var allowlist = [
         'http://localhost:3000',
         'http://localhost:3001',
+        'https://dev-api.icdrc.in',
         'http://77.37.45.141:3000',
         'http://77.37.45.141:3001',
         'https://icdrc.in',
         'https://www.icdrc.in',
         'https://dashboard.icdrc.in',
         'https://dev.icdrc.in',
-        'https://dev-api.icdrc.in',
     ];
     var corsOptionsDelegate = function (req, callback) {
         var corsOptions;
@@ -113,18 +118,65 @@ const startServer = async () => {
     app.use('/api', mediationCaseController);
     app.use('/api', mediationPaymentController);
 
+    app.post('/api/cases/:caseId/assign-mediator', AdminAuthMiddleware, assignMediator);
+
+    // Naye routes:
+    app.put('/api/cases/:caseId/request-session', userAuthMiddleware, requestSession); // User ke liye
+    app.put('/api/cases/:caseId/caseAccept', AdminAuthMiddleware, caseAccept);   // Admin ke liye
+    app.put(
+        '/api/cases/:caseId/close',
+        AdminAuthMiddleware,
+        asyncHandler(async (req, res) => {
+            const { caseId } = req.params;
+            const mediationCase = await MediationCase.findById(caseId);
+
+            if (!mediationCase) {
+                throw new CustomError('Mediation case not found.', httpStatusCode.NOT_FOUND);
+            }
+
+            if (mediationCase.status === 'Closed') {
+                throw new CustomError('Mediation case is already closed.', httpStatusCode.BAD_REQUEST);
+            }
+
+            const updatedCase = await MediationCase.findByIdAndUpdate(
+                caseId,
+                { status: 'Closed' },
+                { new: true },
+            );
+
+            return res.status(httpStatusCode.OK).json({
+                status: httpStatus.SUCCESS,
+                message: 'Case closed successfully.',
+                data: updatedCase,
+            });
+        }),
+    );
+
     // Schedule a cron job to run every day at midnight
-    cron.schedule('0 0 * * *', () => {
-        console.log('Checking subscriptions to send reminder emails...');
-        checkSubscriptions();
+    cron.schedule('0 0 * * *', async () => {
+        logger.info('Checking subscriptions to send reminder emails...');
+        try {
+            await checkSubscriptions();
+        } catch (error) {
+            logger.error(`[cron] checkSubscriptions failed: ${error.message}`);
+        }
     });
 
     app.use(ErrorMiddleware);
 
     const isConnected = await connectDb();
     if (isConnected) {
-        app.listen(port, () => {
+        const server = app.listen(port, () => {
             logger.info(`http://localhost:${port}`);
+        });
+
+        server.on('error', (err) => {
+            if (err && err.code === 'EADDRINUSE') {
+                logger.error(`Port ${port} already in use. Set process.env.PORT to a free port or stop the process using this port.`);
+            } else {
+                logger.error('Server error', err);
+            }
+            process.exit(1);
         });
     }
 };
