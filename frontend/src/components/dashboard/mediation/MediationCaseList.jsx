@@ -2,6 +2,7 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from '../../ui/card';
 import { Badge } from '@chakra-ui/react';
+import MediationScheduleForm from './MediationScheduleForm';
 
 const MediationCaseList = ({ cases }) => {
     if (!cases || cases.length === 0) return null;
@@ -70,7 +71,7 @@ const MediationCaseList = ({ cases }) => {
                                 <p className="text-xs text-gray-500">Payment Status</p>
                                 <Badge
                                     colorScheme={
-                                        item.paymentStatus === 'Paid'
+                                        item.paymentStatus === 'Success'
                                             ? 'green'
                                             : 'orange'
                                     }
@@ -80,6 +81,49 @@ const MediationCaseList = ({ cases }) => {
                             </div>
 
                         </div>
+
+                        {/* Show schedule form only when case is Accepted and session not yet requested */}
+                        {item.status === 'Accepted' && (
+                            <div className="mt-4 pt-4 border-t">
+                                <MediationScheduleForm 
+                                    caseId={item._id} 
+                                    onSuccess={() => window.location.reload()} 
+                                />
+                            </div>
+                        )}
+
+                        {/* Session info: show once session has been requested or mediator assigned */}
+                        {['Session Requested', 'Mediator Assigned', 'Session Scheduled'].includes(item.status) && (
+                            <div className="mt-4 pt-4 border-t">
+                                <h4 className="text-sm font-semibold mb-2">
+                                    {item.status === 'Mediator Assigned' ? ' Session Confirmed' : 'Session Requested'}
+                                </h4>
+                                <div className="bg-white p-3 rounded-lg border text-sm grid grid-cols-2 gap-2">
+                                    <div><span className="text-gray-500">Mode:</span> {item.sessionMode}</div>
+                                    <div><span className="text-gray-500">Date:</span> {item.sessionDate}</div>
+                                    <div><span className="text-gray-500">Start:</span> {item.sessionStartTime}</div>
+                                    <div><span className="text-gray-500">End:</span> {item.sessionEndTime}</div>
+                                    {['Mediator Assigned', 'Session Scheduled'].includes(item.status) && item.googleMeetLink && (
+                                        <div className="col-span-2 pt-2">
+                                            <a
+                                                href={item.googleMeetLink}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-block px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition font-medium"
+                                            >
+                                                Join Google Meet Session
+                                            </a>
+                                        </div>
+                                    )}
+                                    {['Mediator Assigned', 'Session Scheduled'].includes(item.status) && item.sessionMode === 'Offline' && (
+                                        <div className="col-span-2 pt-2 text-gray-600 text-xs">
+                                            📍 Please visit the ICDRC office physically at the scheduled time.<br/>
+                                            <strong>Address:</strong> 6th Floor, Sanatan Building, Opp. CAG Office, Deendayal Upadhyay Marg, New Delhi
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                     </div>
                 ))}
             </CardContent>
