@@ -59,10 +59,10 @@ export default async function RecentTransactions() {
                                     {item.transactionId}
                                 </TableCell>
                                 <TableCell>
-                                    {item.userId.name}
+                                    {item.userId?.name || "N/A"}
                                 </TableCell>
                                 <TableCell>
-                                    {item.userId.email}
+                                    {item.userId?.email || "N/A"}
                                 </TableCell>
 
                                 <TableCell>{formatDate(item.paymentDate)}</TableCell>

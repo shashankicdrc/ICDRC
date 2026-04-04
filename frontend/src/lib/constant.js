@@ -1,5 +1,5 @@
 const browserBaseUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:7000';
+    process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
 const internalBaseUrl = process.env.INTERNAL_BACKEND_URL || browserBaseUrl;
 
 export const BASE_URL =
