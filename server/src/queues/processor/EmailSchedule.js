@@ -18,6 +18,9 @@ const scheduleEmailProcessor = async (job) => {
                 ? process.env.MAIL_SECURE.toLowerCase() === "true"
                 : port === 465;
         const noreplyEmail = process.env.NOREPLYEMAIL || NOREPLYEMAIL;
+        // MAIL_USER = SMTP login credential (e.g. Gmail account)
+        // Falls back to noreplyEmail for servers where login = from address
+        const authUser = process.env.MAIL_USER || noreplyEmail;
 
         let transporter = nodemailer.createTransport({
             host,
@@ -36,7 +39,7 @@ const scheduleEmailProcessor = async (job) => {
                 rejectUnauthorized: false,
             },
             auth: {
-                user: noreplyEmail,
+                user: authUser,
                 pass: process.env.MAIL_PASSWORD,
             },
         });
