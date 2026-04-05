@@ -138,7 +138,7 @@ export const caseAccept = async (req, res) => {
                 <p><strong>Case ID:</strong> ${updatedCase._id}</p>
                 <p>Your case is now ready for session scheduling. Please click the button below to request your preferred mediation session details.</p>
                 <p style="text-align: center; margin: 30px 0;">
-                    <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard/request-session?caseId=${updatedCase._id}" 
+                    <a href="${process.env.FRONTEND_URL || 'http://localhost:3000'}/dashboard/mediation/request-session?caseId=${updatedCase._id}" 
                        style="display: inline-block; padding: 12px 24px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
                         Request Mediation Session
                     </a>
