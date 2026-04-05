@@ -45,28 +45,51 @@ const startServer = async () => {
     const port = process.env.PORT || 8080;
 
     var allowlist = [
-        'http://localhost:3000',
-        'http://localhost:3001',
-        'https://dev-api.icdrc.in',
-        'http://77.37.45.141:3000',
-        'http://77.37.45.141:3001',
-        'https://icdrc.in',
-        'https://www.icdrc.in',
-        'https://dashboard.icdrc.in',
-        'https://dev.icdrc.in',
-    ];
-    var corsOptionsDelegate = function (req, callback) {
-        var corsOptions;
-        if (allowlist.indexOf(req.header('Origin')) !== -1) {
-            corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
-        } else {
-            corsOptions = { origin: false }; // disable CORS for this request
-        }
-        callback(null, corsOptions); // callback expects two parameters: error and options
-    };
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://dev-api.icdrc.in',
+    'http://77.37.45.141:3000',
+    'http://77.37.45.141:3001',
+    'https://icdrc.in',
+    'https://www.icdrc.in',
+    'https://dashboard.icdrc.in',
+    'https://dev.icdrc.in',
+    'https://admin.icdrc.in'
+];
 
-    app.use(express.json());
-    app.use(cors(corsOptionsDelegate));
+app.use(express.json());
+
+// NEW CORS (FIXED)
+app.use(cors({
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+
+        if (allowlist.includes(origin)) {
+            callback(null, true);
+        } else {
+            console.log("Blocked by CORS:", origin); // debug
+            callback(new Error("CORS not allowed"));
+        }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// VERY IMPORTANT (preflight fix)
+app.options('*', cors());
+    // var corsOptionsDelegate = function (req, callback) {
+    //     var corsOptions;
+    //     if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    //         corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+    //     } else {
+    //         corsOptions = { origin: false }; // disable CORS for this request
+    //     }
+    //     callback(null, corsOptions); // callback expects two parameters: error and options
+    // };
+
+   // app.use(express.json());
+   // app.use(cors(corsOptionsDelegate));
     app.set('trust proxy', 1);
     cloudinaryConfiguration();
 
