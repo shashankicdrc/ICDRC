@@ -101,7 +101,14 @@ class MediationPaymentController extends Base {
             },
             body: JSON.stringify({ request: dataBase64 }),
         });
-        
+
+        // Check if response is OK before parsing JSON
+        if (!response.ok) {
+            const errorText = await response.text();
+            logger.error('Payment API error:', { status: response.status, body: errorText });
+            throw new CustomError(`Payment API error: ${errorText}`, response.status);
+        }
+
         const { data, success, message } = await response.json();
         
         if (!success) {

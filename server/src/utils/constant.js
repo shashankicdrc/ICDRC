@@ -68,11 +68,11 @@ export const phonePeEnv =
           ? 'production'
           : 'sandbox';
 
-// PhonePe v2 Checkout API - pay endpoint
+// PhonePe v1 Hermes API - pay endpoint
 export const PHONE_PAY_URL =
     phonePeEnv === 'production'
-        ? 'https://api.phonepe.com/apis/pg/checkout/v2'
-        : 'https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2';
+        ? 'https://api.phonepe.com/apis/hermes/pg/v1'
+        : 'https://api-preprod.phonepe.com/apis/hermes/pg/v1';
 
 // PhonePe v2 OAuth token (prod uses identity-manager per official docs)
 export const PHONE_PAY_AUTH_URL =
@@ -117,3 +117,7 @@ export function buildPhonePeOAuthParams(explicitClientVersion) {
         grant_type: 'client_credentials',
     };
 }
+
+// PhonePe v3 Checkout API
+export const PHONE_PAY_CHECKOUT_URL =
+    'https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2';
