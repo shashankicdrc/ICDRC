@@ -55,3 +55,24 @@ export const getUserMediationCases = async (token) => {
         return { message, data };
     }
 };
+
+export const requestMediationSession = async (token, caseId, sessionData) => {
+    try {
+        const response = await fetch(`${BASE_URL}/api/cases/${caseId}/request-session`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(sessionData),
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            return { error: data.message || 'Failed to request session' };
+        }
+        return { message: data.message, data: data.data };
+    } catch (error) {
+        return { error: error.message || 'Network error' };
+    }
+};

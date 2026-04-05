@@ -30,8 +30,9 @@ export const userPaymentHistory = async (token) => {
     }
 };
 
+// Mediation Payment 
 export const initiatePayment = async (token, values) => {
-    const result = await fetch(`${BASE_URL}/api/payments/initiate`, {
+    const result = await fetch(`${BASE_URL}/api/mediation-payment/initiate`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
