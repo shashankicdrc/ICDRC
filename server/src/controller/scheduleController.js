@@ -1,6 +1,7 @@
 import MediationCase from '../models/mediationCaseModel.js'; 
 import { queues } from '../queues/queue.js';
 import { google } from 'googleapis'; 
+import { mediationCasesTotal } from '../utils/metrics.js';
 
 // ============================================================================
 // GOOGLE MEET OAUTH 2.0 CONFIGURATION
@@ -72,6 +73,8 @@ export const requestSession = async (req, res) => {
         }
 
         // 3. Send Success Response
+        // ─── Track mediation session requested ───────────────────────────────
+        mediationCasesTotal.inc({ transition: 'session_requested' });
         res.status(200).json({ 
             success: true, 
             message: 'Session request submitted successfully to the Admin.',
@@ -128,6 +131,9 @@ export const caseAccept = async (req, res) => {
             { status: 'Accepted' },
             { new: true }
         );
+
+        // ─── Track mediation case accepted ──────────────────────────────────
+        mediationCasesTotal.inc({ transition: 'accepted' });
 
         // 3. Send email to user with button to request session
         const emailHtml = `

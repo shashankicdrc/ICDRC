@@ -26,6 +26,7 @@ import { filterSort, parseFilters } from '#utils/filterSort';
 import pagination from '#utils/pagination';
 import mongoose from 'mongoose';
 import usermodel from '#models/userModel';
+import { complaintRegistrationsTotal } from '#utils/metrics';
 
 class PaymentController extends Base {
     constructor() {
@@ -274,6 +275,8 @@ class PaymentController extends Base {
 
         if (!success) {
             logger.info(data);
+            // ─── Track failed payment ──────────────────────────────────────
+            complaintRegistrationsTotal.inc({ type: complaintType, status: 'failure' });
             return res.redirect(`${FRONTEND_URL}/failure?message=${message}`);
         }
 
@@ -350,6 +353,10 @@ class PaymentController extends Base {
         };
 
         queues.EmailQueue.add('send-mail', teamMessage);
+
+        // ─── Track successful payment ─────────────────────────────────────────
+        complaintRegistrationsTotal.inc({ type: complaintType, status: 'success' });
+
         return res.redirect(
             `${FRONTEND_URL}/success?amount=${data.amount}&transactionId=${data.transactionId}`,
         );
