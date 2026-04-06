@@ -36,7 +36,7 @@
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -55,14 +55,14 @@
       "title": "Avg Request Latency (all routes)",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "rate(http_request_duration_seconds_sum{job=\"icdrc-nodejs-backend\"}[5m]) / rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\"}[5m])",
         "legendFormat": "avg latency"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -81,14 +81,14 @@
       "title": "Requests/sec (last 5m)",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\"}[5m]))",
         "legendFormat": "rps"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -107,14 +107,14 @@
       "title": "5xx Error Rate/sec",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\", status_code=~\"5..\"}[5m]))",
         "legendFormat": "5xx/s"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -132,14 +132,14 @@
       "title": "4xx Error Rate/sec",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\", status_code=~\"4..\"}[5m]))",
         "legendFormat": "4xx/s"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "s" },
         "overrides": []
@@ -150,14 +150,14 @@
       "title": "P95 Latency by Route",
       "type": "timeseries",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job=\"icdrc-nodejs-backend\"}[5m])))",
         "legendFormat": "{{route}}"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "reqps" },
         "overrides": []
@@ -168,7 +168,7 @@
       "title": "Request Rate by Method & Route",
       "type": "timeseries",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (method, route) (rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\"}[5m]))",
         "legendFormat": "{{method}} {{route}}"
       }]
@@ -183,7 +183,7 @@
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -200,14 +200,14 @@
       "title": "Total Successful Subscription Payments",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_subscription_payments_total{status=\"success\"})",
         "legendFormat": "success"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -225,14 +225,14 @@
       "title": "Total Subscription Failures",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_subscription_failures_total)",
         "legendFormat": "failures"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -248,14 +248,14 @@
       "title": "Active Subscriptions (live)",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "icdrc_active_subscriptions_gauge",
         "legendFormat": "active"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
@@ -267,7 +267,7 @@
       "type": "timeseries",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "prom_local" },
           "expr": "sum by (status, plan) (rate(icdrc_subscription_payments_total[5m]))",
           "legendFormat": "{{status}} – {{plan}}"
         }
@@ -275,7 +275,7 @@
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
@@ -286,7 +286,7 @@
       "title": "Subscription Failure Reasons Over Time",
       "type": "timeseries",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (reason) (rate(icdrc_subscription_failures_total[5m]))",
         "legendFormat": "{{reason}}"
       }]
@@ -301,7 +301,7 @@
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -317,14 +317,14 @@
       "title": "Total Emails Sent",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_email_sent_total)",
         "legendFormat": "sent"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -342,14 +342,14 @@
       "title": "Email Send Failures",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_email_failures_total)",
         "legendFormat": "failures"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -367,14 +367,14 @@
       "title": "BullMQ Queue Depth",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "icdrc_bullmq_queue_depth_gauge{queue=\"email-queue\"}",
         "legendFormat": "waiting jobs"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
@@ -385,14 +385,14 @@
       "title": "Emails Sent by Type Over Time",
       "type": "timeseries",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (type) (rate(icdrc_email_sent_total[5m]))",
         "legendFormat": "{{type}}"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
@@ -403,7 +403,7 @@
       "title": "Email Failures by SMTP Error Code",
       "type": "timeseries",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (type, error_code) (rate(icdrc_email_failures_total[5m]))",
         "legendFormat": "{{type}} / {{error_code}}"
       }]
@@ -418,7 +418,7 @@
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -434,14 +434,14 @@
       "title": "Google Meet Links Created",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "icdrc_googlemeet_created_total",
         "legendFormat": "meet links"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -459,14 +459,14 @@
       "title": "Google Calendar API Errors",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_googlemeet_errors_total)",
         "legendFormat": "errors"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
@@ -477,14 +477,14 @@
       "title": "Mediation Case Lifecycle Transitions",
       "type": "timeseries",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (transition) (rate(icdrc_mediation_cases_total[1h]))",
         "legendFormat": "{{transition}}"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
@@ -495,7 +495,7 @@
       "title": "Google Calendar Errors by Code",
       "type": "timeseries",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (error_code) (rate(icdrc_googlemeet_errors_total[5m]))",
         "legendFormat": "HTTP {{error_code}}"
       }]
@@ -510,7 +510,7 @@
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -526,14 +526,14 @@
       "title": "Total Successful Registrations",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_complaint_registrations_total{status=\"success\"})",
         "legendFormat": "success"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": {
           "color": { "mode": "thresholds" },
@@ -551,14 +551,14 @@
       "title": "Failed Registrations (Payment Bounced)",
       "type": "stat",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_complaint_registrations_total{status=\"failure\"})",
         "legendFormat": "failure"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
@@ -569,7 +569,7 @@
       "title": "Complaint Registrations Over Time (by type & status)",
       "type": "timeseries",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (type, status) (rate(icdrc_complaint_registrations_total[5m]))",
         "legendFormat": "{{type}} – {{status}}"
       }]
@@ -584,7 +584,7 @@
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "bytes" },
         "overrides": []
@@ -596,12 +596,12 @@
       "type": "timeseries",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "prom_local" },
           "expr": "nodejs_heap_size_used_bytes{job=\"icdrc-nodejs-backend\"}",
           "legendFormat": "heap used"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "prom_local" },
           "expr": "nodejs_heap_size_total_bytes{job=\"icdrc-nodejs-backend\"}",
           "legendFormat": "heap total"
         }
@@ -609,7 +609,7 @@
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
@@ -620,14 +620,14 @@
       "title": "Event Loop Lag",
       "type": "timeseries",
       "targets": [{
-        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "nodejs_eventloop_lag_seconds{job=\"icdrc-nodejs-backend\"}",
         "legendFormat": "event loop lag"
       }]
     },
 
     {
-      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
@@ -639,12 +639,12 @@
       "type": "timeseries",
       "targets": [
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "prom_local" },
           "expr": "nodejs_active_handles_total{job=\"icdrc-nodejs-backend\"}",
           "legendFormat": "active handles"
         },
         {
-          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "datasource": { "type": "prometheus", "uid": "prom_local" },
           "expr": "nodejs_active_requests_total{job=\"icdrc-nodejs-backend\"}",
           "legendFormat": "active requests"
         }
