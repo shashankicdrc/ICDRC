@@ -1,5 +1,17 @@
 name: icdrc-pre-prod
 
+# ─── Shared logging config (prevents disk exhaustion) ───────────────────────
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+# ─── Explicit internal network (containers talk by name, not via host) ───────
+networks:
+  icdrc-network:
+    driver: bridge
+
 services:
   frontend:
     restart: unless-stopped
@@ -9,9 +21,20 @@ services:
     env_file:
       - ./frontend/.env.pre-prod
     depends_on:
-      - server
+      server:
+        condition: service_healthy        # waits for server to pass its healthcheck
     ports:
       - "3000:3000"
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    security_opt:
+      - no-new-privileges:true            # prevents privilege escalation inside container
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: "0.50"
 
   dashboard:
     restart: unless-stopped
@@ -21,9 +44,20 @@ services:
     env_file:
       - ./dashboard/.env.pre-prod
     depends_on:
-      - server
+      server:
+        condition: service_healthy
     ports:
       - "3001:3001"
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: "0.50"
 
   server:
     restart: unless-stopped
@@ -34,29 +68,68 @@ services:
       - ./server/.env.pre-prod
     depends_on:
       redis:
-        condition: service_started
+        condition: service_healthy        # waits for Redis to be ready, not just started
     ports:
       - "7000:7000"
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: "0.50"
 
   redis:
     restart: unless-stopped
     image: redis:7-alpine
     command: redis-server --appendonly yes
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"            # bind to loopback only — not exposed to internet
     volumes:
       - redis_data_pre_prod:/data
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: "0.25"
 
   prometheus:
     restart: unless-stopped
     image: prom/prometheus:latest
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro   # mount as read-only
       - prometheus_data:/prometheus
     ports:
-      - "9090:9090"
+      - "127.0.0.1:9090:9090"            # internal monitoring — not exposed to internet
     depends_on:
-      - server
+      server:
+        condition: service_healthy
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      start_period: 15s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: "0.50"
 
   grafana:
     restart: unless-stopped
@@ -66,9 +139,25 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     depends_on:
-      - prometheus
+      prometheus:
+        condition: service_healthy
+    networks:
+      - icdrc-network
+    logging: *default-logging
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=securepassword
+      - GF_SERVER_ROOT_URL=http://localhost:3002
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: "0.25"
 
 volumes:
   redis_data_pre_prod:
