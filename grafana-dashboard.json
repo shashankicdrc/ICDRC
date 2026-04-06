@@ -82,7 +82,7 @@
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-        "expr": "sum(rate(http_requests_total{job=\"icdrc-nodejs-backend\"}[5m]))",
+        "expr": "sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\"}[5m]))",
         "legendFormat": "rps"
       }]
     },
@@ -108,7 +108,7 @@
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-        "expr": "sum(rate(http_requests_total{job=\"icdrc-nodejs-backend\", status_code=~\"5..\"}[5m]))",
+        "expr": "sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\", status_code=~\"5..\"}[5m]))",
         "legendFormat": "5xx/s"
       }]
     },
@@ -133,7 +133,7 @@
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-        "expr": "sum(rate(http_requests_total{job=\"icdrc-nodejs-backend\", status_code=~\"4..\"}[5m]))",
+        "expr": "sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\", status_code=~\"4..\"}[5m]))",
         "legendFormat": "4xx/s"
       }]
     },
@@ -169,7 +169,7 @@
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
-        "expr": "sum by (method, route) (rate(http_requests_total{job=\"icdrc-nodejs-backend\"}[5m]))",
+        "expr": "sum by (method, route) (rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\"}[5m]))",
         "legendFormat": "{{method}} {{route}}"
       }]
     },
