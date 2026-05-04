@@ -1,13 +1,5 @@
 import { Schema, model } from 'mongoose';
 
-const evidenceSchema = new Schema(
-    {
-        name: String,      // e.g. "Contract.pdf"
-        url: String,       // storage URL (Cloudinary, S3, etc.)
-    },
-    { _id: false },
-);
-
 const mediationCaseSchema = new Schema(
     {
         userId: {
@@ -25,38 +17,37 @@ const mediationCaseSchema = new Schema(
             type: String,
             required: [true, 'Email is required'],
         },
+        contactNumber: {
+            type: String,
+            required: [true, 'Contact number is required'],
+        },
 
         opponentName: {
             type: String,
             required: [true, 'Opposite party name is required'],
+        },
+        opponentEmail: {
+            type: String,
+            required: [true, 'Opposite party email is required'],
+        },
+        opponentContact: {
+            type: String,
+            required: [true, 'Opposite party contact number is required'],
         },
 
         description: {
             type: String,
             required: [true, 'Description of dispute is required'],
         },
-        category: {
-            type: String,
-            required: [true, 'Dispute category is required'],
-        },
         amount: {
             type: Number,
+            required: [true, 'Amount involved in dispute is required'],
         },
 
-        timeline: {
-            type: String,
+        termsAccepted: {
+            type: Boolean,
+            required: [true, 'Acceptance of terms and conditions is required'],
         },
-        jurisdiction: {
-            type: String, // country / jurisdiction
-            required: [true, 'Jurisdiction is required'],
-        },
-        language: {
-            type: String,
-        },
-        resolution: {
-            type: String, // e.g. refund / compensation / payment plan / replacement / other
-        },
-        files: [evidenceSchema], // list of uploaded documents (URLs)
 
         // new for google meet
         sessionMode: {
@@ -75,16 +66,6 @@ const mediationCaseSchema = new Schema(
         googleMeetLink: {
             type: String, 
             default: null,
-        },
-
-        // Frontend subscription gating fields
-        isSubscribed: {
-            type: Boolean,
-            default: false,
-        },
-        subscriptionId: {
-            type: Schema.Types.ObjectId,
-            ref: 'Subscription',
         },
 
         // Lifecycle
