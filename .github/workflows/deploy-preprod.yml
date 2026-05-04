@@ -19,6 +19,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+
       # ─── Login to GitHub Container Registry ───
       - name: Login to GHCR
         uses: docker/login-action@v3
@@ -34,6 +38,7 @@ jobs:
           context: ./server
           file: ./server/Dockerfile.pre-prod
           push: true
+          provenance: false
           tags: |
             ${{ env.IMAGE_PREFIX }}-server:preprod
             ${{ env.IMAGE_PREFIX }}-server:preprod-${{ github.sha }}
@@ -60,6 +65,7 @@ jobs:
           context: ./frontend
           file: ./frontend/Dockerfile.pre-prod
           push: true
+          provenance: false
           tags: |
             ${{ env.IMAGE_PREFIX }}-frontend:preprod
             ${{ env.IMAGE_PREFIX }}-frontend:preprod-${{ github.sha }}
@@ -80,6 +86,7 @@ jobs:
           context: ./dashboard
           file: ./dashboard/Dockerfile.pre-prod
           push: true
+          provenance: false
           tags: |
             ${{ env.IMAGE_PREFIX }}-dashboard:preprod
             ${{ env.IMAGE_PREFIX }}-dashboard:preprod-${{ github.sha }}
@@ -99,17 +106,22 @@ jobs:
           JWT_SECRET: ${{ secrets.PREPROD_JWT_SECRET }}
           GOOGLE_CLIENT_ID: ${{ secrets.PREPROD_GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.PREPROD_GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.PREPROD_GOOGLE_REFRESH_TOKEN }}
           CLOUD_NAME: ${{ secrets.PREPROD_CLOUD_NAME }}
           CLOUDINARY_API_KEY: ${{ secrets.PREPROD_CLOUDINARY_API_KEY }}
           CLOUDINARY_API_SECRET: ${{ secrets.PREPROD_CLOUDINARY_API_SECRET }}
           MAIL_PASSWORD: ${{ secrets.PREPROD_MAIL_PASSWORD }}
+          MAIL_HOST: ${{ secrets.PREPROD_MAIL_HOST }}
+          MAIL_USER: ${{ secrets.PREPROD_MAIL_USER }}
+          NOREPLYEMAIL: ${{ secrets.PREPROD_NOREPLYEMAIL }}
           SERVER_FRONTEND_URL: ${{ secrets.PREPROD_FRONTEND_URL }}
           SERVER_BACKEND_URL: ${{ secrets.PREPROD_BACKEND_URL }}
         with:
           host: ${{ secrets.PREPROD_SSH_HOST }}
           username: ${{ secrets.PREPROD_SSH_USER }}
           key: ${{ secrets.PREPROD_SSH_KEY }}
-          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL,MONGO_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,MAIL_PASSWORD,SERVER_FRONTEND_URL,SERVER_BACKEND_URL
+          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL,MONGO_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REFRESH_TOKEN,CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,MAIL_PASSWORD,MAIL_HOST,MAIL_USER,NOREPLYEMAIL,SERVER_FRONTEND_URL,SERVER_BACKEND_URL
+          command_timeout: 30m
           script: |
             set -e
             cd ${{ secrets.PREPROD_DEPLOY_PATH }}
@@ -149,10 +161,17 @@ jobs:
             MONGO_URL=$MONGO_URL
             JWT_SECRET=$JWT_SECRET
             GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+            GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+            GOOGLE_REFRESH_TOKEN=$GOOGLE_REFRESH_TOKEN
             CLOUD_NAME=$CLOUD_NAME
             API_KEY=$CLOUDINARY_API_KEY
             API_SECRET=$CLOUDINARY_API_SECRET
             MAIL_PASSWORD=$MAIL_PASSWORD
+            MAIL_HOST=$MAIL_HOST
+            MAIL_PORT=2525
+            MAIL_SECURE=false
+            MAIL_USER=$MAIL_USER
+            NOREPLYEMAIL=$NOREPLYEMAIL
             MERCHANT_ID=$NEXT_PUBLIC_MERCHANT_ID
             SALT_INDEX=1
             SALT_KEY=$NEXT_PUBLIC_SALT_KEY
