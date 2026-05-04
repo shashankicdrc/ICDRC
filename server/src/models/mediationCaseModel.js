@@ -21,6 +21,10 @@ const mediationCaseSchema = new Schema(
             type: String,
             required: [true, 'Contact number is required'],
         },
+        whatsappNumber: {
+            type: String,
+            required: [true, 'WhatsApp number is required'],
+        },
 
         opponentName: {
             type: String,
@@ -49,6 +53,12 @@ const mediationCaseSchema = new Schema(
             required: [true, 'Acceptance of terms and conditions is required'],
         },
 
+        caseType: {
+            type: String,
+            enum: ['Individual', 'Company'],
+            required: [true, 'Case type is required'],
+        },
+
         // new for google meet
         sessionMode: {
             type: String,
@@ -57,10 +67,10 @@ const mediationCaseSchema = new Schema(
         sessionDate: {
             type: String, 
         },
-        sessionStartTime: { // Naya: Start Time
+        sessionStartTime: { 
             type: String, 
         },
-        sessionEndTime: {   // Naya: End Time
+        sessionEndTime: {   
             type: String, 
         },
         googleMeetLink: {

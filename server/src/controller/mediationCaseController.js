@@ -1,4 +1,3 @@
-import UserService from '#services/userService';
 import MediationCase from '#models/mediationCaseModel';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
@@ -10,17 +9,13 @@ import pagination from '#utils/pagination';
 import express from 'express';
 import busboy from 'busboy';
 import { v2 as cloudinary } from 'cloudinary';
-import { queues } from '#queues/queue';
 
 const { Router } = express;
 
 class MediationCaseController extends Base {
-    #userService;
-
     constructor() {
         super();
         this.router = Router();
-        this.#userService = new UserService();
         this.#initializeRoutes();
     }
 
@@ -114,21 +109,11 @@ class MediationCaseController extends Base {
         const skip = pagination(page, perRow);
 
         const filter = {};
-
-        // Back-compat: some clients may send "Paid" / "Pending"
-        const normalizedPaymentStatus = paymentStatus
-            ? String(paymentStatus).trim()
-            : undefined;
-
-        if (normalizedPaymentStatus === 'Paid') {
-            filter.paymentStatus = 'Success';
-        } else if (normalizedPaymentStatus === 'Pending') {
-            filter.paymentStatus = 'Pending';
-        } else if (
-            normalizedPaymentStatus &&
-            ['Pending', 'Success', 'Failed'].includes(normalizedPaymentStatus)
-        ) {
-            filter.paymentStatus = normalizedPaymentStatus;
+        if (paymentStatus) {
+            const normalized = paymentStatus === 'Paid' ? 'Success' : paymentStatus;
+            if (['Pending', 'Success', 'Failed'].includes(normalized)) {
+                filter.paymentStatus = normalized;
+            }
         }
 
         const [cases, totalCount] = await Promise.all([
@@ -141,13 +126,7 @@ class MediationCaseController extends Base {
             MediationCase.countDocuments(filter),
         ]);
 
-        return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Mediation cases fetched successfully.',
-            { cases, totalCount, page, perRow },
-        );
+        return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS, 'Mediation cases fetched successfully.', { cases, totalCount, page, perRow });
     });
 
     #adminGetMediationCaseById = asyncHandler(async (req, res) => {
@@ -221,11 +200,6 @@ class MediationCaseController extends Base {
             throw new CustomError('Mediation case is already closed.', httpStatusCode.BAD_REQUEST);
         }
 
-        // Optionally you can restrict allowed statuses to close
-        // if (![ 'Settled', 'Not Settled', 'In Mediation', 'Mediator Assigned' ].includes(mediationCase.status)) {
-        //     throw new CustomError('Case cannot be closed from current status.', httpStatusCode.BAD_REQUEST);
-        // }
-
         const updatedCase = await MediationCase.findByIdAndUpdate(
             id,
             { status: 'Closed' },
@@ -266,110 +240,79 @@ class MediationCaseController extends Base {
         }
     }
 
+    #validateRequiredFields(data) {
+        const missingFields = [];
+        if (!data.fullName) missingFields.push('fullName');
+        if (!data.contactNumber) missingFields.push('contactNumber');
+        if (!data.whatsappNumber) missingFields.push('whatsappNumber');
+        if (!data.opponentName) missingFields.push('opponentName');
+        if (!data.opponentEmail) missingFields.push('opponentEmail');
+        if (!data.opponentContact) missingFields.push('opponentContact');
+        if (!data.description) missingFields.push('description');
+        if (!data.amount) missingFields.push('amount');
+        if (!data.caseType) missingFields.push('caseType');
+        
+        const termsAcceptedValid = data.termsAccepted === 'true' || 
+                                   data.termsAccepted === '1' || 
+                                   data.termsAccepted === 'on' || 
+                                   data.termsAccepted === true;
+        if (!termsAcceptedValid) missingFields.push('termsAccepted');
+
+        if (missingFields.length > 0) {
+            throw new CustomError(
+                `Missing or invalid required fields: ${missingFields.join(', ')}`,
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
+    }
+
     #updateCaseForUser = asyncHandler(async (req, res) => {
         const { id } = req.params;
         const mediationCase = await MediationCase.findById(id);
         if (!mediationCase) {
-            throw new CustomError(
-                'Mediation case not found.',
-                httpStatusCode.NOT_FOUND,
-            );
+            throw new CustomError('Mediation case not found.', httpStatusCode.NOT_FOUND);
         }
         if (String(mediationCase.userId) !== String(req.id)) {
-            throw new CustomError(
-                "You don't have permission to edit this case.",
-                httpStatusCode.UNAUTHORIZED,
-            );
+            throw new CustomError("You don't have permission to edit this case.", httpStatusCode.UNAUTHORIZED);
         }
         this.#assertEditable(mediationCase);
 
         const contentType = req.headers['content-type'] || '';
-        const isMultipart =
-            typeof contentType === 'string' &&
-            contentType.includes('multipart/form-data');
+        const isMultipart = contentType.includes('multipart/form-data');
 
-        const patch = {
-            fullName: mediationCase.fullName,
-            email: req.email || mediationCase.email,
-            contactNumber: mediationCase.contactNumber,
-            opponentName: mediationCase.opponentName,
-            opponentEmail: mediationCase.opponentEmail,
-            opponentContact: mediationCase.opponentContact,
-            description: mediationCase.description,
-            amount: mediationCase.amount,
-            termsAccepted: mediationCase.termsAccepted,
-        };
-
+        let updates = {};
         if (isMultipart) {
             const { fields } = await this.#parseMultipartAndUpload(req);
-
-            patch.fullName = fields.get('fullName') ?? patch.fullName;
-            patch.email = fields.get('email') || req.email || patch.email;
-            patch.contactNumber =
-                fields.get('contactNumber') ?? patch.contactNumber;
-            patch.opponentName =
-                fields.get('opponentName') ?? patch.opponentName;
-            patch.opponentEmail =
-                fields.get('opponentEmail') ?? patch.opponentEmail;
-            patch.opponentContact =
-                fields.get('opponentContact') ?? patch.opponentContact;
-            patch.description =
-                fields.get('description') ?? patch.description;
-            patch.amount =
-                fields.get('amount') === '' ||
-                fields.get('amount') === null ||
-                fields.get('amount') === undefined
-                    ? patch.amount
-                    : Number(fields.get('amount'));
-            patch.termsAccepted =
-                fields.get('termsAccepted') === true ||
-                fields.get('termsAccepted') === 'true' ||
-                fields.get('termsAccepted') === '1'
-                    ? true
-                    : patch.termsAccepted;
+            updates = {
+                fullName: fields.get('fullName') || mediationCase.fullName,
+                email: fields.get('email') || req.email || mediationCase.email,
+                contactNumber: fields.get('contactNumber') || mediationCase.contactNumber,
+                whatsappNumber: fields.get('whatsappNumber') || mediationCase.whatsappNumber,
+                opponentName: fields.get('opponentName') || mediationCase.opponentName,
+                opponentEmail: fields.get('opponentEmail') || mediationCase.opponentEmail,
+                opponentContact: fields.get('opponentContact') || mediationCase.opponentContact,
+                description: fields.get('description') || mediationCase.description,
+                amount: fields.get('amount') ? Number(fields.get('amount')) : mediationCase.amount,
+                termsAccepted: fields.get('termsAccepted') === 'true' || fields.get('termsAccepted') === '1',
+            };
         } else {
-            const {
-                fullName,
-                email,
-                contactNumber,
-                opponentName,
-                opponentEmail,
-                opponentContact,
-                description,
-                amount,
-                termsAccepted,
-            } = req.body;
-
-            patch.fullName = fullName ?? patch.fullName;
-            patch.email = email || req.email || patch.email;
-            patch.contactNumber = contactNumber ?? patch.contactNumber;
-            patch.opponentName = opponentName ?? patch.opponentName;
-            patch.opponentEmail = opponentEmail ?? patch.opponentEmail;
-            patch.opponentContact = opponentContact ?? patch.opponentContact;
-            patch.description = description ?? patch.description;
-            patch.amount =
-                amount === '' || amount === null || amount === undefined
-                    ? patch.amount
-                    : Number(amount);
-            patch.termsAccepted =
-                termsAccepted === undefined || termsAccepted === null
-                    ? patch.termsAccepted
-                    : Boolean(termsAccepted);
+            const { fullName, email, contactNumber, whatsappNumber, opponentName, opponentEmail, opponentContact, description, amount, termsAccepted } = req.body;
+            updates = {
+                fullName: fullName || mediationCase.fullName,
+                email: email || req.email || mediationCase.email,
+                contactNumber: contactNumber || mediationCase.contactNumber,
+                whatsappNumber: whatsappNumber || mediationCase.whatsappNumber,
+                opponentName: opponentName || mediationCase.opponentName,
+                opponentEmail: opponentEmail || mediationCase.opponentEmail,
+                opponentContact: opponentContact || mediationCase.opponentContact,
+                description: description || mediationCase.description,
+                amount: amount ? Number(amount) : mediationCase.amount,
+                termsAccepted: termsAccepted !== undefined ? Boolean(termsAccepted) : mediationCase.termsAccepted,
+            };
         }
 
-        const updated = await MediationCase.findByIdAndUpdate(
-            mediationCase.id,
-            patch,
-            { new: true },
-        );
-
-        return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Mediation case updated successfully.',
-            updated,
-        );
+        const updated = await MediationCase.findByIdAndUpdate(id, updates, { new: true });
+        return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS, 'Mediation case updated successfully.', updated);
     });
 
     async #parseMultipartAndUpload(req) {
@@ -380,7 +323,9 @@ class MediationCaseController extends Base {
             const bb = busboy({ headers: req.headers });
 
             bb.on('field', (name, value) => {
-                fields.set(name, value);
+                // Trim field names to remove any leading/trailing whitespace
+                const trimmedName = name.trim();
+                fields.set(trimmedName, value);
             });
 
             bb.on('file', (fieldName, file, info) => {
@@ -412,6 +357,7 @@ class MediationCaseController extends Base {
             });
 
             bb.on('error', (err) => reject(err));
+            
             bb.on('finish', async () => {
                 try {
                     const uploaded = await Promise.all(uploads);
@@ -427,157 +373,40 @@ class MediationCaseController extends Base {
 
     #createCaseFromFrontend = asyncHandler(async (req, res) => {
         const contentType = req.headers['content-type'] || '';
-        const isMultipart =
-            typeof contentType === 'string' &&
-            contentType.includes('multipart/form-data');
+        const isMultipart = contentType.includes('multipart/form-data');
 
+        let formData = {};
         if (isMultipart) {
             const { fields } = await this.#parseMultipartAndUpload(req);
-
-            const fullName = fields.get('fullName');
-            const email = fields.get('email');
-            const contactNumber = fields.get('contactNumber');
-            const opponentName = fields.get('opponentName');
-            const opponentEmail = fields.get('opponentEmail');
-            const opponentContact = fields.get('opponentContact');
-            const description = fields.get('description');
-            const amount = fields.get('amount');
-            const termsAcceptedRaw = fields.get('termsAccepted');
-
-            if (
-                !fullName ||
-                !contactNumber ||
-                !opponentName ||
-                !opponentEmail ||
-                !opponentContact ||
-                !description ||
-                !amount ||
-                termsAcceptedRaw !== 'true'
-            ) {
-                throw new CustomError(
-                    'Missing required fields.',
-                    httpStatusCode.BAD_REQUEST,
-                );
-            }
-
-            const finalEmail = email || req.email;
-            if (!finalEmail) {
-                throw new CustomError(
-                    'Email is required.',
-                    httpStatusCode.BAD_REQUEST,
-                );
-            }
-
-            const termsAccepted =
-                termsAcceptedRaw === true ||
-                termsAcceptedRaw === 'true' ||
-                termsAcceptedRaw === '1';
-
-            const existing = await this.#findEditableCaseForUser(req.id);
-            if (existing) {
-                this.#assertEditable(existing);
-                const updated = await MediationCase.findByIdAndUpdate(
-                    existing.id,
-                    {
-                        fullName,
-                        email: finalEmail,
-                        contactNumber,
-                        opponentName,
-                        opponentEmail,
-                        opponentContact,
-                        description,
-                        amount:
-                            amount === '' || amount === null || amount === undefined
-                                ? undefined
-                                : Number(amount),
-                        termsAccepted,
-                        status: 'Submitted',
-                        paymentStatus:
-                            existing.paymentStatus === 'Failed'
-                                ? 'Pending'
-                                : existing.paymentStatus,
-                    },
-                    { new: true },
-                );
-                return this.response(
-                    res,
-                    httpStatusCode.OK,
-                    httpStatus.SUCCESS,
-                    'Mediation case updated successfully.',
-                    {
-                        caseId: updated.id,
-                        status: updated.status,
-                        paymentStatus: updated.paymentStatus,
-                    },
-                );
-            }
-
-            const mediationCase = await MediationCase.create({
-                userId: req.id,
-                fullName,
-                email: finalEmail,
-                contactNumber,
-                opponentName,
-                opponentEmail,
-                opponentContact,
-                description,
-                amount:
-                    amount === '' || amount === null || amount === undefined
-                        ? undefined
-                        : Number(amount),
-                termsAccepted,
-                status: 'Submitted',
-                paymentStatus: 'Pending',
-            });
-
-            return this.response(
-                res,
-                httpStatusCode.OK,
-                httpStatus.SUCCESS,
-                'Mediation case submitted successfully.',
-                {
-                    caseId: mediationCase.id,
-                    status: mediationCase.status,
-                    paymentStatus: mediationCase.paymentStatus,
-                },
-            );
+            formData = {
+                fullName: fields.get('fullName'),
+                email: fields.get('email'),
+                contactNumber: fields.get('contactNumber'),
+                whatsappNumber: fields.get('whatsappNumber'),
+                opponentName: fields.get('opponentName'),
+                opponentEmail: fields.get('opponentEmail'),
+                opponentContact: fields.get('opponentContact'),
+                description: fields.get('description'),
+                amount: fields.get('amount'),
+                termsAccepted: fields.get('termsAccepted'),
+                caseType: fields.get('caseType'),
+            };
+        } else {
+            formData = req.body;
         }
 
-        const {
-            fullName,
-            email,
-            contactNumber,
-            opponentName,
-            opponentEmail,
-            opponentContact,
-            description,
-            amount,
-            termsAccepted,
-        } = req.body;
+        // Validate required fields
+        this.#validateRequiredFields(formData);
 
-        if (
-            !fullName ||
-            !contactNumber ||
-            !opponentName ||
-            !opponentEmail ||
-            !opponentContact ||
-            !description ||
-            !amount ||
-            !termsAccepted
-        ) {
-            throw new CustomError(
-                'Missing required fields.',
-                httpStatusCode.BAD_REQUEST,
-            );
-        }
-
-        const finalEmail = email || req.email;
+        const finalEmail = formData.email || req.email;
         if (!finalEmail) {
-            throw new CustomError(
-                'Email is required.',
-                httpStatusCode.BAD_REQUEST,
-            );
+            throw new CustomError('Email is required.', httpStatusCode.BAD_REQUEST);
         }
+
+        const termsAccepted = formData.termsAccepted === 'true' || 
+                              formData.termsAccepted === '1' || 
+                              formData.termsAccepted === true;
+        const amount = Number(formData.amount);
 
         const existing = await this.#findEditableCaseForUser(req.id);
         if (existing) {
@@ -585,54 +414,44 @@ class MediationCaseController extends Base {
             const updated = await MediationCase.findByIdAndUpdate(
                 existing.id,
                 {
-                    fullName,
+                    fullName: formData.fullName,
                     email: finalEmail,
-                    contactNumber,
-                    opponentName,
-                    opponentEmail,
-                    opponentContact,
-                    description,
-                    amount:
-                        amount === '' || amount === null || amount === undefined
-                            ? undefined
-                            : Number(amount),
-                    termsAccepted: Boolean(termsAccepted),
+                    contactNumber: formData.contactNumber,
+                    whatsappNumber: formData.whatsappNumber,
+                    opponentName: formData.opponentName,
+                    opponentEmail: formData.opponentEmail,
+                    opponentContact: formData.opponentContact,
+                    description: formData.description,
+                    amount,
+                    termsAccepted,
+                    caseType: formData.caseType,
                     status: 'Submitted',
-                    paymentStatus:
-                        existing.paymentStatus === 'Failed'
-                            ? 'Pending'
-                            : existing.paymentStatus,
+                    paymentStatus: existing.paymentStatus === 'Failed' ? 'Pending' : existing.paymentStatus,
                 },
                 { new: true },
             );
-
             return this.response(
                 res,
                 httpStatusCode.OK,
                 httpStatus.SUCCESS,
                 'Mediation case updated successfully.',
-                {
-                    caseId: updated.id,
-                    status: updated.status,
-                    paymentStatus: updated.paymentStatus,
-                },
+                { caseId: updated.id, status: updated.status, paymentStatus: updated.paymentStatus },
             );
         }
 
         const mediationCase = await MediationCase.create({
             userId: req.id,
-            fullName,
+            fullName: formData.fullName,
             email: finalEmail,
-            contactNumber,
-            opponentName,
-            opponentEmail,
-            opponentContact,
-            description,
-            amount:
-                amount === '' || amount === null || amount === undefined
-                    ? undefined
-                    : Number(amount),
-            termsAccepted: Boolean(termsAccepted),
+            contactNumber: formData.contactNumber,
+            whatsappNumber: formData.whatsappNumber,
+            opponentName: formData.opponentName,
+            opponentEmail: formData.opponentEmail,
+            opponentContact: formData.opponentContact,
+            description: formData.description,
+            amount,
+            termsAccepted,
+            caseType: formData.caseType,
             status: 'Submitted',
             paymentStatus: 'Pending',
         });
@@ -642,11 +461,7 @@ class MediationCaseController extends Base {
             httpStatusCode.OK,
             httpStatus.SUCCESS,
             'Mediation case submitted successfully.',
-            {
-                caseId: mediationCase.id,
-                status: mediationCase.status,
-                paymentStatus: mediationCase.paymentStatus,
-            },
+            { caseId: mediationCase.id, status: mediationCase.status, paymentStatus: mediationCase.paymentStatus },
         );
     });
 }

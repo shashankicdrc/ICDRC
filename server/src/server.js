@@ -38,6 +38,7 @@ import MediationCase from '#models/mediationCaseModel';
 import renewSubscriptionController from '#controller/renewSubscriptionController';
 import mediationCaseController from '#controller/mediationCaseController';
 import mediationPaymentController from '#controller/mediationPaymentController';
+import mediatorApplicationController from '#controller/mediatorApplicationController';
 import { assignMediator } from './controller/mediationAssignEmail.js';
 import { requestSession, caseAccept } from './controller/scheduleController.js';
 import promBundle from 'express-prom-bundle';
@@ -152,6 +153,7 @@ const startServer = async () => {
     app.use('/api', renewSubscriptionController);
     app.use('/api', mediationCaseController);
     app.use('/api', mediationPaymentController);
+    app.use('/api', mediatorApplicationController);
 
     app.post('/api/cases/:caseId/assign-mediator', AdminAuthMiddleware, assignMediator);
 

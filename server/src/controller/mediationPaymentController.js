@@ -37,14 +37,9 @@ class MediationPaymentController extends Base {
         );
     }
 
-    // Dynamic Price Calculator based on Claim Amount
+    // Fixed Price for Mediation: Rs. 500 for both Individual and Company
     #calculateFee(amountValue) {
-        const amount = Number(amountValue);
-        if (isNaN(amount) || amount === 0) return 5000;
-        if (amount <= 500000) return 5000;          // Up to 5L -> 5k
-        if (amount <= 5000000) return 10000;        // 5L to 50L -> 10k
-        if (amount <= 10000000) return 15000;       // 50L to 1Cr -> 15k
-        return 25000;                               // Above 1Cr -> 25k
+        return 50000; // Fixed 50000 paise = Rs. 500
     }
 
     #initiateMediationPayment = asyncHandler(async (req, res) => {
@@ -60,16 +55,57 @@ class MediationPaymentController extends Base {
              throw new CustomError('Claim amount is missing in this case.', httpStatusCode.BAD_REQUEST);
         }
 
-        const basePrice = this.#calculateFee(complaint.amount);
-        const price = basePrice * 100; 
+        // TEMPORARY: Skip PhonePe payment for testing - directly mark as paid
+        if (process.env.NODE_ENV === 'development' && process.env.SKIP_PAYMENT === 'true') {
+            logger.warn('DEVELOPMENT MODE: Skipping PhonePe payment');
 
-        // 1. Safe Transaction ID 
-        const transactionId = "T" + Date.now(); 
+            const transactionId = "DEV" + Date.now();
+
+            // Directly update case as paid
+            await mediationCaseModel.findByIdAndUpdate(complaint.id, {
+                paymentStatus: 'Paid',
+                paymentTransactionId: transactionId,
+                paidAt: new Date(),
+            });
+
+            // Save payment history
+            await MediationPaymentHistory.create({
+                userId: req.id,
+                mediationId: complaint.id,
+                amount: 500, // Rs. 500
+                transactionId: transactionId,
+                paymentStatus: 'Success',
+            });
+
+            return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS,
+                'Payment successful (development mode)', {
+                transactionId,
+                amount: 50000, // paise
+                paymentUrl: null // No redirect needed
+            });
+        }
+
+        // Validate environment variables
+        if (!process.env.MERCHANT_ID || !process.env.SALT_KEY || !process.env.SALT_INDEX) {
+            logger.error('Missing PhonePe configuration:', {
+                hasMerchantId: !!process.env.MERCHANT_ID,
+                hasSaltKey: !!process.env.SALT_KEY,
+                hasSaltIndex: !!process.env.SALT_INDEX,
+                phonePeEnv: process.env.PHONEPE_ENV
+            });
+            throw new CustomError('Payment service is not properly configured. Please contact support.', httpStatusCode.INTERNAL_SERVER_ERROR);
+        }
+
+        const basePrice = this.#calculateFee(complaint.amount);
+        const price = basePrice;
+
+        // 1. Safe Transaction ID
+        const transactionId = "T" + Date.now();
 
         // 👉 2. LIVE URL TO BYPASS PHONEPE UAT BLOCK
         const baseURl = 'https://api.icdrc.in';
         const redirectUrl = `${baseURl}/api/mediation-payment/status/${transactionId}?userId=${req.id}&mediationId=${complaint.id}`;
-        
+
         // 3. Strict Payload
         const payload = {
             merchantId: process.env.MERCHANT_ID,
@@ -91,6 +127,12 @@ class MediationPaymentController extends Base {
         const checksum = sha256 + '###' + process.env.SALT_INDEX;
 
         const payURL = `${PHONE_PAY_URL}/pay`;
+        logger.info('PhonePe payment request:', {
+            url: payURL,
+            merchantId: process.env.MERCHANT_ID,
+            transactionId,
+            amount: price
+        });
 
         const response = await fetch(payURL, {
             method: 'POST',
@@ -110,11 +152,11 @@ class MediationPaymentController extends Base {
         }
 
         const { data, success, message } = await response.json();
-        
+
         if (!success) {
             throw new CustomError(message, httpStatusCode.BAD_REQUEST);
         }
-        
+
         return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS, message, data);
     });
 
@@ -166,7 +208,30 @@ class MediationPaymentController extends Base {
 
         await mediationCaseModel.findByIdAndUpdate(complaint.id, {
             paymentStatus: 'Paid',
+            paymentTransactionId: data.transactionId,
+            paidAt: new Date(),
         });
+
+        // Send payment success email
+        try {
+            await queues.EmailQueue.add('send-email', {
+                to: complaint.email,
+                subject: 'Payment Successful - ICDRC Mediation',
+                html: `
+                    <h2>Payment Successful</h2>
+                    <p>Dear ${complaint.fullName},</p>
+                    <p>Your payment of Rs. 500 has been successfully processed for your mediation case.</p>
+                    <p><strong>Transaction ID:</strong> ${data.transactionId}</p>
+                    <p><strong>Amount:</strong> Rs. ${data.amount / 100}</p>
+                    <p>Your mediation case is now active. Our team will contact you shortly to schedule the session.</p>
+                    <p>Thank you for choosing ICDRC.</p>
+                    <br>
+                    <p>Best regards,<br>ICDRC Team</p>
+                `,
+            });
+        } catch (emailError) {
+            logger.error('Failed to send payment success email:', emailError);
+        }
 
         return res.redirect(
             `${FRONTEND_URL}/success?amount=${data.amount / 100}&transactionId=${data.transactionId}`
