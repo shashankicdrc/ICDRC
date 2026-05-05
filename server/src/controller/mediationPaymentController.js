@@ -102,8 +102,8 @@ class MediationPaymentController extends Base {
         // 1. Safe Transaction ID
         const transactionId = "T" + Date.now();
 
-        // 👉 2. LIVE URL TO BYPASS PHONEPE UAT BLOCK
-        const baseURl = 'https://api.icdrc.in';
+        // 👉 2. Use BACKEND_URL from environment for redirect URL
+        const baseURl = process.env.BACKEND_URL || 'https://api.icdrc.in';
         const redirectUrl = `${baseURl}/api/mediation-payment/status/${transactionId}?userId=${req.id}&mediationId=${complaint.id}`;
 
         // 3. Strict Payload
