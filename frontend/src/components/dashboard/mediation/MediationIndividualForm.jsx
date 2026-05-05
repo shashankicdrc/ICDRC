@@ -18,21 +18,22 @@ import '../register/PhoneNumber.css';
 import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import { Checkbox } from '@chakra-ui/react';
+import { addMediationCase } from '../../../externalAPI/mediationService';
 
-const MediationIndividualForm = () => {
+const MediationIndividualForm = ({ onSuccess }) => {
     const { data: session } = useSession();
     const token = session?.user?.AccessToken;
 
     // Individual Fields
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
-    const [contact, setContact] = useState('');
-    const [whatsapp, setWhatsapp] = useState('');
+    const [contactNumber, setContactNumber] = useState('');
+    const [whatsappNumber, setWhatsappNumber] = useState('');
 
     // Opposite Party Fields
-    const [oppositePartyName, setOppositePartyName] = useState('');
-    const [oppositePartyEmail, setOppositePartyEmail] = useState('');
-    const [oppositePartyContact, setOppositePartyContact] = useState('');
+    const [opponentName, setOpponentName] = useState('');
+    const [opponentEmail, setOpponentEmail] = useState('');
+    const [opponentContact, setOpponentContact] = useState('');
 
     // Dispute Details
     const [description, setDescription] = useState('');
@@ -45,11 +46,11 @@ const MediationIndividualForm = () => {
     const clearForm = () => {
         setFullName('');
         setEmail('');
-        setContact('');
-        setWhatsapp('');
-        setOppositePartyName('');
-        setOppositePartyEmail('');
-        setOppositePartyContact('');
+        setContactNumber('');
+        setWhatsappNumber('');
+        setOpponentName('');
+        setOpponentEmail('');
+        setOpponentContact('');
         setDescription('');
         setAmount('');
         setIsChecked(false);
@@ -59,19 +60,19 @@ const MediationIndividualForm = () => {
         try {
             setLoading(true);
 
-            if (!isValidPhoneNumber(contact)) {
+            if (!isValidPhoneNumber(contactNumber)) {
                 toast.error('Enter a valid contact number');
                 setLoading(false);
                 return;
             }
 
-            if (!isValidPhoneNumber(whatsapp)) {
+            if (!isValidPhoneNumber(whatsappNumber)) {
                 toast.error('Enter a valid WhatsApp number');
                 setLoading(false);
                 return;
             }
 
-            if (!isValidPhoneNumber(oppositePartyContact)) {
+            if (!isValidPhoneNumber(opponentContact)) {
                 toast.error('Enter a valid opposite party contact number');
                 setLoading(false);
                 return;
@@ -84,23 +85,34 @@ const MediationIndividualForm = () => {
             }
 
             const mediationData = {
-                type: 'Individual',
+                caseType: 'Individual',
                 fullName,
                 email,
-                contact,
-                whatsapp,
-                oppositePartyName,
-                oppositePartyEmail,
-                oppositePartyContact,
+                contactNumber,
+                whatsappNumber,
+                opponentName,
+                opponentEmail,
+                opponentContact,
                 description,
                 amount,
+                termsAccepted: true,
             };
 
-            // TODO: Replace with actual API call when backend is ready
-            console.log('Mediation Individual Data:', mediationData);
-            toast.success('Mediation case submitted successfully!');
-            clearForm();
+            const { error, message } = await addMediationCase(
+                token,
+                mediationData,
+            );
             setLoading(false);
+
+            if (error) {
+                return toast.error(error);
+            }
+
+            toast.success(message || 'Mediation case submitted successfully!');
+            clearForm();
+            if (onSuccess) {
+                onSuccess();
+            }
         } catch (error) {
             setLoading(false);
             toast.error(error.message);
@@ -160,8 +172,8 @@ const MediationIndividualForm = () => {
                                         international
                                         countryCallingCodeEditable={false}
                                         placeholder="Enter contact number"
-                                        onChange={setContact}
-                                        value={contact}
+                                        onChange={setContactNumber}
+                                        value={contactNumber}
                                         defaultCountry="IN"
                                         required
                                         maxLength={20}
@@ -175,8 +187,8 @@ const MediationIndividualForm = () => {
                                         international
                                         countryCallingCodeEditable={false}
                                         placeholder="Enter WhatsApp number"
-                                        onChange={setWhatsapp}
-                                        value={whatsapp}
+                                        onChange={setWhatsappNumber}
+                                        value={whatsappNumber}
                                         defaultCountry="IN"
                                         required
                                         maxLength={20}
@@ -242,9 +254,9 @@ const MediationIndividualForm = () => {
                                 <div className="space-y-1">
                                     <Label>Opposite Party Name</Label>
                                     <Input
-                                        value={oppositePartyName}
+                                        value={opponentName}
                                         onChange={(e) =>
-                                            setOppositePartyName(e.target.value)
+                                            setOpponentName(e.target.value)
                                         }
                                         required
                                         type="text"
@@ -256,9 +268,9 @@ const MediationIndividualForm = () => {
                                 <div className="space-y-1">
                                     <Label>Opposite Party Email</Label>
                                     <Input
-                                        value={oppositePartyEmail}
+                                        value={opponentEmail}
                                         onChange={(e) =>
-                                            setOppositePartyEmail(
+                                            setOpponentEmail(
                                                 e.target.value,
                                             )
                                         }
@@ -274,8 +286,8 @@ const MediationIndividualForm = () => {
                                         international
                                         countryCallingCodeEditable={false}
                                         placeholder="Enter opposite party's contact"
-                                        onChange={setOppositePartyContact}
-                                        value={oppositePartyContact}
+                                        onChange={setOpponentContact}
+                                        value={opponentContact}
                                         defaultCountry="IN"
                                         required
                                         maxLength={20}
@@ -286,7 +298,10 @@ const MediationIndividualForm = () => {
                         </CardContent>
                     </Card>
 
-                    {/* Terms & Conditions */}
+                </div>
+
+                {/* Terms & Conditions and Submit */}
+                <div className="flex flex-col gap-4 md:col-span-2 lg:col-span-3">
                     <Card>
                         <CardHeader>
                             <CardTitle>Terms & Conditions</CardTitle>
@@ -314,20 +329,19 @@ const MediationIndividualForm = () => {
                             </div>
                         </CardContent>
                     </Card>
-                </div>
 
-                {/* Submit */}
-                <div>
-                    <Button className="w-fit" disabled={loading}>
-                        {loading ? (
-                            <Fragment>
-                                <Loader2 className="mr-2 animate-spin w-4 h-4" />
-                                Please wait...
-                            </Fragment>
-                        ) : (
-                            'Submit Mediation Request'
-                        )}
-                    </Button>
+                    <div>
+                        <Button className="w-fit" disabled={loading}>
+                            {loading ? (
+                                <Fragment>
+                                    <Loader2 className="mr-2 animate-spin w-4 h-4" />
+                                    Please wait...
+                                </Fragment>
+                            ) : (
+                                'Submit Mediation Request'
+                            )}
+                        </Button>
+                    </div>
                 </div>
             </form>
         </Fragment>
