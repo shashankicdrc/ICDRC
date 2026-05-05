@@ -20,7 +20,7 @@ export const links = [
       {
         Head: "Mediation",
         sublink: [
-          { name: "Mediation", link: "/medation" },
+          { name: "Mediation", link: "/mediation" },
           { name: "Virtual", link: "/dashboard/mediation" },
           { name: "Face to Face", link: "/face-to-face-mediation" },
         ],
