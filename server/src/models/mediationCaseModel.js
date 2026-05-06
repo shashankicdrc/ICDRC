@@ -55,8 +55,34 @@ const mediationCaseSchema = new Schema(
 
         caseType: {
             type: String,
-            enum: ['Individual', 'Company'],
+            enum: ['Individual', 'Organisation'],
             required: [true, 'Case type is required'],
+        },
+
+        // Organisation specific fields
+        organisationName: {
+            type: String,
+            required: function() {
+                return this.caseType === 'Organisation';
+            },
+        },
+        organisationEmail: {
+            type: String,
+            required: function() {
+                return this.caseType === 'Organisation';
+            },
+        },
+        organisationContact: {
+            type: String,
+            required: function() {
+                return this.caseType === 'Organisation';
+            },
+        },
+        organisationAddress: {
+            type: String,
+            required: function() {
+                return this.caseType === 'Organisation';
+            },
         },
 
         // new for google meet

@@ -252,6 +252,14 @@ class MediationCaseController extends Base {
         if (!data.amount) missingFields.push('amount');
         if (!data.caseType) missingFields.push('caseType');
         
+        // Conditional validation for organisation fields
+        if (data.caseType === 'Organisation') {
+            if (!data.organisationName) missingFields.push('organisationName');
+            if (!data.organisationEmail) missingFields.push('organisationEmail');
+            if (!data.organisationContact) missingFields.push('organisationContact');
+            if (!data.organisationAddress) missingFields.push('organisationAddress');
+        }
+        
         const termsAcceptedValid = data.termsAccepted === 'true' || 
                                    data.termsAccepted === '1' || 
                                    data.termsAccepted === 'on' || 
@@ -294,9 +302,14 @@ class MediationCaseController extends Base {
                 description: fields.get('description') || mediationCase.description,
                 amount: fields.get('amount') ? Number(fields.get('amount')) : mediationCase.amount,
                 termsAccepted: fields.get('termsAccepted') === 'true' || fields.get('termsAccepted') === '1',
+                caseType: fields.get('caseType') || mediationCase.caseType,
+                organisationName: fields.get('organisationName') || mediationCase.organisationName,
+                organisationEmail: fields.get('organisationEmail') || mediationCase.organisationEmail,
+                organisationContact: fields.get('organisationContact') || mediationCase.organisationContact,
+                organisationAddress: fields.get('organisationAddress') || mediationCase.organisationAddress,
             };
         } else {
-            const { fullName, email, contactNumber, whatsappNumber, opponentName, opponentEmail, opponentContact, description, amount, termsAccepted } = req.body;
+            const { fullName, email, contactNumber, whatsappNumber, opponentName, opponentEmail, opponentContact, description, amount, termsAccepted, caseType, organisationName, organisationEmail, organisationContact, organisationAddress } = req.body;
             updates = {
                 fullName: fullName || mediationCase.fullName,
                 email: email || req.email || mediationCase.email,
@@ -308,6 +321,11 @@ class MediationCaseController extends Base {
                 description: description || mediationCase.description,
                 amount: amount ? Number(amount) : mediationCase.amount,
                 termsAccepted: termsAccepted !== undefined ? Boolean(termsAccepted) : mediationCase.termsAccepted,
+                caseType: caseType || mediationCase.caseType,
+                organisationName: organisationName || mediationCase.organisationName,
+                organisationEmail: organisationEmail || mediationCase.organisationEmail,
+                organisationContact: organisationContact || mediationCase.organisationContact,
+                organisationAddress: organisationAddress || mediationCase.organisationAddress,
             };
         }
 
@@ -390,6 +408,10 @@ class MediationCaseController extends Base {
                 amount: fields.get('amount'),
                 termsAccepted: fields.get('termsAccepted'),
                 caseType: fields.get('caseType'),
+                organisationName: fields.get('organisationName'),
+                organisationEmail: fields.get('organisationEmail'),
+                organisationContact: fields.get('organisationContact'),
+                organisationAddress: fields.get('organisationAddress'),
             };
         } else {
             formData = req.body;
@@ -425,6 +447,10 @@ class MediationCaseController extends Base {
                     amount,
                     termsAccepted,
                     caseType: formData.caseType,
+                    organisationName: formData.organisationName,
+                    organisationEmail: formData.organisationEmail,
+                    organisationContact: formData.organisationContact,
+                    organisationAddress: formData.organisationAddress,
                     status: 'Submitted',
                     paymentStatus: existing.paymentStatus === 'Failed' ? 'Pending' : existing.paymentStatus,
                 },
@@ -452,6 +478,10 @@ class MediationCaseController extends Base {
             amount,
             termsAccepted,
             caseType: formData.caseType,
+            organisationName: formData.organisationName,
+            organisationEmail: formData.organisationEmail,
+            organisationContact: formData.organisationContact,
+            organisationAddress: formData.organisationAddress,
             status: 'Submitted',
             paymentStatus: 'Pending',
         });
