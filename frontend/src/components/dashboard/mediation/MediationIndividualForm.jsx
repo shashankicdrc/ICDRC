@@ -94,7 +94,7 @@ const MediationIndividualForm = ({ onSuccess }) => {
                 opponentEmail,
                 opponentContact,
                 description,
-                amount,
+                amount: Number(amount),
                 termsAccepted: true,
             };
 
