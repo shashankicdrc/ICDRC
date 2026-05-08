@@ -12,7 +12,7 @@ export default function BecomeMediator() {
     const { register, control, handleSubmit, formState: { errors, isSubmitting }, reset } = useForm({
         defaultValues: {
             educationQualifications: [{ degree: '', institution: '', yearOfPassing: '' }],
-            specialExpertise: ''
+            specialExpertise: []
         }
     });
 
@@ -35,7 +35,7 @@ export default function BecomeMediator() {
                     mediationsConducted: Number(data.casesHandled.mediationsConducted),
                     disputeNature: data.casesHandled.disputeNature
                 },
-                specialExpertise: data.specialExpertise ? data.specialExpertise.split(',').map(s => s.trim()).filter(Boolean) : [],
+                specialExpertise: Array.isArray(data.specialExpertise) ? data.specialExpertise : (data.specialExpertise ? [data.specialExpertise] : []),
             };
 
             const response = await applyForMediator(payload);
@@ -171,7 +171,13 @@ export default function BecomeMediator() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Category *</label>
-                                    <input type="text" placeholder="e.g. Advocate" {...register("professionalQualification.category", { required: "Required" })} className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500" />
+                                    <select {...register("professionalQualification.category", { required: "Required" })} className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500">
+                                        <option value="">Select Category</option>
+                                        <option value="Advocate">Advocate</option>
+                                        <option value="Retired Judicial Officer">Retired Judicial Officer</option>
+                                        <option value="Industry Expert">Industry Expert</option>
+                                        <option value="Professional">Professional</option>
+                                    </select>
                                 </div>
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700">Enrollment No.</label>
@@ -239,8 +245,16 @@ export default function BecomeMediator() {
                                     <input type="text" {...register("casesHandled.disputeNature")} className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500" />
                                 </div>
                                 <div className="md:col-span-2">
-                                    <label className="block text-sm font-medium text-gray-700">Special Expertise (Comma separated)</label>
-                                    <input type="text" placeholder="e.g. Commercial Disputes, Family Law" {...register("specialExpertise")} className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500" />
+                                    <label className="block text-sm font-medium text-gray-700">Special Expertise</label>
+                                    <select multiple {...register("specialExpertise")} className="mt-1 block w-full rounded-md border border-gray-300 py-2 px-3 shadow-sm focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 h-32">
+                                        <option value="Insurance Claims">Insurance Claims</option>
+                                        <option value="Motor Accident Claims">Motor Accident Claims</option>
+                                        <option value="Health Insurance">Health Insurance</option>
+                                        <option value="Fire / Marine / Property Insurance">Fire / Marine / Property Insurance</option>
+                                        <option value="Consumer Law">Consumer Law</option>
+                                        <option value="Commercial Disputes">Commercial Disputes</option>
+                                    </select>
+                                    <p className="text-xs text-gray-500 mt-1">Hold Ctrl (Windows) or Command (Mac) to select multiple options.</p>
                                 </div>
                             </div>
                         </div>
