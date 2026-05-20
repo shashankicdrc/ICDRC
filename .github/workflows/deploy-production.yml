@@ -1,0 +1,194 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/${{ github.repository_owner }}/icdrc
+
+jobs:
+  deploy-production:
+    name: Build & Deploy Production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # ─── Login to GitHub Container Registry ───
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # ─── Build & push server image ───
+      - name: Build & push server
+        uses: docker/build-push-action@v5
+        with:
+          context: ./server
+          file: ./server/Dockerfile
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-server:prod
+            ${{ env.IMAGE_PREFIX }}-server:prod-${{ github.sha }}
+
+      # ─── Build & push frontend image ───
+      - name: Copy frontend env for build
+        run: |
+          cat > ./frontend/.env.production << 'EOF'
+          NEXT_PUBLIC_BACKEND_URL=${{ secrets.PROD_NEXT_PUBLIC_BACKEND_URL }}
+          NEXT_PUBLIC_FRONTEND_URL=${{ secrets.PROD_NEXT_PUBLIC_FRONTEND_URL }}
+          NEXT_PUBLIC_MERCHANT_ID=${{ secrets.PROD_MERCHANT_ID }}
+          NEXT_PUBLIC_SALT_KEY=${{ secrets.PROD_SALT_KEY }}
+          NEXT_PUBLIC_SALT_INDEX=1
+          NEXTAUTH_SECRET=${{ secrets.PROD_NEXTAUTH_SECRET }}
+          NEXTAUTH_URL=${{ secrets.PROD_NEXTAUTH_URL }}
+          INTERNAL_BACKEND_URL=http://server:7000
+          GOOGLE_CLIENT_ID=${{ secrets.PROD_GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET=${{ secrets.PROD_GOOGLE_CLIENT_SECRET }}
+          EOF
+
+      - name: Build & push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-frontend:prod
+            ${{ env.IMAGE_PREFIX }}-frontend:prod-${{ github.sha }}
+
+      # ─── Build & push dashboard image ───
+      - name: Copy dashboard env for build
+        run: |
+          cat > ./dashboard/.env.production << 'EOF'
+          NEXTAUTH_SECRET=${{ secrets.PROD_NEXTAUTH_SECRET }}
+          NEXTAUTH_URL=${{ secrets.PROD_DASHBOARD_URL }}
+          NEXT_PUBLIC_BACKEND_URL=${{ secrets.PROD_NEXT_PUBLIC_BACKEND_URL }}
+          INTERNAL_BACKEND_URL=http://server:7000
+          EOF
+
+      - name: Build & push dashboard
+        uses: docker/build-push-action@v5
+        with:
+          context: ./dashboard
+          file: ./dashboard/Dockerfile
+          push: true
+          provenance: false
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-dashboard:prod
+            ${{ env.IMAGE_PREFIX }}-dashboard:prod-${{ github.sha }}
+
+      # ─── Deploy on production server via SSH ───
+      - name: Deploy to production server
+        uses: appleboy/ssh-action@v1
+        env:
+          NEXT_PUBLIC_BACKEND_URL: ${{ secrets.PROD_NEXT_PUBLIC_BACKEND_URL }}
+          NEXT_PUBLIC_FRONTEND_URL: ${{ secrets.PROD_NEXT_PUBLIC_FRONTEND_URL }}
+          NEXT_PUBLIC_MERCHANT_ID: ${{ secrets.PROD_MERCHANT_ID }}
+          NEXT_PUBLIC_SALT_KEY: ${{ secrets.PROD_SALT_KEY }}
+          NEXTAUTH_SECRET: ${{ secrets.PROD_NEXTAUTH_SECRET }}
+          NEXTAUTH_URL: ${{ secrets.PROD_NEXTAUTH_URL }}
+          DASHBOARD_URL: ${{ secrets.PROD_DASHBOARD_URL }}
+          MONGO_URL: ${{ secrets.PROD_MONGO_URL }}
+          JWT_SECRET: ${{ secrets.PROD_JWT_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.PROD_GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.PROD_GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.PROD_GOOGLE_REFRESH_TOKEN }}
+          CLOUD_NAME: ${{ secrets.PROD_CLOUD_NAME }}
+          CLOUDINARY_API_KEY: ${{ secrets.PROD_CLOUDINARY_API_KEY }}
+          CLOUDINARY_API_SECRET: ${{ secrets.PROD_CLOUDINARY_API_SECRET }}
+          MAIL_PASSWORD: ${{ secrets.PROD_MAIL_PASSWORD }}
+          MAIL_HOST: ${{ secrets.PROD_MAIL_HOST }}
+          MAIL_USER: ${{ secrets.PROD_MAIL_USER }}
+          NOREPLYEMAIL: ${{ secrets.PROD_NOREPLYEMAIL }}
+          SERVER_FRONTEND_URL: ${{ secrets.PROD_FRONTEND_URL }}
+          SERVER_BACKEND_URL: ${{ secrets.PROD_BACKEND_URL }}
+        with:
+          host: ${{ secrets.PROD_SSH_HOST }}
+          username: ${{ secrets.PROD_SSH_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL,MONGO_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REFRESH_TOKEN,CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,MAIL_PASSWORD,MAIL_HOST,MAIL_USER,NOREPLYEMAIL,SERVER_FRONTEND_URL,SERVER_BACKEND_URL
+          command_timeout: 30m
+          script: |
+            set -e
+            cd ${{ secrets.PROD_DEPLOY_PATH }}
+
+            # Mark directory as safe (owner mismatch fix)
+            git config --global --add safe.directory ${{ secrets.PROD_DEPLOY_PATH }}
+
+            # Pull latest code
+            git fetch origin main
+            git checkout main || git checkout -b main origin/main
+            git reset --hard origin/main
+
+            # Write env files on server (these are gitignored)
+            cat > ./frontend/.env.production << EOF
+            NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+            NEXT_PUBLIC_FRONTEND_URL=$NEXT_PUBLIC_FRONTEND_URL
+            NEXT_PUBLIC_MERCHANT_ID=$NEXT_PUBLIC_MERCHANT_ID
+            NEXT_PUBLIC_SALT_KEY=$NEXT_PUBLIC_SALT_KEY
+            NEXT_PUBLIC_SALT_INDEX=1
+            NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+            NEXTAUTH_URL=$NEXTAUTH_URL
+            INTERNAL_BACKEND_URL=http://server:7000
+            GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+            GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+            EOF
+
+            cat > ./dashboard/.env.production << EOF
+            NEXTAUTH_SECRET=$NEXTAUTH_SECRET
+            NEXTAUTH_URL=$DASHBOARD_URL
+            NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
+            INTERNAL_BACKEND_URL=http://server:7000
+            EOF
+
+            cat > ./server/.env << EOF
+            NODE_ENV=production
+            PORT=7000
+            MONGO_URL=$MONGO_URL
+            JWT_SECRET=$JWT_SECRET
+            GOOGLE_CLIENT_ID=$GOOGLE_CLIENT_ID
+            GOOGLE_CLIENT_SECRET=$GOOGLE_CLIENT_SECRET
+            GOOGLE_REFRESH_TOKEN=$GOOGLE_REFRESH_TOKEN
+            CLOUD_NAME=$CLOUD_NAME
+            API_KEY=$CLOUDINARY_API_KEY
+            API_SECRET=$CLOUDINARY_API_SECRET
+            MAIL_PASSWORD=$MAIL_PASSWORD
+            MAIL_HOST=$MAIL_HOST
+            MAIL_PORT=2525
+            MAIL_SECURE=false
+            MAIL_USER=$MAIL_USER
+            NOREPLYEMAIL=$NOREPLYEMAIL
+            MERCHANT_ID=$NEXT_PUBLIC_MERCHANT_ID
+            SALT_INDEX=1
+            SALT_KEY=$NEXT_PUBLIC_SALT_KEY
+            FRONTEND_URL=$SERVER_FRONTEND_URL
+            BACKEND_URL=$SERVER_BACKEND_URL
+            REDIS_HOST=redis
+            REDIS_PORT=6379
+            EOF
+
+            # Rebuild and restart containers
+            docker compose -f docker-compose.yml down
+            docker compose -f docker-compose.yml up -d --build
+
+            # Wait and health check
+            echo "Waiting 20s for services to start..."
+            sleep 20
+            HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:7000 || echo "000")
+            echo "Server health check: HTTP $HTTP_CODE"
+            if [ "$HTTP_CODE" = "000" ]; then
+              echo "WARNING: Server not responding yet, check logs with: docker compose logs server"
+            fi
