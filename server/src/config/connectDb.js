@@ -11,8 +11,9 @@ const connectDb = async () => {
         logger.info(`Database is connected successfully to ${dbInstance.connection.host}`)
         return { connected: true }
     } catch (error) {
-        console.error("DATABASE CONNECTION ERROR:", error.message);
-        process.exit(1);
+        process.stderr.write(`DATABASE CONNECTION ERROR: ${error.message}\n`, () => {
+            process.exit(1);
+        });
     }
 }
 
