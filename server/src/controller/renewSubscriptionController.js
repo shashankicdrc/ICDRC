@@ -10,7 +10,7 @@ import {
     httpStatusCode,
 } from '#utils/constant';
 import { nanoid } from 'nanoid';
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
 import crypto from 'crypto';
 import logger from '#utils/logger';
 import PaymentHistory from '#models/paymentHistoryModel';

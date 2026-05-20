@@ -15,7 +15,7 @@ import mongoose, { isValidObjectId } from 'mongoose';
 import complaintMedia from '#models/complaintMediaModel';
 import { v2 as cloudinary } from 'cloudinary';
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
 
 class ChatController extends Base {
     constructor() {

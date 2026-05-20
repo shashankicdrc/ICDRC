@@ -17,7 +17,7 @@ import {
     options,
     verifyToken,
 } from '#utils/jwt';
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
 import generateCode from '#utils/generateCode';
 import { queues } from '#queues/queue';
 import isValidDateTime from '#utils/validateTime';

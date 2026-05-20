@@ -1,4 +1,4 @@
-import userAuthMiddleware from '#middlewares/UserAuthMiddleware ';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
 import usermodel from '#models/userModel';
 import UserService from '#services/userService';
 import { Base } from '#utils/Base';
