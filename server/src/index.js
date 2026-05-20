@@ -15,10 +15,13 @@ const productionServer = () => {
                 worker.on("exit", (code, signal) => {
                     if (signal) {
                         logger.info(`worker was killed by signal: ${signal}`);
+                        process.exit(1);
                     } else if (code !== 0) {
                         logger.info(`worker exited with error code: ${code}`);
+                        process.exit(code);
                     } else {
                         logger.info("worker success!");
+                        process.exit(0);
                     }
                 });
             }
