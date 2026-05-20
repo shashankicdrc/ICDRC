@@ -13,6 +13,8 @@ import partnerController from '#controller/partnerController';
 import paymentController from '#controller/paymentController';
 import userAuthController from '#controller/userAuthController';
 import ErrorMiddleware from '#middlewares/ErroMiddleware';
+import userAuthMiddleware from '#middlewares/UserAuthMiddleware';
+import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import asyncHandler from '#utils/asyncHandler';
 import { httpStatus, httpStatusCode } from '#utils/constant';
 import logger from '#utils/logger';
@@ -31,10 +33,28 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import cron from 'node-cron';
 import { checkSubscriptions } from '#utils/checkSubscription';
+import CustomError from '#utils/CustomError';
+import MediationCase from '#models/mediationCaseModel';
 import renewSubscriptionController from '#controller/renewSubscriptionController';
-
+import mediationCaseController from '#controller/mediationCaseController';
+import mediationPaymentController from '#controller/mediationPaymentController';
+import mediatorApplicationController from '#controller/mediatorApplicationController';
+import { assignMediator } from './controller/mediationAssignEmail.js';
+import { requestSession, caseAccept } from './controller/scheduleController.js';
+import promBundle from 'express-prom-bundle';
 const startServer = async () => {
     const app = express();
+
+    const metricsMiddleware = promBundle({
+        includeMethod: true,
+        includePath: true,
+        promClient: {
+            collectDefaultMetrics: {} // Grabs CPU, RAM, and Node.js specific data
+        }
+    });
+    // Attach the middleware
+    app.use(metricsMiddleware);
+
     const port = process.env.PORT || 8080;
 
     var allowlist = [
@@ -43,19 +63,43 @@ const startServer = async () => {
         'https://icdrc.in',
         'https://www.icdrc.in',
         'https://dashboard.icdrc.in',
+        'https://dev.icdrc.in',
+        'https://admin.icdrc.in'
     ];
-    var corsOptionsDelegate = function (req, callback) {
-        var corsOptions;
-        if (allowlist.indexOf(req.header('Origin')) !== -1) {
-            corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
-        } else {
-            corsOptions = { origin: false }; // disable CORS for this request
-        }
-        callback(null, corsOptions); // callback expects two parameters: error and options
-    };
 
     app.use(express.json());
-    app.use(cors(corsOptionsDelegate));
+
+    // NEW CORS (FIXED)
+    app.use(cors({
+        origin: function (origin, callback) {
+            if (!origin) return callback(null, true);
+
+            if (allowlist.includes(origin)) {
+                callback(null, true);
+            } else {
+                console.log("Blocked by CORS:", origin); // debug
+                callback(new Error("CORS not allowed"));
+            }
+        },
+        credentials: true,
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization']
+    }));
+
+    // VERY IMPORTANT (preflight fix)
+    app.options('*', cors());
+    // var corsOptionsDelegate = function (req, callback) {
+    //     var corsOptions;
+    //     if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    //         corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
+    //     } else {
+    //         corsOptions = { origin: false }; // disable CORS for this request
+    //     }
+    //     callback(null, corsOptions); // callback expects two parameters: error and options
+    // };
+
+    // app.use(express.json());
+    // app.use(cors(corsOptionsDelegate));
     app.set('trust proxy', 1);
     cloudinaryConfiguration();
 
@@ -104,6 +148,43 @@ const startServer = async () => {
     app.use('/api', teamController);
     app.use('/api', textTestimonial);
     app.use('/api', renewSubscriptionController);
+    app.use('/api', mediationCaseController);
+    app.use('/api', mediationPaymentController);
+    app.use('/api', mediatorApplicationController);
+
+    app.post('/api/cases/:caseId/assign-mediator', AdminAuthMiddleware, assignMediator);
+
+    // Naye routes:
+    app.put('/api/cases/:caseId/request-session', userAuthMiddleware, requestSession); // User ke liye
+    app.put('/api/cases/:caseId/caseAccept', AdminAuthMiddleware, caseAccept);   // Admin ke liye
+    app.put(
+        '/api/cases/:caseId/close',
+        AdminAuthMiddleware,
+        asyncHandler(async (req, res) => {
+            const { caseId } = req.params;
+            const mediationCase = await MediationCase.findById(caseId);
+
+            if (!mediationCase) {
+                throw new CustomError('Mediation case not found.', httpStatusCode.NOT_FOUND);
+            }
+
+            if (mediationCase.status === 'Closed') {
+                throw new CustomError('Mediation case is already closed.', httpStatusCode.BAD_REQUEST);
+            }
+
+            const updatedCase = await MediationCase.findByIdAndUpdate(
+                caseId,
+                { status: 'Closed' },
+                { new: true },
+            );
+
+            return res.status(httpStatusCode.OK).json({
+                status: httpStatus.SUCCESS,
+                message: 'Case closed successfully.',
+                data: updatedCase,
+            });
+        }),
+    );
 
     // Schedule a cron job to run every day at midnight
     cron.schedule('0 0 * * *', () => {
@@ -115,8 +196,17 @@ const startServer = async () => {
 
     const isConnected = await connectDb();
     if (isConnected) {
-        app.listen(port, () => {
+        const server = app.listen(port, () => {
             logger.info(`http://localhost:${port}`);
+        });
+
+        server.on('error', (err) => {
+            if (err && err.code === 'EADDRINUSE') {
+                logger.error(`Port ${port} already in use. Set process.env.PORT to a free port or stop the process using this port.`);
+            } else {
+                logger.error('Server error', err);
+            }
+            process.exit(1);
         });
     }
 };

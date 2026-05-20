@@ -1,5 +1,6 @@
 import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import adminModel from '#models/adminModel';
+import usermodel from '#models/userModel';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
 import asyncHandler from '#utils/asyncHandler';
@@ -19,6 +20,17 @@ class AdminController extends Base {
         this.router.put('/admins/role', AdminAuthMiddleware, this.#changeRole);
         this.router.delete('/admins', AdminAuthMiddleware, this.#deleteAdmins);
         this.router.put('/admins', AdminAuthMiddleware, this.#updateProfile);
+        this.router.get(
+            '/admin/users/email',
+            AdminAuthMiddleware,
+            this.#getUserByEmail,
+        );
+        this.router.get('/admin/users', AdminAuthMiddleware, this.#getUsers);
+        this.router.get(
+            '/admin/users/:id',
+            AdminAuthMiddleware,
+            this.#getUserById,
+        );
         this.router.get(
             '/admins/recent/list',
             AdminAuthMiddleware,
@@ -146,6 +158,88 @@ class AdminController extends Base {
             httpStatus.SUCCESS,
             'Admins fetched',
             admins,
+        );
+    });
+
+    #getUsers = asyncHandler(async (req, res) => {
+        const { search, page = 1, limit = 20 } = req.query;
+
+        const query =
+            search && String(search).trim()
+                ? {
+                      $or: [
+                          { email: { $regex: String(search).trim(), $options: 'i' } },
+                          { name: { $regex: String(search).trim(), $options: 'i' } },
+                      ],
+                  }
+                : {};
+
+        const pageNumber = Math.max(parseInt(page, 10) || 1, 1);
+        const limitNumber = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+        const skip = (pageNumber - 1) * limitNumber;
+
+        const [total, users] = await Promise.all([
+            usermodel.countDocuments(query),
+            usermodel
+                .find(query)
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limitNumber)
+                .select('-password'),
+        ]);
+
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Users fetched',
+            {
+                users,
+                pagination: {
+                    total,
+                    page: pageNumber,
+                    limit: limitNumber,
+                    pages: Math.ceil(total / limitNumber) || 1,
+                },
+            },
+        );
+    });
+
+    #getUserByEmail = asyncHandler(async (req, res) => {
+        const { email } = req.query;
+        if (!email) {
+            throw new CustomError('Email is required.', httpStatusCode.BAD_REQUEST);
+        }
+
+        const user = await usermodel
+            .findOne({ email: String(email).trim().toLowerCase() })
+            .select('-password');
+
+        if (!user) {
+            throw new CustomError('User does not exist.', httpStatusCode.BAD_REQUEST);
+        }
+
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'User fetched successfully.',
+            user,
+        );
+    });
+
+    #getUserById = asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const user = await usermodel.findById(id).select('-password');
+        if (!user) {
+            throw new CustomError('User does not exist.', httpStatusCode.BAD_REQUEST);
+        }
+        return this.response(
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'User fetched successfully.',
+            user,
         );
     });
 }

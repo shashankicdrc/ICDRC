@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s # How often to poll your server
+  evaluation_interval: 15s
+scrape_configs:
+  - job_name: "icdrc-nodejs-backend"
+    static_configs:
+      # Note: "server:7000" matches the Docker container name and port used in docker-compose
+      - targets: ["server:7000"]

@@ -72,7 +72,7 @@ const SubscriptionChart = ({ type }) => {
                     `${BASE_URL}/api/analytics/user/subscription`,
                     {
                         headers: {
-                            'Contnet-Type': 'application/json',
+                            'Content-Type': 'application/json',
                             Authorization: `Bearer ${token}`,
                         },
                     },

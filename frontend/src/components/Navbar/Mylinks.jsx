@@ -13,4 +13,18 @@ export const links = [
       },
     ],
   },
+  {
+    name: "Mediation",
+    submenu: true,
+    sublinks: [
+      {
+        Head: "Mediation",
+        sublink: [
+          { name: "Mediation", link: "/mediation" },
+          { name: "Virtual", link: "/dashboard/mediation" },
+          { name: "Face to Face", link: "/face-to-face-mediation" },
+        ],
+      },
+    ],
+  },
 ];

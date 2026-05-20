@@ -16,6 +16,7 @@ import {
     httpStatus,
     httpStatusCode,
 } from '#utils/constant';
+import { requestPhonePeAccessToken } from '#utils/phonePeOAuth';
 import { Router } from 'express';
 import { nanoid } from 'nanoid';
 import crypto from 'crypto';
@@ -25,6 +26,7 @@ import { filterSort, parseFilters } from '#utils/filterSort';
 import pagination from '#utils/pagination';
 import mongoose from 'mongoose';
 import usermodel from '#models/userModel';
+import { complaintRegistrationsTotal } from '#utils/metrics';
 
 class PaymentController extends Base {
     constructor() {
@@ -225,13 +227,14 @@ class PaymentController extends Base {
             );
         }
 
-        const merchantId = process.env.MERCHANT_ID;
-        const keyIndex = process.env.SALT_INDEX;
-        const string =
-            `/pg/v1/status/${merchantId}/${transactionId}` +
-            process.env.SALT_KEY;
-        const sha256 = crypto.createHash('sha256').update(string).digest('hex');
-        const checksum = sha256 + '###' + keyIndex;
+        let accessToken;
+        try {
+            accessToken = await requestPhonePeAccessToken('1');
+        } catch {
+            return res.redirect(
+                `${FRONTEND_URL}/failure?message=Payment auth failed.`,
+            );
+        }
 
         const payURL = `${PHONE_PAY_URL}/status/${merchantId}/${transactionId}`;
         logger.info('PHONE_PAY_URL');
@@ -274,6 +277,8 @@ class PaymentController extends Base {
 
         if (!success) {
             logger.info(data);
+            // ─── Track failed payment ──────────────────────────────────────
+            complaintRegistrationsTotal.inc({ type: complaintType, status: 'failure' });
             return res.redirect(`${FRONTEND_URL}/failure?message=${message}`);
         }
 
@@ -350,6 +355,10 @@ class PaymentController extends Base {
         };
 
         queues.EmailQueue.add('send-mail', teamMessage);
+
+        // ─── Track successful payment ─────────────────────────────────────────
+        complaintRegistrationsTotal.inc({ type: complaintType, status: 'success' });
+
         return res.redirect(
             `${FRONTEND_URL}/success?amount=${data.amount}&transactionId=${data.transactionId}`,
         );
@@ -401,24 +410,36 @@ class PaymentController extends Base {
             );
         }
 
-        const transactionId = nanoid();
-        const baseURl =
-            process.env.NODE_ENV === 'production'
-                ? process.env.BACKEND_URL
-                : 'http://localhost:7000';
+        const accessToken = await requestPhonePeAccessToken(
+            process.env.SALT_INDEX,
+        );
+        logger.info('PhonePe OAuth token obtained for pay');
+
+        // Build v2 PG_CHECKOUT payload
+        const orderId = nanoid().replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 63);
+        const baseURl = process.env.BACKEND_URL || 'http://localhost:7000';
+
         const payload = {
             userId: req.id,
             email: req.email,
             name: req.name,
             amount: price,
-            merchantId: process.env.MERCHANT_ID,
-            merchantTransactionId: transactionId,
-            mobileNumber: complaint.mobile,
-            merchantUserId: 'MUId-' + req.id,
-            redirectUrl: `${baseURl}/api/payments/status/${transactionId}?complaintType=${complaintType}&userId=${req.id}&id=${complaint.id}`,
-            redirectMode: 'POST',
-            paymentInstrument: {
-                type: 'PAY_PAGE',
+            expireAfter: 1200,
+            paymentFlow: {
+                type: 'PG_CHECKOUT',
+                message: 'Payment for ICDRC Case Registration',
+                merchantUrls: {
+                    redirectUrl: `${baseURl}/api/payments/status/${orderId}?complaintType=${complaintType}&userId=${req.id}&id=${complaint.id}`,
+                },
+                paymentModeConfig: {
+                    enabledPaymentModes: [
+                        { type: 'UPI_QR' },
+                        { type: 'UPI_INTENT' },
+                        { type: 'UPI_COLLECT' },
+                        { type: 'NET_BANKING' },
+                        { type: 'CARD', cardTypes: ['DEBIT_CARD', 'CREDIT_CARD'] },
+                    ],
+                },
             },
         };
 

@@ -1,7 +1,7 @@
 import {
     ArrowLeftToLine,
     ArrowRightToLine, ArrowUpDown, BotMessageSquare,
-    CreditCard, FileSearch2, Handshake, Images, LayoutDashboard, ListFilter, Loader2,
+    CreditCard, FileSearch2, Gavel, Handshake, Images, LayoutDashboard, ListFilter, Loader2,
     Mail, MessageSquareText, MessagesSquare, MoreHorizontal, MoreVertical, PackageSearch, Pencil, PlusCircle,
     Rss,
     Settings,
@@ -21,6 +21,7 @@ export const Icons = {
     team: SquareUser,
     individual: UserSearch,
     organisational: PackageSearch,
+    mediation: Gavel,
     settings: Settings,
     edit: Pencil,
     caseStudy: FileSearch2,

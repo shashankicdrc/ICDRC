@@ -10,7 +10,7 @@ export default function RightMenu() {
                 <Link href="/dashboard/register">Register Complaints</Link>
             </Button>
             <Button asChild>
-                <Link href="/#subscription">Subscribe Now</Link>
+                <Link href="/become-mediator">Become a Mediator</Link>
             </Button>
         </Fragment>
     );

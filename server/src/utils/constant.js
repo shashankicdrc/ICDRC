@@ -57,7 +57,69 @@ export const FRONTEND_URL =
         ? process.env.FRONTEND_URL
         : 'http://localhost:3000';
 
+/**
+ * Which PhonePe hosts to call. Set PHONEPE_ENV=production when using live
+ * dashboard credentials while NODE_ENV is not production (e.g. local tests).
+ * Set PHONEPE_ENV=sandbox for UAT credentials on a production Node process.
+ */
+export const phonePeEnv =
+    process.env.PHONEPE_ENV === 'production' ||
+    process.env.PHONEPE_ENV === 'sandbox'
+        ? process.env.PHONEPE_ENV
+        : process.env.NODE_ENV === 'production'
+          ? 'production'
+          : 'sandbox';
+
+// PhonePe v1 Hermes API - pay endpoint
 export const PHONE_PAY_URL =
-    process.env.NODE_ENV === 'production'
+    phonePeEnv === 'production'
         ? 'https://api.phonepe.com/apis/hermes/pg/v1'
-        : 'https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1';
+        : 'https://api-preprod.phonepe.com/apis/hermes/pg/v1';
+
+// PhonePe v2 OAuth token (prod uses identity-manager per official docs)
+export const PHONE_PAY_AUTH_URL =
+    phonePeEnv === 'production'
+        ? 'https://api.phonepe.com/apis/identity-manager/v1/oauth/token'
+        : 'https://api-preprod.phonepe.com/apis/pg-sandbox/v1/oauth/token';
+
+/**
+ * Form body for POST .../oauth/token. Use explicitClientVersion for initiate
+ * (often SALT_INDEX) vs status checks (often "1") per integration notes.
+ */
+function _trimEnv(value) {
+    if (value === undefined || value === null) return value;
+    const s = String(value).trim();
+    return s === '' ? undefined : s;
+}
+
+export function buildPhonePeOAuthParams(explicitClientVersion) {
+    let clientVersion;
+    if (
+        explicitClientVersion !== undefined &&
+        explicitClientVersion !== null &&
+        String(explicitClientVersion).trim() !== ''
+    ) {
+        clientVersion = String(explicitClientVersion).trim();
+    } else {
+        clientVersion =
+            _trimEnv(process.env.PHONEPE_CLIENT_VERSION) ||
+            _trimEnv(process.env.SALT_INDEX) ||
+            '1';
+    }
+    const clientId =
+        _trimEnv(process.env.PHONEPE_CLIENT_ID) ||
+        _trimEnv(process.env.MERCHANT_ID);
+    const clientSecret =
+        _trimEnv(process.env.PHONEPE_CLIENT_SECRET) ||
+        _trimEnv(process.env.SALT_KEY);
+    return {
+        client_id: clientId,
+        client_secret: clientSecret,
+        client_version: clientVersion,
+        grant_type: 'client_credentials',
+    };
+}
+
+// PhonePe v3 Checkout API
+export const PHONE_PAY_CHECKOUT_URL =
+    'https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2';
