@@ -1,14 +1,30 @@
+// ─── Global error handlers — must be registered before any other code ───────
+// These catch crashes that happen during module loading (e.g. BullMQ/ioredis
+// emitting an unhandled 'error' event on startup) which would otherwise kill
+// the process silently.
+process.on("uncaughtException", (err) => {
+    process.stderr.write(`UNCAUGHT EXCEPTION: ${err.stack || err.message}\n`, () => {
+        process.exit(1);
+    });
+});
+
+process.on("unhandledRejection", (reason) => {
+    const msg = reason instanceof Error ? reason.stack : String(reason);
+    process.stderr.write(`UNHANDLED REJECTION: ${msg}\n`, () => {
+        process.exit(1);
+    });
+});
+
 import cluster from "cluster";
 import { cpus } from "os";
 import startServer from "./server.js";
-import logger from "#utils/logger";
 
 const numCPUs = cpus().length;
 
 const productionServer = () => {
     return cluster.isPrimary
         ? (() => {
-            logger.info(`The primary process id is ${process.pid}`);
+            process.stdout.write(`PRIMARY process id: ${process.pid}\n`);
             for (let index = 0; index < numCPUs; index++) {
                 const worker = cluster.fork();
 
@@ -22,7 +38,7 @@ const productionServer = () => {
                             process.exit(code);
                         });
                     } else {
-                        process.stdout.write("worker success!\n", () => {
+                        process.stdout.write("worker exited successfully\n", () => {
                             process.exit(0);
                         });
                     }
@@ -33,4 +49,3 @@ const productionServer = () => {
 };
 
 process.env.NODE_ENV === "production" ? productionServer() : startServer();
-
