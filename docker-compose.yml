@@ -79,8 +79,8 @@ services:
     deploy:
       resources:
         limits:
-          memory: 512m
-          cpus: "0.50"
+          memory: 1g
+          cpus: "1.0"
 
   redis:
     restart: unless-stopped

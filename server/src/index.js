@@ -18,12 +18,15 @@ process.on("unhandledRejection", (reason) => {
 import cluster from "cluster";
 import { cpus } from "os";
 
-const numCPUs = cpus().length;
+// Cap workers at 2 — the container only has 0.5 CPUs allocated.
+// cpus().length returns the host's physical core count (e.g. 8), which would
+// spawn 8 memory-heavy workers and trigger an OOM SIGKILL.
+const numWorkers = Math.min(cpus().length, 2);
 
 if (cluster.isPrimary) {
     process.stdout.write(`PRIMARY process id: ${process.pid}\n`);
 
-    for (let index = 0; index < numCPUs; index++) {
+    for (let index = 0; index < numWorkers; index++) {
         const worker = cluster.fork();
 
         worker.on("exit", (code, signal) => {
