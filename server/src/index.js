@@ -1,7 +1,7 @@
-// ─── Global error handlers — must be registered before any other code ───────
-// These catch crashes that happen during module loading (e.g. BullMQ/ioredis
-// emitting an unhandled 'error' event on startup) which would otherwise kill
-// the process silently.
+// ─── Global error handlers ────────────────────────────────────────────────────
+// NOTE: static `import` statements are hoisted and run BEFORE this module body,
+// so these handlers only catch errors that occur AFTER all imports are resolved.
+// For import-phase errors in worker processes we use dynamic import() below.
 process.on("uncaughtException", (err) => {
     process.stderr.write(`UNCAUGHT EXCEPTION: ${err.stack || err.message}\n`, () => {
         process.exit(1);
@@ -17,35 +17,36 @@ process.on("unhandledRejection", (reason) => {
 
 import cluster from "cluster";
 import { cpus } from "os";
-import startServer from "./server.js";
 
 const numCPUs = cpus().length;
 
-const productionServer = () => {
-    return cluster.isPrimary
-        ? (() => {
-            process.stdout.write(`PRIMARY process id: ${process.pid}\n`);
-            for (let index = 0; index < numCPUs; index++) {
-                const worker = cluster.fork();
+if (cluster.isPrimary) {
+    process.stdout.write(`PRIMARY process id: ${process.pid}\n`);
 
-                worker.on("exit", (code, signal) => {
-                    if (signal) {
-                        process.stderr.write(`worker was killed by signal: ${signal}\n`, () => {
-                            process.exit(1);
-                        });
-                    } else if (code !== 0) {
-                        process.stderr.write(`worker exited with error code: ${code}\n`, () => {
-                            process.exit(code);
-                        });
-                    } else {
-                        process.stdout.write("worker exited successfully\n", () => {
-                            process.exit(0);
-                        });
-                    }
-                });
+    for (let index = 0; index < numCPUs; index++) {
+        const worker = cluster.fork();
+
+        worker.on("exit", (code, signal) => {
+            if (signal) {
+                process.stderr.write(`worker killed by signal: ${signal}\n`, () => process.exit(1));
+            } else if (code !== 0) {
+                process.stderr.write(`worker exited with error code: ${code}\n`, () => process.exit(code));
+            } else {
+                process.stdout.write("worker exited successfully\n", () => process.exit(0));
             }
-        })()
-        : startServer();
-};
+        });
+    }
+} else {
+    // ─── Worker process ───────────────────────────────────────────────────────
+    // Use dynamic import so any error during server.js module loading (or any
+    // of its sub-imports) is caught as a rejected promise and logged clearly.
+    process.stdout.write(`WORKER process id: ${process.pid} starting...\n`);
 
-process.env.NODE_ENV === "production" ? productionServer() : startServer();
+    import("./server.js")
+        .then((mod) => mod.default())
+        .catch((err) => {
+            process.stderr.write(`WORKER STARTUP ERROR: ${err.stack || err.message}\n`, () => {
+                process.exit(1);
+            });
+        });
+}
