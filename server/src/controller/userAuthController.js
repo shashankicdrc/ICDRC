@@ -279,15 +279,6 @@ class UserController extends Base {
                 'Invalid email/password',
                 httpStatusCode.BAD_REQUEST,
             );
-
-        // Social-auth accounts have no password stored
-        if (!isUserExist.password) {
-            throw new CustomError(
-                'This account uses social sign-in. Please log in with Google.',
-                httpStatusCode.BAD_REQUEST,
-            );
-        }
-
         const isValidPassword = await bcrypt.compare(
             password,
             isUserExist.password,

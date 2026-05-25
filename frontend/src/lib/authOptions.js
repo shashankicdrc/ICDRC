@@ -144,25 +144,20 @@ export const authOptions = {
                 };
             } catch (error) {
                 console.error(error);
-                throw error;
+                throw Promise.reject(error);
             }
         },
 
         session: async ({ session, token }) => {
             if (token) {
+                const accessToken = await decodeToken(token.AccessToken);
                 session.user.AccessToken = token.AccessToken;
                 session.user.RefreshToken = token.RefreshToken;
+                session.user.id = accessToken.id;
+                session.user.email = accessToken.email;
+                session.user.name = accessToken.name;
                 session.user.image = token.image || token.picture;
                 session.error = token.error;
-
-                if (token.AccessToken) {
-                    const accessToken = await decodeToken(token.AccessToken);
-                    if (accessToken) {
-                        session.user.id = accessToken.id;
-                        session.user.email = accessToken.email;
-                        session.user.name = accessToken.name;
-                    }
-                }
             }
 
             return session;
