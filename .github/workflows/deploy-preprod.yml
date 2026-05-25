@@ -130,6 +130,10 @@ jobs:
             set -e
             cd ${{ secrets.PREPROD_DEPLOY_PATH }}
 
+            # FIX: Reclaim .git ownership — previous root-run ops can leave
+            # .git/objects owned by root, causing "insufficient permission" on git fetch
+            sudo chown -R $(whoami):$(whoami) .git || true
+
             # Mark directory as safe (owner mismatch fix)
             git config --global --add safe.directory ${{ secrets.PREPROD_DEPLOY_PATH }}
 
