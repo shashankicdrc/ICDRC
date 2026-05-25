@@ -93,10 +93,21 @@ jobs:
             ${{ env.IMAGE_PREFIX }}-dashboard:prod
             ${{ env.IMAGE_PREFIX }}-dashboard:prod-${{ github.sha }}
 
+      # ─── Pre-cleanup: remove root-owned files so SCP can write fresh copies ───
+      # The existing docker-compose.yml on the server may be owned by root from
+      # a previous manual deploy. SCP cannot overwrite root-owned files, so we
+      # delete them first via SSH (which runs as the deploy user with full access).
+      - name: Pre-cleanup stale root-owned files on server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.PROD_SSH_HOST }}
+          username: ${{ secrets.PROD_SSH_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          script: |
+            mkdir -p ${{ secrets.PROD_DEPLOY_PATH }}
+            rm -f ${{ secrets.PROD_DEPLOY_PATH }}/docker-compose.yml
+
       # ─── Copy docker-compose.yml to server via SCP ───
-      # This replaces the old "git pull on server" approach. The server no
-      # longer needs a git repo — images come from GHCR, env files are written
-      # by the SSH script below, and the compose file arrives here via SCP.
       - name: Copy docker-compose.yml to server
         uses: appleboy/scp-action@v0.1.7
         with:

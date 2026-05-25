@@ -93,8 +93,18 @@ jobs:
             ${{ env.IMAGE_PREFIX }}-dashboard:preprod
             ${{ env.IMAGE_PREFIX }}-dashboard:preprod-${{ github.sha }}
 
+      # ─── Pre-cleanup: remove root-owned files so SCP can write fresh copies ───
+      - name: Pre-cleanup stale root-owned files on server
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.PREPROD_SSH_HOST }}
+          username: ${{ secrets.PREPROD_SSH_USER }}
+          key: ${{ secrets.PREPROD_SSH_KEY }}
+          script: |
+            mkdir -p ${{ secrets.PREPROD_DEPLOY_PATH }}
+            rm -f ${{ secrets.PREPROD_DEPLOY_PATH }}/docker-compose.pre-prod.yml
+
       # ─── Copy docker-compose.pre-prod.yml to server via SCP ───
-      # Replaces the old "git pull on server" approach entirely.
       - name: Copy docker-compose.pre-prod.yml to server
         uses: appleboy/scp-action@v0.1.7
         with:
