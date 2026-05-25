@@ -31,7 +31,9 @@ USER appuser
 
 EXPOSE 7000
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+# FIX: Increased start-period to 90s — cluster mode forks multiple workers, each
+# establishing its own MongoDB Atlas connection before the server is truly ready
+HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
   CMD wget -qO- http://localhost:7000/ || exit 1
 
 ENTRYPOINT ["dumb-init", "--"]

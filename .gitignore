@@ -1,24 +1,6 @@
-# Dependencies
-node_modules/
 
-# Next.js build output
-.next/
-
-# Environment files (NEVER commit secrets)
-.env
-.env.*
-!.env.example
-
-# OS files
-.DS_Store
-
-# IDE
-.vscode/
-.idea/
-
-# Docker volumes
-mongo_data/
-redis_data/
-
-# Server test folder
-server_test/
+/backend/node_modules
+/server/node_modules
+/frontend/node_modules
+/dashboard/node_modules
+/frontend/.next

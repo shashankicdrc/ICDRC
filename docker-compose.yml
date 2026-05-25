@@ -76,11 +76,18 @@ services:
     logging: *default-logging
     security_opt:
       - no-new-privileges:true
+    # FIX: Added healthcheck so frontend/dashboard wait for the server to truly be ready
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:7000/"]
+      interval: 15s
+      timeout: 5s
+      start_period: 60s
+      retries: 5
     deploy:
       resources:
         limits:
-          memory: 512m
-          cpus: "0.50"
+          memory: 1g
+          cpus: "1.0"
 
   redis:
     restart: unless-stopped

@@ -24,18 +24,8 @@ const scheduleEmailProcessor = async (job) => {
         const authUser = process.env.MAIL_USER || noreplyEmail;
 
         let transporter = nodemailer.createTransport({
-            host,
-            port,
-            secure,
-            connectionTimeout: parseInt(
-                process.env.MAIL_CONNECTION_TIMEOUT_MS || "20000",
-                10,
-            ),
-            greetingTimeout: parseInt(
-                process.env.MAIL_GREETING_TIMEOUT_MS || "20000",
-                10,
-            ),
-            socketTimeout: parseInt(process.env.MAIL_SOCKET_TIMEOUT_MS || "20000", 10),
+            host: "mail.icdrc.in",
+            port: 465,
             tls: {
                 rejectUnauthorized: false,
             },
