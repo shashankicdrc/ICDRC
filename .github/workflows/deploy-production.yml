@@ -43,9 +43,10 @@ jobs:
             ${{ env.IMAGE_PREFIX }}-server:prod-${{ github.sha }}
 
       # ─── Build & push frontend image ───
+      # FIX: Use unquoted EOF so ${{ secrets.* }} are expanded by the runner shell
       - name: Copy frontend env for build
         run: |
-          cat > ./frontend/.env.production << 'EOF'
+          cat > ./frontend/.env.production << EOF
           NEXT_PUBLIC_BACKEND_URL=${{ secrets.PROD_NEXT_PUBLIC_BACKEND_URL }}
           NEXT_PUBLIC_FRONTEND_URL=${{ secrets.PROD_NEXT_PUBLIC_FRONTEND_URL }}
           NEXT_PUBLIC_MERCHANT_ID=${{ secrets.PROD_MERCHANT_ID }}
@@ -57,6 +58,7 @@ jobs:
           GOOGLE_CLIENT_ID=${{ secrets.PROD_GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET=${{ secrets.PROD_GOOGLE_CLIENT_SECRET }}
           EOF
+          sed -i 's/^[[:space:]]*//' ./frontend/.env.production
 
       - name: Build & push frontend
         uses: docker/build-push-action@v5
@@ -70,14 +72,16 @@ jobs:
             ${{ env.IMAGE_PREFIX }}-frontend:prod-${{ github.sha }}
 
       # ─── Build & push dashboard image ───
+      # FIX: Unquoted EOF so secrets expand correctly
       - name: Copy dashboard env for build
         run: |
-          cat > ./dashboard/.env.production << 'EOF'
+          cat > ./dashboard/.env.production << EOF
           NEXTAUTH_SECRET=${{ secrets.PROD_NEXTAUTH_SECRET }}
           NEXTAUTH_URL=${{ secrets.PROD_DASHBOARD_URL }}
           NEXT_PUBLIC_BACKEND_URL=${{ secrets.PROD_NEXT_PUBLIC_BACKEND_URL }}
           INTERNAL_BACKEND_URL=http://server:7000
           EOF
+          sed -i 's/^[[:space:]]*//' ./dashboard/.env.production
 
       - name: Build & push dashboard
         uses: docker/build-push-action@v5
@@ -115,11 +119,14 @@ jobs:
           NOREPLYEMAIL: ${{ secrets.PROD_NOREPLYEMAIL }}
           SERVER_FRONTEND_URL: ${{ secrets.PROD_FRONTEND_URL }}
           SERVER_BACKEND_URL: ${{ secrets.PROD_BACKEND_URL }}
+          # FIX: Separate server-side payment secrets from NEXT_PUBLIC_ frontend vars
+          SERVER_MERCHANT_ID: ${{ secrets.PROD_SERVER_MERCHANT_ID }}
+          SERVER_SALT_KEY: ${{ secrets.PROD_SERVER_SALT_KEY }}
         with:
           host: ${{ secrets.PROD_SSH_HOST }}
           username: ${{ secrets.PROD_SSH_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
-          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL,MONGO_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REFRESH_TOKEN,CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,MAIL_PASSWORD,MAIL_HOST,MAIL_USER,NOREPLYEMAIL,SERVER_FRONTEND_URL,SERVER_BACKEND_URL
+          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL,MONGO_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REFRESH_TOKEN,CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,MAIL_PASSWORD,MAIL_HOST,MAIL_USER,NOREPLYEMAIL,SERVER_FRONTEND_URL,SERVER_BACKEND_URL,SERVER_MERCHANT_ID,SERVER_SALT_KEY
           command_timeout: 30m
           script: |
             set -e
@@ -173,9 +180,10 @@ jobs:
             MAIL_SECURE=false
             MAIL_USER=$MAIL_USER
             NOREPLYEMAIL=$NOREPLYEMAIL
-            MERCHANT_ID=$NEXT_PUBLIC_MERCHANT_ID
+            # FIX: Use dedicated server-side secrets, not the NEXT_PUBLIC_ frontend vars
+            MERCHANT_ID=$SERVER_MERCHANT_ID
             SALT_INDEX=1
-            SALT_KEY=$NEXT_PUBLIC_SALT_KEY
+            SALT_KEY=$SERVER_SALT_KEY
             FRONTEND_URL=$SERVER_FRONTEND_URL
             BACKEND_URL=$SERVER_BACKEND_URL
             REDIS_HOST=redis
@@ -183,9 +191,12 @@ jobs:
             EOF
             sed -i 's/^[[:space:]]*//' ./server/.env
 
-            # Rebuild and restart containers
+            # FIX: Pull pre-built GHCR images instead of rebuilding from scratch on server
+            # Login to GHCR so the server can pull private images
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true
             docker compose -f docker-compose.yml down
-            docker compose -f docker-compose.yml up -d --build
+            docker compose -f docker-compose.yml pull
+            docker compose -f docker-compose.yml up -d
 
             # Wait and health check
             echo "Waiting 20s for services to start..."

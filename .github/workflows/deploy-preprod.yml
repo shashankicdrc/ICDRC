@@ -44,9 +44,10 @@ jobs:
             ${{ env.IMAGE_PREFIX }}-server:preprod-${{ github.sha }}
 
       # ─── Build & push frontend image ───
+      # FIX: Unquoted EOF so ${{ secrets.* }} are expanded by the runner shell
       - name: Copy frontend env for build
         run: |
-          cat > ./frontend/.env.pre-prod << 'EOF'
+          cat > ./frontend/.env.pre-prod << EOF
           NEXT_PUBLIC_BACKEND_URL=${{ secrets.PREPROD_NEXT_PUBLIC_BACKEND_URL }}
           NEXT_PUBLIC_FRONTEND_URL=${{ secrets.PREPROD_NEXT_PUBLIC_FRONTEND_URL }}
           NEXT_PUBLIC_MERCHANT_ID=${{ secrets.PREPROD_MERCHANT_ID }}
@@ -58,6 +59,7 @@ jobs:
           GOOGLE_CLIENT_ID=${{ secrets.PREPROD_GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET=${{ secrets.PREPROD_GOOGLE_CLIENT_SECRET }}
           EOF
+          sed -i 's/^[[:space:]]*//' ./frontend/.env.pre-prod
 
       - name: Build & push frontend
         uses: docker/build-push-action@v5
@@ -71,14 +73,16 @@ jobs:
             ${{ env.IMAGE_PREFIX }}-frontend:preprod-${{ github.sha }}
 
       # ─── Build & push dashboard image ───
+      # FIX: Unquoted EOF so secrets expand correctly
       - name: Copy dashboard env for build
         run: |
-          cat > ./dashboard/.env.pre-prod << 'EOF'
+          cat > ./dashboard/.env.pre-prod << EOF
           NEXTAUTH_SECRET=${{ secrets.PREPROD_NEXTAUTH_SECRET }}
           NEXTAUTH_URL=${{ secrets.PREPROD_DASHBOARD_URL }}
           NEXT_PUBLIC_BACKEND_URL=${{ secrets.PREPROD_NEXT_PUBLIC_BACKEND_URL }}
           INTERNAL_BACKEND_URL=http://server:7000
           EOF
+          sed -i 's/^[[:space:]]*//' ./dashboard/.env.pre-prod
 
       - name: Build & push dashboard
         uses: docker/build-push-action@v5
@@ -181,9 +185,11 @@ jobs:
             REDIS_PORT=6379
             EOF
 
-            # Rebuild and restart containers
+            # FIX: Pull pre-built GHCR images instead of rebuilding from scratch on server
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true
             docker compose -f docker-compose.pre-prod.yml down
-            docker compose -f docker-compose.pre-prod.yml up -d --build
+            docker compose -f docker-compose.pre-prod.yml pull
+            docker compose -f docker-compose.pre-prod.yml up -d
 
             # Wait and health check
             echo "Waiting 15s for services to start..."

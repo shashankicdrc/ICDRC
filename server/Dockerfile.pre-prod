@@ -31,7 +31,8 @@ USER appuser
 
 EXPOSE 7000
 
-HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+# FIX: Increased start-period to 90s for cluster mode + MongoDB Atlas cold start
+HEALTHCHECK --interval=30s --timeout=10s --start-period=90s --retries=3 \
   CMD wget -qO- http://localhost:7000/ || exit 1
 
 ENTRYPOINT ["dumb-init", "--"]
