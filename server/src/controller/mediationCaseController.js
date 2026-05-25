@@ -1,4 +1,3 @@
-import UserService from '#services/userService';
 import MediationCase from '#models/mediationCaseModel';
 import { Base } from '#utils/Base';
 import CustomError from '#utils/CustomError';
@@ -10,17 +9,13 @@ import pagination from '#utils/pagination';
 import express from 'express';
 import busboy from 'busboy';
 import { v2 as cloudinary } from 'cloudinary';
-import { queues } from '#queues/queue';
 
 const { Router } = express;
 
 class MediationCaseController extends Base {
-    #userService;
-
     constructor() {
         super();
         this.router = Router();
-        this.#userService = new UserService();
         this.#initializeRoutes();
     }
 
@@ -114,21 +109,11 @@ class MediationCaseController extends Base {
         const skip = pagination(page, perRow);
 
         const filter = {};
-
-        // Back-compat: some clients may send "Paid" / "Pending"
-        const normalizedPaymentStatus = paymentStatus
-            ? String(paymentStatus).trim()
-            : undefined;
-
-        if (normalizedPaymentStatus === 'Paid') {
-            filter.paymentStatus = 'Success';
-        } else if (normalizedPaymentStatus === 'Pending') {
-            filter.paymentStatus = 'Pending';
-        } else if (
-            normalizedPaymentStatus &&
-            ['Pending', 'Success', 'Failed'].includes(normalizedPaymentStatus)
-        ) {
-            filter.paymentStatus = normalizedPaymentStatus;
+        if (paymentStatus) {
+            const normalized = paymentStatus === 'Paid' ? 'Success' : paymentStatus;
+            if (['Pending', 'Success', 'Failed'].includes(normalized)) {
+                filter.paymentStatus = normalized;
+            }
         }
 
         const [cases, totalCount] = await Promise.all([
@@ -141,13 +126,7 @@ class MediationCaseController extends Base {
             MediationCase.countDocuments(filter),
         ]);
 
-        return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Mediation cases fetched successfully.',
-            { cases, totalCount, page, perRow },
-        );
+        return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS, 'Mediation cases fetched successfully.', { cases, totalCount, page, perRow });
     });
 
     #adminGetMediationCaseById = asyncHandler(async (req, res) => {
@@ -221,11 +200,6 @@ class MediationCaseController extends Base {
             throw new CustomError('Mediation case is already closed.', httpStatusCode.BAD_REQUEST);
         }
 
-        // Optionally you can restrict allowed statuses to close
-        // if (![ 'Settled', 'Not Settled', 'In Mediation', 'Mediator Assigned' ].includes(mediationCase.status)) {
-        //     throw new CustomError('Case cannot be closed from current status.', httpStatusCode.BAD_REQUEST);
-        // }
-
         const updatedCase = await MediationCase.findByIdAndUpdate(
             id,
             { status: 'Closed' },
@@ -266,148 +240,97 @@ class MediationCaseController extends Base {
         }
     }
 
-    #normalizeFiles(files) {
-        return Array.isArray(files)
-            ? files
-                  .map((f) => {
-                      if (!f) return null;
-                      if (typeof f === 'string') return { name: f, url: f };
-                      if (typeof f === 'object')
-                          return { name: f.name, url: f.url };
-                      return null;
-                  })
-                  .filter(Boolean)
-            : undefined;
+    #validateRequiredFields(data) {
+        const missingFields = [];
+        if (!data.fullName) missingFields.push('fullName');
+        if (!data.contactNumber) missingFields.push('contactNumber');
+        if (!data.whatsappNumber) missingFields.push('whatsappNumber');
+        if (!data.opponentName) missingFields.push('opponentName');
+        if (!data.opponentEmail) missingFields.push('opponentEmail');
+        if (!data.opponentContact) missingFields.push('opponentContact');
+        if (!data.description) missingFields.push('description');
+        if (!data.amount) missingFields.push('amount');
+        if (!data.caseType) missingFields.push('caseType');
+        
+        // Conditional validation for organisation fields
+        if (data.caseType === 'Organisation') {
+            if (!data.organisationName) missingFields.push('organisationName');
+            if (!data.organisationEmail) missingFields.push('organisationEmail');
+            if (!data.organisationContact) missingFields.push('organisationContact');
+            if (!data.organisationAddress) missingFields.push('organisationAddress');
+        }
+        
+        const termsAcceptedValid = data.termsAccepted === 'true' || 
+                                   data.termsAccepted === '1' || 
+                                   data.termsAccepted === 'on' || 
+                                   data.termsAccepted === true;
+        if (!termsAcceptedValid) missingFields.push('termsAccepted');
+
+        if (missingFields.length > 0) {
+            throw new CustomError(
+                `Missing or invalid required fields: ${missingFields.join(', ')}`,
+                httpStatusCode.BAD_REQUEST,
+            );
+        }
     }
 
     #updateCaseForUser = asyncHandler(async (req, res) => {
         const { id } = req.params;
         const mediationCase = await MediationCase.findById(id);
         if (!mediationCase) {
-            throw new CustomError(
-                'Mediation case not found.',
-                httpStatusCode.NOT_FOUND,
-            );
+            throw new CustomError('Mediation case not found.', httpStatusCode.NOT_FOUND);
         }
         if (String(mediationCase.userId) !== String(req.id)) {
-            throw new CustomError(
-                "You don't have permission to edit this case.",
-                httpStatusCode.UNAUTHORIZED,
-            );
+            throw new CustomError("You don't have permission to edit this case.", httpStatusCode.UNAUTHORIZED);
         }
         this.#assertEditable(mediationCase);
 
         const contentType = req.headers['content-type'] || '';
-        const isMultipart =
-            typeof contentType === 'string' &&
-            contentType.includes('multipart/form-data');
+        const isMultipart = contentType.includes('multipart/form-data');
 
+        let updates = {};
         if (isMultipart) {
-            const { fields, uploaded } = await this.#parseMultipartAndUpload(req);
-            const patch = {
-                fullName: fields.get('fullName') ?? mediationCase.fullName,
-                email: (fields.get('email') || req.email || mediationCase.email),
-                opponentName:
-                    fields.get('opponentName') ?? mediationCase.opponentName,
-                description:
-                    fields.get('description') ?? mediationCase.description,
-                category: fields.get('category') ?? mediationCase.category,
-                amount:
-                    fields.get('amount') === '' ||
-                    fields.get('amount') === null ||
-                    fields.get('amount') === undefined
-                        ? mediationCase.amount
-                        : Number(fields.get('amount')),
-                timeline: fields.get('timeline') ?? mediationCase.timeline,
-                jurisdiction:
-                    fields.get('jurisdiction') ?? mediationCase.jurisdiction,
-                language: fields.get('language') ?? mediationCase.language,
-                resolution: fields.get('resolution') ?? mediationCase.resolution,
-                isSubscribed:
-                    fields.get('isSubscribed') === true ||
-                    fields.get('isSubscribed') === 'true' ||
-                    fields.get('isSubscribed') === '1' ||
-                    mediationCase.isSubscribed,
-                subscriptionId:
-                    fields.get('subscriptionId') ??
-                    mediationCase.subscriptionId ??
-                    undefined,
+            const { fields } = await this.#parseMultipartAndUpload(req);
+            updates = {
+                fullName: fields.get('fullName') || mediationCase.fullName,
+                email: fields.get('email') || req.email || mediationCase.email,
+                contactNumber: fields.get('contactNumber') || mediationCase.contactNumber,
+                whatsappNumber: fields.get('whatsappNumber') || mediationCase.whatsappNumber,
+                opponentName: fields.get('opponentName') || mediationCase.opponentName,
+                opponentEmail: fields.get('opponentEmail') || mediationCase.opponentEmail,
+                opponentContact: fields.get('opponentContact') || mediationCase.opponentContact,
+                description: fields.get('description') || mediationCase.description,
+                amount: fields.get('amount') ? Number(fields.get('amount')) : mediationCase.amount,
+                termsAccepted: fields.get('termsAccepted') === 'true' || fields.get('termsAccepted') === '1',
+                caseType: fields.get('caseType') || mediationCase.caseType,
+                organisationName: fields.get('organisationName') || mediationCase.organisationName,
+                organisationEmail: fields.get('organisationEmail') || mediationCase.organisationEmail,
+                organisationContact: fields.get('organisationContact') || mediationCase.organisationContact,
+                organisationAddress: fields.get('organisationAddress') || mediationCase.organisationAddress,
             };
-
-            const newFiles = uploaded
-                .filter((u) => u?.url)
-                .map((u) => ({ name: u.name, url: u.url }));
-            if (newFiles.length) patch.files = newFiles;
-
-            const updated = await MediationCase.findByIdAndUpdate(
-                mediationCase.id,
-                patch,
-                { new: true },
-            );
-
-            return this.response(
-                res,
-                httpStatusCode.OK,
-                httpStatus.SUCCESS,
-                'Mediation case updated successfully.',
-                updated,
-            );
+        } else {
+            const { fullName, email, contactNumber, whatsappNumber, opponentName, opponentEmail, opponentContact, description, amount, termsAccepted, caseType, organisationName, organisationEmail, organisationContact, organisationAddress } = req.body;
+            updates = {
+                fullName: fullName || mediationCase.fullName,
+                email: email || req.email || mediationCase.email,
+                contactNumber: contactNumber || mediationCase.contactNumber,
+                whatsappNumber: whatsappNumber || mediationCase.whatsappNumber,
+                opponentName: opponentName || mediationCase.opponentName,
+                opponentEmail: opponentEmail || mediationCase.opponentEmail,
+                opponentContact: opponentContact || mediationCase.opponentContact,
+                description: description || mediationCase.description,
+                amount: amount ? Number(amount) : mediationCase.amount,
+                termsAccepted: termsAccepted !== undefined ? Boolean(termsAccepted) : mediationCase.termsAccepted,
+                caseType: caseType || mediationCase.caseType,
+                organisationName: organisationName || mediationCase.organisationName,
+                organisationEmail: organisationEmail || mediationCase.organisationEmail,
+                organisationContact: organisationContact || mediationCase.organisationContact,
+                organisationAddress: organisationAddress || mediationCase.organisationAddress,
+            };
         }
 
-        const {
-            fullName,
-            email,
-            opponentName,
-            description,
-            category,
-            amount,
-            timeline,
-            jurisdiction,
-            language,
-            resolution,
-            files,
-            isSubscribed,
-            subscriptionId,
-        } = req.body;
-
-        const patch = {
-            fullName: fullName ?? mediationCase.fullName,
-            email: (email || req.email || mediationCase.email),
-            opponentName: opponentName ?? mediationCase.opponentName,
-            description: description ?? mediationCase.description,
-            category: category ?? mediationCase.category,
-            amount:
-                amount === '' || amount === null || amount === undefined
-                    ? mediationCase.amount
-                    : Number(amount),
-            timeline: timeline ?? mediationCase.timeline,
-            jurisdiction: jurisdiction ?? mediationCase.jurisdiction,
-            language: language ?? mediationCase.language,
-            resolution: resolution ?? mediationCase.resolution,
-            isSubscribed:
-                isSubscribed === undefined || isSubscribed === null
-                    ? mediationCase.isSubscribed
-                    : Boolean(isSubscribed),
-            subscriptionId:
-                subscriptionId ?? mediationCase.subscriptionId ?? undefined,
-        };
-
-        const normalizedFiles = this.#normalizeFiles(files);
-        if (normalizedFiles) patch.files = normalizedFiles;
-
-        const updated = await MediationCase.findByIdAndUpdate(
-            mediationCase.id,
-            patch,
-            { new: true },
-        );
-
-        return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Mediation case updated successfully.',
-            updated,
-        );
+        const updated = await MediationCase.findByIdAndUpdate(id, updates, { new: true });
+        return this.response(res, httpStatusCode.OK, httpStatus.SUCCESS, 'Mediation case updated successfully.', updated);
     });
 
     async #parseMultipartAndUpload(req) {
@@ -418,7 +341,9 @@ class MediationCaseController extends Base {
             const bb = busboy({ headers: req.headers });
 
             bb.on('field', (name, value) => {
-                fields.set(name, value);
+                // Trim field names to remove any leading/trailing whitespace
+                const trimmedName = name.trim();
+                fields.set(trimmedName, value);
             });
 
             bb.on('file', (fieldName, file, info) => {
@@ -450,6 +375,7 @@ class MediationCaseController extends Base {
             });
 
             bb.on('error', (err) => reject(err));
+            
             bb.on('finish', async () => {
                 try {
                     const uploaded = await Promise.all(uploads);
@@ -465,175 +391,44 @@ class MediationCaseController extends Base {
 
     #createCaseFromFrontend = asyncHandler(async (req, res) => {
         const contentType = req.headers['content-type'] || '';
-        const isMultipart =
-            typeof contentType === 'string' &&
-            contentType.includes('multipart/form-data');
+        const isMultipart = contentType.includes('multipart/form-data');
 
+        let formData = {};
         if (isMultipart) {
-            const { fields, uploaded } = await this.#parseMultipartAndUpload(req);
-
-            const fullName = fields.get('fullName');
-            const email = fields.get('email');
-            const opponentName = fields.get('opponentName');
-            const description = fields.get('description');
-            const category = fields.get('category');
-            const amount = fields.get('amount');
-            const timeline = fields.get('timeline');
-            const jurisdiction = fields.get('jurisdiction');
-            const language = fields.get('language');
-            const resolution = fields.get('resolution');
-            const isSubscribedRaw = fields.get('isSubscribed');
-            const subscriptionId = fields.get('subscriptionId');
-
-            if (
-                !fullName ||
-                !opponentName ||
-                !description ||
-                !category ||
-                !jurisdiction
-            ) {
-                throw new CustomError(
-                    'Missing required fields.',
-                    httpStatusCode.BAD_REQUEST,
-                );
-            }
-
-            const finalEmail = email || req.email;
-            if (!finalEmail) {
-                throw new CustomError(
-                    'Email is required.',
-                    httpStatusCode.BAD_REQUEST,
-                );
-            }
-
-            const isSubscribed =
-                isSubscribedRaw === true ||
-                isSubscribedRaw === 'true' ||
-                isSubscribedRaw === '1';
-
-            const files = uploaded
-                .filter((u) => u?.url)
-                .map((u) => ({ name: u.name, url: u.url }));
-
-            const existing = await this.#findEditableCaseForUser(req.id);
-            if (existing) {
-                this.#assertEditable(existing);
-                const updated = await MediationCase.findByIdAndUpdate(
-                    existing.id,
-                    {
-                        fullName,
-                        email: finalEmail,
-                        opponentName,
-                        description,
-                        category,
-                        amount:
-                            amount === '' || amount === null || amount === undefined
-                                ? undefined
-                                : Number(amount),
-                        timeline,
-                        jurisdiction,
-                        language,
-                        resolution,
-                        files: files?.length ? files : existing.files,
-                        isSubscribed,
-                        subscriptionId: subscriptionId || undefined,
-                        status: 'Submitted',
-                        paymentStatus:
-                            existing.paymentStatus === 'Failed'
-                                ? 'Pending'
-                                : existing.paymentStatus,
-                    },
-                    { new: true },
-                );
-                return this.response(
-                    res,
-                    httpStatusCode.OK,
-                    httpStatus.SUCCESS,
-                    'Mediation case updated successfully.',
-                    {
-                        caseId: updated.id,
-                        status: updated.status,
-                        paymentStatus: updated.paymentStatus,
-                    },
-                    
-                );
-            }
-
-            const mediationCase = await MediationCase.create({
-                userId: req.id,
-                fullName,
-                email: finalEmail,
-                opponentName,
-                description,
-                category,
-                amount:
-                    amount === '' || amount === null || amount === undefined
-                        ? undefined
-                        : Number(amount),
-                timeline,
-                jurisdiction,
-                language,
-                resolution,
-                files,
-                isSubscribed,
-                subscriptionId: subscriptionId || undefined,
-                status: 'Submitted',
-                paymentStatus: 'Pending',
-            });
-
-            return this.response(
-            res,
-            httpStatusCode.OK,
-            httpStatus.SUCCESS,
-            'Mediation case submitted successfully.',
-            {
-                caseId: mediationCase.id,
-                status: mediationCase.status,
-                paymentStatus: mediationCase.paymentStatus,
-    },
-);
+            const { fields } = await this.#parseMultipartAndUpload(req);
+            formData = {
+                fullName: fields.get('fullName'),
+                email: fields.get('email'),
+                contactNumber: fields.get('contactNumber'),
+                whatsappNumber: fields.get('whatsappNumber'),
+                opponentName: fields.get('opponentName'),
+                opponentEmail: fields.get('opponentEmail'),
+                opponentContact: fields.get('opponentContact'),
+                description: fields.get('description'),
+                amount: fields.get('amount'),
+                termsAccepted: fields.get('termsAccepted'),
+                caseType: fields.get('caseType'),
+                organisationName: fields.get('organisationName'),
+                organisationEmail: fields.get('organisationEmail'),
+                organisationContact: fields.get('organisationContact'),
+                organisationAddress: fields.get('organisationAddress'),
+            };
+        } else {
+            formData = req.body;
         }
 
-        const {
-            fullName,
-            email,
-            opponentName,
-            description,
-            category,
-            amount,
-            timeline,
-            jurisdiction,
-            language,
-            resolution,
-            files,
-            isSubscribed,
-            subscriptionId,
-        } = req.body;
+        // Validate required fields
+        this.#validateRequiredFields(formData);
 
-        if (
-            !fullName ||
-            !opponentName ||
-            !description ||
-            !category ||
-            !jurisdiction
-        ) {
-            throw new CustomError(
-                'Missing required fields.',
-                httpStatusCode.BAD_REQUEST,
-            );
-        }
-
-        const finalEmail = email || req.email;
+        const finalEmail = formData.email || req.email;
         if (!finalEmail) {
-            throw new CustomError(
-                'Email is required.',
-                httpStatusCode.BAD_REQUEST,
-            );
+            throw new CustomError('Email is required.', httpStatusCode.BAD_REQUEST);
         }
 
-        const normalizedFiles = Array.isArray(files)
-            ? this.#normalizeFiles(files)
-            : undefined;
+        const termsAccepted = formData.termsAccepted === 'true' || 
+                              formData.termsAccepted === '1' || 
+                              formData.termsAccepted === true;
+        const amount = Number(formData.amount);
 
         const existing = await this.#findEditableCaseForUser(req.id);
         if (existing) {
@@ -641,77 +436,63 @@ class MediationCaseController extends Base {
             const updated = await MediationCase.findByIdAndUpdate(
                 existing.id,
                 {
-                    fullName,
+                    fullName: formData.fullName,
                     email: finalEmail,
-                    opponentName,
-                    description,
-                    category,
-                    amount:
-                        amount === '' || amount === null || amount === undefined
-                            ? undefined
-                            : Number(amount),
-                    timeline,
-                    jurisdiction,
-                    language,
-                    resolution,
-                    files: normalizedFiles ?? existing.files,
-                    isSubscribed: Boolean(isSubscribed),
-                    subscriptionId: subscriptionId || undefined,
+                    contactNumber: formData.contactNumber,
+                    whatsappNumber: formData.whatsappNumber,
+                    opponentName: formData.opponentName,
+                    opponentEmail: formData.opponentEmail,
+                    opponentContact: formData.opponentContact,
+                    description: formData.description,
+                    amount,
+                    termsAccepted,
+                    caseType: formData.caseType,
+                    organisationName: formData.organisationName,
+                    organisationEmail: formData.organisationEmail,
+                    organisationContact: formData.organisationContact,
+                    organisationAddress: formData.organisationAddress,
                     status: 'Submitted',
-                    paymentStatus:
-                        existing.paymentStatus === 'Failed'
-                            ? 'Pending'
-                            : existing.paymentStatus,
+                    paymentStatus: existing.paymentStatus === 'Failed' ? 'Pending' : existing.paymentStatus,
                 },
                 { new: true },
             );
-
             return this.response(
                 res,
                 httpStatusCode.OK,
                 httpStatus.SUCCESS,
                 'Mediation case updated successfully.',
-                {
-    caseId: updated.id,
-    status: updated.status,
-    paymentStatus: updated.paymentStatus,
-},
+                { caseId: updated.id, status: updated.status, paymentStatus: updated.paymentStatus },
             );
         }
 
         const mediationCase = await MediationCase.create({
             userId: req.id,
-            fullName,
+            fullName: formData.fullName,
             email: finalEmail,
-            opponentName,
-            description,
-            category,
-            amount:
-                amount === '' || amount === null || amount === undefined
-                    ? undefined
-                    : Number(amount),
-            timeline,
-            jurisdiction,
-            language,
-            resolution,
-            files: normalizedFiles,
-            isSubscribed: Boolean(isSubscribed),
-            subscriptionId: subscriptionId || undefined,
+            contactNumber: formData.contactNumber,
+            whatsappNumber: formData.whatsappNumber,
+            opponentName: formData.opponentName,
+            opponentEmail: formData.opponentEmail,
+            opponentContact: formData.opponentContact,
+            description: formData.description,
+            amount,
+            termsAccepted,
+            caseType: formData.caseType,
+            organisationName: formData.organisationName,
+            organisationEmail: formData.organisationEmail,
+            organisationContact: formData.organisationContact,
+            organisationAddress: formData.organisationAddress,
             status: 'Submitted',
             paymentStatus: 'Pending',
         });
 
         return this.response(
-        res,
-        httpStatusCode.OK,
-        httpStatus.SUCCESS,
-        'Mediation case submitted successfully.',
-    {
-        caseId: mediationCase.id,
-        status: mediationCase.status,
-        paymentStatus: mediationCase.paymentStatus,
-    },
-);
+            res,
+            httpStatusCode.OK,
+            httpStatus.SUCCESS,
+            'Mediation case submitted successfully.',
+            { caseId: mediationCase.id, status: mediationCase.status, paymentStatus: mediationCase.paymentStatus },
+        );
     });
 }
 

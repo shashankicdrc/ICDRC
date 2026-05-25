@@ -1,6 +1,11 @@
-import MediationCase from '../models/mediationCaseModel.js'; // Matched with your screenshot
-import { queues } from '../queues/queue.js'; // Matched with your screenshot
-import { google } from 'googleapis'; 
+import MediationCase from '../models/mediationCaseModel.js';
+import { queues } from '../queues/queue.js';
+import { google } from 'googleapis';
+import {
+    googleMeetCreatedTotal,
+    googleMeetErrorsTotal,
+    mediationCasesTotal,
+} from '../utils/metrics.js'; 
 
 // ============================================================================
 // GOOGLE MEET OAUTH 2.0 CONFIGURATION
@@ -39,44 +44,53 @@ export const assignMediator = async (req, res) => {
         // 2. Google Meet Link Generation (Only if Online and link doesn't exist)
         let meetLink = existingCase.googleMeetLink;
         if (existingCase.sessionMode === 'Online' && !meetLink) {
-            
-            // Format dates for Google Calendar API (assuming IST Timezone +05:30)
-            const eventStartTime = new Date(`${existingCase.sessionDate}T${existingCase.sessionStartTime}:00+05:30`);
-            const eventEndTime = new Date(`${existingCase.sessionDate}T${existingCase.sessionEndTime}:00+05:30`);
+            try {
+                // Format dates for Google Calendar API (assuming IST Timezone +05:30)
+                const eventStartTime = new Date(`${existingCase.sessionDate}T${existingCase.sessionStartTime}:00+05:30`);
+                const eventEndTime = new Date(`${existingCase.sessionDate}T${existingCase.sessionEndTime}:00+05:30`);
 
-            // Determine admin email if available (admin auth sets req.email)
-            const adminEmail = req.email || process.env.GOOGLE_HOST_EMAIL;
+                // Determine admin email if available (admin auth sets req.email)
+                const adminEmail = req.email || process.env.GOOGLE_HOST_EMAIL;
 
-            // Define Google Calendar Event payload
-            const event = {
-                summary: `ICDRC Mediation Session: Case ${caseId.substring(0, 5)}`,
-                description: 'Official online mediation session scheduled via ICDRC portal.',
-                start: { dateTime: eventStartTime.toISOString(), timeZone: 'Asia/Kolkata' },
-                end: { dateTime: eventEndTime.toISOString(), timeZone: 'Asia/Kolkata' },
-                attendees: [
-                    { email: existingCase.email },
-                    ...(adminEmail ? [{ email: adminEmail }] : []),
-                ],
-                conferenceData: {
-                    createRequest: {
-                        requestId: caseId, // Unique ID ensures idempotent requests
-                        conferenceSolutionKey: { type: 'hangoutsMeet' }
-                    }
-                },
-                guestsCanInviteOthers: false,
-                guestsCanModify: false,
-                attendeesCanInviteOthers: false,
-            };
+                // Define Google Calendar Event payload
+                const event = {
+                    summary: `ICDRC Mediation Session: Case ${caseId.substring(0, 5)}`,
+                    description: 'Official online mediation session scheduled via ICDRC portal.',
+                    start: { dateTime: eventStartTime.toISOString(), timeZone: 'Asia/Kolkata' },
+                    end: { dateTime: eventEndTime.toISOString(), timeZone: 'Asia/Kolkata' },
+                    attendees: [
+                        { email: existingCase.email },
+                        ...(adminEmail ? [{ email: adminEmail }] : []),
+                    ],
+                    conferenceData: {
+                        createRequest: {
+                            requestId: caseId,
+                            conferenceSolutionKey: { type: 'hangoutsMeet' }
+                        }
+                    },
+                    guestsCanInviteOthers: false,
+                    guestsCanModify: false,
+                    attendeesCanInviteOthers: false,
+                };
 
-            // Insert event into Google Calendar and retrieve the Meet link
-            const calendarResponse = await calendar.events.insert({
-                calendarId: 'primary',
-                resource: event,
-                conferenceDataVersion: 1, // Required to auto-generate Meet link
-                sendUpdates: 'all', // Notify attendees and help enforce meeting role handling
-            });
+                // Insert event into Google Calendar and retrieve the Meet link
+                const calendarResponse = await calendar.events.insert({
+                    calendarId: 'primary',
+                    resource: event,
+                    conferenceDataVersion: 1,
+                    sendUpdates: 'all',
+                });
 
-            meetLink = calendarResponse.data.hangoutLink; 
+                meetLink = calendarResponse.data.hangoutLink;
+                // ─── Track successful Meet link creation ───────────────────────
+                googleMeetCreatedTotal.inc();
+            } catch (meetError) {
+                // ─── Track Google API errors (401 token expired, 403, etc.) ─────
+                const errorCode = meetError?.code ?? meetError?.response?.status ?? 'UNKNOWN';
+                googleMeetErrorsTotal.inc({ error_code: String(errorCode) });
+                // Re-throw so the outer catch returns a 500 to the admin
+                throw meetError;
+            }
         }
 
         // 3. Update Database with the confirmed status and Meet link
@@ -88,6 +102,9 @@ export const assignMediator = async (req, res) => {
             },
             { new: true }
         );
+
+        // ─── Track mediation case transition ───────────────────────────────
+        mediationCasesTotal.inc({ transition: 'mediator_assigned' });
 
         // 4. Send email with session details
         const emailHtml = `

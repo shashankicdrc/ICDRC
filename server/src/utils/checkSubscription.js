@@ -2,6 +2,7 @@ import subscriptionModel from '#models/subscriptionModel';
 import { queues } from '#queues/queue';
 import { FRONTEND_URL, NOREPLYEMAIL, htmlTemplate } from '#utils/constant';
 import logger from '#utils/logger';
+import { subscriptionExpiryRemindersTotal } from '#utils/metrics';
 
 export const checkSubscriptions = async () => {
     const templateLink = '/src/templates/subscription/RenewSubscription.html';
@@ -72,6 +73,10 @@ export const checkSubscriptions = async () => {
                             html,
                         };
                         await queues.EmailQueue.add('send-email', NewMessage);
+
+                        // ─── Track expiry reminder by days-left bucket ───────────────
+                        const bucket = daysLeft >= 10 ? `${daysLeft}d` : `${daysLeft}d`;
+                        subscriptionExpiryRemindersTotal.inc({ days_left_bucket: bucket });
                     }
                 } catch (planError) {
                     logger.error(

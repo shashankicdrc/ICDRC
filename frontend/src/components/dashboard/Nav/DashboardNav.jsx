@@ -11,8 +11,7 @@ import {
     TooltipContent,
 } from '../../ui/tooltip';
 import { MdPayment } from 'react-icons/md';
-import { NotebookPen, PackageSearch, UserSearch, Handshake } from 'lucide-react';
-
+import { Handshake, NotebookPen, PackageSearch, UserSearch } from 'lucide-react';
 
 const DashboardNav = ({ isCollapsed }) => {
     const pathname = usePathname();
@@ -106,7 +105,6 @@ const DashboardNav = ({ isCollapsed }) => {
                     </TooltipContent>
                 )}
             </Tooltip>
-
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Link
@@ -137,7 +135,7 @@ const DashboardNav = ({ isCollapsed }) => {
                         href="/dashboard/mediation"
                         className={cn(
                             'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                            pathname === '/dashboard/registers'
+                            pathname === '/dashboard/mediation'
                                 ? ' rounded-lg bg-muted text-primary'
                                 : null,
                             isCollapsed ? 'w-fit' : 'w-full',

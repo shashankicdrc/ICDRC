@@ -2,7 +2,6 @@
 import { useEffect } from 'react';
 import HomeNav from '../../components/Navbar/page';
 import Link from 'next/link';
-import Home7Contact from './../../components/HomeComponents/Home7Contact';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
 import Image from 'next/image';
@@ -68,14 +67,14 @@ const About = () => {
             </div>
 
             <h1
-                className="text-gray-900 text-3xl mt-6 md:mt-8 md:text-6xl  font-bold text-center  px-8"
+                className="text-gray-900 text-3xl mt-6 md:mt-8 md:text-5xl font-bold text-center px-8"
                 data-aos="fade-up"
                 data-aos-duration="1000"
             >
                 About Us
             </h1>
 
-            <div className="grid gap-5 grid-cols-1 lg:grid-cols-7 mx-5 my-5 lg:mx-10 items-center">
+            <div className="grid gap-5 grid-cols-1 lg:grid-cols-7 mx-5 mt-2 mb-5 lg:mx-10 items-center">
                 <div className="lg:col-span-3 flex justify-center">
                     <Image
                         src="/images/aboutus.webp"
@@ -85,61 +84,24 @@ const About = () => {
                         alt="commitment pic"
                     />
                 </div>
-                <div className="px-4 lg:col-span-4 space-y-4 text-justify py-5">
+                <div className="px-4 lg:col-span-4 space-y-4 text-justify py-5 text-xl">
                     <p data-aos="fade-up" data-aos-duration="1000">
-                        ICDRC stands as a dedicated entity, specializing in
-                        securing the rightful financial compensation individuals
-                        are entitled to from their insurance providers. Our
-                        adept team of professionals is committed to
-                        collaborating closely with you, comprehending the
-                        nuances of your claim, and fiercely advocating for your
-                        rights. We persistently pursue your case until you
-                        receive the settlement you truly deserve.
+                        The Insurance Claims Dispute Resolution Centre (ICDRC)
+                        is a specialised institutional platform dedicated
+                        exclusively to the mediation of insurance claims
+                        disputes.
                     </p>
                     <p data-aos="fade-up" data-aos-duration="1000">
-                        Recognizing the often overwhelming nature of filing an
-                        insurance claim, we have made it our primary objective
-                        to streamline the process for you. Let us alleviate the
-                        burden by managing all paperwork and engaging in direct
-                        communication with your insurance company, allowing you
-                        to concentrate on restoring normalcy to your life. Our
-                        seasoned experts possess an in-depth understanding of
-                        the insurance industry, ensuring you receive the optimal
-                        outcome for your claim.
-                    </p>
-                    <p data-aos="fade-up" data-aos-duration="1000">
-                        Our unwavering commitment extends to securing the
-                        maximum settlement possible on your behalf. Leveraging
-                        our extensive expertise, we engage in strategic
-                        negotiations and leave no stone unturned in fighting for
-                        every penny you are entitled to. Your satisfaction with
-                        the resolution of your claim remains our paramount
-                        priority.
-                    </p>
-                    <p data-aos="fade-up" data-aos-duration="1000">
-                        One Stop Solution For Insurance Claim Disputes.
-                    </p>
-                    <p data-aos="fade-up" data-aos-duration="1000">
-                        Trust ICDRC to expedite the settlement of your claim,
-                        ensuring a prompt resolution to your financial
-                        compensation needs.
-                    </p>
-                    <p data-aos="fade-up" data-aos-duration="1000">
-                        ICDRC can take the stress out of the claims process so
-                        you can focus on your recovery or other important
-                        matters.
-                    </p>
-                    <p data-aos="fade-up" data-aos-duration="1000">
-                        ICDRC is your partner in alleviating the stress
-                        associated with the claims process, allowing you to
-                        focus on your recovery and other critical matters.
+                        ICDRC offers a structured, neutral, and confidential
+                        environment for resolving insurance disputes through
+                        expert-led mediation, reducing the need for prolonged
+                        litigation and ensuring balanced outcomes.
                     </p>
                 </div>
             </div>
             <div className="h-1 border-t  my-5  w-full"></div>
             <TeamExperts />
             <div className="h-1 border-t  my-5  w-full"></div>
-            <Home7Contact />
             <Footer />
         </div>
     );

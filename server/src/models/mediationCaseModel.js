@@ -1,13 +1,5 @@
 import { Schema, model } from 'mongoose';
 
-const evidenceSchema = new Schema(
-    {
-        name: String,      // e.g. "Contract.pdf"
-        url: String,       // storage URL (Cloudinary, S3, etc.)
-    },
-    { _id: false },
-);
-
 const mediationCaseSchema = new Schema(
     {
         userId: {
@@ -25,38 +17,73 @@ const mediationCaseSchema = new Schema(
             type: String,
             required: [true, 'Email is required'],
         },
+        contactNumber: {
+            type: String,
+            required: [true, 'Contact number is required'],
+        },
+        whatsappNumber: {
+            type: String,
+            required: [true, 'WhatsApp number is required'],
+        },
 
         opponentName: {
             type: String,
             required: [true, 'Opposite party name is required'],
+        },
+        opponentEmail: {
+            type: String,
+            required: [true, 'Opposite party email is required'],
+        },
+        opponentContact: {
+            type: String,
+            required: [true, 'Opposite party contact number is required'],
         },
 
         description: {
             type: String,
             required: [true, 'Description of dispute is required'],
         },
-        category: {
-            type: String,
-            required: [true, 'Dispute category is required'],
-        },
         amount: {
             type: Number,
+            required: [true, 'Amount involved in dispute is required'],
         },
 
-        timeline: {
+        termsAccepted: {
+            type: Boolean,
+            required: [true, 'Acceptance of terms and conditions is required'],
+        },
+
+        caseType: {
             type: String,
+            enum: ['Individual', 'Organisation'],
+            required: [true, 'Case type is required'],
         },
-        jurisdiction: {
-            type: String, // country / jurisdiction
-            required: [true, 'Jurisdiction is required'],
-        },
-        language: {
+
+        // Organisation specific fields
+        organisationName: {
             type: String,
+            required: function() {
+                return this.caseType === 'Organisation';
+            },
         },
-        resolution: {
-            type: String, // e.g. refund / compensation / payment plan / replacement / other
+        organisationEmail: {
+            type: String,
+            required: function() {
+                return this.caseType === 'Organisation';
+            },
         },
-        files: [evidenceSchema], // list of uploaded documents (URLs)
+        organisationContact: {
+            type: String,
+            required: function() {
+                return this.caseType === 'Organisation';
+            },
+        },
+        organisationAddress: {
+            type: String,
+            required: function() {
+                return this.caseType === 'Organisation';
+            },
+        },
 
         // new for google meet
         sessionMode: {
@@ -66,25 +93,15 @@ const mediationCaseSchema = new Schema(
         sessionDate: {
             type: String, 
         },
-        sessionStartTime: { // Naya: Start Time
+        sessionStartTime: { 
             type: String, 
         },
-        sessionEndTime: {   // Naya: End Time
+        sessionEndTime: {   
             type: String, 
         },
         googleMeetLink: {
             type: String, 
             default: null,
-        },
-
-        // Frontend subscription gating fields
-        isSubscribed: {
-            type: Boolean,
-            default: false,
-        },
-        subscriptionId: {
-            type: Schema.Types.ObjectId,
-            ref: 'Subscription',
         },
 
         // Lifecycle

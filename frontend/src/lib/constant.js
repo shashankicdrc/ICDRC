@@ -31,6 +31,9 @@ export const navlinks = [
     { name: 'Gallery', link: '/gallery' },
     { name: 'Case Studies', link: '/casestudies' },
     { name: 'Partner with us', link: '/partner' },
+    { name: 'Mediation', link: '/mediation' },
+    { name: 'Virtual Mediation', link: '/dashboard/mediation'},
+    { name: 'Face to Face Mediation', link: '/face-to-face-mediation'}
 ];
 
 export const adminnavlinks = [

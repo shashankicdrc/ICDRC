@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import { Job } from "bullmq";
 import { NOREPLYEMAIL } from "#utils/constant";
 import logger from "#utils/logger";
+import { emailSentTotal, emailFailuresTotal } from "#utils/metrics";
 
 /**
  * Process a scheduled email job.
@@ -23,18 +24,8 @@ const scheduleEmailProcessor = async (job) => {
         const authUser = process.env.MAIL_USER || noreplyEmail;
 
         let transporter = nodemailer.createTransport({
-            host,
-            port,
-            secure,
-            connectionTimeout: parseInt(
-                process.env.MAIL_CONNECTION_TIMEOUT_MS || "20000",
-                10,
-            ),
-            greetingTimeout: parseInt(
-                process.env.MAIL_GREETING_TIMEOUT_MS || "20000",
-                10,
-            ),
-            socketTimeout: parseInt(process.env.MAIL_SOCKET_TIMEOUT_MS || "20000", 10),
+            host: "mail.icdrc.in",
+            port: 465,
             tls: {
                 rejectUnauthorized: false,
             },
@@ -45,6 +36,10 @@ const scheduleEmailProcessor = async (job) => {
         });
         let info = await transporter.sendMail(job.data);
         logger.info(info.response);
+
+        // ─── Track successful sends by job name ───────────────────────────────
+        const emailType = job.name ?? 'unknown';
+        emailSentTotal.inc({ type: emailType });
 
     } catch (error) {
         // Log the underlying nodemailer error (EAUTH/ETIMEDOUT/550/etc.)
@@ -63,6 +58,11 @@ const scheduleEmailProcessor = async (job) => {
                 command: error?.command,
             },
         });
+
+        // ─── Track failed sends by type and SMTP error code ───────────────────
+        const emailType = job?.name ?? 'unknown';
+        const errorCode = error?.code ?? error?.responseCode ?? 'UNKNOWN';
+        emailFailuresTotal.inc({ type: emailType, error_code: String(errorCode) });
     }
 };
 

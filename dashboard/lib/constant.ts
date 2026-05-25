@@ -8,7 +8,7 @@ const developmentBaseUrl =
 export const BASE_URL =
     process.env.NODE_ENV === "production"
         ? process.env.NEXT_PUBLIC_BACKEND_URL
-        : developmentBaseUrl;
+        : "http://localhost:7000";
 
 
 export const problemOptions = [

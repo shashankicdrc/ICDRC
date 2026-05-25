@@ -1,16 +1,38 @@
-FROM node:18-alpine
+FROM node:18-alpine AS base
 
+# ─── Stage 1: Install production dependencies ───
+FROM base AS deps
 WORKDIR /app
 
-COPY package*.json ./
+# dumb-init for proper PID 1 signal handling (graceful shutdown)
+RUN apk add --no-cache dumb-init
 
+COPY package*.json ./
 RUN npm ci --omit=dev
 
-COPY . .
+# ─── Stage 2: Production runner ───
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Copy dumb-init from deps stage
+COPY --from=deps /usr/bin/dumb-init /usr/bin/dumb-init
+
+# Run as non-root user for security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 appuser
+
+# Copy only what's needed
+COPY --from=deps --chown=appuser:nodejs /app/node_modules ./node_modules
+COPY --chown=appuser:nodejs . .
+
+USER appuser
 
 EXPOSE 7000
 
-HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD wget -qO- http://localhost:7000/ || exit 1
 
+ENTRYPOINT ["dumb-init", "--"]
 CMD ["npm", "run", "start"]

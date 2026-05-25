@@ -2,7 +2,7 @@ import logger from '#utils/logger';
 import fs from 'fs';
 import ejs from 'ejs';
 
-export const NOREPLYEMAIL = process.env.NOREPLYEMAIL || 'no_reply@icdrc.in';
+export const NOREPLYEMAIL = 'no_reply@icdrc.in';
 
 export const policyTypeToEmail = {
     'Life Insurance': 'lifeinsurance@icdrc.in',
@@ -53,7 +53,9 @@ export const httpStatus = {
 };
 
 export const FRONTEND_URL =
-    process.env.FRONTEND_URL || 'http://localhost:3000';
+    process.env.NODE_ENV === 'production'
+        ? process.env.FRONTEND_URL
+        : 'http://localhost:3000';
 
 /**
  * Which PhonePe hosts to call. Set PHONEPE_ENV=production when using live

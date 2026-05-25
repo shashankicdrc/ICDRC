@@ -1,20 +1,16 @@
-"use client";
+'use client';
 
-import MediationForm from "@/components/dashboard/register/MediationForm";
-import { Box, Heading, Text } from "@chakra-ui/react";
+import MediationForm from '@/components/dashboard/mediation/MediationForm';
 
 export default function MediationPage() {
-  return (
-    <Box p={6}>
-      <Heading size="lg" mb={4}>
-        Mediation
-      </Heading>
-
-      <Text fontSize="md">
-        Welcome to the Mediation section. Here you can manage mediation cases.
-      </Text>
-
-      <MediationForm/>
-    </Box>
-  );
+    return (
+        <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
+            <div className="mx-auto grid max-w-[65rem] flex-1 auto-rows-max gap-4">
+                <h1 className="text-2xl font-semibold tracking-tight">
+                    Virtual Mediation
+                </h1>
+            </div>
+            <MediationForm />
+        </main>
+    );
 }

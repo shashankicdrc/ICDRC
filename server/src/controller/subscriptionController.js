@@ -28,6 +28,10 @@ import AdminAuthMiddleware from '#middlewares/AdminAuthMiddleware';
 import mongoose from 'mongoose';
 import usermodel from '#models/userModel';
 import { queues } from '#queues/queue';
+import {
+    subscriptionPaymentsTotal,
+    subscriptionFailuresTotal,
+} from '#utils/metrics';
 
 class SubscriptionController extends Base {
     #subscriptionService;
@@ -546,6 +550,7 @@ class SubscriptionController extends Base {
             logger.info(message);
 
             if (!success || !data || data.responseCode !== 'SUCCESS') {
+                subscriptionFailuresTotal.inc({ reason: 'gateway_error' });
                 return res.redirect(
                     `${FRONTEND_URL}/failure?message=${message}`,
                 );
@@ -556,6 +561,7 @@ class SubscriptionController extends Base {
             });
 
             if (isAlreadyProcessed) {
+                subscriptionFailuresTotal.inc({ reason: 'already_processed' });
                 return res.redirect(
                     `${FRONTEND_URL}/failure?message=Your payment is already processed.`,
                 );
@@ -628,10 +634,14 @@ class SubscriptionController extends Base {
 
             queues.EmailQueue.add('send-email', NewMessage);
 
+            // ─── Track successful subscription payment ───────────────────────────
+            subscriptionPaymentsTotal.inc({ status: 'success', plan: plan.name });
+
             return res.redirect(
                 `${FRONTEND_URL}/success?amount=${data.amount}&transactionId=${data.transactionId}`,
             );
         } catch (error) {
+            subscriptionFailuresTotal.inc({ reason: 'gateway_error' });
             return res.redirect(
                 `${FRONTEND_URL}/failure?message=$${error.message}`,
             );
@@ -678,8 +688,10 @@ class SubscriptionController extends Base {
 
         const transactionId = nanoid();
 
-        const backendUrl = process.env.BACKEND_URL || 'http://localhost:7000';
-        const redirectUrl = `${backendUrl}/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`;
+        const redirectUrl =
+            process.env.NODE_ENV === 'production'
+                ? `${process.env.BACKEND_URL}/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`
+                : `http://localhost:7000/api/subscription/status/${transactionId}?planId=${isPlan.id}&userId=${req.id}`;
 
         const payload = {
             userId: req.id,

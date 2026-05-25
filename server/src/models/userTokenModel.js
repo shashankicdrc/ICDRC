@@ -7,12 +7,6 @@ const userTokenSchema = new Schema({
         required: [true, "userId is required"],
         ref: 'user'
     },
-    type: {
-        type: String,
-        enum: ['password_reset', 'email_verification'],
-        default: 'password_reset',
-        required: [true, "Token type is required."],
-    },
     code: {
         type: String,
         required: [true, "Code must be 6 characters long."],

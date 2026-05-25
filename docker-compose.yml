@@ -1,46 +1,167 @@
-version: '3.9'
+name: icdrc-production
+
+# ─── Shared logging config (prevents disk exhaustion) ───────────────────────
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "5"
+
+# ─── Explicit internal network (containers talk by name, not via host) ───────
+networks:
+  icdrc-network:
+    driver: bridge
+
 services:
-  client:
-    container_name: icdrc_frontend
-    image: app1
-    build: ./frontend
+  frontend:
+    restart: unless-stopped
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    env_file:
+      - ./frontend/.env.production
+    depends_on:
+      server:
+        condition: service_healthy
     ports:
       - "3000:3000"
-    depends_on:
-      - server
-    env_file:
-        - ./frontend/.env
-    environment:
-      - NEXTAUTH_URL=http://77.37.45.141:3100
-      - NEXTAUTH_SECRET=hMVQySmVjbrzps89s+Ro4SGGSmKpjF8Ox5XI7VAs2J0=
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: "0.50"
 
   dashboard:
-    container_name: icdrc_dashboard
-    image: app2
-    build: ./dashboard
+    restart: unless-stopped
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    env_file:
+      - ./dashboard/.env.production
+    depends_on:
+      server:
+        condition: service_healthy
     ports:
       - "3001:3001"
-    depends_on:
-      - server
-    env_file:
-        - ./dashboard/.env
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: "0.50"
 
-  
   server:
-    container_name: new_server
-    build: ./server
-    restart: always
-    depends_on:
-     - redis
+    restart: unless-stopped
+    build:
+      context: ./server
+      dockerfile: Dockerfile
     env_file:
       - ./server/.env
+    depends_on:
+      redis:
+        condition: service_healthy
     ports:
-      - 7000:7000
-    
-  redis:
-    container_name: redis
-    image: redis:alpine
-    restart: always
-    ports:
-      - 6379:6379
+      - "7000:7000"
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    security_opt:
+      - no-new-privileges:true
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+          cpus: "1.0"
 
+  redis:
+    restart: unless-stopped
+    image: redis:7-alpine
+    command: redis-server --appendonly yes
+    ports:
+      - "127.0.0.1:6379:6379"            # bind to loopback only — not exposed to internet
+    volumes:
+      - redis_data_prod:/data
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      start_period: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: "0.25"
+
+  prometheus:
+    restart: unless-stopped
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data_prod:/prometheus
+    ports:
+      - "127.0.0.1:9090:9090"            # internal monitoring — not exposed to internet
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      start_period: 15s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: "0.50"
+
+  grafana:
+    restart: unless-stopped
+    image: grafana/grafana:latest
+    ports:
+      - "3002:3000"
+    volumes:
+      - grafana_data_prod:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana-dashboard.json:/var/lib/grafana/dashboards/icdrc-operations-v1.json:ro
+    depends_on:
+      prometheus:
+        condition: service_healthy
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-securepassword}
+      - GF_SERVER_ROOT_URL=http://localhost:3002
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 256m
+          cpus: "0.25"
+
+volumes:
+  redis_data_prod:
+  prometheus_data_prod:
+  grafana_data_prod:

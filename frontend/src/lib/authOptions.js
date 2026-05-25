@@ -125,11 +125,6 @@ export const authOptions = {
                     return token;
                 }
 
-                if (typeof RefreshAccessToken === 'undefined') {
-                    // Avoid crashing on Dev server if RefreshAccessToken isn't defined or imported.
-                    return token;
-                }
-
                 const refreshTokenData = await RefreshAccessToken(
                     token.AccessToken,
                     token.RefreshToken,
@@ -149,20 +144,25 @@ export const authOptions = {
                 };
             } catch (error) {
                 console.error(error);
-                throw Promise.reject(error);
+                throw error;
             }
         },
 
         session: async ({ session, token }) => {
             if (token) {
-                const accessToken = await decodeToken(token.AccessToken);
                 session.user.AccessToken = token.AccessToken;
                 session.user.RefreshToken = token.RefreshToken;
-                session.user.id = accessToken.id;
-                session.user.email = accessToken.email;
-                session.user.name = accessToken.name;
                 session.user.image = token.image || token.picture;
                 session.error = token.error;
+
+                if (token.AccessToken) {
+                    const accessToken = await decodeToken(token.AccessToken);
+                    if (accessToken) {
+                        session.user.id = accessToken.id;
+                        session.user.email = accessToken.email;
+                        session.user.name = accessToken.name;
+                    }
+                }
             }
 
             return session;
