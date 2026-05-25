@@ -132,10 +132,6 @@ jobs:
             set -e
             cd ${{ secrets.PROD_DEPLOY_PATH }}
 
-            # FIX: Reclaim .git ownership — previous root-run Docker/git ops can leave
-            # .git/objects owned by root, causing "insufficient permission" on git fetch
-            sudo chown -R $(whoami):$(whoami) .git || true
-
             # Mark directory as safe (owner mismatch fix)
             git config --global --add safe.directory ${{ secrets.PROD_DEPLOY_PATH }}
 
