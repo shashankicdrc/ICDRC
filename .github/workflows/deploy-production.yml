@@ -43,7 +43,7 @@ jobs:
             ${{ env.IMAGE_PREFIX }}-server:prod-${{ github.sha }}
 
       # ─── Build & push frontend image ───
-      # FIX: Use unquoted EOF so ${{ secrets.* }} are expanded by the runner shell
+      # Unquoted EOF so ${{ secrets.* }} are expanded by the runner shell
       - name: Copy frontend env for build
         run: |
           cat > ./frontend/.env.production << EOF
@@ -72,7 +72,6 @@ jobs:
             ${{ env.IMAGE_PREFIX }}-frontend:prod-${{ github.sha }}
 
       # ─── Build & push dashboard image ───
-      # FIX: Unquoted EOF so secrets expand correctly
       - name: Copy dashboard env for build
         run: |
           cat > ./dashboard/.env.production << EOF
@@ -93,6 +92,20 @@ jobs:
           tags: |
             ${{ env.IMAGE_PREFIX }}-dashboard:prod
             ${{ env.IMAGE_PREFIX }}-dashboard:prod-${{ github.sha }}
+
+      # ─── Copy docker-compose.yml to server via SCP ───
+      # This replaces the old "git pull on server" approach. The server no
+      # longer needs a git repo — images come from GHCR, env files are written
+      # by the SSH script below, and the compose file arrives here via SCP.
+      - name: Copy docker-compose.yml to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.PROD_SSH_HOST }}
+          username: ${{ secrets.PROD_SSH_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          source: docker-compose.yml
+          target: ${{ secrets.PROD_DEPLOY_PATH }}
+          overwrite: true
 
       # ─── Deploy on production server via SSH ───
       - name: Deploy to production server
@@ -119,7 +132,6 @@ jobs:
           NOREPLYEMAIL: ${{ secrets.PROD_NOREPLYEMAIL }}
           SERVER_FRONTEND_URL: ${{ secrets.PROD_FRONTEND_URL }}
           SERVER_BACKEND_URL: ${{ secrets.PROD_BACKEND_URL }}
-          # FIX: Separate server-side payment secrets from NEXT_PUBLIC_ frontend vars
           SERVER_MERCHANT_ID: ${{ secrets.PROD_SERVER_MERCHANT_ID }}
           SERVER_SALT_KEY: ${{ secrets.PROD_SERVER_SALT_KEY }}
         with:
@@ -132,15 +144,9 @@ jobs:
             set -e
             cd ${{ secrets.PROD_DEPLOY_PATH }}
 
-            # Mark directory as safe (owner mismatch fix)
-            git config --global --add safe.directory ${{ secrets.PROD_DEPLOY_PATH }}
+            # Write env files (gitignored — written fresh on every deploy)
+            mkdir -p frontend dashboard server
 
-            # Pull latest code
-            git fetch origin main
-            git checkout main || git checkout -b main origin/main
-            git reset --hard origin/main
-
-            # Write env files on server (these are gitignored)
             cat > ./frontend/.env.production << EOF
             NEXT_PUBLIC_BACKEND_URL=$NEXT_PUBLIC_BACKEND_URL
             NEXT_PUBLIC_FRONTEND_URL=$NEXT_PUBLIC_FRONTEND_URL
@@ -180,7 +186,6 @@ jobs:
             MAIL_SECURE=false
             MAIL_USER=$MAIL_USER
             NOREPLYEMAIL=$NOREPLYEMAIL
-            # FIX: Use dedicated server-side secrets, not the NEXT_PUBLIC_ frontend vars
             MERCHANT_ID=$SERVER_MERCHANT_ID
             SALT_INDEX=1
             SALT_KEY=$SERVER_SALT_KEY
@@ -191,18 +196,17 @@ jobs:
             EOF
             sed -i 's/^[[:space:]]*//' ./server/.env
 
-            # FIX: Pull pre-built GHCR images instead of rebuilding from scratch on server
-            # Login to GHCR so the server can pull private images
+            # Pull pre-built GHCR images and restart containers
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true
             docker compose -f docker-compose.yml down
             docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml up -d
 
-            # Wait and health check
+            # Health check
             echo "Waiting 20s for services to start..."
             sleep 20
             HTTP_CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:7000 || echo "000")
             echo "Server health check: HTTP $HTTP_CODE"
             if [ "$HTTP_CODE" = "000" ]; then
-              echo "WARNING: Server not responding yet, check logs with: docker compose logs server"
+              echo "WARNING: Server not responding yet — check logs with: docker compose logs server"
             fi
