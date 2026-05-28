@@ -9,9 +9,7 @@ import Testimonial from '../../components/HomeComponents/Testimonials/page';
 // import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
-import PricingCard from '../../components/HomeComponents/PricingCard';
 import { ReviewTestimonial } from '../../components/HomeComponents/ReviewTestimonial';
-import TotalSubscription from '@/components/HomeComponents/TotalSubscription';
 
 const Home = () => {
     return (
@@ -19,12 +17,10 @@ const Home = () => {
             <SocialIcons />
             <Navbar isWhiteBg={true} />
             <Home1 />
-            <TotalSubscription />
             <Home3 />
             <Home2 />
             <Home5 />
             <Home4 />
-            <PricingCard />
             <ReviewTestimonial />
             <Testimonial />
             {/* <Home7Contact /> */}

@@ -26,43 +26,14 @@ const Home4 = () => {
                 data-aos-duration="1000"
             >
                 At ICDRC, we offer an efficient process for resolving insurance
-                disputes through expert arbitration, settlements, and
-                litigation.{' '}
+                disputes through expert mediation, arbitration and
+                settlements.{' '}
             </p>
 
             <div className="container mx-auto overflow-hidden">
                 <div className="row">
                     <div className="col-md-12">
                         <div className="road-map-main">
-                            <div className="road-map-wrapper">
-                                <div className="road-map-circle">
-                                    <span className="road-map-circle-text flex items-center justify-center">
-                                        <SquareMousePointer
-                                            style={{
-                                                height: '40px',
-                                                width: '110px',
-                                            }}
-                                        />
-                                    </span>
-                                </div>
-                                <div
-                                    className="road-map-card"
-                                    data-aos="fade-left"
-                                    data-aos-duration="1000"
-                                >
-                                    <h4 className="card-head">
-                                        Choose Your Subscription{' '}
-                                    </h4>
-                                    <p className="card-text">
-                                        Select the subscription plan that suits
-                                        your needs—whether you are an individual
-                                        or representing an organization. Each
-                                        plan offers tailored support for your
-                                        insurance dispute resolution.{' '}
-                                    </p>
-                                </div>
-                            </div>
-
                             <div className="road-map-wrapper">
                                 <div className="road-map-circle">
                                     <span className="road-map-circle-text flex items-center justify-center">
@@ -108,10 +79,10 @@ const Home4 = () => {
                                     data-aos-duration="1000"
                                 >
                                     <h4 className="card-head">
-                                        Subscription Fee Payment{' '}
+                                        Fee Payment{' '}
                                     </h4>
                                     <p className="card-text">
-                                        Pay the subscription fee to proceed: Rs.
+                                        Pay the fee to proceed: Rs.
                                         199 for individuals and Rs. 1999 for
                                         organizations. Our affordable fees
                                         ensure high-quality service without

@@ -11,17 +11,7 @@ const Home5 = () => {
                 At ICDRC, we offer unparalleled expertise and dedication to resolving your insurance disputes effectively and efficiently </p>
 
             <div className='py-4 md:py-8'>
-                <div className='m-14 gap-12 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1'>
-
-                    <div className='border-2 bg-white border-gray-500 rounded-lg py-2 px-4'>
-                        <Image src="/images/expert.webp" alt="" className='rounded-xl mb-2 md:mb-4 w-full' data-aos="fade-up" data-aos-duration="1000" width={400} height={400} />
-                        <h1 className='text-gray-900 text-xl md:text-2xl font-[Roboto] font-bold bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent' data-aos="fade-up" data-aos-duration="1000">
-                            Expert Insurance Guidance
-                        </h1>
-                        <p className='text-gray-700 text-justify font-medium text-sm md:text-md py-2  tracking-wide mx-auto' data-aos="fade-up" data-aos-duration="1000">
-                            Navigating insurance claims becomes effortless with ICDRC. Our experts simplify complex processes, ensure accurate filings, and negotiate for optimal outcomes, all while offering a contingency fee basis for peace of mind.
-                        </p>
-                    </div>
+                <div className='m-14 gap-12 grid lg:grid-cols-2 md:grid-cols-2 grid-cols-1'>
 
                     <div className='border-2 bg-white border-gray-500 rounded-lg py-2 px-4'>
                         <Image src="/images/Seamless.webp" alt="" className='rounded-xl mb-2 md:mb-4 w-full' data-aos="fade-up"
