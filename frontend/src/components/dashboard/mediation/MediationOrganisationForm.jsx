@@ -334,6 +334,7 @@ const MediationOrganisationForm = ({ onSuccess }) => {
                                         onChange={(e) =>
                                             setAmount(e.target.value)
                                         }
+                                        onWheel={(e) => e.target.blur()}
                                         placeholder="Enter the dispute amount"
                                         min={0}
                                     />

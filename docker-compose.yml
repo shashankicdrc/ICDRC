@@ -15,6 +15,7 @@ networks:
 services:
   frontend:
     restart: unless-stopped
+    image: ghcr.io/shashankicdrc/icdrc-frontend:prod
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -38,6 +39,7 @@ services:
 
   dashboard:
     restart: unless-stopped
+    image: ghcr.io/shashankicdrc/icdrc-dashboard:prod
     build:
       context: ./dashboard
       dockerfile: Dockerfile
@@ -61,6 +63,7 @@ services:
 
   server:
     restart: unless-stopped
+    image: ghcr.io/shashankicdrc/icdrc-server:prod
     build:
       context: ./server
       dockerfile: Dockerfile
