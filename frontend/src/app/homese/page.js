@@ -5,7 +5,7 @@ import Home2 from '../../components/HomeComponents/Home2';
 import Home3 from '../../components/HomeComponents/Home3';
 import Home4 from '../../components/HomeComponents/Home4';
 import Home5 from '../../components/HomeComponents/Home5';
-import Testimonial from '../../components/HomeComponents/Testimonials/page';
+// import Testimonial from '../../components/HomeComponents/Testimonials/page';
 // import Home7Contact from '../../components/HomeComponents/Home7Contact';
 import Footer from '../../components/footer/page';
 import SocialIcons from '../../components/SocialIcons/page';
@@ -26,7 +26,7 @@ const Home = () => {
             <Home4 />
             <PricingCard />
             <ReviewTestimonial />
-            <Testimonial />
+            {/* <Testimonial /> */}
             {/* <Home7Contact /> */}
             <Footer />
         </div>
