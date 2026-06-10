@@ -246,7 +246,8 @@ class MediationCaseController extends Base {
         if (!data.contactNumber) missingFields.push('contactNumber');
         if (!data.whatsappNumber) missingFields.push('whatsappNumber');
         if (!data.opponentName) missingFields.push('opponentName');
-        if (!data.opponentEmail) missingFields.push('opponentEmail');
+        const opponentNameIsOther = String(data.opponentName).trim().toLowerCase() === 'other';
+        if (opponentNameIsOther && !data.opponentNameOther) missingFields.push('opponentNameOther');
         if (!data.opponentContact) missingFields.push('opponentContact');
         if (!data.description) missingFields.push('description');
         if (!data.amount) missingFields.push('amount');
@@ -297,6 +298,7 @@ class MediationCaseController extends Base {
                 contactNumber: fields.get('contactNumber') || mediationCase.contactNumber,
                 whatsappNumber: fields.get('whatsappNumber') || mediationCase.whatsappNumber,
                 opponentName: fields.get('opponentName') || mediationCase.opponentName,
+                opponentNameOther: fields.get('opponentNameOther') || mediationCase.opponentNameOther,
                 opponentEmail: fields.get('opponentEmail') || mediationCase.opponentEmail,
                 opponentContact: fields.get('opponentContact') || mediationCase.opponentContact,
                 description: fields.get('description') || mediationCase.description,
@@ -309,13 +311,14 @@ class MediationCaseController extends Base {
                 organisationAddress: fields.get('organisationAddress') || mediationCase.organisationAddress,
             };
         } else {
-            const { fullName, email, contactNumber, whatsappNumber, opponentName, opponentEmail, opponentContact, description, amount, termsAccepted, caseType, organisationName, organisationEmail, organisationContact, organisationAddress } = req.body;
+            const { fullName, email, contactNumber, whatsappNumber, opponentName, opponentNameOther, opponentEmail, opponentContact, description, amount, termsAccepted, caseType, organisationName, organisationEmail, organisationContact, organisationAddress } = req.body;
             updates = {
                 fullName: fullName || mediationCase.fullName,
                 email: email || req.email || mediationCase.email,
                 contactNumber: contactNumber || mediationCase.contactNumber,
                 whatsappNumber: whatsappNumber || mediationCase.whatsappNumber,
                 opponentName: opponentName || mediationCase.opponentName,
+                opponentNameOther: opponentNameOther || mediationCase.opponentNameOther,
                 opponentEmail: opponentEmail || mediationCase.opponentEmail,
                 opponentContact: opponentContact || mediationCase.opponentContact,
                 description: description || mediationCase.description,
@@ -402,6 +405,7 @@ class MediationCaseController extends Base {
                 contactNumber: fields.get('contactNumber'),
                 whatsappNumber: fields.get('whatsappNumber'),
                 opponentName: fields.get('opponentName'),
+                opponentNameOther: fields.get('opponentNameOther'),
                 opponentEmail: fields.get('opponentEmail'),
                 opponentContact: fields.get('opponentContact'),
                 description: fields.get('description'),
@@ -441,6 +445,7 @@ class MediationCaseController extends Base {
                     contactNumber: formData.contactNumber,
                     whatsappNumber: formData.whatsappNumber,
                     opponentName: formData.opponentName,
+                    opponentNameOther: formData.opponentNameOther,
                     opponentEmail: formData.opponentEmail,
                     opponentContact: formData.opponentContact,
                     description: formData.description,
@@ -472,6 +477,7 @@ class MediationCaseController extends Base {
             contactNumber: formData.contactNumber,
             whatsappNumber: formData.whatsappNumber,
             opponentName: formData.opponentName,
+            opponentNameOther: formData.opponentNameOther,
             opponentEmail: formData.opponentEmail,
             opponentContact: formData.opponentContact,
             description: formData.description,
