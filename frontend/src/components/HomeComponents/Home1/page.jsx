@@ -38,11 +38,11 @@ const Home1 = () => {
                                     data-aos="fade-up"
                                     data-aos-duration="2000"
                                 >
-                                    Share your insurance claim & be assured that
+                                    Share your insurance claim/dispute & be assured that
                                     your claim is handled by a qualified
                                     insurance professional
                                 </h2>
-                                <ComplaintButton />
+                                {/* <ComplaintButton /> */}
                             </div>
                         </div>
                         <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end mb-8 md:mb-0">
@@ -70,10 +70,10 @@ const Home1 = () => {
                                     data-aos="fade-up"
                                     data-aos-duration="2000"
                                 >
-                                    We're the company that helps to settle
+                                    We're the mediation centre that helps to settle
                                     insurance claims{' '}
                                 </h2>
-                                <ComplaintButton />
+                                {/* <ComplaintButton /> */}
                             </div>
                         </div>
                         <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end mb-8 md:mb-0">
@@ -101,9 +101,9 @@ const Home1 = () => {
                                     data-aos-duration="2000"
                                 >
                                     We mediate between insured and insurance
-                                    company{' '}
+                                    mediation centre{' '}
                                 </h2>
-                                <ComplaintButton />
+                                {/* <ComplaintButton /> */}
                             </div>
                         </div>
                         <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end mb-8 md:mb-0">
@@ -132,7 +132,7 @@ const Home1 = () => {
                                 >
                                     Maximizing outcomes, minimizing disputes.{' '}
                                 </h2>
-                                <ComplaintButton />
+                                {/* <ComplaintButton /> */}
                             </div>
                         </div>
                         <div className="w-full md:w-1/2 order-1 md:order-2 flex justify-center md:justify-end mb-8 md:mb-0">
@@ -161,7 +161,7 @@ const Home1 = () => {
                                 >
                                     Certificate Of Recognition-Startup India{' '}
                                 </h2>
-                                <ComplaintButton />
+                                {/* <ComplaintButton /> */}
                             </div>
                         </div>
                         <div
