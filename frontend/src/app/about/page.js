@@ -33,10 +33,9 @@ const About = () => {
                                 data-aos="fade-up"
                                 data-aos-duration="2000"
                             >
-                                India’s most reliable and single
-                                <br /> window solution platform
+                                India’s most reliable solution platform
                             </h2>
-                            <Link
+                            {/* <Link
                                 href="/#subscription"
                                 data-aos="fade-up"
                                 data-aos-duration="2000"
@@ -60,7 +59,7 @@ const About = () => {
                                     </svg>
                                 </span>
                                 <span className="relative">Subscribe Now</span>
-                            </Link>
+                            </Link> */}
                         </div>
                     </div>
                 </div>
