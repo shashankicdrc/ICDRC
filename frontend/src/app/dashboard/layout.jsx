@@ -43,8 +43,10 @@ export default function layout({ children }) {
                     <DashboardBreadCrumb />
                     <div className="flex items-center space-x-4">
                         <div className="hidden md:flex md:items-center md:space-x-2">
-                            <CheckSubscriptionActive type="Individual" />
-                            <CheckSubscriptionActive type="Organisational" />
+
+                            {/* <CheckSubscriptionActive type="Individual" />
+                            <CheckSubscriptionActive type="Organisational" /> */}
+                            
                         </div>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -56,8 +58,8 @@ export default function layout({ children }) {
                                         <AvatarFallback className="uppercase">
                                             {session?.user.name
                                                 ? getNameLetter(
-                                                      session?.user.name,
-                                                  )
+                                                    session?.user.name,
+                                                )
                                                 : 'DS'}
                                         </AvatarFallback>
                                     </Avatar>
