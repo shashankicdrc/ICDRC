@@ -101,7 +101,7 @@ const Home1 = () => {
                                     data-aos-duration="2000"
                                 >
                                     We mediate between insured and insurance
-                                    mediation centre{' '}
+                                    company{' '}
                                 </h2>
                                 {/* <ComplaintButton /> */}
                             </div>
