@@ -38,7 +38,10 @@ const DashboardNav = ({ isCollapsed }) => {
                     <TooltipContent side="right">Dashboard</TooltipContent>
                 )}
             </Tooltip>
-            <Tooltip>
+
+
+             {/* Register a complaint */}
+            {/* <Tooltip>
                 <TooltipTrigger asChild>
                     <Link
                         href="/dashboard/register"
@@ -57,6 +60,30 @@ const DashboardNav = ({ isCollapsed }) => {
                 {isCollapsed && (
                     <TooltipContent side="right">
                         Register a Complaint
+                    </TooltipContent>
+                )}
+            </Tooltip> */}
+
+           {/* Mediation  */}
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Link
+                        href="/dashboard/mediation"
+                        className={cn(
+                            'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
+                            pathname === '/dashboard/mediation'
+                                ? ' rounded-lg bg-muted text-primary'
+                                : null,
+                            isCollapsed ? 'w-fit' : 'w-full',
+                        )}
+                    >
+                        <Handshake className="h-5 w-5" />
+                        {!isCollapsed && <span>Refer for Mediation</span>}
+                    </Link>
+                </TooltipTrigger>
+                {isCollapsed && (
+                    <TooltipContent side="right">
+                        Refer for Mediation
                     </TooltipContent>
                 )}
             </Tooltip>
@@ -126,30 +153,6 @@ const DashboardNav = ({ isCollapsed }) => {
                 {isCollapsed && (
                     <TooltipContent side="right">
                         Payment History
-                    </TooltipContent>
-                )}
-            </Tooltip>
-
-            {/* Mediation  */}
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Link
-                        href="/dashboard/mediation"
-                        className={cn(
-                            'flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary',
-                            pathname === '/dashboard/mediation'
-                                ? ' rounded-lg bg-muted text-primary'
-                                : null,
-                            isCollapsed ? 'w-fit' : 'w-full',
-                        )}
-                    >
-                        <Handshake className="h-5 w-5" />
-                        {!isCollapsed && <span>Mediation</span>}
-                    </Link>
-                </TooltipTrigger>
-                {isCollapsed && (
-                    <TooltipContent side="right">
-                        Mediation
                     </TooltipContent>
                 )}
             </Tooltip>
