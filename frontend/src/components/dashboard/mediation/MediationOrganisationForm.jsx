@@ -11,6 +11,13 @@ import { Label } from '../../ui/label';
 import { Input } from '../../ui/input';
 import { Textarea } from '../../ui/textarea';
 import { Button } from '../../ui/button';
+import {
+    Select,
+    SelectItem,
+    SelectContent,
+    SelectTrigger,
+    SelectValue,
+} from '../../ui/select';
 import { Loader2 } from 'lucide-react';
 import PhoneInput, { isValidPhoneNumber } from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
@@ -19,6 +26,7 @@ import toast from 'react-hot-toast';
 import { useSession } from 'next-auth/react';
 import { Checkbox } from '@chakra-ui/react';
 import { addMediationCase } from '../../../externalAPI/mediationService';
+import { insurance } from '../../../lib/constant';
 
 const MediationOrganisationForm = ({ onSuccess }) => {
     const { data: session } = useSession();
@@ -38,6 +46,7 @@ const MediationOrganisationForm = ({ onSuccess }) => {
 
     // Opposite Party Details
     const [opponentName, setOpponentName] = useState('');
+    const [otherOpponentName, setOtherOpponentName] = useState('');
     const [opponentEmail, setOpponentEmail] = useState('');
     const [opponentContact, setOpponentContact] = useState('');
 
@@ -59,6 +68,7 @@ const MediationOrganisationForm = ({ onSuccess }) => {
         setContactNumber('');
         setWhatsappNumber('');
         setOpponentName('');
+        setOtherOpponentName('');
         setOpponentEmail('');
         setOpponentContact('');
         setDescription('');
@@ -69,6 +79,18 @@ const MediationOrganisationForm = ({ onSuccess }) => {
     const onSubmit = async () => {
         try {
             setLoading(true);
+
+            if (!opponentName) {
+                toast.error('Please select an opposite party (insurance company)');
+                setLoading(false);
+                return;
+            }
+
+            if (opponentName === 'Other' && !otherOpponentName.trim()) {
+                toast.error('Please enter the insurance company name');
+                setLoading(false);
+                return;
+            }
 
             if (!isValidPhoneNumber(organisationContact)) {
                 toast.error('Enter a valid organisation contact number');
@@ -110,7 +132,7 @@ const MediationOrganisationForm = ({ onSuccess }) => {
                 email,
                 contactNumber,
                 whatsappNumber,
-                opponentName,
+                opponentName: opponentName === 'Other' ? otherOpponentName : opponentName,
                 opponentEmail,
                 opponentContact,
                 description,
@@ -345,17 +367,51 @@ const MediationOrganisationForm = ({ onSuccess }) => {
                             <div className="grid gap-4">
                                 <div className="space-y-1">
                                     <Label>Opposite Party Name</Label>
-                                    <Input
-                                        value={opponentName}
-                                        onChange={(e) =>
-                                            setOpponentName(e.target.value)
+                                    <Select
+                                        onValueChange={(value) =>
+                                            setOpponentName(value)
                                         }
-                                        required
-                                        type="text"
-                                        maxLength={100}
-                                        placeholder="Enter opposite party's name"
-                                    />
+                                        required={true}
+                                        value={opponentName}
+                                    >
+                                        <SelectTrigger className="w-full">
+                                            <SelectValue placeholder="Select Insurance Company" />
+                                        </SelectTrigger>
+                                        <SelectContent className="w-[300px] max-h-[200px]">
+                                            {insurance
+                                                .sort()
+                                                .map((item, index) => (
+                                                    <SelectItem
+                                                        key={index}
+                                                        value={item}
+                                                    >
+                                                        {item}
+                                                    </SelectItem>
+                                                ))}
+                                            <SelectItem value="Other">
+                                                Other
+                                            </SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
+
+                                {opponentName === 'Other' && (
+                                    <div className="space-y-1">
+                                        <Label>Enter Insurance Company Name</Label>
+                                        <Input
+                                            value={otherOpponentName}
+                                            onChange={(e) =>
+                                                setOtherOpponentName(
+                                                    e.target.value,
+                                                )
+                                            }
+                                            required
+                                            type="text"
+                                            maxLength={100}
+                                            placeholder="Enter insurance company name"
+                                        />
+                                    </div>
+                                )}
 
                                 <div className="space-y-1">
                                     <Label>Opposite Party Email</Label>
@@ -366,7 +422,6 @@ const MediationOrganisationForm = ({ onSuccess }) => {
                                                 e.target.value,
                                             )
                                         }
-                                        required
                                         type="email"
                                         placeholder="Enter opposite party's email"
                                     />
