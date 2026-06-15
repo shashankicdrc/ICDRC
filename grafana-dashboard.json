@@ -31,7 +31,7 @@
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
       "id": 100,
-      "title": "🟢 API Performance",
+      "title": "🟢 API Health at a Glance",
       "type": "row"
     },
 
@@ -42,22 +42,31 @@
           "color": { "mode": "thresholds" },
           "thresholds": { "mode": "absolute", "steps": [
             { "color": "green", "value": null },
-            { "color": "yellow", "value": 0.5 },
-            { "color": "red", "value": 1 }
+            { "color": "yellow", "value": 500 },
+            { "color": "red", "value": 1000 }
           ]},
-          "unit": "s",
+          "unit": "ms",
+          "decimals": 0,
           "mappings": []
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
       "id": 1,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "background", "graphMode": "area" },
-      "title": "Avg Request Latency (all routes)",
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "area",
+        "text": { "valueSize": 40 }
+      },
+      "title": "⏱ Avg Response Time",
+      "description": "Average time to respond to any API request in the last 5 minutes. Green = fast (<500ms), Red = slow (>1s).",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
-        "expr": "rate(http_request_duration_seconds_sum{job=\"icdrc-nodejs-backend\"}[5m]) / rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\"}[5m])",
-        "legendFormat": "avg latency"
+        "expr": "1000 * (rate(http_request_duration_seconds_sum{job=\"icdrc-nodejs-backend\"}[5m]) / rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\"}[5m]))",
+        "legendFormat": "Response Time"
       }]
     },
 
@@ -72,18 +81,27 @@
             { "color": "red", "value": 200 }
           ]},
           "unit": "reqps",
+          "decimals": 1,
           "mappings": []
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
       "id": 2,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "background", "graphMode": "area" },
-      "title": "Requests/sec (last 5m)",
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "area",
+        "text": { "valueSize": 40 }
+      },
+      "title": "🌐 Requests per Second",
+      "description": "How many API requests are being handled right now. Normal traffic is under 50 req/s.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\"}[5m]))",
-        "legendFormat": "rps"
+        "legendFormat": "req/s"
       }]
     },
 
@@ -93,23 +111,34 @@
         "defaults": {
           "color": { "mode": "thresholds" },
           "thresholds": { "mode": "absolute", "steps": [
-            { "color": "green", "value": null },
-            { "color": "yellow", "value": 1 },
-            { "color": "red", "value": 5 }
+            { "color": "red", "value": null },
+            { "color": "yellow", "value": 95 },
+            { "color": "green", "value": 99 }
           ]},
-          "unit": "reqps",
+          "unit": "percent",
+          "decimals": 1,
+          "min": 0,
+          "max": 100,
           "mappings": []
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
       "id": 3,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "background", "graphMode": "area" },
-      "title": "5xx Error Rate/sec",
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "area",
+        "text": { "valueSize": 40 }
+      },
+      "title": "✅ API Success Rate",
+      "description": "Percentage of requests that completed without a server error (5xx). Should be above 99%.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
-        "expr": "sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\", status_code=~\"5..\"}[5m]))",
-        "legendFormat": "5xx/s"
+        "expr": "100 * (1 - sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\", status_code=~\"5..\"}[5m])) / sum(rate(http_request_duration_seconds_count{job=\"icdrc-nodejs-backend\"}[5m])))",
+        "legendFormat": "Success Rate"
       }]
     },
 
@@ -123,13 +152,23 @@
             { "color": "yellow", "value": 5 },
             { "color": "red", "value": 20 }
           ]},
-          "unit": "reqps"
+          "unit": "reqps",
+          "decimals": 2,
+          "mappings": []
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
       "id": 4,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "textMode": "auto", "colorMode": "background", "graphMode": "area" },
-      "title": "4xx Error Rate/sec",
+      "options": {
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "orientation": "auto",
+        "textMode": "value_and_name",
+        "colorMode": "background",
+        "graphMode": "area",
+        "text": { "valueSize": 40 }
+      },
+      "title": "⚠️ Client Errors (4xx) Rate",
+      "description": "Rate of bad request errors — usually caused by invalid input or unauthorized access. A spike here may indicate abuse.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
@@ -141,17 +180,30 @@
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "s" },
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "ms",
+          "decimals": 0,
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "spanNulls": false
+          }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 5 },
       "id": 5,
-      "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "P95 Latency by Route",
+      "options": {
+        "legend": { "calcs": ["mean", "max", "lastNotNull"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "🐢 Slowest Routes (P95 Response Time in ms)",
+      "description": "95th percentile response time per route. If a route consistently shows >500ms, it needs optimization.",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
-        "expr": "histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job=\"icdrc-nodejs-backend\"}[5m])))",
+        "expr": "1000 * histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket{job=\"icdrc-nodejs-backend\"}[5m])))",
         "legendFormat": "{{route}}"
       }]
     },
@@ -159,13 +211,25 @@
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "reqps" },
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "reqps",
+          "decimals": 2,
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10
+          }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 5 },
       "id": 6,
-      "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Request Rate by Method & Route",
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "📊 Traffic by Endpoint",
+      "description": "Which API endpoints are being called the most. Helps identify popular or overloaded routes.",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
@@ -178,7 +242,7 @@
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 13 },
       "id": 101,
-      "title": "💳 Subscription & Payments",
+      "title": "💳 Payments & Subscriptions",
       "type": "row"
     },
 
@@ -191,18 +255,20 @@
             { "color": "green", "value": null }
           ]},
           "unit": "short",
+          "decimals": 0,
           "mappings": []
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 0, "y": 14 },
       "id": 10,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "Total Successful Subscription Payments",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "💰 Successful Payments (All Time)",
+      "description": "Total number of subscription payments that completed successfully since the server started.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_subscription_payments_total{status=\"success\"})",
-        "legendFormat": "success"
+        "legendFormat": "Paid"
       }]
     },
 
@@ -216,18 +282,49 @@
             { "color": "yellow", "value": 1 },
             { "color": "red", "value": 5 }
           ]},
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 6, "y": 14 },
       "id": 11,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "Total Subscription Failures",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "❌ Payment Failures (All Time)",
+      "description": "Total failed subscription payment attempts. Investigate if this is growing rapidly.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_subscription_failures_total)",
-        "legendFormat": "failures"
+        "legendFormat": "Failed"
+      }]
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "red", "value": null },
+            { "color": "yellow", "value": 80 },
+            { "color": "green", "value": 95 }
+          ]},
+          "unit": "percent",
+          "decimals": 1,
+          "min": 0,
+          "max": 100
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 14 },
+      "id": 15,
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none", "text": { "valueSize": 40 } },
+      "title": "📈 Payment Success Rate",
+      "description": "Percentage of subscription payment attempts that succeeded. Should be above 95%.",
+      "type": "stat",
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
+        "expr": "100 * sum(icdrc_subscription_payments_total{status=\"success\"}) / (sum(icdrc_subscription_payments_total{status=\"success\"}) + sum(icdrc_subscription_failures_total))",
+        "legendFormat": "Success %"
       }]
     },
 
@@ -239,37 +336,48 @@
           "thresholds": { "mode": "absolute", "steps": [
             { "color": "green", "value": null }
           ]},
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         }
       },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 14 },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 14 },
       "id": 12,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "Active Subscriptions (live)",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "🔑 Active Subscriptions (Live)",
+      "description": "Number of users with an active subscription right now.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "icdrc_active_subscriptions_gauge",
-        "legendFormat": "active"
+        "legendFormat": "Active"
       }]
     },
 
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "decimals": 2,
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 18 },
       "id": 13,
-      "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Subscription Payment Outcomes Over Time",
+      "options": {
+        "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "💳 Payment Outcomes Over Time (by plan)",
+      "description": "Shows successful vs failed payments broken down by plan type over time. A growing 'failure' line needs immediate attention.",
       "type": "timeseries",
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prom_local" },
           "expr": "sum by (status, plan) (rate(icdrc_subscription_payments_total[5m]))",
-          "legendFormat": "{{status}} – {{plan}}"
+          "legendFormat": "{{plan}} — {{status}}"
         }
       ]
     },
@@ -277,18 +385,27 @@
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "decimals": 2,
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 18 },
       "id": 14,
-      "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Subscription Failure Reasons Over Time",
+      "options": {
+        "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "🔴 Why Are Payments Failing?",
+      "description": "Payment failure reasons over time. Helps identify whether failures are from gateway issues, expired cards, or user cancellations.",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (reason) (rate(icdrc_subscription_failures_total[5m]))",
-        "legendFormat": "{{reason}}"
+        "legendFormat": "Reason: {{reason}}"
       }]
     },
 
@@ -296,7 +413,7 @@
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 26 },
       "id": 102,
-      "title": "📧 Email Queue (BullMQ)",
+      "title": "📧 Email Delivery (BullMQ)",
       "type": "row"
     },
 
@@ -308,18 +425,20 @@
           "thresholds": { "mode": "absolute", "steps": [
             { "color": "green", "value": null }
           ]},
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 0, "y": 27 },
       "id": 20,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "Total Emails Sent",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "📨 Emails Sent (All Time)",
+      "description": "Total emails successfully delivered since server start (confirmations, OTPs, notifications, etc.).",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_email_sent_total)",
-        "legendFormat": "sent"
+        "legendFormat": "Sent"
       }]
     },
 
@@ -333,18 +452,20 @@
             { "color": "yellow", "value": 1 },
             { "color": "red", "value": 3 }
           ]},
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 6, "y": 27 },
       "id": 21,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "Email Send Failures",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "📛 Email Failures (All Time)",
+      "description": "Total emails that failed to deliver. If this is growing, check SMTP credentials and mail server health.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_email_failures_total)",
-        "legendFormat": "failures"
+        "legendFormat": "Failed"
       }]
     },
 
@@ -358,31 +479,71 @@
             { "color": "yellow", "value": 10 },
             { "color": "red", "value": 50 }
           ]},
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 12, "y": 27 },
       "id": 22,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "BullMQ Queue Depth",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "📬 Emails Waiting in Queue",
+      "description": "Emails currently sitting in the BullMQ queue waiting to be sent. A large number here means the email worker is falling behind.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "icdrc_bullmq_queue_depth_gauge{queue=\"email-queue\"}",
-        "legendFormat": "waiting jobs"
+        "legendFormat": "Queued"
       }]
     },
 
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "red", "value": null },
+            { "color": "yellow", "value": 90 },
+            { "color": "green", "value": 99 }
+          ]},
+          "unit": "percent",
+          "decimals": 1,
+          "min": 0,
+          "max": 100
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 27 },
+      "id": 25,
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none", "text": { "valueSize": 40 } },
+      "title": "📮 Email Delivery Rate",
+      "description": "Percentage of emails that were successfully delivered. Should be close to 100%.",
+      "type": "stat",
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
+        "expr": "100 * sum(icdrc_email_sent_total) / (sum(icdrc_email_sent_total) + sum(icdrc_email_failures_total))",
+        "legendFormat": "Delivery %"
+      }]
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "decimals": 2,
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 31 },
       "id": 23,
-      "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Emails Sent by Type Over Time",
+      "options": {
+        "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "📧 Email Volume by Type Over Time",
+      "description": "Breakdown of email types being sent (e.g. verification, payment confirmation, reminders). Useful for understanding communication volume.",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
@@ -394,18 +555,27 @@
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "decimals": 2,
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 31 },
       "id": 24,
-      "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Email Failures by SMTP Error Code",
+      "options": {
+        "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "🔴 Email Failures by Error Code",
+      "description": "SMTP error codes causing email failures. Code 550 = mailbox not found, 421 = server unavailable. Contact your mail provider if errors spike.",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (type, error_code) (rate(icdrc_email_failures_total[5m]))",
-        "legendFormat": "{{type}} / {{error_code}}"
+        "legendFormat": "{{type}} / Error {{error_code}}"
       }]
     },
 
@@ -413,7 +583,7 @@
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 39 },
       "id": 103,
-      "title": "📹 Google Meet & Mediation",
+      "title": "📹 Mediation & Google Meet",
       "type": "row"
     },
 
@@ -425,18 +595,20 @@
           "thresholds": { "mode": "absolute", "steps": [
             { "color": "green", "value": null }
           ]},
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 0, "y": 40 },
       "id": 30,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "Google Meet Links Created",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "📅 Meet Links Created",
+      "description": "Total Google Meet links generated for mediation sessions.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "icdrc_googlemeet_created_total",
-        "legendFormat": "meet links"
+        "legendFormat": "Meet Links"
       }]
     },
 
@@ -450,49 +622,69 @@
             { "color": "yellow", "value": 1 },
             { "color": "red", "value": 3 }
           ]},
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 6, "y": 40 },
       "id": 31,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "Google Calendar API Errors",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "🚫 Google Calendar API Errors",
+      "description": "Errors from Google Calendar API when creating Meet links. Usually caused by quota limits or expired OAuth tokens.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_googlemeet_errors_total)",
-        "legendFormat": "errors"
+        "legendFormat": "Errors"
       }]
     },
 
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "decimals": 2,
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 44 },
       "id": 32,
-      "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Mediation Case Lifecycle Transitions",
+      "options": {
+        "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "⚖️ Mediation Case Status Changes Over Time",
+      "description": "How mediation cases are progressing — submitted, under review, resolved, closed. A healthy platform shows regular resolution activity.",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (transition) (rate(icdrc_mediation_cases_total[1h]))",
-        "legendFormat": "{{transition}}"
+        "legendFormat": "Status: {{transition}}"
       }]
     },
 
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "decimals": 2,
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 44 },
       "id": 33,
-      "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Google Calendar Errors by Code",
+      "options": {
+        "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "🔴 Google Calendar Errors by HTTP Code",
+      "description": "HTTP error codes from Google API. 401 = auth expired (refresh OAuth token), 429 = quota exceeded, 500 = Google server issue.",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
@@ -517,18 +709,20 @@
           "thresholds": { "mode": "absolute", "steps": [
             { "color": "green", "value": null }
           ]},
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 0, "y": 53 },
       "id": 40,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "Total Successful Registrations",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "✅ Successful Registrations",
+      "description": "Total complaint registrations where payment was completed and the case was created.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_complaint_registrations_total{status=\"success\"})",
-        "legendFormat": "success"
+        "legendFormat": "Registered"
       }]
     },
 
@@ -542,36 +736,76 @@
             { "color": "yellow", "value": 1 },
             { "color": "red", "value": 3 }
           ]},
-          "unit": "short"
+          "unit": "short",
+          "decimals": 0
         }
       },
       "gridPos": { "h": 4, "w": 6, "x": 6, "y": 53 },
       "id": 41,
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "title": "Failed Registrations (Payment Bounced)",
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": { "valueSize": 40 } },
+      "title": "❌ Registrations Failed (Payment Bounced)",
+      "description": "Registrations where payment failed. User attempted to file a complaint but couldn't complete payment.",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum(icdrc_complaint_registrations_total{status=\"failure\"})",
-        "legendFormat": "failure"
+        "legendFormat": "Failed"
       }]
     },
 
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "red", "value": null },
+            { "color": "yellow", "value": 80 },
+            { "color": "green", "value": 95 }
+          ]},
+          "unit": "percent",
+          "decimals": 1,
+          "min": 0,
+          "max": 100
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 53 },
+      "id": 43,
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none", "text": { "valueSize": 40 } },
+      "title": "📊 Registration Success Rate",
+      "description": "Percentage of complaint registration attempts that resulted in a successful filing.",
+      "type": "stat",
+      "targets": [{
+        "datasource": { "type": "prometheus", "uid": "prom_local" },
+        "expr": "100 * sum(icdrc_complaint_registrations_total{status=\"success\"}) / sum(icdrc_complaint_registrations_total)",
+        "legendFormat": "Success %"
+      }]
+    },
+
+    {
+      "datasource": { "type": "prometheus", "uid": "prom_local" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "decimals": 2,
+          "custom": { "lineWidth": 2, "fillOpacity": 15 }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 24, "x": 0, "y": 57 },
       "id": 42,
-      "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Complaint Registrations Over Time (by type & status)",
+      "options": {
+        "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "📋 Complaint Registrations Over Time (Individual vs Organisational)",
+      "description": "Volume of new complaint filings over time. Separated by type (individual/organisational) and outcome (success/failure).",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
         "expr": "sum by (type, status) (rate(icdrc_complaint_registrations_total[5m]))",
-        "legendFormat": "{{type}} – {{status}}"
+        "legendFormat": "{{type}} — {{status}}"
       }]
     },
 
@@ -579,31 +813,49 @@
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 65 },
       "id": 105,
-      "title": "🖥️ Node.js Runtime",
+      "title": "🖥️ Server Health (Node.js Runtime)",
       "type": "row"
     },
 
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "bytes" },
-        "overrides": []
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "decmbytes",
+          "decimals": 1,
+          "custom": { "lineWidth": 2, "fillOpacity": 20 }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Heap Used (MB)" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Heap Total (MB)" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "blue", "mode": "fixed" } }]
+          }
+        ]
       },
       "gridPos": { "h": 8, "w": 8, "x": 0, "y": 66 },
       "id": 50,
-      "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Node.js Heap Memory Usage",
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "🧠 Memory Usage (Heap)",
+      "description": "Node.js heap memory in MB. 'Used' should stay well below 'Total'. If 'Used' approaches 'Total', the server is under memory pressure.",
       "type": "timeseries",
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prom_local" },
-          "expr": "nodejs_heap_size_used_bytes{job=\"icdrc-nodejs-backend\"}",
-          "legendFormat": "heap used"
+          "expr": "nodejs_heap_size_used_bytes{job=\"icdrc-nodejs-backend\"} / 1024 / 1024",
+          "legendFormat": "Heap Used (MB)"
         },
         {
           "datasource": { "type": "prometheus", "uid": "prom_local" },
-          "expr": "nodejs_heap_size_total_bytes{job=\"icdrc-nodejs-backend\"}",
-          "legendFormat": "heap total"
+          "expr": "nodejs_heap_size_total_bytes{job=\"icdrc-nodejs-backend\"} / 1024 / 1024",
+          "legendFormat": "Heap Total (MB)"
         }
       ]
     },
@@ -611,42 +863,65 @@
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "ms",
+          "decimals": 1,
+          "custom": { "lineWidth": 2, "fillOpacity": 15 },
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "green", "value": null },
+            { "color": "yellow", "value": 100 },
+            { "color": "red", "value": 500 }
+          ]}
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 8, "x": 8, "y": 66 },
       "id": 51,
-      "options": { "legend": { "calcs": ["mean"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Event Loop Lag",
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "⚡ Event Loop Lag (ms)",
+      "description": "How long async tasks are waiting to be processed. Under 100ms = healthy. Above 500ms = server is struggling — check for CPU-heavy operations.",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prom_local" },
-        "expr": "nodejs_eventloop_lag_seconds{job=\"icdrc-nodejs-backend\"}",
-        "legendFormat": "event loop lag"
+        "expr": "nodejs_eventloop_lag_seconds{job=\"icdrc-nodejs-backend\"} * 1000",
+        "legendFormat": "Event Loop Lag"
       }]
     },
 
     {
       "datasource": { "type": "prometheus", "uid": "prom_local" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "short",
+          "decimals": 0,
+          "custom": { "lineWidth": 2, "fillOpacity": 10 }
+        },
         "overrides": []
       },
       "gridPos": { "h": 8, "w": 8, "x": 16, "y": 66 },
       "id": 52,
-      "options": { "legend": { "calcs": ["mean"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Active Handles & Requests",
+      "options": {
+        "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" },
+        "tooltip": { "mode": "multi" }
+      },
+      "title": "🔗 Open Connections & Handles",
+      "description": "Active handles = open file descriptors, sockets, timers. Active requests = in-flight HTTP requests. A sudden spike may indicate a connection leak.",
       "type": "timeseries",
       "targets": [
         {
           "datasource": { "type": "prometheus", "uid": "prom_local" },
           "expr": "nodejs_active_handles_total{job=\"icdrc-nodejs-backend\"}",
-          "legendFormat": "active handles"
+          "legendFormat": "Open Handles (sockets/files)"
         },
         {
           "datasource": { "type": "prometheus", "uid": "prom_local" },
           "expr": "nodejs_active_requests_total{job=\"icdrc-nodejs-backend\"}",
-          "legendFormat": "active requests"
+          "legendFormat": "In-flight Requests"
         }
       ]
     }
@@ -659,7 +934,7 @@
   "time": { "from": "now-6h", "to": "now" },
   "timepicker": {},
   "timezone": "Asia/Kolkata",
-  "title": "ICDRC — Business Operations",
+  "title": "ICDRC — Operations Dashboard",
   "uid": "icdrc-operations-v1",
-  "version": 1
+  "version": 2
 }
