@@ -1,8 +1,25 @@
 global:
-  scrape_interval: 15s # How often to poll your server
-  evaluation_interval: 15s
+  scrape_interval: 15s       # How often to poll targets
+  evaluation_interval: 15s   # How often to evaluate alert rules
+
+# ─── Alertmanager connection ──────────────────────────────────────────────────
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093   # Docker service name
+
+# ─── Alert rules files ────────────────────────────────────────────────────────
+rule_files:
+  - /etc/prometheus/alert-rules.yml
+
+# ─── Scrape targets ───────────────────────────────────────────────────────────
 scrape_configs:
   - job_name: "icdrc-nodejs-backend"
     static_configs:
-      # Note: "server:7000" matches the Docker container name and port used in docker-compose
+      # "server:7000" matches the Docker container name and port in docker-compose
       - targets: ["server:7000"]
+
+  - job_name: "alertmanager"
+    static_configs:
+      - targets: ["alertmanager:9093"]

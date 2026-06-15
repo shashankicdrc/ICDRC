@@ -1,0 +1,161 @@
+groups:
+
+  # ──────────────────────────────────────────────────────────────────────────────
+  # API Health
+  # ──────────────────────────────────────────────────────────────────────────────
+  - name: api_health
+    rules:
+
+      - alert: APIHighErrorRate
+        expr: |
+          sum(rate(http_request_duration_seconds_count{job="icdrc-nodejs-backend", status_code=~"5.."}[5m]))
+          /
+          sum(rate(http_request_duration_seconds_count{job="icdrc-nodejs-backend"}[5m])) > 0.05
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High server error rate (>5%)"
+          description: "More than 5% of API requests are returning 5xx errors. Current rate: {{ $value | humanizePercentage }}. Check server logs immediately."
+
+      - alert: APISlowResponses
+        expr: |
+          histogram_quantile(0.95,
+            sum by (le) (rate(http_request_duration_seconds_bucket{job="icdrc-nodejs-backend"}[5m]))
+          ) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "API P95 response time is above 2 seconds"
+          description: "95% of requests are taking longer than 2s to respond (current: {{ $value | humanizeDuration }}). Users are likely experiencing slowness."
+
+      - alert: APIDown
+        expr: |
+          absent(http_request_duration_seconds_count{job="icdrc-nodejs-backend"})
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "ICDRC API is not responding"
+          description: "Prometheus has not received any metrics from the backend for over 1 minute. The server container may be crashed or unreachable."
+
+  # ──────────────────────────────────────────────────────────────────────────────
+  # Node.js Runtime
+  # ──────────────────────────────────────────────────────────────────────────────
+  - name: nodejs_runtime
+    rules:
+
+      - alert: HighHeapMemoryUsage
+        expr: |
+          nodejs_heap_size_used_bytes{job="icdrc-nodejs-backend"}
+          /
+          nodejs_heap_size_total_bytes{job="icdrc-nodejs-backend"} > 0.85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Node.js heap memory above 85%"
+          description: "The server is using {{ $value | humanizePercentage }} of its heap. Risk of OOM crash. Consider restarting or investigating memory leaks."
+
+      - alert: CriticalHeapMemoryUsage
+        expr: |
+          nodejs_heap_size_used_bytes{job="icdrc-nodejs-backend"}
+          /
+          nodejs_heap_size_total_bytes{job="icdrc-nodejs-backend"} > 0.95
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Node.js heap memory critically high (>95%)"
+          description: "Heap usage is at {{ $value | humanizePercentage }}. Server is about to crash due to out-of-memory. Immediate restart required."
+
+      - alert: HighEventLoopLag
+        expr: |
+          nodejs_eventloop_lag_seconds{job="icdrc-nodejs-backend"} > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Node.js event loop lag above 500ms"
+          description: "Event loop is lagging by {{ $value | humanizeDuration }}. The server is likely CPU-bound or processing too many synchronous operations."
+
+  # ──────────────────────────────────────────────────────────────────────────────
+  # Payments & Subscriptions
+  # ──────────────────────────────────────────────────────────────────────────────
+  - name: payments
+    rules:
+
+      - alert: HighPaymentFailureRate
+        expr: |
+          sum(rate(icdrc_subscription_failures_total[15m]))
+          /
+          (sum(rate(icdrc_subscription_payments_total[15m])) + sum(rate(icdrc_subscription_failures_total[15m]))) > 0.10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Payment failure rate above 10%"
+          description: "{{ $value | humanizePercentage }} of subscription payment attempts are failing in the last 15 minutes. Check PhonePe gateway status."
+
+      - alert: PaymentFailureSpike
+        expr: |
+          sum(rate(icdrc_subscription_failures_total[5m])) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Unusual spike in payment failures"
+          description: "Payment failures are occurring at {{ $value | humanize }} per second. This may indicate a gateway outage or configuration issue."
+
+  # ──────────────────────────────────────────────────────────────────────────────
+  # Email Delivery
+  # ──────────────────────────────────────────────────────────────────────────────
+  - name: email_delivery
+    rules:
+
+      - alert: EmailQueueBacklog
+        expr: |
+          icdrc_bullmq_queue_depth_gauge{queue="email-queue"} > 50
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Email queue has {{ $value }} pending emails"
+          description: "More than 50 emails are waiting in the BullMQ queue. The email worker may be stuck or the SMTP server is slow."
+
+      - alert: EmailQueueCritical
+        expr: |
+          icdrc_bullmq_queue_depth_gauge{queue="email-queue"} > 200
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Email queue critically backed up ({{ $value }} emails)"
+          description: "Over 200 emails are queued. Users are not receiving time-sensitive emails (OTPs, confirmations). Check SMTP connectivity."
+
+      - alert: HighEmailFailureRate
+        expr: |
+          sum(rate(icdrc_email_failures_total[10m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Email delivery failures detected"
+          description: "Emails are failing at {{ $value | humanize }} per second. Check SMTP credentials and mail server health."
+
+  # ──────────────────────────────────────────────────────────────────────────────
+  # Google Meet / Calendar
+  # ──────────────────────────────────────────────────────────────────────────────
+  - name: google_meet
+    rules:
+
+      - alert: GoogleCalendarErrors
+        expr: |
+          sum(rate(icdrc_googlemeet_errors_total[10m])) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Google Calendar API errors detected"
+          description: "Meet link creation is failing at {{ $value | humanize }} errors/sec. Check OAuth token expiry or Google API quota."

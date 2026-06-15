@@ -145,11 +145,12 @@ jobs:
           SERVER_BACKEND_URL: ${{ secrets.PROD_BACKEND_URL }}
           SERVER_MERCHANT_ID: ${{ secrets.PROD_SERVER_MERCHANT_ID }}
           SERVER_SALT_KEY: ${{ secrets.PROD_SERVER_SALT_KEY }}
+          ALERT_EMAIL_TO: ${{ secrets.PROD_ALERT_EMAIL_TO }}
         with:
           host: ${{ secrets.PROD_SSH_HOST }}
           username: ${{ secrets.PROD_SSH_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
-          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL,MONGO_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REFRESH_TOKEN,CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,MAIL_PASSWORD,MAIL_HOST,MAIL_USER,NOREPLYEMAIL,SERVER_FRONTEND_URL,SERVER_BACKEND_URL,SERVER_MERCHANT_ID,SERVER_SALT_KEY
+          envs: NEXT_PUBLIC_BACKEND_URL,NEXT_PUBLIC_FRONTEND_URL,NEXT_PUBLIC_MERCHANT_ID,NEXT_PUBLIC_SALT_KEY,NEXTAUTH_SECRET,NEXTAUTH_URL,DASHBOARD_URL,MONGO_URL,JWT_SECRET,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET,GOOGLE_REFRESH_TOKEN,CLOUD_NAME,CLOUDINARY_API_KEY,CLOUDINARY_API_SECRET,MAIL_PASSWORD,MAIL_HOST,MAIL_USER,NOREPLYEMAIL,SERVER_FRONTEND_URL,SERVER_BACKEND_URL,SERVER_MERCHANT_ID,SERVER_SALT_KEY,ALERT_EMAIL_TO
           command_timeout: 30m
           script: |
             set -e
@@ -206,6 +207,17 @@ jobs:
             REDIS_PORT=6379
             EOF
             sed -i 's/^[[:space:]]*//' ./server/.env
+
+            # Write alertmanager env (used by alertmanager.yml for SMTP + recipient)
+            mkdir -p alertmanager
+            cat > ./alertmanager/.env << EOF
+            MAIL_HOST=$MAIL_HOST
+            MAIL_PORT=2525
+            MAIL_USER=$MAIL_USER
+            MAIL_PASSWORD=$MAIL_PASSWORD
+            ALERT_EMAIL_TO=$ALERT_EMAIL_TO
+            EOF
+            sed -i 's/^[[:space:]]*//' ./alertmanager/.env
 
             # Pull pre-built GHCR images and restart containers
             echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin || true

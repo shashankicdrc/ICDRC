@@ -120,6 +120,7 @@ services:
     image: prom/prometheus:latest
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./alertmanager/alert-rules.yml:/etc/prometheus/alert-rules.yml:ro
       - prometheus_data_prod:/prometheus
     ports:
       - "127.0.0.1:9090:9090"            # internal monitoring — not exposed to internet
@@ -140,6 +141,35 @@ services:
         limits:
           memory: 512m
           cpus: "0.50"
+
+  alertmanager:
+    restart: unless-stopped
+    image: prom/alertmanager:latest
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager_data_prod:/alertmanager
+    ports:
+      - "127.0.0.1:9093:9093"            # internal only — not exposed to internet
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+      - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093'
+    depends_on:
+      - prometheus
+    networks:
+      - icdrc-network
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:9093/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      start_period: 10s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          memory: 128m
+          cpus: "0.10"
 
   grafana:
     restart: unless-stopped
@@ -175,3 +205,4 @@ volumes:
   redis_data_prod:
   prometheus_data_prod:
   grafana_data_prod:
+  alertmanager_data_prod:
