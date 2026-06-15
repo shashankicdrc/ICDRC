@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '../../../lib/utils';
 import { CiHome } from 'react-icons/ci';
 import { MdPayment } from 'react-icons/md';
-import { NotebookPen, PackageSearch, Settings, UserSearch } from 'lucide-react';
+import { NotebookPen, PackageSearch, Settings, UserSearch, Handshake } from 'lucide-react';
 
 const MobileNav = () => {
     const [open, setopen] = React.useState(false);
@@ -72,7 +72,8 @@ const MobileNav = () => {
                         <CiHome className="h-5 w-5" />
                         Dashboard
                     </Link>
-                    <Link
+
+                    {/* <Link
                         href="/dashboard/register"
                         onClick={() => setopen(!open)}
                         className={cn(
@@ -84,6 +85,20 @@ const MobileNav = () => {
                     >
                         <NotebookPen className="h-5 w-5" />
                         Register a Complaint
+                    </Link> */}
+
+                    <Link
+                        href="/dashboard/mediation"
+                        onClick={() => setopen(!open)}
+                        className={cn(
+                            'mx-[-0.65rem] flex items-center gap-4  px-3 py-2 text-muted-foreground hover:text-foreground',
+                            pathname === '/dashboard/mediation'
+                                ? 'rounded-xl bg-muted text-primary'
+                                : null,
+                        )}
+                    >
+                        <Handshake className="h-5 w-5" />
+                        Refer for Mediation
                     </Link>
                     <Link
                         href="/dashboard/complaints/individual"

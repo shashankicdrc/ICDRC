@@ -38,11 +38,11 @@ const Home3 = () => {
             imgSrc: '/images/facing/Surveyor.png',
             imgAlt: 'No Surveyor Image',
         },
-        {
-            text: 'Mis-selling of policy',
-            imgSrc: '/images/facing/Mis.png',
-            imgAlt: 'Mis Selling Policy Image',
-        },
+        // {
+        //     text: 'Mis-selling of policy',
+        //     imgSrc: '/images/facing/Mis.png',
+        //     imgAlt: 'Mis Selling Policy Image',
+        // },
         {
             text: 'Policy document not received',
             imgSrc: '/images/facing/Policy.png',

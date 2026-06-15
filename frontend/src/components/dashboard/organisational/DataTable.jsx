@@ -53,9 +53,9 @@ export function OrganisationlDataTable({ columns, data }) {
         <div>
             <div className="flex my-3">
                 <Button size="sm" asChild>
-                    <Link href="/dashboard/register">
+                    <Link href="/dashboard/mediation">
                         <PlusCircle className="h-3.5 w-3.5 mr-2" />
-                        Register Complaint
+                        Refer for Mediation
                     </Link>
                 </Button>{' '}
                 <DropdownMenu>

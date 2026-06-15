@@ -24,7 +24,7 @@ const Home5 = () => {
                         </p>
                     </div>
 
-                    <div className='border-2 bg-white border-gray-500 rounded-lg  py-2 px-4'>
+                    {/* <div className='border-2 bg-white border-gray-500 rounded-lg  py-2 px-4'>
                         <Image
                             src="/images/client.webp"
                             alt="image"
@@ -41,7 +41,7 @@ const Home5 = () => {
                         <p className='text-gray-700 text-justify font-medium text-sm md:text-md py-2  tracking-wide mx-auto' data-aos="fade-up" data-aos-duration="1000">
                             ICDRC prioritizes you. We're committed to simplifying claim settlements and optimizing results. Our experienced team ensures accurate documentation, minimizing hassles while working on a no-win, no-fee basis for your convenience.
                         </p>
-                    </div>
+                    </div> */}
 
                 </div>
             </div>

@@ -30,9 +30,17 @@ const mediationCaseSchema = new Schema(
             type: String,
             required: [true, 'Opposite party name is required'],
         },
+        opponentNameOther: {
+            type: String,
+            required: function() {
+                return String(this.opponentName).trim().toLowerCase() === 'other';
+            },
+            default: null,
+        },
         opponentEmail: {
             type: String,
-            required: [true, 'Opposite party email is required'],
+            required: false,
+            default: null,
         },
         opponentContact: {
             type: String,

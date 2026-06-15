@@ -93,7 +93,7 @@ const FaceToFaceMediation = () => {
                         <div className="space-y-3 mb-6">
                             <div className="flex items-center gap-3 text-gray-600">
                                 <MdPhone size={20} className="text-orange-500" />
-                                <span>+91-11-4102 3725</span>
+                                <span>+91-7070717167</span>
                             </div>
                             <div className="flex items-center gap-3 text-gray-600">
                                 <MdEmail size={20} className="text-orange-500" />
@@ -137,7 +137,7 @@ const FaceToFaceMediation = () => {
                         <div className="space-y-3 mb-6">
                             <div className="flex items-center gap-3 text-gray-600">
                                 <MdPhone size={20} className="text-blue-500" />
-                                <span>+91-11-4102 3725</span>
+                                <span>+91-7070717167</span>
                             </div>
                             <div className="flex items-center gap-3 text-gray-600">
                                 <MdEmail size={20} className="text-blue-500" />

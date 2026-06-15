@@ -7,7 +7,7 @@ export default function RightMenu() {
     return (
         <Fragment>
             <Button asChild>
-                <Link href="/dashboard/register">Register Complaints</Link>
+                <Link href="/dashboard/mediation">Refer for Mediation</Link>
             </Button>
             <Button asChild>
                 <Link href="/become-mediator">Become a Mediator</Link>

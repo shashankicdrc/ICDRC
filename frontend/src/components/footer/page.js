@@ -31,11 +31,13 @@ export default function Footer() {
                             />
                         </Link>
                         <p className="md:max-w-xs mt-4 md:text-sm text-gray-600 text-justify">
-                            Your Trusted Insurance Claims and Dispute Resolution
-                            Partner! Looking for expert guidance with insurance
-                            claims or dispute resolution? Partner with us for a
-                            seamless experience. Our team of seasoned
-                            professionals is here to support you at every step.
+                            The Insurance Claims Dispute Resolution Centre (ICDRC)
+                            is a specialised institutional platform dedicated
+                            exclusively to the mediation of insurance claims
+                            disputes. ICDRC offers a structured, neutral, and confidential
+                            environment for resolving insurance disputes through
+                            expert-led mediation, reducing the need for prolonged
+                            litigation and ensuring balanced outcomes.
                         </p>
                         <div className="flex mt-8 space-x-6 text-gray-600">
                             <a
@@ -200,15 +202,15 @@ export default function Footer() {
                                 ICDRC Services Pvt. Ltd.
                             </a>
                         </span>{' '}
-                        | All rights reserved | Designed, developed and
-                        maintained by{' '}
+                        | All rights reserved | Maintained
+                        by{' '}
                         <a
-                            href="https://www.webdesys.com"
+                            href="https://monkovatechnologies.com/"
                             target="_blank"
                             rel="noreferrer"
                             className="font-bold text-orange-600 text-xl"
                         >
-                            WebDesys
+                            Monkova Technologies
                         </a>
                         .
                     </p>
