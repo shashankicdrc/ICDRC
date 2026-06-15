@@ -1,0 +1,64 @@
+global:
+  # How long to wait before re-sending an alert that is still firing
+  resolve_timeout: 5m
+
+  # ─── SMTP (email) settings ───────────────────────────────────────────────────
+  smtp_smarthost: '${MAIL_HOST}:${MAIL_PORT}'
+  smtp_from: '${MAIL_USER}'
+  smtp_auth_username: '${MAIL_USER}'
+  smtp_auth_password: '${MAIL_PASSWORD}'
+  smtp_require_tls: false
+
+# ─── Routing tree ─────────────────────────────────────────────────────────────
+route:
+  receiver: 'email-ops'          # default receiver
+  group_by: ['alertname', 'severity']
+  group_wait: 30s                # wait 30s before sending first alert in a group
+  group_interval: 5m             # send follow-up if group changes
+  repeat_interval: 4h            # re-notify if still firing after 4 hours
+
+  routes:
+    # Critical alerts → immediate, repeat every 1h
+    - matchers:
+        - severity = "critical"
+      receiver: 'email-ops'
+      group_wait: 10s
+      repeat_interval: 1h
+
+    # Warning alerts → batch, repeat every 6h
+    - matchers:
+        - severity = "warning"
+      receiver: 'email-ops'
+      group_wait: 1m
+      repeat_interval: 6h
+
+# ─── Receivers ────────────────────────────────────────────────────────────────
+receivers:
+  - name: 'email-ops'
+    email_configs:
+      - to: '${ALERT_EMAIL_TO}'
+        send_resolved: true
+        headers:
+          subject: '[{{ .Status | toUpper }}] ICDRC Alert: {{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+        html: |
+          {{ range .Alerts }}
+          <h2 style="color: {{ if eq .Status "firing" }}#e53e3e{{ else }}#38a169{{ end }}">
+            {{ if eq .Status "firing" }}🔴 ALERT FIRING{{ else }}✅ RESOLVED{{ end }}
+          </h2>
+          <table style="border-collapse:collapse;width:100%">
+            <tr><td style="padding:8px;font-weight:bold">Alert</td><td style="padding:8px">{{ .Annotations.summary }}</td></tr>
+            <tr style="background:#f7fafc"><td style="padding:8px;font-weight:bold">Details</td><td style="padding:8px">{{ .Annotations.description }}</td></tr>
+            <tr><td style="padding:8px;font-weight:bold">Severity</td><td style="padding:8px">{{ .Labels.severity | toUpper }}</td></tr>
+            <tr style="background:#f7fafc"><td style="padding:8px;font-weight:bold">Started</td><td style="padding:8px">{{ .StartsAt.Format "2006-01-02 15:04:05 IST" }}</td></tr>
+          </table>
+          <hr/>
+          {{ end }}
+
+# ─── Inhibition rules ─────────────────────────────────────────────────────────
+# Suppress warning alerts when a critical alert for the same service is firing
+inhibit_rules:
+  - source_matchers:
+      - severity = "critical"
+    target_matchers:
+      - severity = "warning"
+    equal: ['alertname']
